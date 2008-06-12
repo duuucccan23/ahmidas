@@ -1,0 +1,11 @@
+namespace SU3
+{
+  inline hcMatrix::hcMatrix(Matrix const &parent)
+    : d_parent(parent)
+  {}
+  
+  inline Matrix const &hcMatrix::dagger() const
+  {
+    return d_parent;
+  }
+}

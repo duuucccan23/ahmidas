@@ -1,0 +1,102 @@
+namespace QCD
+{
+  inline Gauge::Gauge()
+  {}
+  
+  inline Gauge::Gauge(SU3::Matrix const &value)
+  {
+    std::fill(d_data, d_data + 4, value);
+  }
+  
+  inline Gauge::Gauge(SU3::Matrix const *values)
+  {
+    std::copy(values, values + 4, d_data);
+  }
+      
+  inline Gauge::Gauge(Gauge const &other)
+  {
+    std::copy(other.d_data, other.d_data + 4, d_data);
+  }
+  
+  inline Gauge::Gauge(double const *data)
+  {
+    std::copy(data, data + 72, reinterpret_cast< double* >(d_data));
+  }
+  
+  inline Gauge::Gauge(std::complex< double > const *data)
+  {
+    std::copy(data, data + 36, reinterpret_cast< std::complex< double >* >(d_data));
+  }
+
+  inline void Gauge::reunitarize()
+  {
+    for (SU3::Matrix *iter = d_data; iter != d_data + 4; ++iter)
+      iter->reunitarize();
+  }
+
+  inline void Gauge::leftMultiply(SU3::Matrix const &other)
+  {
+    for (SU3::Matrix *iter = d_data; iter != d_data + 4; ++iter)
+      iter->leftMultiply(other);
+  }
+  
+  inline void Gauge::leftMultiply(Gauge const &other)
+  {
+    for (size_t ctr = 0; ctr < 4; ++ctr)
+      d_data[ctr].leftMultiply(other.d_data[ctr]);
+  }
+
+  inline void Gauge::rightMultiply(SU3::Matrix const &other)
+  {
+    for (SU3::Matrix *iter = d_data; iter != d_data + 4; ++iter)
+      iter->rightMultiply(other);
+  }
+  
+  inline void Gauge::rightMultiply(Gauge const &other)
+  {
+    for (size_t ctr = 0; ctr < 4; ++ctr)
+      d_data[ctr].rightMultiply(other.d_data[ctr]);
+  }
+  
+  template< typename T >
+  inline Gauge &Gauge::operator+=(T const &rhand)
+  {
+    for (SU3::Matrix *iter = d_data; iter != d_data + 4; ++iter)
+      *iter += rhand;
+    return *this;
+  }
+
+  template< typename T >
+  inline Gauge &Gauge::operator-=(T const &rhand)
+  {
+    for (SU3::Matrix *iter = d_data; iter != d_data + 4; ++iter)
+      *iter -= rhand;
+    return *this;
+  }
+
+  template< typename T >
+  inline Gauge &Gauge::operator*=(T const &rhand)
+  {
+    for (SU3::Matrix *iter = d_data; iter != d_data + 4; ++iter)
+      *iter *= rhand;
+    return *this;
+  }
+
+  template< typename T >
+  inline Gauge &Gauge::operator/=(T const &rhand)
+  {
+    for (SU3::Matrix *iter = d_data; iter != d_data + 4; ++iter)
+      *iter /= rhand;
+    return *this;
+  }
+
+  inline SU3::Matrix &Gauge::operator[](short component)
+  {
+    return d_data[component];
+  }
+
+  inline SU3::Matrix const &Gauge::operator[](short component) const
+  {
+    return d_data[component];
+  }  
+}

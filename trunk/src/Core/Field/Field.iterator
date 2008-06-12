@@ -1,0 +1,25 @@
+class iterator: public std::iterator< std::bidirectional_iterator_tag, Element >
+{
+  friend class Field< Element, L, T >;
+  
+  Field< Element, L, T >  &d_parent;
+  short              d_idx[4];
+  
+  iterator(Field< Element, L, T > &parent, short *idx);
+  iterator(iterator const &other);
+        
+  public:
+    iterator &operator--();
+    iterator const operator--(int);
+    iterator &operator++();
+    iterator const operator++(int);
+    
+    bool operator==(iterator const &other) const;
+    bool operator!=(iterator const &other) const;
+    
+    Element &operator*();
+    Element const &operator*() const;
+    
+    Element *operator->();
+    Element const *operator->() const;
+};

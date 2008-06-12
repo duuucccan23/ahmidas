@@ -1,0 +1,23 @@
+namespace Core
+{
+  // Check for endian style of the machine in use (thanks, Carsten or Marc!)  
+  inline bool big_endian()
+  {
+    union
+    {
+      int l;
+      char c[sizeof(int)];
+    } u;
+    
+    u.l = 1;
+    return(u.c[sizeof(int) - 1] == 1);
+  }
+  
+  // Reverses byteorder in case the data read from file was written differently, STL version
+  template< typename T >
+  inline void swapEndian(T *begin, T *end)
+  {
+    for (T *iter = begin; iter < end; ++iter)
+      std::reverse(reinterpret_cast< char* >(iter), reinterpret_cast< char* >(iter) + sizeof(T));
+  }   
+}

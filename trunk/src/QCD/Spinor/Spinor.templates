@@ -1,0 +1,12 @@
+namespace QCD
+{
+  template< size_t IndexSink, size_t IndexSource >
+  std::complex< double > contractTwoPoint(Dirac::Gamma< IndexSink > gammaSink, Spinor sink,
+                                          Dirac::Gamma< IndexSource > gammaSource, Spinor source)
+  {
+    std::complex< double > result = std::complex< double >(0, 0);
+    for (size_t idx = 0; idx < 4; ++idx)
+      result += gammaSink.sign(idx) * gammaSource.sign(idx) * innerProduct(sink[gammaSink.perm(idx)], source[gammaSource.perm(idx)]);
+    return result;
+  }
+}

@@ -1,0 +1,88 @@
+namespace QCD
+{
+  template< >
+  inline void Spinor::leftMultiply(Dirac::Sigma< 41 > const)
+  {
+    upper.leftMultiply(Dirac::Pauli< 1 >());
+    lower.leftMultiply(Dirac::Pauli< 1 >(), -1);
+  }
+
+  template< >
+  inline void Spinor::leftMultiply(Dirac::Sigma< 42 > const)
+  {
+    upper.leftMultiply(Dirac::Pauli< 2 >());
+    lower.leftMultiply(Dirac::Pauli< 2 >(), -1);
+  }
+
+  template< >
+  inline void Spinor::leftMultiply(Dirac::Sigma< 43 > const)
+  {
+    upper.leftMultiply(Dirac::Pauli< 3 >());
+    lower.leftMultiply(Dirac::Pauli< 3 >(), -1);
+  }
+
+  template< >
+  inline void Spinor::leftMultiply(Dirac::Sigma< 12 > const)
+  {
+    upper.leftMultiply(Dirac::Pauli< 3 >(), -1);
+    lower.leftMultiply(Dirac::Pauli< 3 >(), -1);
+  }
+
+  template< >
+  inline void Spinor::leftMultiply(Dirac::Sigma< 13 > const)
+  {
+    upper.leftMultiply(Dirac::Pauli< 2 >());
+    lower.leftMultiply(Dirac::Pauli< 2 >());
+  }
+
+  template< >
+  inline void Spinor::leftMultiply(Dirac::Sigma< 23 > const)
+  {
+    upper.leftMultiply(Dirac::Pauli< 1 >(), -1);
+    lower.leftMultiply(Dirac::Pauli< 1 >(), -1);
+  }
+
+  template< >
+  inline void Spinor::leftMultiply(Dirac::Sigma< 14 > const)
+  {
+    upper.leftMultiply(Dirac::Pauli< 1 >(), -1);
+    lower.leftMultiply(Dirac::Pauli< 1 >());
+  }
+
+  template< >
+  inline void Spinor::leftMultiply(Dirac::Sigma< 24 > const)
+  {
+    upper.leftMultiply(Dirac::Pauli< 2 >(), -1);
+    lower.leftMultiply(Dirac::Pauli< 2 >());
+  }
+
+  template< >
+  inline void Spinor::leftMultiply(Dirac::Sigma< 34 > const)
+  {
+    upper.leftMultiply(Dirac::Pauli< 3 >(), -1);
+    lower.leftMultiply(Dirac::Pauli< 3 >());
+  }
+
+  template< >
+  inline void Spinor::leftMultiply(Dirac::Sigma< 21 > const)
+  {
+    upper.leftMultiply(Dirac::Pauli< 3 >());
+    lower.leftMultiply(Dirac::Pauli< 3 >());
+  }
+
+  template< >
+  inline void Spinor::leftMultiply(Dirac::Sigma< 31 > const)
+  {
+    upper.leftMultiply(Dirac::Pauli< 2 >(), -1);
+    lower.leftMultiply(Dirac::Pauli< 2 >(), -1);
+  }
+
+  template< >
+  inline void Spinor::leftMultiply(Dirac::Sigma< 32 > const)
+  {
+    upper.leftMultiply(Dirac::Pauli< 1 >());
+    lower.leftMultiply(Dirac::Pauli< 1 >());
+  }
+
+}
+

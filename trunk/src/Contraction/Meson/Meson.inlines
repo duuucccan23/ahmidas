@@ -1,0 +1,7 @@
+namespace Contraction
+{
+  template< size_t IndexSource, size_t IndexSink >
+  inline MesonLightLight< IndexSource, IndexSink >::MesonLightLight(Core::Grid &grid)
+    : d_grid(grid), d_buffer(new std::complex<double>[grid.volume()])
+  {}
+}

@@ -1,0 +1,107 @@
+namespace Core
+{
+  // MPI was only designed with ints. This means my choice for uints necessitates many casts.
+  // I could change my choice, or maybe try and write some nice wrapping for the MPI functions
+
+  template< size_t L, size_t T >
+  Grid< L, T >::Grid()
+    : d_bufferVolume(0)
+  {
+    size_t gridSize = static_cast< size_t >(MPI::COMM_WORLD.Get_size());
+    if (totalVolume() % gridSize) // No balanced distribution available
+      MPI::COMM_WORLD.Abort(EDEADLK);
+
+    d_localVolume = totalVolume() / gridSize;
+
+    // Compute the gcd using the Euclidian algorithm
+    {
+      size_t high = std::max(T, gridSize);
+      size_t low  = std::min(T, gridSize);
+
+      while (high % low)
+      {
+        std::swap(high, low);
+        low = low % high; // NB Already swapped...
+      }
+
+      d_dims[idx_T] = low;
+    }
+
+    // The other nodes should be used to divide the spatial part
+    {
+      size_t spatSize = gridSize / d_dims[idx_T];
+      size_t fac[3] = {1, 1, 1};
+
+      size_t idx = 0;
+      size_t div = 2;
+
+      // We prime factorize the remainder and distribute the factors
+      while (spatSize != 1)
+      {
+        if (spatSize % div)
+        {
+          ++div;
+          continue;
+        }
+        spatSize /= div;
+        fac[idx++] *= div;
+        idx %= 3;
+      }
+
+      d_dims[idx_X] = fac[0];
+      d_dims[idx_Y] = fac[1];
+      d_dims[idx_Z] = fac[2];
+    }
+
+    d_sizes[idx_T] = T / d_dims[idx_T];
+    d_sizes[idx_X] = L / d_dims[idx_X];
+    d_sizes[idx_Y] = L / d_dims[idx_Y];
+    d_sizes[idx_Z] = L / d_dims[idx_Z];
+
+    // With the dimensions determined, we create a Cartesian communicator
+    {
+      bool wrap[] = {true, true, true, true};
+      int intGrid[4];
+      std::copy(d_dims, d_dims + 4, intGrid);
+
+      d_grid = MPI::COMM_WORLD.Create_cart(4 /* ndims */, intGrid, wrap, true /* reorder */);
+      
+      bool boolGrid[4];
+      std::fill(boolGrid, boolGrid + 4, false);
+      boolGrid[idx_T] = true;
+      d_timeSlice = d_grid.Sub(boolGrid);
+
+      d_grid.Get_coords(d_grid.Get_rank(), 4, intGrid);
+      std::copy(intGrid, intGrid + 4, d_coords);
+    }
+
+    // Calculate and store the local volume for the distribution just constructed
+    d_surfaces[idx_Z] = 1;
+    d_surfaces[idx_Y] = d_surfaces[idx_Z] * d_sizes[idx_Z];
+    d_surfaces[idx_X] = d_surfaces[idx_Y] * d_sizes[idx_Y];
+    d_surfaces[idx_T] = d_surfaces[idx_X] * d_sizes[idx_X];
+
+    // We want to make sure the setup is consistent, since errors here will be hard
+    // enough to trace as it is...
+    assert((d_surfaces[idx_T] * d_sizes[idx_T]) == d_localVolume);
+
+    // Finally, we'd like to know the 3D volume of each dimension,
+    // and the largest volume over which we will be using communication
+    for (size_t ctr = 0; ctr < 4; ++ctr)
+    {
+      d_volumes[ctr] = d_localVolume / d_dims[ctr];
+      if (d_dims[ctr] != 1 && d_volumes[ctr] > d_bufferVolume)
+        d_bufferVolume = d_volumes[ctr];
+    }
+  }
+
+  template< size_t L, size_t T >
+  size_t Core::Grid< L, T >::contiguousBlock() const
+  {
+    size_t cutIdx = 0;
+    for (; cutIdx < 4; ++cutIdx)
+      if (d_dims[cutIdx] > 1)
+        break;
+    return localVolume(cutIdx);
+  }
+}

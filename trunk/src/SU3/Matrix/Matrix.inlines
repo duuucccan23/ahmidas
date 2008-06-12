@@ -1,0 +1,122 @@
+namespace SU3
+{
+  inline Matrix::Matrix()
+  {}
+  
+  inline Matrix::Matrix(double *data)
+  {
+    std::copy(data, data + 18, reinterpret_cast< double* >(d_data));
+  }
+  
+  inline Matrix::Matrix(std::complex< double > *data)
+  {
+    std::copy(data, data + 9, d_data);
+  }
+  
+  inline Matrix::Matrix(Matrix const &other)
+  {
+    std::copy(other.d_data, other.d_data + 9, d_data);
+  }
+
+  inline Matrix &Matrix::operator=(Matrix const &other)
+  {
+    if (&other != this)
+      std::copy(other.d_data, other.d_data + 9, d_data);
+    return *this;
+  }
+  
+  inline Matrix const &Matrix::identity()
+  {
+    return s_identity;
+  }
+  
+  inline Matrix const &Matrix::zero()
+  {
+    return s_zero;
+  }
+
+  inline Matrix::~Matrix()
+  {}
+  
+  inline std::complex< double > &Matrix::operator()(int i, int j)
+  {
+    return d_data[i * 3 + j];
+  }
+  
+  inline std::complex< double > const &Matrix::operator()(int i, int j) const
+  {
+    return d_data[i * 3 + j];  
+  }
+
+  template< typename T >
+  inline Matrix &Matrix::operator+=(T const &rhand)
+  {
+    for (size_t ctr = 0; ctr < 9; ++ctr)
+      d_data[ctr] += rhand;
+    return *this;
+  }
+
+  template< >
+  inline Matrix &Matrix::operator+=(Matrix const &rhand)
+  {
+    for (size_t ctr = 0; ctr < 9; ++ctr)
+      d_data[ctr] += rhand.d_data[ctr];
+    return *this;
+  }
+  
+  template< typename T >
+  inline Matrix &Matrix::operator-=(T const &rhand)
+  {
+    for (size_t ctr = 0; ctr < 9; ++ctr)
+      d_data[ctr] -= rhand;
+    return *this;
+  }
+  
+  template< >
+  inline Matrix &Matrix::operator-=(Matrix const &rhand)
+  {
+    for (size_t ctr = 0; ctr < 9; ++ctr)
+      d_data[ctr] -= rhand.d_data[ctr];
+    return *this;
+  }
+  
+  template< typename T >
+  inline Matrix &Matrix::operator*=(T const &rhand)
+  {
+    for (size_t ctr = 0; ctr < 9; ++ctr)
+      d_data[ctr] *= rhand;
+    return *this;
+  }
+
+  template< >
+  inline Matrix &Matrix::operator*=(Matrix const &rhand)
+  {
+    rightMultiply(rhand);
+    return *this;
+  }
+
+  template< >
+  inline Matrix &Matrix::operator*=(hcMatrix const &rhand)
+  {
+    rightMultiply(rhand);
+    return *this;
+  }
+  
+  template< typename T >
+  inline Matrix &Matrix::operator/=(T const &rhand)
+  {
+    for (size_t ctr = 0; ctr < 9; ++ctr)
+      d_data[ctr] /= rhand;
+    return *this;
+  }
+  
+  inline hcMatrix const Matrix::dagger()
+  {
+    return hcMatrix(*this);
+  }
+  
+  inline std::complex < double > Matrix::sign(std::complex< double > const &x)
+  {
+    return x / abs(x);
+  }
+}

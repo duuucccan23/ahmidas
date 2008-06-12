@@ -1,0 +1,143 @@
+namespace Core
+{
+  template< typename Element, typename Atom >
+  inline Component< Element, Atom >::Component(Field< Element > &parent, short component)
+    : d_parent(parent), d_component(component)
+  {}
+
+  template< typename Element, typename Atom >
+  inline Atom& element(short const *idx)
+  {
+    return d_parent.element(idx)[d_component];
+  }
+
+  template< typename Element, typename Atom >
+  template< typename Scalar >
+  inline void Component< Element, Atom >::leftMultiply(Scalar const &scalar)
+  {
+    for (iterator iter = begin(); iter != end(); ++iter)
+      iter->leftMultiply(scalar);
+  }
+  
+  template< typename Element, typename Atom >  
+  template< typename OtherElement >
+  inline void leftMultiply(Field< OtherElement > const &field)
+  {
+    for (iterator iter = begin(), Field< OtherElement >::iterator fIter = field.begin(); 
+         iter != end(); ++iter)
+      iter->leftMultiply(*fiter);
+  }      
+  
+  template< typename Element, typename Atom >    
+  template< typename OtherElement, typename OtherAtom  >
+  void leftMultiply(Component< OtherElement, OtherAtom > const &other)
+  {
+    for (iterator iter = begin(), Component< OtherElement, OtherAtom >::iterator cIter = other.begin(); 
+         iter != end(); ++iter, cIter)
+      iter->leftMultiply(*cIter);
+  }      
+  
+  template< typename Element, typename Atom >
+  template< typename Scalar >
+  inline void Component< Element, Atom >::rightMultiply(Scalar const &scalar)
+  {
+    for (iterator iter = begin(); iter != end(); ++iter)
+      iter->rightMultiply(scalar);
+  }
+  
+  template< typename Element, typename Atom >  
+  template< typename OtherElement >
+  inline void rightMultiply(Field< OtherElement > const &field)
+  {
+    for (iterator iter = begin(), Field< OtherElement >::iterator fIter = field.begin(); 
+         iter != end(); ++iter)
+      iter->rightMultiply(*fiter);
+  }      
+  
+  template< typename Element, typename Atom >    
+  template< typename OtherElement, typename OtherAtom  >
+  inline void rightMultiply(Component< OtherElement, OtherAtom > const &other)
+  {
+    for (iterator iter = begin(), Component< OtherElement, OtherAtom >::iterator cIter = other.begin(); 
+         iter != end(); ++iter, ++cIter)
+      iter->rightMultiply(*cIter);
+  }            
+  
+  template< typename OtherElement >
+  inline Component< Element, Atom > &operator+=(Field< OtherElement > const &other)
+  {
+    for (iterator iter = begin(), Field< OtherElement >::iterator fIter = field.begin(); 
+         iter != end(); ++iter)
+      iter->operator+=(*fiter);
+  }
+  
+  template< typename OtherElement, typename OtherAtom  >
+  inline Component< Element, Atom > &operator+=(Component< OtherElement, OtherAtom > const &other)
+  {
+    for (iterator iter = begin(), Component< OtherElement, OtherAtom >::iterator cIter = other.begin(); 
+         iter != end(); ++iter, ++cIter)
+      iter->operator+=(*cIter);
+  }         
+  
+  template< typename OtherElement >
+  inline Component< Element, Atom > &operator-=(Field< OtherElement > const &other)
+  {
+    for (iterator iter = begin(), Field< OtherElement >::iterator fIter = field.begin(); 
+         iter != end(); ++iter)
+      iter->operator-=(*fiter);
+  }
+  
+  template< typename OtherElement, typename OtherAtom  >
+  inline Component< Element, Atom > &operator-=(Component< OtherElement, OtherAtom > const &other)
+  {
+    for (iterator iter = begin(), Component< OtherElement, OtherAtom >::iterator cIter = other.begin(); 
+         iter != end(); ++iter, ++cIter)
+      iter->operator-=(*cIter);
+  }  
+
+  template< typename Scalar >
+  inline Component< Element, Atom > &operator*=(Scalar const &scalar)
+  {
+    for (iterator iter = begin(); iter != end(); ++iter)
+      iter->operator*=(scalar);
+  }  
+
+  template< typename OtherElement >
+  inline Component< Element, Atom > &operator*=(Field< OtherElement > const &field)
+  {
+    for (iterator iter = begin(), Field< OtherElement >::iterator fIter = field.begin(); 
+         iter != end(); ++iter)
+      iter->operator*=(*fiter);
+  }           
+      
+  template< typename OtherElement, typename OtherAtom >
+  inline Component< Element, Atom > &operator*=(Component< OtherElement, OtherAtom > const &field)
+  {
+    for (iterator iter = begin(), Component< OtherElement, OtherAtom >::iterator cIter = other.begin(); 
+         iter != end(); ++iter, ++cIter)
+      iter->operator*=(*cIter);
+  }        
+  
+  template< typename Scalar >
+  inline Component< Element, Atom > &operator/=(Scalar const &scalar)
+  {
+    for (iterator iter = begin(); iter != end(); ++iter)
+      iter->operator/=(scalar);
+  }
+  
+  template< typename OtherElement >
+  inline Component< Element, Atom > &operator/=(Field< OtherElement > const &field)
+  {
+    for (iterator iter = begin(), Field< OtherElement >::iterator fIter = field.begin(); 
+         iter != end(); ++iter)
+      iter->operator/=(*fiter);
+  }           
+      
+  template< typename OtherElement, typename OtherAtom >
+  inline Component< Element, Atom > &operator/=(Component< OtherElement, OtherAtom > const &field)
+  {
+    for (iterator iter = begin(), Component< OtherElement, OtherAtom >::iterator cIter = other.begin(); 
+         iter != end(); ++iter, ++cIter)
+      iter->operator/=(*cIter);
+  }  
+}

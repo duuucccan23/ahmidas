@@ -1,0 +1,106 @@
+namespace QCD
+{
+  inline Spinor::Spinor()
+  {}
+  
+  inline Spinor::Spinor(SU3::Vector const &value)
+  {
+    std::fill(d_data, d_data + 4, value);
+  }
+  
+  inline Spinor::Spinor(Spinor const &other)
+  {
+    std::copy(other.d_data, other.d_data + 4, d_data);
+  }
+  
+  inline Spinor::Spinor(double const *data)
+  {
+    std::copy(data, data + 24, reinterpret_cast< double* >(d_data)); // NOTE Tricky... check this!
+  }
+
+  inline Spinor::Spinor(std::complex< double > const *data)
+  {
+    std::copy(data, data + 12, reinterpret_cast< std::complex< double >* >(d_data));
+  }
+      
+  template< typename T >
+  inline Spinor &Spinor::operator+=(T const &rhand)
+  {
+    // NOTE Maybe use mem_fun_ref, but that needs experimentation.
+    for (SU3::Vector *iter = d_data; iter < d_data + 4; ++iter)
+      *iter += rhand;
+    return *this;
+  }
+      
+  template< >
+  inline Spinor &Spinor::operator+=(Spinor const &rhand)
+  {
+    for (size_t ctr = 0; ctr < 4; ++ctr)
+      d_data[ctr] += rhand.d_data[ctr];
+    return *this;
+  }
+
+  template< typename T >
+  inline Spinor &Spinor::operator-=(T const &rhand)
+  {
+    for (SU3::Vector *iter = d_data; iter < d_data + 4; ++iter)
+      *iter -= rhand;
+    return *this;
+  }      
+  
+  template< >
+  inline Spinor &Spinor::operator-=(Spinor const &rhand)
+  {
+    for (size_t ctr = 0; ctr < 4; ++ctr)
+      d_data[ctr] -= rhand.d_data[ctr];
+    return *this;
+  }      
+      
+  template< typename T >
+  inline Spinor &Spinor::operator*=(T const &rhand)
+  {
+    for (SU3::Vector *iter = d_data; iter < d_data + 4; ++iter)
+      *iter *= rhand;
+    return *this;
+  }
+
+  template< typename T >
+  inline Spinor &Spinor::operator/=(T const &rhand)
+  {
+    for (SU3::Vector *iter = d_data; iter < d_data + 4; ++iter)
+      *iter /= rhand;
+    return *this;
+  }
+      
+  inline void Spinor::leftMultiply(SU3::Matrix const &mat)
+  {
+    for (SU3::Vector *iter = d_data; iter < d_data + 4; ++iter)
+      iter->leftMultiply(mat);
+  }      
+
+  inline void Spinor::leftMultiply(SU3::hcMatrix const &mat)
+  {
+    for (SU3::Vector *iter = d_data; iter < d_data + 4; ++iter)
+      iter->leftMultiply(mat);
+  }
+
+  inline SU3::Vector &Spinor::operator[](short component)
+  {
+    return d_data[component];
+  }
+  
+  inline SU3::Vector const &Spinor::operator[](short component) const
+  {
+    return d_data[component];
+  }
+  
+  inline WeylSpinor Spinor::upper()
+  {
+    return WeylSpinor(d_data);
+  }
+  
+  inline WeylSpinor Spinor::lower()
+  {
+    return WeylSpinor(d_data + 2);
+  }
+}

@@ -65,7 +65,7 @@ namespace Core
       std::copy(d_dims, d_dims + 4, intGrid);
 
       d_grid = MPI::COMM_WORLD.Create_cart(4 /* ndims */, intGrid, wrap, true /* reorder */);
-      
+
       bool boolGrid[4];
       std::fill(boolGrid, boolGrid + 4, false);
       boolGrid[idx_T] = true;

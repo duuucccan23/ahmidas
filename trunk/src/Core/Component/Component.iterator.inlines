@@ -4,12 +4,12 @@ namespace Core
   inline Component< Element, Atom >::iterator::iterator(Field< Element >::iterator &iterator, short component)
     : d_iterator(iterator), d_component(component)
   {}
-  
+
   template< typename Element, typename Atom >
   inline Component< Element, Atom >::iterator::iterator(iterator const &other)
    : d_iterator(other.d_iterator), d_component(other.d_component)
   {}
-        
+
   template< typename Element, typename Atom >
   inline Component< Element, Atom >::iterator &Component< Element, Atom >::iterator::operator--()
   {
@@ -17,24 +17,24 @@ namespace Core
     return *this;
   }
 
-  template< typename Element, typename Atom >  
+  template< typename Element, typename Atom >
   inline Component< Element, Atom >::iterator const Component< Element, Atom >::iterator::operator--(int)
   {
     return iterator(d_iterator--, d_component);
   }
 
-  template< typename Element, typename Atom >  
+  template< typename Element, typename Atom >
   inline Component< Element, Atom >::iterator &Component< Element, Atom >::iterator::operator++()
   {
     ++d_iterator;
     return *this;
   }
 
-  template< typename Element, typename Atom >  
+  template< typename Element, typename Atom >
   inline Component< Element, Atom >::iterator const Component< Element, Atom >::iterator::operator++(int)
   {
     return iterator(d_iterator++, d_component);
-  }  
+  }
 
   template< typename Element, typename Atom >
   inline bool Component< Element, Atom >::iterator::operator==(iterator const &other) const
@@ -65,7 +65,7 @@ namespace Core
   {
     return *(d_iterator->operator[](d_component));
   }
-  
+
   template< typename Element, typename Atom >
   inline Atom const *Component< Element, Atom >::iterator::operator->() const
   {

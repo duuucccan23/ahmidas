@@ -7,6 +7,7 @@ int main(int argc, char **argv)
 {
   MPI::Init(argc, argv);
   Core::Grid< 4, 8 > grid;
+
   Core::Field< QCD::Spinor, 4, 8 > spinor(grid);
   Core::Buffer< QCD::Spinor > buffer(grid);
 

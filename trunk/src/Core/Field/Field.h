@@ -13,6 +13,7 @@ namespace Core
   {
     Grid< L, T >  &d_grid;
     size_t         d_offsets[4];
+    size_t         d_bufferSize;
     MPI::Datatype  d_surfaces[4];
 
     Element  *d_buffer;

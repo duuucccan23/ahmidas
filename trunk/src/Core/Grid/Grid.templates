@@ -89,7 +89,7 @@ namespace Core
     // and the largest volume over which we will be using communication
     for (size_t ctr = 0; ctr < 4; ++ctr)
     {
-      d_volumes[ctr] = d_localVolume / d_dims[ctr];
+      d_volumes[ctr] = d_localVolume / d_sizes[ctr];
       if (d_dims[ctr] != 1 && d_volumes[ctr] > d_bufferVolume)
         d_bufferVolume = d_volumes[ctr];
     }

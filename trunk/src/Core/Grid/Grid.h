@@ -29,7 +29,7 @@ namespace Core
     public:
       Grid();
       ~Grid();
-      
+
       MPI::Cartcomm &grid();
       MPI::Cartcomm &timeSlice();
 
@@ -49,7 +49,7 @@ namespace Core
       size_t surface(size_t idx) const;
 
       size_t neighbour(SpaceTimeIndex idx, Direction dir) const;
-      
+
       size_t bufferVolume() const;
       size_t contiguousBlock() const;
   };

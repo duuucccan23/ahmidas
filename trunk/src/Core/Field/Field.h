@@ -44,34 +44,12 @@ namespace Core
 
       Field< Element, L, T > &shift(SpaceTimeIndex idx, Direction shift);
 
-      template< typename Type >
-      void leftMultiply(Field< Type, L, T > const &other);
-
-      template< typename Type >
-      void rightMultiply(Field< Type, L, T > const &other);
-
-      template< typename Type >
-      Field< Element, L, T > &operator+=(Type const &rhand);
-
-      template< typename Type >
-      Field< Element, L, T > &operator+=(Field< Type, L, T > const &rhand);
-
-      template< typename Type >
-      Field< Element, L, T > &operator-=(Type const &rhand);
-
-      template< typename Type >
-      Field< Element, L, T > &operator-=(Field< Type, L, T > const &rhand);
-
-      template< typename Type >
-      Field< Element, L, T > &operator*=(Type const &rhand);
-
-      template< typename Type >
-      Field< Element, L, T > &operator*=(Field< Type, L, T > const &rhand);
-
-      template< typename Type >
-      Field< Element, L, T > &operator/=(Type const &rhand);
+#include "Field.operators"
 
       void reunitarize();
+         
+      template< typename ElementArray >
+      void averageTimeSlice(ElementArray *result);
 
     private:
       void setSurfaces();

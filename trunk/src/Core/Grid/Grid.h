@@ -33,8 +33,10 @@ namespace Core
       MPI::Cartcomm &grid();
       MPI::Cartcomm &timeSlice();
 
+      size_t rank() const;      
+
       size_t const *coords() const;
-      size_t rank() const;
+      size_t coord(size_t idx) const;
 
       size_t const *dims() const;
       size_t dim(size_t idx) const;

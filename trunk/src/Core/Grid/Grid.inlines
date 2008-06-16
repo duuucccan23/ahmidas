@@ -17,15 +17,21 @@ namespace Core
   }
   
   template< size_t L, size_t T >
+  inline size_t Grid< L, T >::rank() const
+  {
+    return d_grid.Get_rank();
+  }  
+  
+  template< size_t L, size_t T >
   inline size_t const* Grid< L, T >::coords() const
   {
     return d_coords;
   }
 
   template< size_t L, size_t T >
-  inline size_t Grid< L, T >::rank() const
+  inline size_t Grid< L, T >::coord(size_t idx) const
   {
-    return d_grid.Get_rank();
+    return d_coords[idx];
   }
 
   template< size_t L, size_t T >

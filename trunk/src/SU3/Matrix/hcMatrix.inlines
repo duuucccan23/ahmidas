@@ -1,5 +1,20 @@
 namespace SU3
 {
+  inline std::complex< double > det(hcMatrix const &mat)
+  {
+    return std::conj(det(d_parent));
+  }
+  
+  inline std::complex< double > tr(hcMatrix const &mat)
+  {
+    return std::conj(tr(d_parent));
+  }
+  
+  inline std::complex< double > minorSum(hcMatrix const &mat)
+  {
+    return std::conj(minorSum(d_parent));
+  }
+  
   inline hcMatrix::hcMatrix(Matrix const &parent)
     : d_parent(parent)
   {}

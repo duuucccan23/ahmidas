@@ -5,7 +5,17 @@
 
 namespace SU3
 {
+  class Matrix;
   class hcMatrix;
+  
+  std::complex< double > det(Matrix const &mat);
+  std::complex< double > det(hcMatrix const &mat);
+  
+  std::complex< double > tr(Matrix const &mat);
+  std::complex< double > tr(hcMatrix const &mat);
+  
+  std::complex< double > minorSum(Matrix const &mat);
+  std::complex< double > minorSum(hcMatrix const &mat);
   
   class Matrix
   {
@@ -52,13 +62,21 @@ namespace SU3
       void rightMultiply(hcMatrix const &other);           
       
       hcMatrix const dagger();
+      
       void reunitarize();
-      void reunitarize_wrong();
+      
+      friend std::complex< double > det(Matrix const &mat);
+      friend std::complex< double > tr(Matrix const &mat);
+      friend std::complex< double > minorSum(Matrix const &mat);
       
     private:
       void givens(std::complex< double > &c, std::complex< double > &s, 
                   std::complex< double > const &f, std::complex< double > const &g);
       std::complex< double > sign(std::complex< double > const &x);
+      
+      std::complex< double > det(std::complex< double > const *data);
+      std::complex< double > tr(std::complex< double > const *data);
+      std::complex< double > minorSum(std::complex< double > const *data);
   };
 
   class hcMatrix
@@ -71,6 +89,10 @@ namespace SU3
     
     public:
       Matrix const &dagger() const;
+      
+      friend std::complex< double > det(hcMatrix const &mat);
+      friend std::complex< double > tr(hcMatrix const &mat);
+      friend std::complex< double > minorSum(hcMatrix const &mat);
   };
 }
 

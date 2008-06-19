@@ -9,12 +9,7 @@ namespace SU3
   {
     return std::conj(tr(d_parent));
   }
-  
-  inline std::complex< double > minorSum(hcMatrix const &mat)
-  {
-    return std::conj(minorSum(d_parent));
-  }
-  
+
   inline hcMatrix::hcMatrix(Matrix const &parent)
     : d_parent(parent)
   {}

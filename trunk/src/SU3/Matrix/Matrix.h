@@ -14,9 +14,6 @@ namespace SU3
   std::complex< double > tr(Matrix const &mat);
   std::complex< double > tr(hcMatrix const &mat);
   
-  std::complex< double > minorSum(Matrix const &mat);
-  std::complex< double > minorSum(hcMatrix const &mat);
-  
   class Matrix
   {
     std::complex< double > d_data[9];
@@ -67,16 +64,14 @@ namespace SU3
       
       friend std::complex< double > det(Matrix const &mat);
       friend std::complex< double > tr(Matrix const &mat);
-      friend std::complex< double > minorSum(Matrix const &mat);
       
     private:
       void givens(std::complex< double > &c, std::complex< double > &s, 
                   std::complex< double > const &f, std::complex< double > const &g);
       std::complex< double > sign(std::complex< double > const &x);
       
-      std::complex< double > det(std::complex< double > const *data);
-      std::complex< double > tr(std::complex< double > const *data);
-      std::complex< double > minorSum(std::complex< double > const *data);
+      std::complex< double > det(std::complex< double > const *data) const;
+      std::complex< double > tr(std::complex< double > const *data) const;
   };
 
   class hcMatrix
@@ -92,7 +87,6 @@ namespace SU3
       
       friend std::complex< double > det(hcMatrix const &mat);
       friend std::complex< double > tr(hcMatrix const &mat);
-      friend std::complex< double > minorSum(hcMatrix const &mat);
   };
 }
 

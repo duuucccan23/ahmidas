@@ -42,6 +42,9 @@ void SU3::Matrix::reunitarize()
   
   // We calculate the distinct elements of H2, using hermiticity to avoid calculations left and right.
   
+  static double const fac_1_3 = 1.0 / 3.0;
+  static double const fac_2pi_3 = fac_1_3 * 4 * std::acos(0.0);
+  
   double H2_diag[3] = 
   {
     std::norm(d_data[0]) + std::norm(d_data[3]) + std::norm(d_data[6]),
@@ -58,23 +61,29 @@ void SU3::Matrix::reunitarize()
   
   double H2_off_norm[3] = {std::norm(H2_off[0]), std::norm(H2_off[1]), std::norm(H2_off[2])};  
   
-  double detH2 =   H2_diag[0] * H2_diag[1] * H2_diag[2] 
-                 + 2 * std::real(H2_off[0] * std::conj(H2_off[1]) * H2_off[2])
-                 - H2_diag[0] * H2_off_norm[2] - H2_diag[1] * H2_off_norm[1] - H2_diag[2] * H2_off_norm[0];
-  double trH2  =   H2_diag[0] + H2_diag[1] + H2_diag[2];
-  double trH2_2 =  trH2 * trH2;
-  double c2H2  =   H2_diag[0] * (H2_diag[1] + H2_diag[2]) + H2_diag[1] * H2_diag[2] 
-                 - H2_off_norm[0] - H2_off_norm[1] - H2_off_norm[2];
+  // a_3 = -(1/3) * tr(H2)
+  double a_3 = - fac_1_3 * (H2_diag[0] + H2_diag[1] + H2_diag[2]);
+  // b = c2(H2)
+  double b =     H2_diag[0] * (H2_diag[1] + H2_diag[2]) + H2_diag[1] * H2_diag[2] 
+               - H2_off_norm[0] - H2_off_norm[1] - H2_off_norm[2];
+  // c = - det(H2)
+  double c =   - H2_diag[0] * H2_diag[1] * H2_diag[2] 
+               - 2 * std::real(H2_off[0] * std::conj(H2_off[1]) * H2_off[2])
+               + H2_diag[0] * H2_off_norm[2] + H2_diag[1] * H2_off_norm[1] 
+               + H2_diag[2] * H2_off_norm[0];
   
-  double pfac  = 2 * std::sqrt(trH2_2 - 3 * c2H2); 
-  double tabc  = (2 * trH2 * (trH2_2 - 9 * c2H2) + 27 * detH2) / (pfac * (trH2_2 - 3 * c2H2));
-  double fac3  = 1.0 / 3.0;
+  double Q  = a_3 * a_3 - fac_1_3 * b;
+  double sqrt_Q = std::sqrt(Q);
   
-  pfac *= fac3;
+  double R  = a_3 * a_3 * a_3 + 0.5 * (detH2 - a_3 * b);
   
-  double r0 = pfac * std::cos(fac3 * std::acos(tabc)) + fac3 * trH2;
-  double r1 = -pfac * std::cos(fac3 * std::acos(-tabc)) + fac3 * trH2;
-  double r2 = trH2 - r0 - r1;
+  double theta = fac_1_3 * std::acos(std::sqrt(R) / (Q * sqrt_Q)));
+  
+  double lambda[3] = { -2 * sqrt_Q * std::cos(theta) - a_3,
+                       -2 * sqrt_Q * std::cos(theta + fac_2pi_3) - a_3,
+                       -2 * sqrt_Q * std::cos(theta - fac_2pi_3) - a_3 };
+  
   
   // TODO Find eigenvectors, etc...
 }
+

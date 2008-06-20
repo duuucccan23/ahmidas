@@ -38,17 +38,17 @@ void SU3::Matrix::reunitarize()
   double b =     H2_diag[0] * (H2_diag[1] + H2_diag[2]) + H2_diag[1] * H2_diag[2]
                - H2_off_norm[0] - H2_off_norm[1] - H2_off_norm[2];
   // c = - det(H2)
-  double c =   - H2_diag[0] * H2_diag[1] * H2_diag[2]
-               - 2 * std::real(H2_off[0] * std::conj(H2_off[1]) * H2_off[2])
-               + H2_diag[0] * H2_off_norm[2] + H2_diag[1] * H2_off_norm[1]
-               + H2_diag[2] * H2_off_norm[0];
+  double c = - H2_diag[0] * H2_diag[1] * H2_diag[2]
+             - 2 * std::real(H2_off[0] * std::conj(H2_off[1]) * H2_off[2])
+             + H2_diag[0] * H2_off_norm[2] + H2_diag[1] * H2_off_norm[1]
+             + H2_diag[2] * H2_off_norm[0];
 
   double Q  = a_3_2 - fac_1_3 * b;
   double sqrt_Q = std::sqrt(Q);
   double sqrt_min_2Q = -2 * sqrt_Q;
 
-  // theta_3 = 1/3 * acos(sqrt(R)/sqrt(Q^3))
-  double theta_3 = fac_1_3 * std::acos(std::sqrt(a_3_2 * a_3 + 0.5 * (detH2 - a_3 * b)) / (Q * sqrt_Q)));
+  // theta_3 = 1/3 * acos(R/sqrt(Q^3))
+  double theta_3 = fac_1_3 * std::acos((a_3_2 * a_3 + 0.5 * (c - a_3 * b)) / (Q * sqrt_Q));
 
   double lambda[3] = { sqrt_min_2Q * std::cos(theta_3) - a_3,
                        sqrt_min_2Q * std::cos(theta_3 + fac_2pi_3) - a_3,
@@ -65,47 +65,46 @@ void SU3::Matrix::reunitarize()
   Matrix eigenVectors;
   for (size_t ctr = 0; ctr < 3; ++ctr)
   {
-    size_t offset = 3 * ctr;
-    eigenVectors.d_data[offset] = (v2_num_zero + H2_off[1] * lambda[ctr]) 
+    eigenVectors.d_data[ctr] = (v2_num_zero + H2_off[1] * lambda[ctr]) 
                                   / (v2_den_zero + v2_den_one * lambda[ctr] + lambda[ctr]*lambda[ctr]);
-    eigenVectors.d_data[offset + 1] = (std::conj(H2_off[0]) * eigenVectors[offset] + H2_off[2]) / (lambda[ctr] - H2_diag[1]);
-    double normal = std::pow(1 + eigenVectors[offset] * std::conj(eigenVectors[offset]) + eigenVectors[offset + 1] * std::conj(eigenVectors[offset + 1]), -0.5);
-    eigenVectors.d_data[offset]     *= normal;
-    eigenVectors.d_data[offset + 1] *= normal;
-    eigenVectors.d_data[offset + 2]  = normal;
+    eigenVectors.d_data[ctr + 3] = (std::conj(H2_off[0]) * eigenVectors.d_data[ctr] + H2_off[2]) / (lambda[ctr] - H2_diag[1]);
+    double normal = std::pow(1 + std::norm(eigenVectors.d_data[ctr]) + std::norm(eigenVectors.d_data[ctr + 3]), -0.5);
+    eigenVectors.d_data[ctr]     *= normal;
+    eigenVectors.d_data[ctr + 3] *= normal;
+    eigenVectors.d_data[ctr + 6]  = normal;
   }
 
   for (size_t ctr = 0; ctr < 3; ++ctr)
     lambda[ctr] = 1 / std::sqrt(lambda[ctr]);
 
-  // The following will perform the contraction U'*D-(1/2)*U
+  // The following will perform the contraction V*D-(1/2)*V'
   Matrix H;
   H.d_data[0] =   lambda[0] * eigenVectors.d_data[0] * std::conj(eigenVectors.d_data[0])
-                + lambda[1] * eigenVectors.d_data[3] * std::conj(eigenVectors.d_data[3])
-                + lambda[2] * eigenVectors.d_data[6] * std::conj(eigenVectors.d_data[6]);
-  H.d_data[1] =   lambda[0] * eigenVectors.d_data[0] * std::conj(eigenVectors.d_data[1])
-                + lambda[1] * eigenVectors.d_data[3] * std::conj(eigenVectors.d_data[4])
-                + lambda[2] * eigenVectors.d_data[6] * std::conj(eigenVectors.d_data[7]);
-  H.d_data[2] =   lambda[0] * eigenVectors.d_data[0] * std::conj(eigenVectors.d_data[2])
-                + lambda[1] * eigenVectors.d_data[3] * std::conj(eigenVectors.d_data[5])
-                + lambda[2] * eigenVectors.d_data[6] * std::conj(eigenVectors.d_data[8]);
-  H.d_data[3] =   lambda[0] * eigenVectors.d_data[1] * std::conj(eigenVectors.d_data[0])
-                + lambda[1] * eigenVectors.d_data[4] * std::conj(eigenVectors.d_data[3])
-                + lambda[2] * eigenVectors.d_data[7] * std::conj(eigenVectors.d_data[6]);
-  H.d_data[4] =   lambda[0] * eigenVectors.d_data[1] * std::conj(eigenVectors.d_data[1])
+                + lambda[1] * eigenVectors.d_data[1] * std::conj(eigenVectors.d_data[1])
+                + lambda[2] * eigenVectors.d_data[2] * std::conj(eigenVectors.d_data[2]);
+  H.d_data[1] =   lambda[0] * eigenVectors.d_data[0] * std::conj(eigenVectors.d_data[3])
+                + lambda[1] * eigenVectors.d_data[1] * std::conj(eigenVectors.d_data[4])
+                + lambda[2] * eigenVectors.d_data[2] * std::conj(eigenVectors.d_data[5]);
+  H.d_data[2] =   lambda[0] * eigenVectors.d_data[0] * std::conj(eigenVectors.d_data[6])
+                + lambda[1] * eigenVectors.d_data[1] * std::conj(eigenVectors.d_data[7])
+                + lambda[2] * eigenVectors.d_data[2] * std::conj(eigenVectors.d_data[8]);
+  H.d_data[3] =   lambda[0] * eigenVectors.d_data[3] * std::conj(eigenVectors.d_data[0])
+                + lambda[1] * eigenVectors.d_data[4] * std::conj(eigenVectors.d_data[1])
+                + lambda[2] * eigenVectors.d_data[5] * std::conj(eigenVectors.d_data[2]);
+  H.d_data[4] =   lambda[0] * eigenVectors.d_data[3] * std::conj(eigenVectors.d_data[3])
                 + lambda[1] * eigenVectors.d_data[4] * std::conj(eigenVectors.d_data[4])
-                + lambda[2] * eigenVectors.d_data[7] * std::conj(eigenVectors.d_data[7]);
-  H.d_data[5] =   lambda[0] * eigenVectors.d_data[1] * std::conj(eigenVectors.d_data[2])
-                + lambda[1] * eigenVectors.d_data[4] * std::conj(eigenVectors.d_data[5])
-                + lambda[2] * eigenVectors.d_data[7] * std::conj(eigenVectors.d_data[8]);
-  H.d_data[6] =   lambda[0] * eigenVectors.d_data[2] * std::conj(eigenVectors.d_data[0])
-                + lambda[1] * eigenVectors.d_data[5] * std::conj(eigenVectors.d_data[3])
-                + lambda[2] * eigenVectors.d_data[8] * std::conj(eigenVectors.d_data[6]);
-  H.d_data[7] =   lambda[0] * eigenVectors.d_data[2] * std::conj(eigenVectors.d_data[1])
-                + lambda[1] * eigenVectors.d_data[5] * std::conj(eigenVectors.d_data[4])
-                + lambda[2] * eigenVectors.d_data[8] * std::conj(eigenVectors.d_data[7]);
-  H.d_data[8] =   lambda[0] * eigenVectors.d_data[2] * std::conj(eigenVectors.d_data[2])
-                + lambda[1] * eigenVectors.d_data[5] * std::conj(eigenVectors.d_data[5])
+                + lambda[2] * eigenVectors.d_data[5] * std::conj(eigenVectors.d_data[5]);
+  H.d_data[5] =   lambda[0] * eigenVectors.d_data[3] * std::conj(eigenVectors.d_data[6])
+                + lambda[1] * eigenVectors.d_data[4] * std::conj(eigenVectors.d_data[7])
+                + lambda[2] * eigenVectors.d_data[5] * std::conj(eigenVectors.d_data[8]);
+  H.d_data[6] =   lambda[0] * eigenVectors.d_data[6] * std::conj(eigenVectors.d_data[0])
+                + lambda[1] * eigenVectors.d_data[7] * std::conj(eigenVectors.d_data[1])
+                + lambda[2] * eigenVectors.d_data[8] * std::conj(eigenVectors.d_data[2]);
+  H.d_data[7] =   lambda[0] * eigenVectors.d_data[6] * std::conj(eigenVectors.d_data[3])
+                + lambda[1] * eigenVectors.d_data[7] * std::conj(eigenVectors.d_data[4])
+                + lambda[2] * eigenVectors.d_data[8] * std::conj(eigenVectors.d_data[5]);
+  H.d_data[8] =   lambda[0] * eigenVectors.d_data[6] * std::conj(eigenVectors.d_data[6])
+                + lambda[1] * eigenVectors.d_data[7] * std::conj(eigenVectors.d_data[7])
                 + lambda[2] * eigenVectors.d_data[8] * std::conj(eigenVectors.d_data[8]);
 
   // We're almost done! All that remains is finishing off the matrix...

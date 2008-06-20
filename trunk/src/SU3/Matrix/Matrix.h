@@ -2,18 +2,21 @@
 #define GUARD_SU3_MATRIX_H
 
 #include <complex>
+#include <iostream>
 
 namespace SU3
 {
   class Matrix;
   class hcMatrix;
-  
+
   std::complex< double > det(Matrix const &mat);
   std::complex< double > det(hcMatrix const &mat);
-  
+
   std::complex< double > tr(Matrix const &mat);
   std::complex< double > tr(hcMatrix const &mat);
-  
+
+  std::ostream &operator<<(std::ostream &out, Matrix const &mat);
+
   class Matrix
   {
     std::complex< double > d_data[9];
@@ -51,24 +54,24 @@ namespace SU3
       template< typename T >
       Matrix &operator/=(T const &rhand);
 
-      
       void leftMultiply(Matrix const &other);
       void rightMultiply(Matrix const &other);
       
       void leftMultiply(hcMatrix const &other);
       void rightMultiply(hcMatrix const &other);           
       
-      hcMatrix const dagger();
+      hcMatrix const dagger() const;
       
       void reunitarize();
       
       friend std::complex< double > det(Matrix const &mat);
       friend std::complex< double > tr(Matrix const &mat);
-      
+      friend std::ostream &operator<<(std::ostream &out, Matrix const &mat);
+
     private:
       void givens(std::complex< double > &c, std::complex< double > &s, 
-                  std::complex< double > const &f, std::complex< double > const &g);
-      std::complex< double > sign(std::complex< double > const &x);
+                  std::complex< double > const &f, std::complex< double > const &g) const;
+      std::complex< double > sign(std::complex< double > const &x) const;
       
       std::complex< double > det(std::complex< double > const *data) const;
       std::complex< double > tr(std::complex< double > const *data) const;

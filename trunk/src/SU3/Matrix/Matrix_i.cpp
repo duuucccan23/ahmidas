@@ -1,6 +1,6 @@
 #include "Matrix.ih"
 
-void SU3::Matrix::givens(std::complex< double > &c, std::complex< double > &s, std::complex< double > const &f, std::complex < double > const &g)
+void SU3::Matrix::givens(std::complex< double > &c, std::complex< double > &s, std::complex< double > const &f, std::complex < double > const &g) const
 {
   if (g.real() == 0 && g.imag() == 0)
   {

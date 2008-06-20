@@ -1,5 +1,10 @@
 #include "Matrix.ih"
 
+// This reunitarization procedure implements the 'French method' in an explicit way.
+// It has been written like this to avoid the single dependency on the LAPACK library
+// that was present in previous code. Since this implementation was tailored for the
+// specific case of 3x3 hermitian matrices when it comes to the determination of eigenvalues,
+// it might also be faster.
 // See documentation on unitarization for further information.
 
 void SU3::Matrix::reunitarize()
@@ -50,8 +55,8 @@ void SU3::Matrix::reunitarize()
                        sqrt_min_2Q * std::cos(theta_3 - fac_2pi_3) - a_3 };
 
   // We now know the eigenvalues, time to determine the associated eigenvectors
-  // \bar(b) * c - e * a
-  std::complex< double > v2_num_zero = std::conj(H2_off[0]) * H2_off[1] - H2_off[2] * H2_diag[0];
+  // b * e - c * d
+  std::complex< double > v2_num_zero = H2_off[0] * H2_off[2] - H2_off[1] * H2_diag[1];
   // a*d - b\bar(b)
   std::complex< double > v2_den_zero = H2_diag[0] * H2_diag[1] - H2_off_norm[0];
   // -(a + d)
@@ -61,9 +66,10 @@ void SU3::Matrix::reunitarize()
   for (size_t ctr = 0; ctr < 3; ++ctr)
   {
     size_t offset = 3 * ctr;
-    eigenVectors.d_data[offset + 1] = (v2_num_zero + H2_off[2] * lambda[ctr]) / (v2_den_zero + v2_den_one * lambda[ctr] + lambda_2);
-    eigenVectors.d_data[offset] = (H2_off[0] * eigenVectors[offset + 1] + H2_off[1]) / (lambda[ctr] - H2_diag[0]);
-    double normal = std::pow(1 + eigenVectors[offset] * std::conj(eigenVectors[offset]) + eigenVectors[offset + 1] * std::conj(eigenVectors[offset + 1]), fac_1_3);
+    eigenVectors.d_data[offset] = (v2_num_zero + H2_off[1] * lambda[ctr]) 
+                                  / (v2_den_zero + v2_den_one * lambda[ctr] + lambda[ctr]*lambda[ctr]);
+    eigenVectors.d_data[offset + 1] = (std::conj(H2_off[0]) * eigenVectors[offset] + H2_off[2]) / (lambda[ctr] - H2_diag[1]);
+    double normal = std::pow(1 + eigenVectors[offset] * std::conj(eigenVectors[offset]) + eigenVectors[offset + 1] * std::conj(eigenVectors[offset + 1]), -fac_1_3);
     eigenVectors.d_data[offset]     *= normal;
     eigenVectors.d_data[offset + 1] *= normal;
     eigenVectors.d_data[offset + 2]  = normal;
@@ -72,8 +78,7 @@ void SU3::Matrix::reunitarize()
   for (size_t ctr = 0; ctr < 3; ++ctr)
     lambda[ctr] = 1 / std::sqrt(lambda[ctr]);
 
-  // NOTE I'm not sure if it makes sense to store an array of conjugated eigenvectors...
-  // In any case: the following will perform the contraction U'*D-(1/2)*U
+  // The following will perform the contraction U'*D-(1/2)*U
   Matrix H;
   H.d_data[0] =   lambda[0] * eigenVectors.d_data[0] * std::conj(eigenVectors.d_data[0])
                 + lambda[1] * eigenVectors.d_data[3] * std::conj(eigenVectors.d_data[3])
@@ -105,5 +110,5 @@ void SU3::Matrix::reunitarize()
 
   // We're almost done! All that remains is finishing off the matrix...
   rightMultiply(H);
-  operator/=(std::pow(det(d_data), fac_1_3));
+  operator*=(std::pow(det(d_data), -fac_1_3));
 }

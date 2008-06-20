@@ -69,7 +69,7 @@ void SU3::Matrix::reunitarize()
     eigenVectors.d_data[offset] = (v2_num_zero + H2_off[1] * lambda[ctr]) 
                                   / (v2_den_zero + v2_den_one * lambda[ctr] + lambda[ctr]*lambda[ctr]);
     eigenVectors.d_data[offset + 1] = (std::conj(H2_off[0]) * eigenVectors[offset] + H2_off[2]) / (lambda[ctr] - H2_diag[1]);
-    double normal = std::pow(1 + eigenVectors[offset] * std::conj(eigenVectors[offset]) + eigenVectors[offset + 1] * std::conj(eigenVectors[offset + 1]), -fac_1_3);
+    double normal = std::pow(1 + eigenVectors[offset] * std::conj(eigenVectors[offset]) + eigenVectors[offset + 1] * std::conj(eigenVectors[offset + 1]), -0.5);
     eigenVectors.d_data[offset]     *= normal;
     eigenVectors.d_data[offset + 1] *= normal;
     eigenVectors.d_data[offset + 2]  = normal;

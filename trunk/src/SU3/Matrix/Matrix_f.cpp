@@ -44,6 +44,12 @@ void SU3::Matrix::reunitarize()
              + H2_diag[2] * H2_off_norm[0];
 
   double Q  = a_3_2 - fac_1_3 * b;
+  double R  = ;
+  if (Q == 0) // We should already be unitary...
+  {
+    operator*=(std::pow(det(d_data), -fac_1_3));
+    return;
+  }
   double sqrt_Q = std::sqrt(Q);
   double sqrt_min_2Q = -2 * sqrt_Q;
 
@@ -67,8 +73,10 @@ void SU3::Matrix::reunitarize()
   {
     eigenVectors.d_data[ctr] = (v2_num_zero + H2_off[1] * lambda[ctr]) 
                                   / (v2_den_zero + v2_den_one * lambda[ctr] + lambda[ctr]*lambda[ctr]);
-    eigenVectors.d_data[ctr + 3] = (std::conj(H2_off[0]) * eigenVectors.d_data[ctr] + H2_off[2]) / (lambda[ctr] - H2_diag[1]);
-    double normal = std::pow(1 + std::norm(eigenVectors.d_data[ctr]) + std::norm(eigenVectors.d_data[ctr + 3]), -0.5);
+    eigenVectors.d_data[ctr + 3] = (std::conj(H2_off[0]) * eigenVectors.d_data[ctr] + H2_off[2]) / 
+                                   (lambda[ctr] - H2_diag[1]);
+    double normal = std::pow(1 + std::norm(eigenVectors.d_data[ctr]) + 
+                                 std::norm(eigenVectors.d_data[ctr + 3]), -0.5);
     eigenVectors.d_data[ctr]     *= normal;
     eigenVectors.d_data[ctr + 3] *= normal;
     eigenVectors.d_data[ctr + 6]  = normal;

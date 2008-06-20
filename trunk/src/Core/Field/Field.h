@@ -48,8 +48,7 @@ namespace Core
 
       void reunitarize();
          
-      template< typename ElementArray >
-      void averageTimeSlice(ElementArray *result);
+      void averageTimeSlice(std::complex< double > *result);
 
     private:
       void setSurfaces();

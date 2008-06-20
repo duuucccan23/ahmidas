@@ -19,7 +19,8 @@ namespace Contraction
     if (d_grid.rank() == 0)
       fullCorrelator = new std::complex< double >[d_grid.latVolume()];
 
-    d_grid.d_grid.Gather(d_correlator, d_grid.volume(), MPI::DOUBLE_COMPLEX,
-                         fullCorrelator, d_grid.volume(), MPI::DOUBLE_COMPLEX);
+    if (d_grid.d_backbone.Get_rank() == 0)
+      d_grid.d_backbone.Gather(d_correlator, d_grid.volume(), MPI::DOUBLE_COMPLEX,
+                               fullCorrelator, d_grid.volume(), MPI::DOUBLE_COMPLEX, 0);
   }
 }

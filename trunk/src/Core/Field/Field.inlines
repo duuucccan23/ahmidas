@@ -131,8 +131,8 @@ namespace Core
   inline Element &Field< Element, L, T >::element(short const *idx)
   {
     return d_field[  (((idx[idx_T] + d_offsets[idx_T]) % d_grid.dim(idx_T)) * d_grid.cumDim(idx_T))
-        + (((idx[idx_X] + d_offsets[idx_X]) % d_grid.dim(idx_X)) * d_grid.cumDim(idx_X))
-        + (((idx[idx_Y] + d_offsets[idx_Y]) % d_grid.dim(idx_Y)) * d_grid.cumDim(idx_Y))
-        + (((idx[idx_Z] + d_offsets[idx_Z]) % d_grid.dim(idx_Z)) * d_grid.cumDim(idx_Z))];
+                   + (((idx[idx_X] + d_offsets[idx_X]) % d_grid.dim(idx_X)) * d_grid.cumDim(idx_X))
+                   + (((idx[idx_Y] + d_offsets[idx_Y]) % d_grid.dim(idx_Y)) * d_grid.cumDim(idx_Y))
+                   + (((idx[idx_Z] + d_offsets[idx_Z]) % d_grid.dim(idx_Z)) * d_grid.cumDim(idx_Z))];
   }
 }

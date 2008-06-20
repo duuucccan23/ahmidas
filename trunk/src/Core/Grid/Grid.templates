@@ -70,6 +70,7 @@ namespace Core
       std::fill(boolGrid, boolGrid + 4, false);
       boolGrid[idx_T] = true;
       d_timeSlice = d_grid.Sub(boolGrid);
+      d_backbone = d_grid.Split(d_timeSlice.Get_rank(), 0); // We'll leave the rank in standard order
 
       d_grid.Get_coords(d_grid.Get_rank(), 4, intGrid);
       std::copy(intGrid, intGrid + 4, d_coords);

@@ -1,0 +1,9 @@
+namespace Core
+{
+  template< size_t T >
+  Correlator(std::complex< double > *data, size_t sourceSlice)
+  {
+    std::copy(data + sourceSlice, data + T, d_data);
+    std::copy(data, data + sourceSlice, d_data - sourceSlice + T);
+  }
+}

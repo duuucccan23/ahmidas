@@ -16,6 +16,7 @@ namespace Core
   {
     MPI::Cartcomm d_grid;
     MPI::Cartcomm d_timeSlice;
+    MPI::Cartcomm d_backbone;
 
     size_t d_dims[4];
     size_t d_sizes[4];
@@ -32,6 +33,7 @@ namespace Core
 
       MPI::Cartcomm &grid();
       MPI::Cartcomm &timeSlice();
+      MPI::Cartcomm &backbone();
 
       size_t rank() const;      
 

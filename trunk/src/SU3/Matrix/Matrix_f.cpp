@@ -44,7 +44,6 @@ void SU3::Matrix::reunitarize()
              + H2_diag[2] * H2_off_norm[0];
 
   double Q  = a_3_2 - fac_1_3 * b;
-  double R  = ;
   if (Q == 0) // We should already be unitary...
   {
     operator*=(std::pow(det(d_data), -fac_1_3));

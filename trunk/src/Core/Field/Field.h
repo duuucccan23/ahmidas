@@ -1,6 +1,7 @@
 #ifndef GUARD_CORE_FIELD_H
 #define GUARD_CORE_FIELD_H
 
+#include <complex>
 #include "../Grid/Grid.h"
 
 namespace Core
@@ -26,7 +27,7 @@ namespace Core
       Field(Field const &other, Element const &value);
       ~Field();
 
-      void readFromFile(char const* fileName); /// NOT YET IMPLEMENTED!
+      void readFromFile(char const* fileName); ///UNTESTED
       Core::Grid< L, T > const &grid() const;
 
       void increaseIdx(short *idx) const;
@@ -57,6 +58,14 @@ namespace Core
 
 #include "Field.inlines"
 #include "Field.iterator.inlines"
-#include "Field.templates"
+#include "Field_a.template"
+#include "Field_b.template"
+#include "Field_c.template"
+#include "Field_d.template"
+#include "Field_e.template"
+#include "Field_f.template"
+#include "Field_g.template"
+#include "Field_h.template"
+#include "Field_i.template"
 
 #endif

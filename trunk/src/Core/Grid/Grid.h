@@ -35,13 +35,16 @@ namespace Core
       MPI::Cartcomm &timeSlice();
       MPI::Cartcomm &backbone();
 
-      size_t rank() const;      
+      size_t rank() const;
 
       size_t const *coords() const;
       size_t coord(size_t idx) const;
 
       size_t const *dims() const;
       size_t dim(size_t idx) const;
+
+      size_t const *sizes() const;
+      size_t size(size_t idx) const;
 
       size_t const *localVolumes() const;
       size_t localVolume(size_t idx) const;

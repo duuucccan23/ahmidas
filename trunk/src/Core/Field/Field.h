@@ -48,7 +48,7 @@ namespace Core
 #include "Field.operators"
 
       void reunitarize();
-         
+
       void averageTimeSlice(std::complex< double > *result);
 
     private:
@@ -67,5 +67,6 @@ namespace Core
 #include "Field_g.template"
 #include "Field_h.template"
 #include "Field_i.template"
+#include "Field_j.template"
 
 #endif

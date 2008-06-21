@@ -9,19 +9,19 @@ namespace Core
   {
     return d_grid;
   }
-  
+
   template< size_t L, size_t T >
   inline MPI::Cartcomm &Grid< L, T >::timeSlice()
   {
     return d_timeSlice;
   }
-  
+
   template< size_t L, size_t T >
   inline size_t Grid< L, T >::rank() const
   {
     return d_grid.Get_rank();
-  }  
-  
+  }
+
   template< size_t L, size_t T >
   inline size_t const* Grid< L, T >::coords() const
   {
@@ -44,6 +44,18 @@ namespace Core
   inline size_t Grid< L, T >::dim(size_t idx) const
   {
     return d_dims[idx];
+  }
+
+  template< size_t L, size_t T >
+  inline size_t const *Grid< L, T >::sizes() const
+  {
+    return d_sizes;
+  }
+
+  template< size_t L, size_t T >
+  inline size_t Grid< L, T >::size(size_t idx) const
+  {
+    return d_sizes[idx];
   }
 
   template< size_t L, size_t T >
@@ -89,7 +101,7 @@ namespace Core
     d_grid.Shift(idx, dir, rank, result);
     return result;
   }
-  
+
   template< size_t L, size_t T >
   inline size_t Grid< L, T >::bufferVolume() const
   {

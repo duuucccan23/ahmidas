@@ -7,13 +7,11 @@
 
 namespace Contraction
 {
-  template< size_t IndexSource, size_t IndexSink >
+  template< size_t L, size_t T, size_t IndexSource, size_t IndexSink >
   class MesonLightLight
   {
-    Core::Grid &d_grid;
-
     std::complex< double > *d_correlator;
-    std::complex< double > *d_buffer;
+    Core::Field< std::complex< double >, L, T > d_field;
 
     public:
       MesonLightLight(Core::Grid &grid, size_t sourceSlice);

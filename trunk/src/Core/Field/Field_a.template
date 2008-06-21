@@ -4,33 +4,4 @@ namespace Core
   {
     return (left + right);
   }
-  
-/*  template< typename Element, size_t L, size_t T >
-  void Field< Element, L, T >::averageTimeSlice< std::complex< double > >(std::complex< double > *result)
-  {
-    void *v_buffer = d_buffer;
-    MPI::Attach_buffer(v_buffer, d_bufferSize);
-    
-    MPI::Op operator_plus;
-    operator_plus.Init(plus, true); //commutes
-
-    for (size_t ctr = 0; ctr < d_grid.dim(idx_T); ++ctr)
-      d_grid.timeSlice().Reduce(d_data + ctr * d_grid.localVolume(idx_T), 
-                                result + d_grid.coord(idx_T) * d_grid.dim[idx_T] + ctr, 
-                                d_surfaces[idx_T], MPI::DOUBLE_COMPLEX, operator_plus, 0);
-       
-    d_grid.grid().Barrier();
-    
-    if (timeSlice.Get_rank() == 0)
-    {
-      for (size_t ctr = 0; ctr < d_grid.dim(idx_T); ++ctr)
-        result[d_grid.coord(idx_T) * d_grid.dim[idx_T] + ctr] /= d_grid.localVolume(idx_T);
-
-      d_grid.grid().Gather(result + );
-    }
-    
-    void *v_bufp = &v_buffer;
-    MPI::Detach_buffer(v_bufp);
-  }
-*/
 }

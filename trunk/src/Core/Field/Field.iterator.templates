@@ -1,5 +1,5 @@
 namespace Core
-{ 
+{
   template< typename Element >
   Field< Element >::iterator Field< Element >::iterator:::operator--(int)
   {
@@ -7,7 +7,7 @@ namespace Core
     d_parent.decreaseIndex(d_idx);
     return result;
   }
-   
+
   template< typename Element >
   Field< Element >::iterator Field< Element >::iterator:::operator++(int)
   {

@@ -1,26 +1,30 @@
 namespace Contraction
 {
-  template< size_t IndexSource, size_t IndexSink >
-  void MesonLightLight< IndexSource, IndexSink >::contract(Core::Field< QCD::Spinor > const &source,
-                                                           Core::Field< QCD::Spinor > const &sink)
+  template< size_t L, size_t T, size_t IndexSource, size_t IndexSink >
+  void MesonLightLight< L, T, IndexSource, IndexSink >::contract(Core::Field< QCD::Spinor > const &source,
+                                                                 Core::Field< QCD::Spinor > const &sink)
   {
-    Core::Field< QCD::Spinor >::iterator sourceItr = source.begin();
-    Core::Field< QCD::Spinor >::iterator sinkItr = sink.begin();
-    for (size_t ctr = 0; ctr < d_grid.volume(); ++sourceItr, ++sinkItr)
-      d_buffer[ctr] = contractTwoPoint(Dirac::Gamma< IndexSink >(), *sinkItr,
-                                          Dirac::Gamma< IndexSource >(), *sourceItr);
-    gatherCorrelator();
-  }
+    Core::Field< QCD::Spinor, L, T >::iterator sourceItr = source.begin();
+    Core::Field< QCD::Spinor, L, T >::iterator sinkItr = sink.begin();
+    Core::Field< std::complex< double >, L, T >::iterator fieldItr = d_field.begin();
+    for (; fieldItr != d_field.end(); ++sourceItr, ++sinkItr, ++fieldItr)
+     *fieldItr = contractTwoPoint(Dirac::Gamma< IndexSink >(), *sinkItr,
+                                Dirac::Gamma< IndexSource >(), *sourceItr);
 
-  template< size_t IndexSource, size_t IndexSink >
-  void MesonLightLight< IndexSource, IndexSink >::gatherCorrelator()
-  {
-    std::complex< double > *fullCorrelator;
-    if (d_grid.rank() == 0)
-      fullCorrelator = new std::complex< double >[d_grid.latVolume()];
+    std::complex< double > buffer[d_field.grid().size(Core::idx_T)];
+    d_field.averageTimeSlice(buffer);
 
-    if (d_grid.d_backbone.Get_rank() == 0)
-      d_grid.d_backbone.Gather(d_correlator, d_grid.volume(), MPI::DOUBLE_COMPLEX,
-                               fullCorrelator, d_grid.volume(), MPI::DOUBLE_COMPLEX, 0);
+    if (d_field.grid().timeSlice().Get_rank() == 0)
+    {
+      if (d_field.grid().rank() == 0)
+      {
+        assert(d_field.grid().backbone().Get_rank() == 0); // Have to be careful, this could go very wrong...
+        d_correlator = new std::complex< double >[T];
+      }
+      d_field.grid().backbone().Gather(buffer, d_field.grid().size(Core::idx_t), MPI::DOUBLE_COMPLEX,
+                                       d_correlator, d_field.grid().size(Core::idx_t), MPI::DOUBLE_COMPLEX, 0 /*root*/);
+    }
+    // NOTE This should return something or the other... What do we do with the result?
+    // Or do we leave it to the user of the object to decide upon readout?
   }
 }

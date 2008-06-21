@@ -1,9 +1,9 @@
 #ifndef GUARD_CONTRACTION_MESON_H
 #define GUARD_CONTRACTION_MESON_H
 
-#include "../../Core/Field/Field.h"
-#include "../../Dirac/Gamma/Gamma.h"
-#include "../../QCD/Spinor/Spinor.h"
+#include <Core/Field/Field.h>
+#include <Dirac/Gamma/Gamma.h>
+#include <QCD/Spinor/Spinor.h>
 
 namespace Contraction
 {
@@ -22,6 +22,8 @@ namespace Contraction
   };
 }
 
-#include "MesonLightLight.inlines"
+#include "Meson.inlines"
+#include "Meson_a.template"
+#include "Meson_b.template"
 
 #endif

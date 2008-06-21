@@ -70,11 +70,11 @@ void SU3::Matrix::reunitarize()
   Matrix eigenVectors;
   for (size_t ctr = 0; ctr < 3; ++ctr)
   {
-    eigenVectors.d_data[ctr] = (v2_num_zero + H2_off[1] * lambda[ctr]) 
+    eigenVectors.d_data[ctr] = (v2_num_zero + H2_off[1] * lambda[ctr])
                                   / (v2_den_zero + v2_den_one * lambda[ctr] + lambda[ctr]*lambda[ctr]);
-    eigenVectors.d_data[ctr + 3] = (std::conj(H2_off[0]) * eigenVectors.d_data[ctr] + H2_off[2]) / 
+    eigenVectors.d_data[ctr + 3] = (std::conj(H2_off[0]) * eigenVectors.d_data[ctr] + H2_off[2]) /
                                    (lambda[ctr] - H2_diag[1]);
-    double normal = std::pow(1 + std::norm(eigenVectors.d_data[ctr]) + 
+    double normal = std::pow(1 + std::norm(eigenVectors.d_data[ctr]) +
                                  std::norm(eigenVectors.d_data[ctr + 3]), -0.5);
     eigenVectors.d_data[ctr]     *= normal;
     eigenVectors.d_data[ctr + 3] *= normal;

@@ -1,6 +1,8 @@
 #ifndef GUARD_DIRAC_GAMMA_H
 #define GUARD_DIRAC_GAMMA_H
 
+#include <complex>
+
 namespace Dirac
 {
   template< size_t Index >

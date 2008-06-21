@@ -4,25 +4,25 @@ namespace SU3
   {
     return mat.det(mat.d_data);
   }
-      
+
   inline std::complex< double > tr(Matrix const &mat)
   {
     return mat.tr(mat.d_data);
-  }      
-  
+  }
+
   inline Matrix::Matrix()
   {}
-  
-  inline Matrix::Matrix(double *data)
+
+  inline Matrix::Matrix(double const *data)
   {
     std::copy(data, data + 18, reinterpret_cast< double* >(d_data));
   }
-  
-  inline Matrix::Matrix(std::complex< double > *data)
+
+  inline Matrix::Matrix(std::complex< double > const *data)
   {
     std::copy(data, data + 9, d_data);
   }
-  
+
   inline Matrix::Matrix(Matrix const &other)
   {
     std::copy(other.d_data, other.d_data + 9, d_data);
@@ -34,12 +34,12 @@ namespace SU3
       std::copy(other.d_data, other.d_data + 9, d_data);
     return *this;
   }
-  
+
   inline Matrix const &Matrix::identity()
   {
     return s_identity;
   }
-  
+
   inline Matrix const &Matrix::zero()
   {
     return s_zero;
@@ -47,15 +47,15 @@ namespace SU3
 
   inline Matrix::~Matrix()
   {}
-  
+
   inline std::complex< double > &Matrix::operator()(int i, int j)
   {
     return d_data[i * 3 + j];
   }
-  
+
   inline std::complex< double > const &Matrix::operator()(int i, int j) const
   {
-    return d_data[i * 3 + j];  
+    return d_data[i * 3 + j];
   }
 
   template< typename T >
@@ -73,7 +73,7 @@ namespace SU3
       d_data[ctr] += rhand.d_data[ctr];
     return *this;
   }
-  
+
   template< typename T >
   inline Matrix &Matrix::operator-=(T const &rhand)
   {
@@ -81,7 +81,7 @@ namespace SU3
       d_data[ctr] -= rhand;
     return *this;
   }
-  
+
   template< >
   inline Matrix &Matrix::operator-=(Matrix const &rhand)
   {
@@ -89,7 +89,7 @@ namespace SU3
       d_data[ctr] -= rhand.d_data[ctr];
     return *this;
   }
-  
+
   template< typename T >
   inline Matrix &Matrix::operator*=(T const &rhand)
   {
@@ -111,7 +111,7 @@ namespace SU3
     rightMultiply(rhand);
     return *this;
   }
-  
+
   template< typename T >
   inline Matrix &Matrix::operator/=(T const &rhand)
   {
@@ -119,17 +119,17 @@ namespace SU3
       d_data[ctr] /= rhand;
     return *this;
   }
-  
+
   inline hcMatrix const Matrix::dagger() const
   {
     return hcMatrix(*this);
   }
-  
+
   inline std::complex < double > Matrix::sign(std::complex< double > const &x) const
   {
     return x / abs(x);
   }
-  
+
   inline std::complex< double > Matrix::det(std::complex< double > const *data) const
   {
     return   d_data[0] * (d_data[4] * d_data[8] - d_data[5] * d_data[7])

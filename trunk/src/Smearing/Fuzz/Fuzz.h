@@ -1,23 +1,32 @@
 #ifndef GUARD_SMEARING_FUZZ_H
 #define GUARD_SMEARING_FUZZ_H
 
-#include "Fields/GaugeField/GaugeField.h"
-#include "Fields/GaugeComponent/GaugeComponent.h"
-#include "SU3/Matrix/Matrix.h"
+#include <algorithm>
+
+#include <Core/Buffer/Buffer.h>
+#include <Core/Field/Field.h>
+#include <Core/Component/Component.h>
+#include <QCD/Gauge/Gauge.h>
+#include <SU3/Matrix/Matrix.h>
 
 namespace Smearing
 {
   class Fuzz
   {
     size_t  d_length;
-    
+
     public:
       Fuzz(size_t length);
-      void smear(Fields::GaugeField &field) const;
-    
+
+      template< size_t L, size_t T >
+      void smear(Core::Field< QCD::Gauge, L, T > &field) const;
+
     private:
-      void accumDirection(Fields::GaugeField &field, SpaceTimeIndex idx) const;
+      void accumDirection(Core::Field< QCD::Gauge, L, T > &field, short idx) const;
   };
 }
+
+#include "Fuzz_a.template"
+#include "Fuzz_b.template"
 
 #endif

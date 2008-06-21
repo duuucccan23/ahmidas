@@ -1,24 +1,25 @@
 class iterator: public std::iterator< std::bidirectional_iterator_tag, Atom >
 {
-  friend class Component< Element, Atom >;
-  
-  Field< Element >::iterator d_iterator;
-  
-  iterator(Field< Element >::iterator &iterator, short component);
+  friend class Component< Element, L, T, Atom >;
+
+  typename Field< Element, L, T >::iterator d_iterator;
+  short d_component;
+
+  iterator(typename Field< Element, L, T >::iterator &iterator, short component);
   iterator(iterator const &other);
-        
+
   public:
     iterator &operator--();
     iterator const operator--(int);
     iterator &operator++();
     iterator const operator++(int);
-    
+
     bool operator==(iterator const &other) const;
     bool operator!=(iterator const &other) const;
-    
-    Element &operator*();
-    Element  operator*() const;
-    
-    Element *operator->();
-    Element const *operator->() const;
+
+    Atom &operator*();
+    Atom  operator*() const;
+
+    Atom *operator->();
+    Atom const *operator->() const;
 };

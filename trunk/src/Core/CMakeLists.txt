@@ -1,0 +1,6 @@
+SET(Sources_Buffer Buffer/Buffer.h)
+SET(Sources_Component Component/Component.h)
+SET(Sources_Correlator Correlator/Correlator.h)
+SET(Sources_Field Field/Field_a.cpp Field/Field.h)
+SET(Sources_Grid Grid/Grid.h)
+ADD_LIBRARY(Core ${Sources_Buffer} ${Sources_Component} ${Sources_Correlator} ${Sources_Field} ${Sources_Grid})

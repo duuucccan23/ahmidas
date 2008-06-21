@@ -1,73 +1,73 @@
 namespace Core
 {
-  template< typename Element, typename Atom >
-  inline Component< Element, Atom >::iterator::iterator(Field< Element >::iterator &iterator, short component)
+  template< typename Element, size_t L, size_t T, typename Atom >
+  inline Component< Element, L, T, Atom >::iterator::iterator(typename Field< Element, L, T >::iterator &iterator, short component)
     : d_iterator(iterator), d_component(component)
   {}
 
-  template< typename Element, typename Atom >
-  inline Component< Element, Atom >::iterator::iterator(iterator const &other)
+  template< typename Element, size_t L, size_t T, typename Atom >
+  inline Component< Element, L, T, Atom >::iterator::iterator(iterator const &other)
    : d_iterator(other.d_iterator), d_component(other.d_component)
   {}
 
-  template< typename Element, typename Atom >
-  inline Component< Element, Atom >::iterator &Component< Element, Atom >::iterator::operator--()
+  template< typename Element, size_t L, size_t T, typename Atom >
+  inline typename Component< Element, L, T, Atom >::iterator &Component< Element, L, T, Atom >::iterator::operator--()
   {
     --d_iterator;
     return *this;
   }
 
-  template< typename Element, typename Atom >
-  inline Component< Element, Atom >::iterator const Component< Element, Atom >::iterator::operator--(int)
+  template< typename Element, size_t L, size_t T, typename Atom >
+  inline typename Component< Element, L, T, Atom >::iterator const Component< Element, L, T, Atom >::iterator::operator--(int)
   {
     return iterator(d_iterator--, d_component);
   }
 
-  template< typename Element, typename Atom >
-  inline Component< Element, Atom >::iterator &Component< Element, Atom >::iterator::operator++()
+  template< typename Element, size_t L, size_t T, typename Atom >
+  inline typename Component< Element, L, T, Atom >::iterator &Component< Element, L, T, Atom >::iterator::operator++()
   {
     ++d_iterator;
     return *this;
   }
 
-  template< typename Element, typename Atom >
-  inline Component< Element, Atom >::iterator const Component< Element, Atom >::iterator::operator++(int)
+  template< typename Element, size_t L, size_t T, typename Atom >
+  inline typename Component< Element, L, T, Atom >::iterator const Component< Element, L, T, Atom >::iterator::operator++(int)
   {
     return iterator(d_iterator++, d_component);
   }
 
-  template< typename Element, typename Atom >
-  inline bool Component< Element, Atom >::iterator::operator==(iterator const &other) const
+  template< typename Element, size_t L, size_t T, typename Atom >
+  inline bool Component< Element, L, T, Atom >::iterator::operator==(iterator const &other) const
   {
     return d_iterator == other.d_iterator;
   }
 
-  template< typename Element, typename Atom >
-  inline bool Component< Element, Atom >::iterator::operator!=(iterator const &other) const
+  template< typename Element, size_t L, size_t T, typename Atom >
+  inline bool Component< Element, L, T, Atom >::iterator::operator!=(iterator const &other) const
   {
     return d_iterator != other.d_iterator;
   }
 
-  template< typename Element, typename Atom >
-  inline Atom &Component< Element, Atom >::iterator::operator*()
+  template< typename Element, size_t L, size_t T, typename Atom >
+  inline Atom &Component< Element, L, T, Atom >::iterator::operator*()
   {
     return d_iterator->operator[](d_component);
   }
 
-  template< typename Element, typename Atom >
-  inline Atom Component< Element, Atom >::iterator::operator*() const
+  template< typename Element, size_t L, size_t T, typename Atom >
+  inline Atom Component< Element, L, T, Atom >::iterator::operator*() const
   {
     return d_iterator->operator[](d_component);
   }
 
-  template< typename Element, typename Atom >
-  inline Atom *Component< Element, Atom >::iterator::operator->()
+  template< typename Element, size_t L, size_t T, typename Atom >
+  inline Atom *Component< Element, L, T, Atom >::iterator::operator->()
   {
     return *(d_iterator->operator[](d_component));
   }
 
-  template< typename Element, typename Atom >
-  inline Atom const *Component< Element, Atom >::iterator::operator->() const
+  template< typename Element, size_t L, size_t T, typename Atom >
+  inline Atom const *Component< Element, L, T, Atom >::iterator::operator->() const
   {
     return *(d_iterator->operator[](d_component));
   }

@@ -2,11 +2,13 @@
 #define GUARD_CORE_FIELD_H
 
 #include <complex>
+#include <mpi.h>
+
 #include "../Grid/Grid.h"
 
 namespace Core
 {
-  template< typename Element, typename Atom >
+  template< typename Element, size_t L, size_t T, typename Atom >
   class Component;
 
   template< typename Element, size_t L, size_t T >
@@ -41,7 +43,7 @@ namespace Core
       iterator end();
 
       template< typename Atom >
-      Component< Element, Atom > component(size_t idx);
+      Component< Element, L, T, Atom > component(size_t idx);
 
       Field< Element, L, T > &shift(SpaceTimeIndex idx, Direction shift);
 
@@ -54,12 +56,14 @@ namespace Core
     private:
       void setSurfaces();
   };
+
+  std::complex< double > plus(std::complex< double > const &left, std::complex< double > const &right);
 }
 
 #include "Field.inlines"
 #include "Field.iterator.inlines"
 #include "Field_a.template"
-#include "Field_b.template"
+//#include "Field_b.template"
 #include "Field_c.template"
 #include "Field_d.template"
 #include "Field_e.template"
@@ -67,6 +71,5 @@ namespace Core
 #include "Field_g.template"
 #include "Field_h.template"
 #include "Field_i.template"
-#include "Field_j.template"
 
 #endif

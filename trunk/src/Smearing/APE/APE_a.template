@@ -1,0 +1,9 @@
+namespace Smearing
+{
+  typename< size_t L, size_t T >
+  inline void APE::smear(Core::Field< QCD::Gauge, L, T > &field, size_t iterations)
+  {
+    for (size_t ctr = 0; ctr < iterations; ++ctr)
+      smear(field);
+  }
+}

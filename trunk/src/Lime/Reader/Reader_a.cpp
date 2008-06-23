@@ -1,24 +1,24 @@
 #include "Reader.ih"
 
-void Lime::Reader(std::string const &filename) const
+Lime::Reader::Reader(std::string const &filename)
   : d_data(new Data(filename)), d_fail(0), d_size(0)
 {
   while(!(d_fail = limeReaderNextRecord(d_data->reader)))
   {
-    d_data->headerType = limeReaderType(limereader);
-    if(!strcmp("ildg-binary-data", header_type))
+    d_data->headerType = limeReaderType(d_data->reader);
+    if(!strcmp("ildg-binary-data", d_data->headerType))
       break;
   }
   
-  swith(d_fail)
+  switch(d_fail)
   {
     case LIME_SUCCESS:
       break;
     case LIME_EOF:
-      std::cerr << "No ildg-binary-data record found in " << filename << '.' << endl;
+      std::cerr << "No ildg-binary-data record found in " << filename << '.' << std::endl;
       MPI::COMM_WORLD.Abort(EIO);
     default:
-      std::cerr << "Lime reader exited with I/O error " << d_fail << '.' << endl;
+      std::cerr << "Lime reader exited with I/O error " << d_fail << '.' << std::endl;
       MPI::COMM_WORLD.Abort(EIO);
   }
   

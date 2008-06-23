@@ -2,6 +2,7 @@
 #define GUARD_LIME_DATA_H
 
 #include <string>
+#include <Lime/c-lime/lime.h>
 
 namespace Lime
 {

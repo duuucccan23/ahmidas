@@ -1,10 +1,5 @@
 namespace Lime
-{
-  inline Reader::~Reader()
-  {
-    delete d_data;
-  }
-  
+{ 
   inline int Reader::fail() const
   {
     return d_fail;
@@ -16,8 +11,8 @@ namespace Lime
   }
   
   template< typename DataType >
-  inline void Reader::read(DataType *data, size_t elements)
+  inline void Reader::read(DataType *data, size_t elements) const
   {
-    d_fail = read(reinterpret_cast< char* >(data), elements * sizeof(DataType));
+    read(reinterpret_cast< char* >(data), elements * sizeof(DataType));
   }
 }

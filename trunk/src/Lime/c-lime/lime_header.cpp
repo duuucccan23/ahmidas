@@ -34,7 +34,7 @@ LimeRecordHeader *limeCreateHeader(int MB_flag,
   }
 
   /* Copy the type string */
-  strcpy(ret_val->type, type);  * include/lime_config_internal.h.in: Induced change
+  strcpy(ret_val->type, type);
 
   /* Fill out the rest of the fields */
   ret_val->ME_flag = ME_flag;

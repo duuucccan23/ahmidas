@@ -1,7 +1,6 @@
 #ifndef LIME_CONFIG_H
 #define LIME_CONFIG_H
 
-
 /* Undef the unwanted from the environment -- eg the compiler command line */
 #undef PACKAGE
 #undef PACKAGE_BUGREPORT

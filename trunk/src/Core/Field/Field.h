@@ -1,10 +1,12 @@
 #ifndef GUARD_CORE_FIELD_H
 #define GUARD_CORE_FIELD_H
 
+#include <cassert>
 #include <complex>
 #include <mpi.h>
 
-#include "../Grid/Grid.h"
+#include <Core/Grid/Grid.h>
+#include <Lime/Reader/Reader.h>
 
 namespace Core
 {
@@ -55,6 +57,7 @@ namespace Core
 
     private:
       void setSurfaces();
+      void moveBufferToData();
   };
 
   std::complex< double > plus(std::complex< double > const &left, std::complex< double > const &right);
@@ -63,7 +66,7 @@ namespace Core
 #include "Field.inlines"
 #include "Field.iterator.inlines"
 #include "Field_a.template"
-//#include "Field_b.template"
+#include "Field_b.template"
 #include "Field_c.template"
 #include "Field_d.template"
 #include "Field_e.template"

@@ -23,6 +23,23 @@ namespace Core
   }
 
   template< size_t L, size_t T >
+  inline size_t Grid< L, T >::rank(size_t index) const
+  {
+    int coord[4] =
+      {  (index                     / d_volumes[idx_T]) / (d_volumes[idx_T] / dims[idx_T]),
+        ((index % d_volumes[idx_T]) / d_volumes[idx_X]) / (d_volumes[idx_X] / dims[idx_X]),
+        ((index % d_volumes[idx_X]) / d_volumes[idx_Y]) / (d_volumes[idx_Y] / dims[idx_Y]),
+        ((index % d_volumes[idx_Y]) / d_volumes[idx_Z]) / (d_volumes[idx_Z] / dims[idx_Z]) };
+    return rank(coord);
+  }
+
+  template< size_t L, size_t T >
+  inline size_t Grid< L, T >::rank(int const *coord) const
+  {
+    return d_grid.Get_cart_rank(coord);
+  }
+
+  template< size_t L, size_t T >
   inline size_t const* Grid< L, T >::coords() const
   {
     return d_coords;

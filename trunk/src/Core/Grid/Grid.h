@@ -36,6 +36,8 @@ namespace Core
       MPI::Cartcomm &backbone();
 
       size_t rank() const;
+      size_t rank(size_t index) const;
+      size_t rank(int const *coords) const;
 
       size_t const *coords() const;
       size_t coord(size_t idx) const;

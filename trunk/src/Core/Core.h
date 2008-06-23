@@ -24,7 +24,8 @@ namespace Core
 
   enum MpiTags
   {
-    TAG_GAUGEFIELD
+    TAG_GAUGEFIELD,
+    TAG_FILE_DISTRIBUTION
   };
 }
 

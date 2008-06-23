@@ -2,7 +2,7 @@
 #define LIME_UTILS_H
 
 #include "lime_fixed_types.h"
- 
+
   /** \brief Utility function for padding headers and data to 4byte boundaries
    *
    *  \param nbytes  is the number of bytes in the data

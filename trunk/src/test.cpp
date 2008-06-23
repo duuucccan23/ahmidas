@@ -16,14 +16,14 @@ int main()
   for (size_t ctr = 0; ctr < 5; ++ctr)
     std::cout << data[ctr][0] << std::endl;
   
-  Core::swapEndian(data, data + 5);
+  Core::swapEndian(data, data + 5, sizeof(double));
   
   std::cout << "****  SWAPPED  ****" << std::endl << std::endl;
   
   for (size_t ctr = 0; ctr < 5; ++ctr)
     std::cout << data[ctr][0] << std::endl;
   
-  std::cout << "****  REUNIT  ****" << std::endl << std::endl;
+  std::cout << "****  REUNITARIZED  ****" << std::endl << std::endl;
   
   for (size_t ctr = 0; ctr < 5; ++ctr)
     data[ctr].reunitarize();

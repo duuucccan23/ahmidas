@@ -13,11 +13,13 @@ namespace Core
     return(u.c[sizeof(int) - 1] == 1);
   }
   
-  // Reverses byteorder in case the data read from file was written differently, STL version
+  // Reverses byteorder, STL version
   template< typename T >
-  inline void swapEndian(T *begin, T *end)
+  inline void swapEndian(T *begin, T *end, size_t block = sizeof(T))
   {
-    for (T *iter = begin; iter < end; ++iter)
-      std::reverse(reinterpret_cast< char* >(iter), reinterpret_cast< char* >(iter) + sizeof(T));
+    std::cout << "[swapEndian] " << block << std::endl;
+    char const *chEnd = reinterpret_cast< char* >(end);
+    for (char *iter = reinterpret_cast< char* >(begin); iter < chEnd; iter += block)
+      std::reverse(iter, iter + block);
   }   
 }

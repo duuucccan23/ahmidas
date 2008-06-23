@@ -1,6 +1,7 @@
 #ifndef GUARD_CORE_H
 #define GUARD_CORE_H
 
+#include <algorithm>
 #include <cassert>
 
 namespace Core

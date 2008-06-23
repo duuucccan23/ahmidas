@@ -9,12 +9,18 @@ namespace Lime
   
   class Reader
   {
-    Data *d_data;
-    int   d_fail;
+    Data   *d_data;
+    int     d_fail;
+    size_t  d_size;
     
     public:
       Reader(std::string const &filename);
       ~Reader();
+      
+      int fail() const;
+      size_t size() const;
+      
+      
       template< typename DataType >
       void read(DataType *buffer, size_t elements) const;
     

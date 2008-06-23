@@ -5,9 +5,19 @@ namespace Lime
     delete d_data;
   }
   
+  inline int Reader::fail() const
+  {
+    return d_fail;
+  }
+  
+  inline size_t Reader::size() const
+  {
+    return d_size;
+  }
+  
   template< typename DataType >
   inline void Reader::read(DataType *data, size_t elements)
   {
-    read(reinterpret_cast< char* >(data), elements * sizeof(DataType));
+    d_fail = read(reinterpret_cast< char* >(data), elements * sizeof(DataType));
   }
 }

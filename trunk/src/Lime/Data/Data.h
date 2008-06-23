@@ -17,6 +17,4 @@ namespace Lime
   };
 }
 
-#include "Data.inlines"
-
 #endif

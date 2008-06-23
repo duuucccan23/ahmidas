@@ -1,7 +1,7 @@
 #include "Reader.ih"
 
 void Lime::Reader(std::string const &filename) const
-  : d_data(new Data(filename)), d_fail(0)
+  : d_data(new Data(filename)), d_fail(0), d_size(0)
 {
   while(!(d_fail = limeReaderNextRecord(d_data->reader)))
   {
@@ -22,13 +22,5 @@ void Lime::Reader(std::string const &filename) const
       MPI::COMM_WORLD.Abort(EIO);
   }
   
-  size_t bytes = limeReaderBytes(d_data->reader);
-  
-  bytes = 
-  if((int)bytes != LX*LY*LZ*T*72*sizeof(double)) {
-    fprintf(stderr, "Probably wrong lattice size or precision (bytes=%d) in file %s\n", (int)bytes, filename);
-    fprintf(stderr, "Aborting...!\n");
-    fflush( stdout );
-    exit(501);
-  }
+  d_size = limeReaderBytes(d_data->reader);
 }

@@ -1,0 +1,13 @@
+namespace Lime
+{
+  inline Reader::~Reader()
+  {
+    delete d_data;
+  }
+  
+  template< typename DataType >
+  inline void Reader::read(DataType *data, size_t elements)
+  {
+    read(reinterpret_cast< char* >(data), elements * sizeof(DataType));
+  }
+}

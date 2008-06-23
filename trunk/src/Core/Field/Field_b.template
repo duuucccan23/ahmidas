@@ -42,7 +42,7 @@ namespace Core
     }
     bytes = limeReaderBytes(limereader);
     if((int)bytes != L * L * L * T * 72 * sizeof(double)) {
-      fprintf(stderr, "Probably wrong lattice size or precision (bytes=%d) in file %s\n", (int)bytes, fileName);
+      fprintf(stderr, "Probably wrong lattice size or precision (bytes=%d) in file %s\n", (int)bytes, fileName);  status = limeReaderReadData(tmp2, &bytes, limereader);
       fprintf(stderr, "Aborting...!\n");
       fflush( stdout );
       exit(501);

@@ -17,7 +17,6 @@ namespace Core
   template< typename T >
   inline void swapEndian(T *begin, T *end, size_t block = sizeof(T))
   {
-    std::cout << "[swapEndian] " << block << std::endl;
     char const *chEnd = reinterpret_cast< char* >(end);
     for (char *iter = reinterpret_cast< char* >(begin); iter < chEnd; iter += block)
       std::reverse(iter, iter + block);

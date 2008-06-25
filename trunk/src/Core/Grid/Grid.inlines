@@ -84,7 +84,7 @@ namespace Core
   template< size_t L, size_t T >
   inline size_t Grid< L, T >::surface(size_t idx) const
   {
-    return (idx == 4 ? d_localVolume : d_surfaces[idx]);
+    return d_surfaces[idx];
   }
 
   template< size_t L, size_t T >
@@ -108,7 +108,7 @@ namespace Core
   template< size_t L, size_t T >
   inline size_t Grid< L, T >::dimSize(size_t idx) const
   {
-    return d_dimSizes[idx];
+    return (idx == 4 ? d_localVolume : d_dimSizes[idx]);
   }
 
   template< size_t L, size_t T >

@@ -103,6 +103,6 @@ namespace Core
     for (; cutIdx < 4; ++cutIdx)
       if (d_dims[cutIdx] > 1)
         break;
-    return localVolume(cutIdx);
+    return d_surfaces[cutIdx];
   }
 }

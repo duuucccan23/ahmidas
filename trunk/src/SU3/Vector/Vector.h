@@ -7,7 +7,7 @@
 
 namespace SU3
 {
-  std::ostream &operator<<(std::ostream &out, Vector const &vec);
+//  std::ostream &operator<<(std::ostream &out, Vector const &vec);
   
   class Vector
   {

@@ -26,10 +26,10 @@ namespace Core
   inline size_t Grid< L, T >::rank(size_t index) const
   {
     int coord[4] =
-    {  (index                     / d_surfaces[idx_T]) / (d_surfaces[idx_T] / dims[idx_T]),
-       ((index % d_surfaces[idx_T]) / d_surfaces[idx_X]) / (d_surfaces[idx_X] / dims[idx_X]),
-       ((index % d_surfaces[idx_X]) / d_surfaces[idx_Y]) / (d_surfaces[idx_Y] / dims[idx_Y]),
-       ((index % d_surfaces[idx_Y]) / d_surfaces[idx_Z]) / (d_surfaces[idx_Z] / dims[idx_Z]) };
+    {  (index                     / d_surfaces[idx_T]) / (d_surfaces[idx_T] / dims()[idx_T]),
+       ((index % d_surfaces[idx_T]) / d_surfaces[idx_X]) / (d_surfaces[idx_X] / dims()[idx_X]),
+       ((index % d_surfaces[idx_X]) / d_surfaces[idx_Y]) / (d_surfaces[idx_Y] / dims()[idx_Y]),
+       ((index % d_surfaces[idx_Y]) / d_surfaces[idx_Z]) / (d_surfaces[idx_Z] / dims()[idx_Z]) };
     return rank(coord);
   }
 

@@ -33,11 +33,15 @@ int main(int argc, char **argv)
     size_t const *surfaces = grid.surfaces();
     cout << "Surfaces are: " << surfaces[0] << " " << surfaces[1] << " " << surfaces[2] << " "  << surfaces[3] << endl;
     
-    cout << "The buffer volume is: " << grid.bufferVolume() << endl;
+    size_t const *dimSizes = grid.dimSizes();
+    cout << "Dimsizes are: " << dimSizes[0] << " " << dimSizes[1] << " " << dimSizes[2] << " "  << dimSizes[3] << endl;
+    
+    cout << "The communication buffer volume is: " << grid.bufferVolume() << endl;
     cout << "The largest contiguous block is: " << grid.contiguousBlock() << endl;
   }
   Core::Field<QCD::Gauge, 24, 48> field(grid);
-
+  field.readFromFile("../test/conf.save");
+  
   //  QCD::Gauge *data = new QCD::Gauge[663552];
 //  read.read(data, 663552);
 //  Core::swapEndian(data, data + 663552, sizeof(double));

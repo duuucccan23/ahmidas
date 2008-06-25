@@ -77,22 +77,22 @@ namespace Core
     }
 
     // Calculate and store the local volume for the distribution just constructed
-    d_surfaces[idx_Z] = 1;
-    d_surfaces[idx_Y] = d_surfaces[idx_Z] * d_sizes[idx_Z];
-    d_surfaces[idx_X] = d_surfaces[idx_Y] * d_sizes[idx_Y];
-    d_surfaces[idx_T] = d_surfaces[idx_X] * d_sizes[idx_X];
+    d_dimSizes[idx_Z] = 1;
+    d_dimSizes[idx_Y] = d_dimSizes[idx_Z] * d_sizes[idx_Z];
+    d_dimSizes[idx_X] = d_dimSizes[idx_Y] * d_sizes[idx_Y];
+    d_dimSizes[idx_T] = d_dimSizes[idx_X] * d_sizes[idx_X];
 
     // We want to make sure the setup is consistent, since errors here will be hard
     // enough to trace as it is...
-    assert((d_surfaces[idx_T] * d_sizes[idx_T]) == d_localVolume);
+    assert((d_dimSizes[idx_T] * d_sizes[idx_T]) == d_localVolume);
 
     // Finally, we'd like to know the 3D volume of each dimension,
     // and the largest volume over which we will be using communication
     for (size_t ctr = 0; ctr < 4; ++ctr)
     {
-      d_volumes[ctr] = d_localVolume / d_sizes[ctr];
-      if (d_dims[ctr] != 1 && d_volumes[ctr] > d_bufferVolume)
-        d_bufferVolume = d_volumes[ctr];
+      d_surfaces[ctr] = d_localVolume / d_sizes[ctr];
+      if (d_dims[ctr] != 1 && d_surfaces[ctr] > d_bufferVolume)
+        d_bufferVolume = d_surfaces[ctr];
     }
   }
 

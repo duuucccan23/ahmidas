@@ -21,8 +21,8 @@ namespace Core
     size_t d_dims[4];
     size_t d_sizes[4];
     size_t d_coords[4];
-    size_t d_volumes[4];
     size_t d_surfaces[4];
+    size_t d_dimSizes[4];
 
     size_t d_localVolume;
     size_t d_bufferVolume;
@@ -48,14 +48,14 @@ namespace Core
       size_t const *sizes() const;
       size_t size(size_t idx) const;
 
-      size_t const *localVolumes() const;
-      size_t localVolume(size_t idx) const;
+      size_t const *surfaces() const;
+      size_t surface(size_t idx) const;
 
       size_t localVolume() const;
       size_t totalVolume() const;
 
-      size_t const *surfaces() const;
-      size_t surface(size_t idx) const;
+      size_t const *dimSizes() const;
+      size_t dimSize(size_t idx) const;
 
       size_t neighbour(SpaceTimeIndex idx, Direction dir) const;
 

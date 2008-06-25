@@ -7,6 +7,8 @@
 
 namespace SU3
 {
+  std::ostream &operator<<(std::ostream &out, Vector const &vec);
+  
   class Vector
   {
     std::complex< double > d_data[3];

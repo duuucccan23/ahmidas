@@ -41,8 +41,10 @@ int main(int argc, char **argv)
   }
   Core::Field<QCD::Gauge, 24, 48> field(grid);
   field.readFromFile("../test/conf.save");
-  
-  //  QCD::Gauge *data = new QCD::Gauge[663552];
+
+
+
+//  QCD::Gauge *data = new QCD::Gauge[663552];
 //  read.read(data, 663552);
 //  Core::swapEndian(data, data + 663552, sizeof(double));
 

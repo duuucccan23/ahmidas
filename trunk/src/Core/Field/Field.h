@@ -64,7 +64,7 @@ namespace Core
 
     private:
       void setSurfaces();
-      void moveBufferToData();
+      size_t moveBufferToData(size_t written);
   };
   
   template< typename Element, size_t L, size_t T >

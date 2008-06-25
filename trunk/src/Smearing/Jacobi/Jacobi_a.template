@@ -26,11 +26,9 @@ namespace Smearing
       spinorBuffer += shiftedSpinor;
     }
     
-
     
-    gaugeField.shift(idx_Z, dir_UP); // Return to original position
+    
     spinorBuffer *= d_kappa;
-    
     spinorField += spinorBuffer;
     spinorField *= d_weight;
   }

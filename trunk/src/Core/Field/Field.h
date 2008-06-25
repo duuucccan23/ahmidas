@@ -12,6 +12,9 @@ namespace Core
 {
   template< typename Element, size_t L, size_t T, typename Atom >
   class Component;
+  
+  template< typename Element, size_t L, size_t T >
+  class hcField;
 
   template< typename Element, size_t L, size_t T >
   class Field
@@ -29,6 +32,9 @@ namespace Core
       Field(Field const &other);
       Field(Core::Grid< L, T > &grid, Element const &value);
       Field(Field const &other, Element const &value);
+
+      explicit Field(hcField< Element, L, T > const &other);
+      
       ~Field();
 
       void readFromFile(char const* fileName); ///UNTESTED
@@ -51,6 +57,7 @@ namespace Core
 
 #include "Field.operators"
 
+      hcField< Element, L, T > dagger() const;
       void reunitarize();
 
       void averageTimeSlice(std::complex< double > *result);
@@ -58,6 +65,15 @@ namespace Core
     private:
       void setSurfaces();
       void moveBufferToData();
+  };
+  
+  template< typename Element, size_t L, size_t T >
+  class hcField
+  {
+    Field< Element, L, T > const &d_parent;
+    
+    public:
+      hcField(Field< Element, L, T > const &parent); // Not yet implemented
   };
 
   std::complex< double > plus(std::complex< double > const &left, std::complex< double > const &right);
@@ -74,5 +90,6 @@ namespace Core
 #include "Field_g.template"
 #include "Field_h.template"
 #include "Field_i.template"
+#include "Field_j.template"
 
 #endif

@@ -2,13 +2,13 @@ template< typename Type >
 void leftMultiply(Field< Type, L, T > const &other);
 
 template< typename Type >
+void leftMultiply(hcField< Type, L, T > const &other);
+
+template< typename Type >
 void rightMultiply(Field< Type, L, T > const &other);
 
 template< typename Type >
-void leftMultiply(hcField< Type, L, T > const &other); // NOTE Not yet implemented
-
-template< typename Type >
-void rightMultiply(hcField< Type, L, T > const &other); // NOTE Not yet implemented
+void rightMultiply(hcField< Type, L, T > const &other);
 
 template< typename Type >
 Field< Element, L, T > &operator+=(Type const &rhand);
@@ -17,7 +17,7 @@ template< typename Type >
 Field< Element, L, T > &operator+=(Field< Type, L, T > const &rhand);
 
 template< typename Type >
-Field< Element, L, T > &operator+=(hcField< Type, L, T > const &rhand); // NOTE Not yet implemented
+Field< Element, L, T > &operator+=(hcField< Type, L, T > const &rhand);
 
 template< typename Type >
 Field< Element, L, T > &operator-=(Type const &rhand);
@@ -26,7 +26,7 @@ template< typename Type >
 Field< Element, L, T > &operator-=(Field< Type, L, T > const &rhand);
 
 template< typename Type >
-Field< Element, L, T > &operator-=(hcField< Type, L, T > const &rhand); // NOTE Not yet implemented
+Field< Element, L, T > &operator-=(hcField< Type, L, T > const &rhand);
 
 template< typename Type >
 Field< Element, L, T > &operator*=(Type const &rhand);
@@ -35,7 +35,7 @@ template< typename Type >
 Field< Element, L, T > &operator*=(Field< Type, L, T > const &rhand);
 
 template< typename Type >
-Field< Element, L, T > &operator*=(hcField< Type, L, T > const &rhand); // NOTE Not yet implemented
+Field< Element, L, T > &operator*=(hcField< Type, L, T > const &rhand);
 
 template< typename Type >
 Field< Element, L, T > &operator/=(Type const &rhand);

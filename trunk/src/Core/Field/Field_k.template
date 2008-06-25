@@ -8,7 +8,7 @@ namespace Core
     std::copy(other.d_parent.d_offsets, other.d_parent.d_offsets + 4, d_offsets);
     std::copy(other.d_parent.d_surfaces, other.d_parent.d_surfaces + 4, d_surfaces);
     Element *hisIter  = other.d_field;
-    for (Element *myIter = d_field; myIter != d_field + d_localVolume; ++myIter, ++hisIter)
+    for (Element *myIter = d_field; myIter != d_field + d_grid.localVolume(); ++myIter, ++hisIter)
       *myIter = hisIter->dagger();    
   }
 }

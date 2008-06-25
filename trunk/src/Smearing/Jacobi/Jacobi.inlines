@@ -1,0 +1,13 @@
+namespace Smearing
+{
+  void Jacobi::Jacobi(double kappa)
+    : d_kappa(kappa), d_weight(1 / (1 + 6 * kappa))
+  {}
+  
+  template< size_t L, size_t T >
+  void Jacobi::smear(Core::Field< QCD::Spinor, L, T > &spinorField, Core::Field< QCD::Gauge, L, T > &gaugeField, size_t iterations) const;
+  {
+    for (size_t ctr = 0; ctr < iterations; ++ctr)
+      smear(spinorField, gaugeField);
+  }
+}

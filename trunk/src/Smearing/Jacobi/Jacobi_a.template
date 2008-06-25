@@ -1,0 +1,37 @@
+namespace Smearing
+{
+  template< size_t L, size_t T >
+  void Jacobi::smear(Core::Field< QCD::Spinor, L, T > &spinorField, Core::Field< QCD::Gauge, L, T > &gaugeField) const
+  {
+    Buffer< QCD::Spinor > spinorBuffer(spinorField.grid());
+    
+    {
+      Core::Field< QCD::Spinor > shiftedSpinor(spinorField);
+      shiftedSpinor.shift(idx_X, dir_UP);
+      shiftedSpinor.leftMultiply(gaugeField.component< SU3::Matrix, L, T >(idx_X));
+      spinorBuffer += shiftedSpinor;
+    }
+       
+    {
+      Core::Field< QCD::Spinor > shiftedSpinor(spinorField);
+      shiftedSpinor.shift(idx_Y, dir_UP);
+      shiftedSpinor.leftMultiply(gaugeField.component< SU3::Matrix, L, T >(idx_Y));
+      spinorBuffer += shiftedSpinor;
+    }
+    
+    {
+      Core::Field< QCD::Spinor > shiftedSpinor(spinorField);
+      shiftedSpinor.shift(idx_Z, dir_UP);
+      shiftedSpinor.leftMultiply(gaugeField.component< SU3::Matrix, L, T >(idx_Z));
+      spinorBuffer += shiftedSpinor;
+    }
+    
+
+    
+    gaugeField.shift(idx_Z, dir_UP); // Return to original position
+    spinorBuffer *= d_kappa;
+    
+    spinorField += spinorBuffer;
+    spinorField *= d_weight;
+  }
+}

@@ -113,4 +113,11 @@ namespace Core
   {
     return d_bufferVolume;
   }
+  
+  template< size_t L, size_t T >
+  inline bool Grid< L, T >::bigEndian() const
+  {
+    return d_bigEndian;
+  }
+
 }

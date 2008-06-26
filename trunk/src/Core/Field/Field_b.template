@@ -11,6 +11,8 @@ namespace Core
       {
         d_grid.grid().Recv(d_field + written, (d_grid.contiguousBlock() * sizeof(Element)) / sizeof(double),
                            MPI::DOUBLE, 0, TAG_FILE_DISTRIBUTION);
+        if (!d_grid.bigEndian())
+          swapEndian(d_field + written, d_field + written + d_grid.contiguousBlock() , sizeof(double));
       }
       return;
     }
@@ -37,6 +39,8 @@ namespace Core
       if (!destination) // This block of data should be stored locally
       {
         std::copy(fileBuffer, fileBuffer + d_grid.contiguousBlock(), d_field + written);
+        if (!d_grid.bigEndian())
+          swapEndian(d_field + written, d_field + written + d_grid.contiguousBlock() , sizeof(double));
         written += d_grid.contiguousBlock();
         continue;
       }

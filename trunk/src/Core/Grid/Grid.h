@@ -28,6 +28,8 @@ namespace Core
     size_t d_localVolume;
     size_t d_bufferVolume;
 
+    bool d_bigEndian;
+
     public:
       Grid();
       ~Grid();
@@ -62,6 +64,8 @@ namespace Core
 
       size_t bufferVolume() const;
       size_t contiguousBlock() const;
+
+      bool bigEndian() const;
   };
 }
 

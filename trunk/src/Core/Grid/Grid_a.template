@@ -5,7 +5,7 @@ namespace Core
 
   template< size_t L, size_t T >
   Grid< L, T >::Grid()
-    : d_bufferVolume(0)
+    : d_bufferVolume(0), d_bigEndian(big_endian())
   {
     size_t gridSize = static_cast< size_t >(MPI::COMM_WORLD.Get_size());
     if (totalVolume() % gridSize) // No balanced distribution available

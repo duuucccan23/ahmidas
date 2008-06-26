@@ -11,14 +11,10 @@ using namespace std;
 int main(int argc, char **argv)
 {
   MPI::Init(argc, argv);
-  std::cout << "Init on node " << MPI::COMM_WORLD.Get_rank() << std::endl;
-//  Lime::Reader read("../test/conf.save");
-//  std::cout << "I managed to connect!" << std::endl;
-//  std::cout << "Failure state: " << read.fail() << std::endl;
-//  std::cout << "Size of file: " << read.size() << std::endl;
 
   Core::Grid<24, 48> grid;
   size_t myrank = grid.rank();
+ 
   if (myrank == 0)
   {
     size_t mylocvol = grid.localVolume();
@@ -43,13 +39,7 @@ int main(int argc, char **argv)
   Core::Field<QCD::Gauge, 24, 48> field(grid);
   field.readFromFile("../test/conf.save");
 
-//  QCD::Gauge *data = new QCD::Gauge[663552];
-//  read.read(data, 663552);
-//  Core::swapEndian(data, data + 663552, sizeof(double));
-
-
   MPI::Finalize();
-  //delete[] data;
   return 0;
 }
 

@@ -4,8 +4,7 @@ namespace Core
   size_t Core::Field< Element, L, T >::moveBufferToData(size_t written)
   {
     std::cout << written << std::endl;
-    std::copy(d_buffer, d_buffer + d_bufferSize / sizeof(Element), d_field + written);
-    written += d_bufferSize / sizeof(Element);
+
     return written;
   }
 }

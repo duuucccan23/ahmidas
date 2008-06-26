@@ -5,19 +5,20 @@ namespace Core
   void Core::Field< Element, T, L >::readFromFile(char const* fileName)
   {
     size_t written = 0; //Number of locally written elements
+
     if (d_grid.rank()) // Prepare to receive
     {
       std::cout << "I am node " << d_grid.rank() << ", now going to wait for data.\n";
-      for (size_t ctr = 0; ctr < (d_grid.localVolume() / d_grid.contiguousBlock()); ++ctr)
+      for (size_t ctr = 0; ctr < (d_grid.localVolume() / d_grid.contiguousBlock()); ++ctr, written += d_grid.contiguousBlock())
       {
-        d_grid.grid().Recv(d_buffer, (d_grid.contiguousBlock() * sizeof(Element)) / sizeof(double),
+        d_grid.grid().Recv(d_field + written, (d_grid.contiguousBlock() * sizeof(Element)) / sizeof(double),
                            MPI::DOUBLE, 0, TAG_FILE_DISTRIBUTION);
-        written = moveBufferToData(written);
       }
       return;
     }
 
     // At this point, we know we're node 0
+    Element *fileBuffer = new Element[d_grid.contiguousBlock()];
     Lime::Reader confFile(fileName);
 
     // Check the content of this file for a simple sanity condition.
@@ -28,27 +29,29 @@ namespace Core
     }
 
     size_t nBlocks = d_grid.totalVolume() / d_grid.contiguousBlock();
-
     std::cout << "I am node " << d_grid.rank() << ", now going to send " << nBlocks << " blocks of data.\n";
+    
     for (size_t ctr = 0; ctr < nBlocks; ++ctr)
     {
-      confFile.read(d_buffer, d_grid.contiguousBlock());
+      confFile.read(fileBuffer, d_grid.contiguousBlock());
       std::cout << "I am node " << d_grid.rank() << ", I just read block " << ctr << " from the confFile.\n";
       if (confFile.fail())
         MPI::COMM_WORLD.Abort(EIO);
 
-      size_t destination = d_grid.rank(ctr * d_grid.contiguousBlock()); //error here!
+      size_t destination = d_grid.rank(ctr * d_grid.contiguousBlock());
       std::cout << "The destination I computed = " << destination << " based on: " << ctr * d_grid.contiguousBlock() << std::endl;
       if (!destination) // This block of data should be stored locally
       {
         std::cout << "Going to store block " << ctr << " locally.\n";
-        written = moveBufferToData(written);
+        std::copy(fileBuffer, fileBuffer + d_grid.contiguousBlock(), d_field + written);
+	written += d_grid.contiguousBlock();
         continue;
       }
       std::cout << "Going to send block " << ctr << " to node " << destination << ".\n";
-      d_grid.grid().Send(d_buffer, (d_grid.contiguousBlock() * sizeof(Element)) / sizeof(double),
-                          MPI::DOUBLE, destination, TAG_FILE_DISTRIBUTION);
+      d_grid.grid().Send(fileBuffer, (d_grid.contiguousBlock() * sizeof(Element)) / sizeof(double),
+                         MPI::DOUBLE, destination, TAG_FILE_DISTRIBUTION);
     }
+    delete[] fileBuffer;
     std::cout << "Node 0 done.\n";
   }
 }

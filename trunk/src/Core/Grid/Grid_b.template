@@ -1,0 +1,12 @@
+namespace Core
+{
+  template< size_t L, size_t T >
+  size_t Core::Grid< L, T >::contiguousBlock() const
+  {
+    size_t cutIdx = 0;
+    for (; cutIdx < 4; ++cutIdx)
+      if (d_dims[cutIdx] > 1)
+        break;
+    return dimSize(cutIdx+1);
+  }
+}

@@ -48,16 +48,16 @@ namespace Core
         idx %= 3;
       }
 
-      d_dims[idx_X] = fac[0];
+      d_dims[idx_Z] = fac[0];
       d_dims[idx_Y] = fac[1];
-      d_dims[idx_Z] = fac[2];
+      d_dims[idx_X] = fac[2];
     }
 
-    d_sizes[idx_T] = T / d_dims[idx_T];
     d_sizes[idx_X] = L / d_dims[idx_X];
     d_sizes[idx_Y] = L / d_dims[idx_Y];
     d_sizes[idx_Z] = L / d_dims[idx_Z];
-
+    d_sizes[idx_T] = T / d_dims[idx_T];
+    
     // With the dimensions determined, we create a Cartesian communicator
     {
       bool wrap[] = {true, true, true, true};
@@ -66,8 +66,7 @@ namespace Core
 
       d_grid = MPI::COMM_WORLD.Create_cart(4 /* ndims */, intGrid, wrap, true /* reorder */);
 
-      bool boolGrid[4];
-      std::fill(boolGrid, boolGrid + 4, false);
+      bool boolGrid[4] = {false, false, false, false};
       boolGrid[idx_T] = true;
       d_timeSlice = d_grid.Sub(boolGrid);
       d_backbone = d_grid.Split(d_timeSlice.Get_rank(), 0); // We'll leave the rank in standard order
@@ -76,33 +75,23 @@ namespace Core
       std::copy(intGrid, intGrid + 4, d_coords);
     }
 
-    // Calculate and store the local volume for the distribution just constructed
-    d_dimSizes[idx_Z] = 1;
-    d_dimSizes[idx_Y] = d_dimSizes[idx_Z] * d_sizes[idx_Z];
-    d_dimSizes[idx_X] = d_dimSizes[idx_Y] * d_sizes[idx_Y];
-    d_dimSizes[idx_T] = d_dimSizes[idx_X] * d_sizes[idx_X];
+    // Calculate and store the dimensional size for the distribution just constructed
+    d_dimSizes[idx_X] = 1;
+    d_dimSizes[idx_Y] = d_sizes[idx_X];
+    d_dimSizes[idx_Z] = d_dimSizes[idx_Y] * d_sizes[idx_Y];
+    d_dimSizes[idx_T] = d_dimSizes[idx_Z] * d_sizes[idx_Z];
 
     // We want to make sure the setup is consistent, since errors here will be hard
     // enough to trace as it is...
     assert((d_dimSizes[idx_T] * d_sizes[idx_T]) == d_localVolume);
 
-    // Finally, we'd like to know the 3D volume of each dimension,
-    // and the largest volume over which we will be using communication
+    // Finally, we'd like to know the 3D surface of each dimension,
+    // and the largest surface over which we will be using communication
     for (size_t ctr = 0; ctr < 4; ++ctr)
     {
       d_surfaces[ctr] = d_localVolume / d_sizes[ctr];
       if (d_dims[ctr] != 1 && d_surfaces[ctr] > d_bufferVolume)
         d_bufferVolume = d_surfaces[ctr];
     }
-  }
-
-  template< size_t L, size_t T >
-  size_t Core::Grid< L, T >::contiguousBlock() const
-  {
-    size_t cutIdx = 0;
-    for (; cutIdx < 4; ++cutIdx)
-      if (d_dims[cutIdx] > 1)
-        break;
-    return dimSize(cutIdx+1);
   }
 }

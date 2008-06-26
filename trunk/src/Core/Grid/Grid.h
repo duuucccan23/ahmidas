@@ -65,6 +65,7 @@ namespace Core
 }
 
 #include "Grid.inlines"
-#include "Grid.templates"
+#include "Grid_a.template"
+#include "Grid_b.template"
 
 #endif

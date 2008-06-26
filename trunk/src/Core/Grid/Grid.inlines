@@ -25,7 +25,6 @@ namespace Core
   template< size_t L, size_t T >
   inline size_t Grid< L, T >::rank(int const *coord) const
   {
-    std::cout << coord[0] << " " << coord[1] << " " << coord[2] << " " << coord[3] << std::endl;
     return d_grid.Get_cart_rank(coord);
   }
 

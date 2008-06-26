@@ -37,8 +37,8 @@ int main(int argc, char **argv)
     cout << "The largest contiguous block is: " << grid.contiguousBlock() << endl;
   }
   Core::Field<QCD::Gauge, 24, 48> field(grid);
-  field.readFromFile("../test/conf.save");
-
+  field.readFromFile("../test/conf.save");  
+  
   MPI::Finalize();
   return 0;
 }

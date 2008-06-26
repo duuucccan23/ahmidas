@@ -3,11 +3,11 @@ namespace Core
   template< size_t L, size_t T >
   size_t Grid< L, T >::rank(size_t index) const
   {
-    int coord[4];    
-    coord[idx_X] = (index % dimSize(idx_T) / dimSize(idx_X)) / size(idx_X);
-    coord[idx_Y] = (index % dimSize(idx_X) / dimSize(idx_Y)) / size(idx_Y);
-    coord[idx_Z] = (index % dimSize(idx_Y) / dimSize(idx_Z)) / size(idx_Z);
-    coord[idx_T] = (index / dimSize(idx_T)) / size(idx_T);
+    int coord[4];
+    coord[idx_X] = (index % L) / size(idx_X);
+    coord[idx_Y] = (index % (L*L)) / (L * size(idx_Y));
+    coord[idx_Z] = (index % (L*L*L)) / (L*L*size(idx_Z));
+    coord[idx_T] = index / (L * L * L * size(idx_T));
     return rank(coord);
   }
 }

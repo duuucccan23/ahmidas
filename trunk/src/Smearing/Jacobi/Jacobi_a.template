@@ -5,29 +5,39 @@ namespace Smearing
   {
     Buffer< QCD::Spinor > spinorBuffer(spinorField.grid());
     
-    {
-      Core::Field< QCD::Spinor > shiftedSpinor(spinorField);
-      shiftedSpinor.shift(idx_X, dir_UP);
-      shiftedSpinor.leftMultiply(gaugeField.component< SU3::Matrix, L, T >(idx_X));
-      spinorBuffer += shiftedSpinor;
-    }
-       
-    {
-      Core::Field< QCD::Spinor > shiftedSpinor(spinorField);
-      shiftedSpinor.shift(idx_Y, dir_UP);
-      shiftedSpinor.leftMultiply(gaugeField.component< SU3::Matrix, L, T >(idx_Y));
-      spinorBuffer += shiftedSpinor;
-    }
+    Core::Field< QCD::Spinor > shiftedSpinor(spinorField);
+    shiftedSpinor.shift(idx_X, dir_UP);
+    shiftedSpinor.leftMultiply(gaugeField.component< SU3::Matrix, L, T >(idx_X));
+    spinorBuffer += shiftedSpinor;
+      
+    shiftedSpinor = spinorField;
+    shiftedSpinor.shift(idx_Y, dir_UP);
+    shiftedSpinor.leftMultiply(gaugeField.component< SU3::Matrix, L, T >(idx_Y));
+    spinorBuffer += shiftedSpinor;
+
+    shiftedSpinor = spinorField;
+    shiftedSpinor.shift(idx_Z, dir_UP);
+    shiftedSpinor.leftMultiply(gaugeField.component< SU3::Matrix, L, T >(idx_Z));
+    spinorBuffer += shiftedSpinor;
     
-    {
-      Core::Field< QCD::Spinor > shiftedSpinor(spinorField);
-      shiftedSpinor.shift(idx_Z, dir_UP);
-      shiftedSpinor.leftMultiply(gaugeField.component< SU3::Matrix, L, T >(idx_Z));
-      spinorBuffer += shiftedSpinor;
-    }
+    // We now calculate the backwards gauge part
     
-    
-    
+    Core::Field< QCD::Spinor > shiftedSpinor(spinorField);
+    shiftedSpinor.leftMultiply(gaugeField.component< SU3::Matrix, L, T >(idx_X));
+    shiftedSpinor.shift(idx_X, dir_UP);
+    spinorBuffer += shiftedSpinor;
+      
+    shiftedSpinor = spinorField;
+    shiftedSpinor.shift(idx_Y, dir_UP);
+    shiftedSpinor.leftMultiply(gaugeField.component< SU3::Matrix, L, T >(idx_Y));
+    spinorBuffer += shiftedSpinor;
+
+    shiftedSpinor = spinorField;
+    shiftedSpinor.shift(idx_Z, dir_UP);
+    shiftedSpinor.leftMultiply(gaugeField.component< SU3::Matrix, L, T >(idx_Z));
+    spinorBuffer += shiftedSpinor;
+
+    // Combine all the results here
     spinorBuffer *= d_kappa;
     spinorField += spinorBuffer;
     spinorField *= d_weight;

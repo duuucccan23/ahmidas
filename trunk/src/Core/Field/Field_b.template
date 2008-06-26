@@ -28,7 +28,7 @@ namespace Core
     }
 
     size_t nBlocks = d_grid.totalVolume() / d_grid.contiguousBlock();
-    
+
     std::cout << "I am node " << d_grid.rank() << ", now going to send " << nBlocks << " blocks of data.\n";
     for (size_t ctr = 0; ctr < nBlocks; ++ctr)
     {
@@ -49,5 +49,6 @@ namespace Core
       d_grid.grid().Send(d_buffer, (d_grid.contiguousBlock() * sizeof(Element)) / sizeof(double),
                           MPI::DOUBLE, destination, TAG_FILE_DISTRIBUTION);
     }
+    std::cout << "Node 0 done.\n";
   }
 }

@@ -5,13 +5,13 @@ namespace Core
   {
     if (--idx[idx_X] >= 0)
       return;
-    idx[idx_Z] += d_grid.size(idx_X);
+    idx[idx_X] += d_grid.size(idx_X);
     if (--idx[idx_Y] >= 0)
       return;
     idx[idx_Y] += d_grid.size(idx_Y);
     if (--idx[idx_Z] >= 0)
       return;
-    idx[idx_X] += d_grid.size(idx_Z);
+    idx[idx_Z] += d_grid.size(idx_Z);
     --idx[idx_T];
   }
 }

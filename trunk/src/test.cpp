@@ -11,6 +11,7 @@ using namespace std;
 int main(int argc, char **argv)
 {
   MPI::Init(argc, argv);
+  std::cout << "Init on node " << MPI::COMM_WORLD.Get_rank() << std::endl;
 //  Lime::Reader read("../test/conf.save");
 //  std::cout << "I managed to connect!" << std::endl;
 //  std::cout << "Failure state: " << read.fail() << std::endl;

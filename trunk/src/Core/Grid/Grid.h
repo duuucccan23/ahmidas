@@ -2,8 +2,9 @@
 #define GUARD_CORE_GRID_H
 
 #include <algorithm>
-#include <functional>
 #include <cerrno>
+#include <functional>
+#include <iostream>
 
 #include <mpi/mpi.h>
 
@@ -67,5 +68,6 @@ namespace Core
 #include "Grid.inlines"
 #include "Grid_a.template"
 #include "Grid_b.template"
+#include "Grid_c.template"
 
 #endif

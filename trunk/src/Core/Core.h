@@ -9,9 +9,9 @@ namespace Core
   // Definitions for clarity in refering to indices -- beware the inverted order...
   enum SpaceTimeIndex
   {
-    idx_Z = 0,
+    idx_X = 0,
     idx_Y = 1,
-    idx_X = 2,
+    idx_Z = 2,
     idx_T = 3
   };
 

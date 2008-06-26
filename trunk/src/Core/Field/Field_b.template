@@ -38,7 +38,7 @@ namespace Core
         MPI::COMM_WORLD.Abort(EIO);
 
       size_t destination = d_grid.rank(ctr * d_grid.contiguousBlock()); //error here!
-      std::cout << "The destination I computed = " << destination << std::endl;
+      std::cout << "The destination I computed = " << destination << " based on: " << ctr * d_grid.contiguousBlock() << std::endl;
       if (!destination) // This block of data should be stored locally
       {
         std::cout << "Going to store block " << ctr << " locally.\n";

@@ -27,6 +27,7 @@ namespace Core
 
     size_t d_localVolume;
     size_t d_bufferVolume;
+    size_t d_contiguousBlock;
 
     bool d_bigEndian;
 
@@ -66,6 +67,10 @@ namespace Core
       size_t contiguousBlock() const;
 
       bool bigEndian() const;
+
+    private:
+      void initContiguousBlock();
+      size_t greatestCommonDivisor(size_t high, size_t low);
   };
 }
 

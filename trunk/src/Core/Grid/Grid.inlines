@@ -113,7 +113,13 @@ namespace Core
   {
     return d_bufferVolume;
   }
-  
+
+  template< size_t L, size_t T >
+  inline size_t Grid< L, T >::contiguousBlock() const
+  {
+    return d_contiguousBlock;
+  }
+
   template< size_t L, size_t T >
   inline bool Grid< L, T >::bigEndian() const
   {

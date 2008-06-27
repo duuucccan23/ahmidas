@@ -8,11 +8,11 @@ namespace Core
       int l;
       char c[sizeof(int)];
     } u;
-    
+
     u.l = 1;
     return(u.c[sizeof(int) - 1] == 1);
   }
-  
+
   // Reverses byteorder, STL version
   template< typename T >
   inline void swapEndian(T *begin, T *end, size_t block = sizeof(T))
@@ -20,5 +20,5 @@ namespace Core
     char const *chEnd = reinterpret_cast< char* >(end);
     for (char *iter = reinterpret_cast< char* >(begin); iter < chEnd; iter += block)
       std::reverse(iter, iter + block);
-  }   
+  }
 }

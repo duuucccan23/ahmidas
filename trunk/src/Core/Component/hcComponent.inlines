@@ -1,0 +1,13 @@
+namespace Core
+{ 
+  < typename Element, size_t L, size_t T, typename Atom >
+  inline hcComponent(Component< Element, L, T, Atom > const &parent)
+    : d_parent(parent)
+  {}
+  
+  < typename Element, size_t L, size_t T, typename Atom >
+  inline Component< Element, L, T, Atom > const &dagger() const
+  {
+    return d_parent;
+  }
+}

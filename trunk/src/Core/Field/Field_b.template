@@ -24,7 +24,7 @@ namespace Core
     // Check the content of this file for a simple sanity condition.
     if (d_grid.totalVolume() * sizeof(Element) != confFile.size())
     {
-      std::cerr << "Content of " << fileName << " is of inappropriate size." << std::endl;
+      std::cerr << "Content of " << fileName << " is of inappropriate size.\nAborting." << std::endl;
       MPI::COMM_WORLD.Abort(EIO);
     }
 
@@ -33,7 +33,10 @@ namespace Core
     {
       confFile.read(fileBuffer, d_grid.contiguousBlock());
       if (confFile.fail())
+      {
+	std::cerr << "Unexpected error while reading file " << fileName << ".\nAborting." << std::endl;
         MPI::COMM_WORLD.Abort(EIO);
+      }
 
       size_t destination = d_grid.rank(ctr * d_grid.contiguousBlock());
       if (!destination) // This block of data should be stored locally

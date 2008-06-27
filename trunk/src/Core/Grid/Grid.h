@@ -70,7 +70,7 @@ namespace Core
 
     private:
       void initContiguousBlock();
-      size_t greatestCommonDivisor(size_t high, size_t low);
+      size_t greatestCommonDivisor(size_t x, size_t y);
   };
 }
 
@@ -78,5 +78,6 @@ namespace Core
 #include "Grid_a.template"
 #include "Grid_b.template"
 #include "Grid_c.template"
+#include "Grid_d.template"
 
 #endif

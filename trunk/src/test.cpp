@@ -12,7 +12,7 @@ int main(int argc, char **argv)
 {
   MPI::Init(argc, argv);
 
-  Core::Grid<32, 64> grid;
+  Core::Grid<24, 48> grid;
   Core::Field<QCD::Gauge, 24, 48> field(grid);
   field.readFromFile("../test/conf.save");
 

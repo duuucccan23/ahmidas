@@ -11,9 +11,13 @@ ADD_SUBDIRECTORY(Lime)
 ADD_SUBDIRECTORY(QCD)
 ADD_SUBDIRECTORY(SU3)
 
+
 ADD_EXECUTABLE(main main.cpp)
 TARGET_LINK_LIBRARIES(main Lime SU3)
 
 ENABLE_TESTING()
 ADD_EXECUTABLE(endian ../../test/endian.cpp)
 ADD_TEST(endianness endian)
+ADD_EXECUTABLE(reunit1 ../../test/reunit1.cpp)
+TARGET_LINK_LIBRARIES(reunit1 SU3)
+ADD_TEST(reunitarization_1 reunit1)

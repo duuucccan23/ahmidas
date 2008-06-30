@@ -1,0 +1,13 @@
+#summary Ahmidas installation manual
+
+= Introduction =
+
+During development, all the small incremental steps needed to get Ahmidas running can be easily dismissed as trivial. For a fresh install, all the steps should be gathered. That is the purpose of this page.
+
+= Installation =
+
+  # Ahmidas is currently stored in an SVN repository. So the first requirement is a working SVN-client. Tarballs may be an option later. Checkout instructions are available on the project website under Source.
+  # The build system is [http://www.cmake.org cmake}, which is usually available on systems or through systems such as apt.
+  # Compilation goes via and MPI compiler such as mpic++. So {{{export CXX=mpic++}}} and then run {{{cmake $PATH_TO_SOURCE_DIRECTORY}}}.
+  # Then {{{make all}}} to compile all the tests and all executables.
+  # Preferably run {{{make test}}} or the more verbose {{ctest -V}}}.

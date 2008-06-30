@@ -4,7 +4,6 @@ namespace Core
   void Core::Field< Element, T, L >::readFromFile(char const* fileName)
   {
     size_t written = 0; //Number of locally written elements
-    
     if (d_grid.rank()) // Prepare to receive
     {
       for (size_t ctr = 0; ctr < (d_grid.localVolume() / d_grid.contiguousBlock()); ++ctr, written += d_grid.contiguousBlock())

@@ -11,10 +11,15 @@ using namespace std;
 int main(int argc, char **argv)
 {
   MPI::Init(argc, argv);
-
   Core::Grid<24, 48> grid;
+  if (!grid.rank())
+    cout << "MPI and Grid initialized (on node 0).\n";
   Core::Field<QCD::Gauge, 24, 48> field(grid);
-  field.readFromFile("../test/conf.save");
+  if (!grid.rank())
+    cout << "Field initialized (on node 0).\n";
+  field.readFromFile("../test/conf.2448");
+  if (!grid.rank())
+    cout << "Field read and endianness corrected (on node 0).\n";
 
 /*
   short index[4] = {0,0,0,0}; 
@@ -28,4 +33,3 @@ int main(int argc, char **argv)
   MPI::Finalize();
   return 0;
 }
-

@@ -1,5 +1,4 @@
 #include <errno.h> 
-#include <iostream>
 #include <mpi.h>
 
 #include <Lime/Data/Data.h>

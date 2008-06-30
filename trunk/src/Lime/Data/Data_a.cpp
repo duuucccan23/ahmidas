@@ -3,11 +3,15 @@
 Lime::Data::Data(std::string const &filename)
   : reader(limeCreateReader(stream))
 {
+  std::cerr << "[DEBUG] Entered Lime::Data constructor" << std::endl;
   struct stat statusBuffer;
   int readStatus = stat(filename.c_str(), &statusBuffer);
+  std::cerr << "[DEBUG] Performed stat on " << filename << std::endl;
+  
   switch (readStatus)
   {
     case 0:
+      std::cerr << "[DEBUG] Managed to read file normally" << std::endl;
       break;
     case EACCES:
       std::cerr << "An error occured while trying to access " << filename 
@@ -28,6 +32,9 @@ Lime::Data::Data(std::string const &filename)
 		<< filename << '.' << std::endl;
       break;
   }
+  
+  std::cerr << "[DEBUG] Preparing to set up stream" << std::endl;
+  
   if (readStatus)
     MPI::COMM_WORLD.Abort(readStatus);
   

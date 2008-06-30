@@ -20,12 +20,13 @@ namespace Core
       iterator begin();
       iterator end();
 
-      Atom &element(Core::SpaceTimeIndex *idx);
-      hcComponent< typename Element, size_t L, size_t T, typename Atom > const &dagger() const;
+      Atom &element(Core::SpaceTimeIndex const *idx);
+      hcComponent< Element, L, T, Atom > const &dagger() const;
       
-      #include "Component.operator"
+      #include "Component.operators"
   };
   
+  template< typename Element, size_t L, size_t T, typename Atom >
   class hcComponent
   {
     Component< Element, L, T, Atom > const &d_parent;

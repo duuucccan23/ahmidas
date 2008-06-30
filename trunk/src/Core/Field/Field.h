@@ -13,8 +13,8 @@ namespace Core
   template< typename Element, size_t L, size_t T, typename Atom >
   class Component;
 
-   template< typename Element, size_t L, size_t T, typename Atom >
-   class hcComponent;
+  template< typename Element, size_t L, size_t T, typename Atom >
+  class hcComponent;
 
   
   template< typename Element, size_t L, size_t T >

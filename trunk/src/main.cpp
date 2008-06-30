@@ -5,6 +5,7 @@
 #include <Core/Core.h>
 #include <Core/Grid/Grid.h>
 #include <Core/Field/Field.h>
+//#include <Smearing/APE/APE.h>
 
 using namespace std;
 
@@ -17,19 +18,12 @@ int main(int argc, char **argv)
   Core::Field<QCD::Gauge, 24, 48> field(grid);
   if (!grid.rank())
     cout << "Field initialized (on node 0).\n";
-  field.readFromFile("../test/conf.2448");
+  field.readFromFile("../../test/conf.2448");
   if (!grid.rank())
     cout << "Field read and endianness corrected (on node 0).\n";
-
-/*
-  short index[4] = {0,0,0,0}; 
-  QCD::Gauge myGauge = field.element(index);
-  cout << myGauge[0];
+//  Smearing::APE ape(0.5);
 
   
-  QCD::Gauge myGauge = (*(--field.end()));
-  cout << myGauge[0];
-*/
   MPI::Finalize();
   return 0;
 }

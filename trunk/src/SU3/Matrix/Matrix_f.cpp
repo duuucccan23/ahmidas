@@ -1,4 +1,5 @@
 #include "Matrix.ih"
+#include <iostream>
 
 // This reunitarization procedure implements the 'French method' in an explicit way.
 // It has been written like this to avoid the single dependency on the LAPACK library
@@ -46,33 +47,30 @@ void SU3::Matrix::reunitarize()
   // This algorithm won't work for matrices that aren't full rank!
   if (c == 0)
     return;
-  
-  
+
   double Q  = a_3_2 - fac_1_3 * b; 
-  double R = a_3_2 * a_3 + 0.5 * (c - a_3 * b);
 
   // Due to precision issues, unitary matrices will sometimes fail here.
   // In that case, we find that R and Q are very close to 0, 
   // so we can explicitly check here.
-  
-  
-  if (Q <= 0 || R <= 0) // We should already be (almost) unitary
+
+  if (Q <= 0) // We should already be (almost) unitary
   {
     operator*=(std::pow(det(d_data), -fac_1_3));
     return;
   }
-  
+
   double sqrt_Q = std::sqrt(Q);
-  double Q_sqrt_Q = Q * sqrt_Q;
-  
-  if (R > Q_sqrt_Q) // This implies all sort of nastiness
+
+  double R_div_Q_sqrt_Q = (a_3_2 * a_3 + 0.5 * (c - a_3 * b)) / (Q * sqrt_Q);
+
+  if (R_div_Q_sqrt_Q < -1 || R_div_Q_sqrt_Q > 1) // This implies all sort of nastiness
   {
     operator*=(std::pow(det(d_data), -fac_1_3));
     return;
   }
-  
-  // theta_3 = 1/3 * acos(arg_theta)
-  double theta_3 = fac_1_3 * std::acos(R / (Q_sqrt_Q));
+
+  double theta_3 = fac_1_3 * std::acos(R_div_Q_sqrt_Q);
 
   double sqrt_min_2Q = -2 * sqrt_Q;
   double lambda[3] = { sqrt_min_2Q * std::cos(theta_3) - a_3,

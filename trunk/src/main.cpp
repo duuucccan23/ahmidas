@@ -5,7 +5,7 @@
 #include <Core/Core.h>
 #include <Core/Grid/Grid.h>
 #include <Core/Field/Field.h>
-//#include <Smearing/APE/APE.h>
+#include <Smearing/APE/APE.h>
 
 using namespace std;
 
@@ -23,7 +23,7 @@ int main(int argc, char **argv)
     cout << "Field read and endianness corrected (on node 0).\n";
 //  Smearing::APE ape(0.5);
 
-  
+
   MPI::Finalize();
   return 0;
 }

@@ -21,7 +21,7 @@ namespace Smearing
       void smear(Core::Field< QCD::Gauge, L, T > &field) const;
 
       template< size_t L, size_t T >
-      void smear(Core::Field< QCD::Gauge, L, T >, size_t iterations) const;
+      void smear(Core::Field< QCD::Gauge, L, T > &field, size_t iterations) const;
   };
 }
 

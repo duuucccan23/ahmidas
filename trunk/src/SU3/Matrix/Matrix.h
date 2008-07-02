@@ -43,23 +43,7 @@ namespace SU3
       std::complex< double > &operator()(int i, int j);
       std::complex< double > const &operator()(int i, int j) const;
 
-      template< typename T >
-      Matrix &operator+=(T const &rhand);
-
-      template< typename T >
-      Matrix &operator-=(T const &rhand);
-
-      template< typename T >
-      Matrix &operator*=(T const &rhand);
-
-      template< typename T >
-      Matrix &operator/=(T const &rhand);
-
-      void leftMultiply(Matrix const &other);
-      void rightMultiply(Matrix const &other);
-
-      void leftMultiply(hcMatrix const &other);
-      void rightMultiply(hcMatrix const &other);
+#include "Matrix.operators"
 
       hcMatrix const dagger() const;
 

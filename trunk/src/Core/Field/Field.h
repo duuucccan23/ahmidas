@@ -42,7 +42,9 @@ namespace Core
       
       ~Field();
 
+      template< typename Precision >
       void readFromFile(char const* fileName, char const* fileType);
+      
       Core::Grid< L, T > const &grid() const;
 
       void increaseIdx(short *idx) const;
@@ -67,7 +69,7 @@ namespace Core
 
       void averageTimeSlice(std::complex< double > *result);
 
-    private:
+    private:      
       void setSurfaces();
       size_t moveBufferToData(size_t written);
   };

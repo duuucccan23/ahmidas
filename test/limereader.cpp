@@ -6,7 +6,7 @@ int main(int argc, char **argv)
 {
   MPI::Init(argc, argv);
   size_t const bufSize = 1024;
-  Lime::Reader limeTest(argv[1]);
+  Lime::Reader limeTest(argv[1], argv[2]);
   size_t doubSize = limeTest.size() / sizeof(double);
   std::cout << "Connected to file " << argv[1] << ", with contents of size " << doubSize << ".\n"
             << "Preparing to read." << std::endl;

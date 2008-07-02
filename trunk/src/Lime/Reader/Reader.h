@@ -2,26 +2,27 @@
 #define GUARD_LIME_READER_H
 
 #include <string>
+#include <Core/Core.h>
 
 namespace Lime
 {
   struct Data;
-  
+
   class Reader
   {
     Data        *d_data;
     int mutable  d_fail;
     size_t       d_size;
-    
+
     public:
       Reader(std::string const &filename, std::string const &filetype);
       ~Reader();
-      
+
       int fail() const;
       size_t size() const;
 
-      void read(char *buffer, size_t elements) const;
-      
+      void read(char *buffer, uint64_t elements) const;
+
       template< typename DataType >
       void read(DataType *buffer, size_t elements) const;
   };

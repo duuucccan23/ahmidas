@@ -42,7 +42,7 @@ namespace Core
       
       ~Field();
 
-      void readFromFile(char const* fileName);
+      void readFromFile(char const* fileName, char const* fileType);
       Core::Grid< L, T > const &grid() const;
 
       void increaseIdx(short *idx) const;

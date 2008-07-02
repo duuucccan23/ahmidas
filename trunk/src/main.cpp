@@ -18,7 +18,7 @@ int main(int argc, char **argv)
   Core::Field<QCD::Gauge, 24, 48> field(grid);
   if (!grid.rank())
     cout << "Field initialized (on node 0).\n";
-  field.readFromFile("../../test/conf.2448");
+  field.readFromFile("../test/conf.2448");
   if (!grid.rank())
     cout << "Field read and endianness corrected (on node 0).\n";
 //  Smearing::APE ape(0.5);

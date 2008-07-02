@@ -43,7 +43,7 @@ void SU3::Matrix::reunitarize()
              - 2 * std::real(H2_off[0] * std::conj(H2_off[1]) * H2_off[2])
              + H2_diag[0] * H2_off_norm[2] + H2_diag[1] * H2_off_norm[1]
              + H2_diag[2] * H2_off_norm[0];
-  
+
   // This algorithm won't work for matrices that aren't full rank!
   if (c == 0)
     return;

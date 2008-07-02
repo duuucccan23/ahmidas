@@ -25,5 +25,6 @@ int main(int, char **)
   }
   std::cout << "Reunitarization of a previously reunitarized matrix does not leave it invariant.\n";
   std::cout << "Offending matrix was:\n" << copy;
+  std::cout << "Result of reunitarization was:\n" << mat;
   return 1;
 }

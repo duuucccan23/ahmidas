@@ -19,12 +19,11 @@ namespace Lime
       
       int fail() const;
       size_t size() const;
+
+      void read(char *buffer, size_t elements) const;
       
       template< typename DataType >
       void read(DataType *buffer, size_t elements) const;
-    
-    private:
-      void read(char *buffer, size_t elements) const;
   };
 }
 

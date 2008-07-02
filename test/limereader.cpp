@@ -7,10 +7,11 @@ int main(int argc, char **argv)
   MPI::Init(argc, argv);
   size_t const bufSize = 1024;
   Lime::Reader limeTest(argv[1]);
-  std::cout << "Connected to file " << argv[1] << ", with contents of size " << limeTest.size() << ".\n"
+  size_t doubSize = limeTest.size() / sizeof(double);
+  std::cout << "Connected to file " << argv[1] << ", with contents of size " << doubSize << ".\n"
             << "Preparing to read." << std::endl;
   double *buffer = new double[bufSize];
-  for (size_t ctr = 0; ctr < (limeTest.size() / bufSize); ++ctr)
+  for (size_t ctr = 0; ctr < (doubSize / bufSize); ++ctr)
   {
     limeTest.read(buffer, bufSize);
     if (limeTest.fail())
@@ -19,7 +20,8 @@ int main(int argc, char **argv)
       return 1;
     }
   }
-  limeTest.read(buffer, limeTest.size() % bufSize);
+  limeTest.read(buffer, doubSize % bufSize);
+  std::cout << "Remaining read: " << (doubSize % bufSize) << std::endl;
     if (limeTest.fail())
     {
       std::cout << "Reader went to failed state after final read." << std::endl;

@@ -11,4 +11,4 @@ ADD_TEST(reunitarization_2 reunit2)
 
 ADD_EXECUTABLE(limereader limereader.cpp)
 TARGET_LINK_LIBRARIES(limereader Lime)
-ADD_TEST(limereader limereader ../test/conf.2448)
+ADD_TEST(limereader limereader ../../test/conf.2448)

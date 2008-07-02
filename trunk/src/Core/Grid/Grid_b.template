@@ -4,9 +4,8 @@ namespace Core
   void Core::Grid< L, T >::initContiguousBlock()
   {
     size_t cutIdx = 0;
-    for (; cutIdx < 4; ++cutIdx)
-      if (d_dims[cutIdx] > 1)
-        break;
-    d_contiguousBlock = dimSize(cutIdx+1);
+    while ((d_dims[cutIdx] == 1) && (cutIdx < 4))
+      ++cutIdx;
+    d_contiguousBlock = dimSize(cutIdx);
   }
 }

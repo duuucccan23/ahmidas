@@ -38,9 +38,9 @@ namespace Core
 
   template< typename Element, size_t L, size_t T >
   template< typename Atom >
-  inline Component< Element, L, T, Atom > Field< Element, L, T >::component(size_t idx)
+  inline Component< Element, L, T, Atom > Field< Element, L, T >::component(SpaceTimeIndex idx)
   {
-    return FieldComponent(*this, idx);
+    return Component< Element, L, T, Atom >(*this, idx);
   }
 
   template< typename Element, size_t L, size_t T >
@@ -65,7 +65,7 @@ namespace Core
   {
     typename hcField< Type, L, T >::iterator hisIter = other.d_parent.begin();
     for (iterator myIter = begin(); myIter != end(); ++myIter, ++hisIter)
-      myIter->leftMultiply(hisIter->dagger());    
+      myIter->leftMultiply(hisIter->dagger());
   }
 
   template< typename Element, size_t L, size_t T >
@@ -74,7 +74,7 @@ namespace Core
   {
     typename Component< Type, L, T, Atom >::iterator hisIter = other.begin();
     for (iterator myIter = begin(); myIter != end(); ++myIter, ++hisIter)
-      myIter->leftMultiply(*hisIter);    
+      myIter->leftMultiply(*hisIter);
   }
 
   template< typename Element, size_t L, size_t T >
@@ -83,7 +83,7 @@ namespace Core
   {
     typename Component< Type, L, T, Atom >::iterator hisIter = other.parent().begin();
     for (iterator myIter = begin(); myIter != end(); ++myIter, ++hisIter)
-      myIter->leftMultiply(hisIter->dagger());    
+      myIter->leftMultiply(hisIter->dagger());
   }
 
   template< typename Element, size_t L, size_t T >
@@ -94,7 +94,7 @@ namespace Core
     for (iterator myIter = begin(); myIter != end(); ++myIter, ++hisIter)
       myIter->rightMultiply(*hisIter);
   }
-  
+
   template< typename Element, size_t L, size_t T >
   template< typename Type >
   inline void Field< Element, L, T >::rightMultiply(hcField< Type, L, T > const &other)
@@ -110,7 +110,7 @@ namespace Core
   {
     typename Component< Type, L, T, Atom >::iterator hisIter = other.begin();
     for (iterator myIter = begin(); myIter != end(); ++myIter, ++hisIter)
-      myIter->righttMultiply(*hisIter);        
+      myIter->righttMultiply(*hisIter);
   }
 
   template< typename Element, size_t L, size_t T >
@@ -119,7 +119,7 @@ namespace Core
   {
     typename Component< Type, L, T, Atom >::iterator hisIter = other.parent().begin();
     for (iterator myIter = begin(); myIter != end(); ++myIter, ++hisIter)
-      myIter->rightMultiply(hisIter->dagger());       
+      myIter->rightMultiply(hisIter->dagger());
   }
 
   template< typename Element, size_t L, size_t T >
@@ -138,7 +138,7 @@ namespace Core
     typename Field< Type, L, T >::iterator hisIter = other.begin();
     for (iterator myIter = begin(); myIter != end(); ++myIter, ++hisIter)
       *myIter += *hisIter;
-    return *this;    
+    return *this;
   }
 
   template< typename Element, size_t L, size_t T >
@@ -148,17 +148,17 @@ namespace Core
     typename hcField< Type, L, T >::iterator hisIter = other.d_parent.begin();
     for (iterator myIter = begin(); myIter != end(); ++myIter, ++hisIter)
       *myIter += hisIter->dagger();
-    return *this;    
+    return *this;
   }
 
   template< typename Element, size_t L, size_t T >
   template< typename Type, typename Atom >
   inline Field< Element, L, T > &Field< Element, L, T >::operator+=(Component< Type, L, T, Atom > const &other)
-  {	
+  {
     typename Component< Type, L, T, Atom >::iterator hisIter = other.begin();
     for (iterator myIter = begin(); myIter != end(); ++myIter, ++hisIter)
-      myIter->operator+=(*hisIter);    
-    return *this;    
+      myIter->operator+=(*hisIter);
+    return *this;
   }
 
   template< typename Element, size_t L, size_t T >
@@ -168,7 +168,7 @@ namespace Core
     typename Component< Type, L, T, Atom >::iterator hisIter = other.parent().begin();
     for (iterator myIter = begin(); myIter != end(); ++myIter, ++hisIter)
       myIter->operator+=(hisIter->dagger());
-    return *this;    
+    return *this;
   }
 
   template< typename Element, size_t L, size_t T >
@@ -177,7 +177,7 @@ namespace Core
   {
     for (Element *iter = d_field; iter != d_field + d_grid.volume(); ++iter)
       *iter -= rhand;
-    return *this;    
+    return *this;
   }
 
   template< typename Element, size_t L, size_t T >
@@ -187,9 +187,9 @@ namespace Core
     typename Field< Type, L, T >::iterator hisIter  = other.begin();
     for (iterator myIter = begin(); myIter != end(); ++myIter, ++hisIter)
       *myIter -= *hisIter;
-    return *this;    
+    return *this;
   }
-  
+
   template< typename Element, size_t L, size_t T >
   template< typename Type >
   inline Field< Element, L, T > &Field< Element, L, T >::operator-=(hcField< Type, L, T > const &other)
@@ -197,7 +197,7 @@ namespace Core
     typename hcField< Type, L, T >::iterator hisIter  = other.parent().begin();
     for (iterator myIter = begin(); myIter != end(); ++myIter, ++hisIter)
       *myIter->operator-=(hisIter->dagger());
-    return *this;    
+    return *this;
   }
 
   template< typename Element, size_t L, size_t T >
@@ -206,8 +206,8 @@ namespace Core
   {
     typename Component< Type, L, T, Atom >::iterator hisIter = other.begin();
     for (iterator myIter = begin(); myIter != end(); ++myIter, ++hisIter)
-      myIter->operator-=(*hisIter);        
-    return *this;    
+      myIter->operator-=(*hisIter);
+    return *this;
   }
 
   template< typename Element, size_t L, size_t T >
@@ -216,8 +216,8 @@ namespace Core
   {
     typename Component< Type, L, T, Atom >::iterator hisIter = other.parent().begin();
     for (iterator myIter = begin(); myIter != end(); ++myIter, ++hisIter)
-      myIter->operator-=(hisIter->dagger()); 
-    return *this;    
+      myIter->operator-=(hisIter->dagger());
+    return *this;
   }
 
   template< typename Element, size_t L, size_t T >
@@ -226,7 +226,7 @@ namespace Core
   {
     for (Element *iter = d_field; iter != d_field + d_grid.volume(); ++iter)
       *iter *= rhand;
-    return *this;    
+    return *this;
   }
 
   template< typename Element, size_t L, size_t T >
@@ -236,7 +236,7 @@ namespace Core
     typename hcField< Type, L, T >::iterator hisIter = other.d_parent.begin();
     for (iterator myIter = begin(); myIter != end(); ++myIter, ++hisIter)
       *myIter *= hisIter->dagger();
-    return *this;    
+    return *this;
   }
 
   template< typename Element, size_t L, size_t T >
@@ -245,7 +245,7 @@ namespace Core
   {
     typename Component< Type, L, T, Atom >::iterator hisIter = other.begin();
     for (iterator myIter = begin(); myIter != end(); ++myIter, ++hisIter)
-      myIter->operator-=(*hisIter);    
+      myIter->operator-=(*hisIter);
     return *this;
   }
 
@@ -255,8 +255,8 @@ namespace Core
   {
     typename Component< Type, L, T, Atom >::iterator hisIter = other.parent().begin();
     for (iterator myIter = begin(); myIter != end(); ++myIter, ++hisIter)
-      myIter->operator*=(hisIter->dagger()); 
-    return *this;    
+      myIter->operator*=(hisIter->dagger());
+    return *this;
   }
 
   template< typename Element, size_t L, size_t T >
@@ -265,7 +265,7 @@ namespace Core
   {
     for (Element *iter = d_field; iter != d_field + d_grid.volume(); ++iter)
       *iter /= rhand;
-    return *this;    
+    return *this;
   }
 
   template< typename Element, size_t L, size_t T >
@@ -275,5 +275,5 @@ namespace Core
                    + (((idx[idx_X] + d_offsets[idx_X]) % d_grid.dim(idx_X)) * d_grid.dimSize(idx_X))
                    + (((idx[idx_Y] + d_offsets[idx_Y]) % d_grid.dim(idx_Y)) * d_grid.dimSize(idx_Y))
                    + (((idx[idx_Z] + d_offsets[idx_Z]) % d_grid.dim(idx_Z)) * d_grid.dimSize(idx_Z))];
-  }  
+  }
 }

@@ -16,7 +16,7 @@ namespace Core
   template< typename Element, size_t L, size_t T, typename Atom >
   class hcComponent;
 
-  
+
   template< typename Element, size_t L, size_t T >
   class hcField;
 
@@ -39,12 +39,12 @@ namespace Core
 
       explicit Field(hcField< Element, L, T > const &other);
       Field< Element, L, T > &operator=(Field< Element, L, T > const &other);
-      
+
       ~Field();
 
       template< typename Precision >
       void readFromFile(char const* fileName, char const* fileType);
-      
+
       Core::Grid< L, T > const &grid() const;
 
       void increaseIdx(short *idx) const;
@@ -58,7 +58,7 @@ namespace Core
       iterator end();
 
       template< typename Atom >
-      Component< Element, L, T, Atom > component(size_t idx);
+      Component< Element, L, T, Atom > component(SpaceTimeIndex idx);
 
       Field< Element, L, T > &shift(SpaceTimeIndex idx, Direction shift);
 
@@ -69,19 +69,19 @@ namespace Core
 
       void averageTimeSlice(std::complex< double > *result);
 
-    private:      
+    private:
       void setSurfaces();
       size_t moveBufferToData(size_t written);
   };
-  
+
   template< typename Element, size_t L, size_t T >
   class hcField
   {
     friend class Field< Element, L, T >;
     Field< Element, L, T > const &d_parent;
-    
+
     hcField(Field< Element, L, T > const &parent);
-    
+
     public:
       Field< Element, L, T > const &dagger() const;
   };

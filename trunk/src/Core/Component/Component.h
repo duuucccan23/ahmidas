@@ -5,10 +5,12 @@ namespace Core
 {
   template< typename Element, size_t L, size_t T, typename Atom >
   class hcComponent;
-  
+
   template< typename Element, size_t L, size_t T, typename Atom >
   class Component
   {
+    friend class Field< Element, L, T >;
+
     Field< Element, L, T > &d_parent;
     Core::SpaceTimeIndex    d_component;
 
@@ -22,21 +24,21 @@ namespace Core
 
       Atom &element(Core::SpaceTimeIndex const *idx);
       hcComponent< Element, L, T, Atom > const &dagger() const;
-      
+
       #include "Component.operators"
   };
-  
+
   template< typename Element, size_t L, size_t T, typename Atom >
   class hcComponent
   {
     Component< Element, L, T, Atom > const &d_parent;
-    
+
     hcComponent(Component< Element,  L,  T,  Atom > const &parent);
-    
+
     public:
       Component< Element, L, T, Atom > const &dagger() const;
   };
-  
+
 }
 
 #include "Component.inlines"

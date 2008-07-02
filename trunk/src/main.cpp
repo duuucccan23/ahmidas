@@ -22,8 +22,8 @@ int main(int argc, char **argv)
   field.readFromFile< double >("../test/conf.2448", "ildg-binary-data");
   if (!grid.rank())
     cout << "Field read and endianness corrected (on node 0).\n";
-  Smearing::APE ape(0.5);
-//  ape.smear(field, 1);
+  //Smearing::APE ape(0.5);
+  //ape.smear(field, 1);
 
   MPI::Finalize();
   return 0;

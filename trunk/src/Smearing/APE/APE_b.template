@@ -22,30 +22,30 @@ namespace Smearing
     Core::Buffer< SU3::Matrix > stapleYminZ(field.grid(), baseMatrix);
 
     // We start from (0, 0, 0), where we will end as well...
-      stapleYplusX.rightMultiply(shifter.component(Core::idx_X)); // 1
-      stapleZplusY.rightMultiply(shifter.component(Core::idx_Y)); // 1
-      stapleXplusZ.rightMultiply(shifter.component(Core::idx_Z)); // 1
-      stapleZplusX.rightMultiply(shifter.component(Core::idx_X)); // 1
+      stapleYplusX.rightMultiply(shifter.component< SU3::Matrix >(Core::idx_X)); // 1
+      stapleZplusY.rightMultiply(shifter.component< SU3::Matrix >(Core::idx_Y)); // 1
+      stapleXplusZ.rightMultiply(shifter.component< SU3::Matrix >(Core::idx_Z)); // 1
+      stapleZplusX.rightMultiply(shifter.component< SU3::Matrix >(Core::idx_X)); // 1
 
     shifter.shift(Core::idx_X, Core::dir_UP);   // ( 1, 0, 0)   1
 
-      stapleXplusY.leftMultiply(shifter.component(Core::idx_Y)); // 1
-      stapleYplusX.rightMultiply(shifter.component(Core::idx_Y)); // 2
-      stapleZplusX.rightMultiply(shifter.component(Core::idx_Z)); // 2
+      stapleXplusY.leftMultiply(shifter.component< SU3::Matrix >(Core::idx_Y)); // 1
+      stapleYplusX.rightMultiply(shifter.component< SU3::Matrix >(Core::idx_Y)); // 2
+      stapleZplusX.rightMultiply(shifter.component< SU3::Matrix >(Core::idx_Z)); // 2
 
     shifter.shift(Core::idx_Z, Core::dir_DOWN); // ( 1, 0,-1)   2
 
-      stapleXminZ.leftMultiply(shifter.component(Core::idx_Z)); // 1
+      stapleXminZ.leftMultiply(shifter.component< SU3::Matrix >(Core::idx_Z)); // 1
 
     shifter.shift(Core::idx_X, Core::dir_DOWN); // ( 0, 0,-1)   3
 
-      stapleXminZ.leftMultiply(shifter.component(Core::idx_X)); // 2
-      stapleXminZ.leftMultiply(shifter.component(Core::idx_Z).dagger()); // 3
-      stapleYminZ.rightMultiply(shifter.component(Core::idx_Z).dagger()); // 1
-      stapleYminZ.rightMultiply(shifter.component(Core::idx_Y)); // 2
+      stapleXminZ.leftMultiply(shifter.component< SU3::Matrix >(Core::idx_X)); // 2
+      stapleXminZ.leftMultiply((shifter.component< SU3::Matrix >(Core::idx_Z)).dagger()); // 3
+      stapleYminZ.rightMultiply((shifter.component< SU3::Matrix >(Core::idx_Z)).dagger()); // 1
+      stapleYminZ.rightMultiply(shifter.component< SU3::Matrix >(Core::idx_Y)); // 2
 
       // Finished a staple! Add and reassign the memory
-      std_foreach(field.component(Core::idx_X).begin(), field.component(Core::idx_X).end(),
+      std_foreach((field.component< SU3::Matrix >(Core::idx_X)).begin(), (field.component< SU3::Matrix >(Core::idx_X)).end(),
                   Core::add(stapleXminZ));
       Core::Buffer< SU3::Matrix > stapleYplusZ(stapleXminZ, baseMatrix);
 
@@ -54,91 +54,91 @@ namespace Smearing
       stapleYminZ.rightMultiply(field.Component(Core::idx_Z)); // 3
 
       // Finished a staple! Add and reassign the memory
-      std_foreach(field.component(Core::idx_Y).begin(), field.component(Core::idx_Y).end(),
+      std_foreach((field.component< SU3::Matrix >(Core::idx_Y)).begin(), (field.component< SU3::Matrix >(Core::idx_Y)).end(),
                   Core::add(stapleYminZ));
       Core::Buffer< SU3::Matrix > stapleZminX(stapleYminZ, baseMatrix);
 
     shifter.shift(Core::idx_Z, Core::dir_UP);    // ( 0, 1, 0)   5
 
-      stapleXplusY.leftMultiply(shifter.component(Core::idx_X));
-      stapleYplusX.rightMultiply(shifter.component(Core::idx_X).dagger());
-      stapleYplusZ.leftMultiply(shifter.component(Core::idx_Z).dagger());
-      stapleZplusY.rightMultiply(shifter.component(Core::idx_Z));
+      stapleXplusY.leftMultiply(shifter.component< SU3::Matrix >(Core::idx_X));
+      stapleYplusX.rightMultiply((shifter.component< SU3::Matrix >(Core::idx_X)).dagger());
+      stapleYplusZ.leftMultiply((shifter.component< SU3::Matrix >(Core::idx_Z)).dagger());
+      stapleZplusY.rightMultiply(shifter.component< SU3::Matrix >(Core::idx_Z));
 
-      std_foreach(field.component(Core::idx_Y).begin(), field.component(Core::idx_Y).end(),
+      std_foreach((field.component< SU3::Matrix >(Core::idx_Y)).begin(), (field.component< SU3::Matrix >(Core::idx_Y)).end(),
                   Core::add(stapleYplusX));
       Core::Buffer< SU3::Matrix > stapleYminX(stapleYplusX, baseMatrix);
 
     shifter.shift(Core::idx_X, Core::dir_DOWN); // (-1, 1, 0)   6
 
-      stapleYminX.leftMultiply(shifter.component(Core::idx_X));
+      stapleYminX.leftMultiply(shifter.component< SU3::Matrix >(Core::idx_X));
 
     shifter.shift(Core::idx_Y, Core::dir_DOWN); // (-1, 0, 0)   7
 
-      stapleYminX.leftMultiply(shifter.component(Core::idx_Y));
-      stapleYminX.leftMultiply(shifter.component(Core::idx_X).dagger());
-      stapleZminX.rightMultiply(shifter.component(Core::idx_X).dagger());
-      stapleZminX.rightMultiply(shifter.component(Core::idx_Z));
+      stapleYminX.leftMultiply(shifter.component< SU3::Matrix >(Core::idx_Y));
+      stapleYminX.leftMultiply((shifter.component< SU3::Matrix >(Core::idx_X)).dagger());
+      stapleZminX.rightMultiply((shifter.component< SU3::Matrix >(Core::idx_X)).dagger());
+      stapleZminX.rightMultiply(shifter.component< SU3::Matrix >(Core::idx_Z));
 
-      std_foreach(field.component(Core::idx_Y).begin(), field.component(Core::idx_Y).end(),
+      std_foreach((field.component< SU3::Matrix >(Core::idx_Y)).begin(), (field.component< SU3::Matrix >(Core::idx_Y)).end(),
                   Core::add(stapleYminX));
       Core::Buffer< SU3::Matrix > stapleXminY(stapleYminX, baseMatrix);
 
     shifter.shift(Core::idx_Z, Core::dir_UP);   // (-1, 0, 1)   8
 
-      stapleZminX.rightMultiply(shifter.component(Core::idx_X));
+      stapleZminX.rightMultiply(shifter.component< SU3::Matrix >(Core::idx_X));
 
-      std_foreach(field.component(Core::idx_Z).begin(), field.component(Core::idx_Z).end(),
+      std_foreach((field.component< SU3::Matrix >(Core::idx_Z)).begin(), (field.component< SU3::Matrix >(Core::idx_Z)).end(),
                   Core::add(stapleZminX));
       Core::Buffer< SU3::Matrix > stapleZminY(stapleZminX, baseMatrix);
 
     shifter.shift(Core::idx_X, Core::dir_UP);   // ( 0, 0, 1)   9
 
-      stapleZminY.leftMultiply(shifter.component(Core::idx_Y).dagger());
-      stapleXplusZ.rightMultiply(shifter.component(Core::idx_X));
-      stapleYplusZ.leftMultiply(shifter.component(Core::idx_Y));
-      stapleZplusX.rightMultiply(shifter.component(Core::idx_X).dagger());
+      stapleZminY.leftMultiply((shifter.component< SU3::Matrix >(Core::idx_Y)).dagger());
+      stapleXplusZ.rightMultiply(shifter.component< SU3::Matrix >(Core::idx_X));
+      stapleYplusZ.leftMultiply(shifter.component< SU3::Matrix >(Core::idx_Y));
+      stapleZplusX.rightMultiply((shifter.component< SU3::Matrix >(Core::idx_X)).dagger());
 
-      std_foreach(field.component(Core::idx_Z).begin(), field.component(Core::idx_Z).end(),
+      std_foreach((field.component< SU3::Matrix >(Core::idx_Z)).begin(), (field.component< SU3::Matrix >(Core::idx_Z)).end(),
                   Core::add(stapleZplusX));
-      std_foreach(field.component(Core::idx_Z).begin(), field.component(Core::idx_Z).end(),
+      std_foreach((field.component< SU3::Matrix >(Core::idx_Z)).begin(), (field.component< SU3::Matrix >(Core::idx_Z)).end(),
                   Core::add(stapleZplusY));
 
     shifter.shift(Core::idx_Y, Core::dir_DOWN); // ( 0,-1, 1)  10
 
-      stapleZminY.leftMultiply(shifter.component(Core::idx_Y));
+      stapleZminY.leftMultiply(shifter.component< SU3::Matrix >(Core::idx_Y));
 
     shifter.shift(Core::idx_Z, Core::dir_DOWN); // ( 0,-1, 0)  11
 
-      stapleXminY.rightMultiply(shifter.component(Core::idx_Y).dagger());
-      stapleXminY.rightMultiply(shifter.component(Core::idx_X));
-      stapleZminY.leftMultiply(shifter.component(Core::idx_Z));
-      stapleZminY.leftMultiply(shifter.component(Core::idx_Y).dagger());
+      stapleXminY.rightMultiply((shifter.component< SU3::Matrix >(Core::idx_Y)).dagger());
+      stapleXminY.rightMultiply(shifter.component< SU3::Matrix >(Core::idx_X));
+      stapleZminY.leftMultiply(shifter.component< SU3::Matrix >(Core::idx_Z));
+      stapleZminY.leftMultiply((shifter.component< SU3::Matrix >(Core::idx_Y)).dagger());
 
-      std_foreach(field.component(Core::idx_Z).begin(), field.component(Core::idx_Z).end(),
+      std_foreach((field.component< SU3::Matrix >(Core::idx_Z)).begin(), (field.component< SU3::Matrix >(Core::idx_Z)).end(),
                   Core::add(stapleZminY));
 
     shifter.shift(Core::idx_X, Core::dir_UP);   // ( 1,-1, 0)  12
 
-      stapleXminY.rightMultiply(shifter.component(Core::idx_Y));
+      stapleXminY.rightMultiply(shifter.component< SU3::Matrix >(Core::idx_Y));
 
-      std_foreach(field.component(Core::idx_X).begin(), field.component(Core::idx_X).end(),
+      std_foreach((field.component< SU3::Matrix >(Core::idx_X)).begin(), (field.component< SU3::Matrix >(Core::idx_X)).end(),
                   Core::add(stapleXminY));
 
     shifter.shift(Core::idx_Y, Core::dir_UP);   // ( 1, 0, 0)  13
 
-      stapleXplusZ.rightMultiply(shifter.component(Core::idx_Z).dagger());
+      stapleXplusZ.rightMultiply((shifter.component< SU3::Matrix >(Core::idx_Z)).dagger());
 
-      std_foreach(field.component(Core::idx_X).begin(), field.component(Core::idx_X).end(),
+      std_foreach((field.component< SU3::Matrix >(Core::idx_X)).begin(), (field.component< SU3::Matrix >(Core::idx_X)).end(),
                   Core::add(stapleXminY));
 
     shifter.shift(Core::idx_X, Core::dir_DOWN); // ( 0, 0, 0)  14
-      stapleXplusY.leftMultiply(shifter.component(Core::idx_Y));
-      stapleYplusZ.leftMultiply(shifter.component(Core::idx_Z));
+      stapleXplusY.leftMultiply(shifter.component< SU3::Matrix >(Core::idx_Y));
+      stapleYplusZ.leftMultiply(shifter.component< SU3::Matrix >(Core::idx_Z));
 
-      std_foreach(field.component(Core::idx_X).begin(), field.component(Core::idx_X).end(),
+      std_foreach((field.component< SU3::Matrix >(Core::idx_X)).begin(), (field.component< SU3::Matrix >(Core::idx_X)).end(),
                   Core::add(stapleXplusY));
-      std_foreach(field.component(Core::idx_Y).begin(), field.component(Core::idx_Y).end(),
+      std_foreach((field.component< SU3::Matrix >(Core::idx_Y)).begin(), (field.component< SU3::Matrix >(Core::idx_Y)).end(),
                   Core::add(stapleYplusZ));
 
     // That should be it! We made a full round and summed 12 staples over the field in total.

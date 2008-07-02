@@ -14,7 +14,7 @@ namespace Lime
     size_t       d_size;
     
     public:
-      Reader(std::string const &filename);
+      Reader(std::string const &filename, std::string const &filetype);
       ~Reader();
       
       int fail() const;

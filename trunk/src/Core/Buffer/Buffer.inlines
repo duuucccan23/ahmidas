@@ -89,7 +89,7 @@ namespace Core
   {
     typename Field< OtherElement, L, T >::const_iterator otherItr = other.begin();
     for (iterator itr = begin(); itr != end(); ++itr, ++otherItr)
-      itr->leftMultiply(*otherItr);
+      itr->rightMultiply(*otherItr);
   }
 
   template< typename Element >
@@ -98,7 +98,7 @@ namespace Core
   {
     typename Field< OtherElement, L, T >::const_iterator otherItr = other.begin();
     for (iterator itr = begin(); itr != end(); ++itr, ++otherItr)
-      itr->leftMultiply(otherItr->dagger());
+      itr->rightMultiply(otherItr->dagger());
   }
 
   template< typename Element >
@@ -107,7 +107,7 @@ namespace Core
   {
     typename Component< OtherElement, L, T, Atom >::const_iterator otherItr = other.begin();
     for (iterator itr = begin(); itr != end(); ++itr, ++otherItr)
-      itr->leftMultiply(*otherItr);
+      itr->rightMultiply(*otherItr);
   }
 
   template< typename Element >
@@ -116,6 +116,6 @@ namespace Core
   {
     typename Component< OtherElement, L, T, Atom >::const_iterator otherItr = other.begin();
     for (iterator itr = begin(); itr != end(); ++itr, ++otherItr)
-      itr->leftMultiply(otherItr->dagger());
+      itr->rightMultiply(otherItr->dagger());
   }
 }

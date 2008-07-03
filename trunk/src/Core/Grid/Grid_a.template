@@ -46,7 +46,7 @@ namespace Core
     d_sizes[idx_Y] = L / d_dims[idx_Y];
     d_sizes[idx_Z] = L / d_dims[idx_Z];
     d_sizes[idx_T] = T / d_dims[idx_T];
-    
+
     // With the dimensions determined, we create a Cartesian communicator
     {
       bool wrap[] = {true, true, true, true};

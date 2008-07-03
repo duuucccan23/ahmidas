@@ -16,3 +16,7 @@ ADD_TEST(limereader limereader ../../test/conf.2448 ildg-binary-data)
 ADD_EXECUTABLE(fieldcomponent fieldcomponent.cpp)
 TARGET_LINK_LIBRARIES(fieldcomponent Core)
 ADD_TEST(fieldcomponent fieldcomponent)
+
+ADD_EXECUTABLE(grid grid.cpp)
+TARGET_LINK_LIBRARIES(grid Core)
+ADD_TEST(grid grid)

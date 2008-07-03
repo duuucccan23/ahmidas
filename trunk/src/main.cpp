@@ -23,7 +23,8 @@ int main(int argc, char **argv)
   if (!grid.rank())
     cout << "Field read and endianness corrected (on node 0).\n";
   Smearing::APE ape(0.5);
-  ape.smear(field, 1);
+
+  ape.smear(field, 20);
 
   MPI::Finalize();
   return 0;

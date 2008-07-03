@@ -30,7 +30,7 @@ namespace Smearing
     Core::Component< QCD::Gauge, L, T, SU3::Matrix > fieldZ(field, Core::idx_Z);
 
     // We start from (0, 0, 0), where we will end as well...
-/*      stapleYplusX.rightMultiply(shiftX); // 1
+      stapleYplusX.rightMultiply(shiftX); // 1
       stapleZplusY.rightMultiply(shiftY); // 1
       stapleXplusZ.rightMultiply(shiftZ); // 1
       stapleZplusX.rightMultiply(shiftX); // 1
@@ -49,7 +49,7 @@ namespace Smearing
 
       stapleXminZ.leftMultiply(shiftX); // 2
       stapleXminZ.leftMultiply(shiftZ.dagger()); // 3
-*/      stapleYminZ.rightMultiply(shiftZ.dagger()); // 1
+      stapleYminZ.rightMultiply(shiftZ.dagger()); // 1
       stapleYminZ.rightMultiply(shiftY); // 2
 
       // Finished a staple! Add and reassign the memory

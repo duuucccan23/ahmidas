@@ -118,4 +118,54 @@ namespace Core
     for (iterator itr = begin(); itr != end(); ++itr, ++otherItr)
       itr->rightMultiply(otherItr->dagger());
   }
+
+  template< typename Element >
+  template< typename OtherElement, size_t L, size_t T >
+  Buffer< Element > &Buffer< Element >::operator+=(Field< OtherElement, L, T > const &other) // NOTE Not yet implemented
+  {
+    typename Field< OtherElement, L, T >::const_iterator otherItr = other.begin();
+    for (iterator itr = begin(); itr != end(); ++itr, ++otherItr)
+      itr->operator+=(otherItr->dagger());
+    return *this;
+  }
+
+  template< typename Element >
+  template< typename OtherElement, size_t L, size_t T >
+  Buffer< Element > &Buffer< Element >::operator+=(hcField< OtherElement, L, T > const &other) // NOTE Not yet implemented
+  {
+    typename Field< OtherElement, L, T >::const_iterator otherItr = other.dagger().begin();
+    for (iterator itr = begin(); itr != end(); ++itr, ++otherItr)
+      itr->operator+=(otherItr->dagger());
+    return *this;
+  }
+
+  template< typename Element >
+  template< typename OtherElement, size_t L, size_t T, typename Atom >
+  Buffer< Element > &Buffer< Element >::operator+=(Component< OtherElement, L, T, Atom > const &other) // NOTE Not yet implemented
+  {
+    typename Component< OtherElement, L, T, Atom >::const_iterator otherItr = other.begin();
+    for (iterator itr = begin(); itr != end(); ++itr, ++otherItr)
+      itr->operator+=(otherItr->dagger());
+    return *this;
+  }
+
+  template< typename Element >
+  template< typename OtherElement, size_t L, size_t T, typename Atom >
+  Buffer< Element > &Buffer< Element >::operator+=(hcComponent< OtherElement, L, T, Atom > const &other) // NOTE Not yet implemented
+  {
+    typename Component< OtherElement, L, T, Atom >::const_iterator otherItr = other.dagger().begin();
+    for (iterator itr = begin(); itr != end(); ++itr, ++otherItr)
+      itr->operator+=(otherItr->dagger());
+    return *this;
+  }
+
+  template< typename Element >
+  template< typename OtherElement >
+  Buffer< Element > &Buffer< Element >::operator+=(Buffer< OtherElement > const &other) // NOTE Not yet implemented
+  {
+    typename Buffer< OtherElement >::const_iterator otherItr = other.begin();
+    for (iterator itr = begin(); itr != end(); ++itr, ++otherItr)
+      itr->operator+=(otherItr->dagger());
+    return *this;
+  }
 }

@@ -1,6 +1,10 @@
 #ifndef GUARD_SMEARING_JACOBI_H
 #define GUARD_SMEARING_JACOBI_H
 
+#include <Core/Field/Field.h>
+#include <Core/Buffer/Buffer.h>
+#include <Core/Component/Component.h>
+
 namespace Smearing
 {
   class Jacobi
@@ -16,7 +20,7 @@ namespace Smearing
 
       template< size_t L, size_t T >
       void smear(Core::Field< QCD::Spinor, L, T > &spinorField, Core::Field< QCD::Gauge, L, T > &gaugeField, size_t iterations) const;
-  }
+  };
 }
 
 #include "Jacobi.inlines"

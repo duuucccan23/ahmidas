@@ -20,8 +20,6 @@ int main(int argc, char **argv)
   if (!grid.rank())
     cout << "Field initialized (on node 0).\n";
   field.readFromFile< double >("../test/conf.2448", "ildg-binary-data");
-  cout << grid.dim(0) << " " << grid.dim(1) << " " << grid.dim(2) << " " << grid.dim(3) << endl;
-  cout << grid.dimSize(0) << " " << grid.dimSize(1) << " " << grid.dimSize(2) << " " << grid.dimSize(3) << endl;
   if (!grid.rank())
     cout << "Field read and endianness corrected (on node 0).\n";
   Smearing::APE ape(0.5);

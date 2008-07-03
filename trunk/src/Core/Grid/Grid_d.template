@@ -5,7 +5,7 @@ namespace Core
   {
     size_t high = std::max(x, y);
     size_t low  = std::min(x, y);
-    
+
     while (high % low)
     {
       std::swap(high, low);

@@ -16,9 +16,8 @@ int main(int argc, char **argv)
   Core::Grid<8, 8> grid;
   if (!grid.rank())
     cout << "MPI and Grid initialized (on node 0).\n";
-
-  cout << grid.dim(0) << " " << grid.dim(1) << " " << grid.dim(2) << " " << grid.dim(3) << endl;
-
+  size_t index = 2048;
+  cout << grid.rank(index) << endl;
   MPI::Finalize();
   return 0;
 }

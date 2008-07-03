@@ -10,4 +10,16 @@ namespace Core
   {
     return d_parent;
   }
+
+  template< typename Element, size_t L, size_t T, typename Atom >
+  inline typename Component< Element, L, T, Atom >::const_iterator &hcComponent< Element, L, T, Atom >::begin() const
+  {
+    return d_parent.begin();
+  }
+
+  template< typename Element, size_t L, size_t T, typename Atom >
+  inline typename Component< Element, L, T, Atom >::const_iterator &hcComponent< Element, L, T, Atom >::end() const
+  {
+    return d_parent.end();
+  }
 }

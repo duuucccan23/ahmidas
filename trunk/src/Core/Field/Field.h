@@ -57,6 +57,9 @@ namespace Core
       iterator begin();
       iterator end();
 
+      const_iterator begin() const;
+      const_iterator end() const;
+
       template< typename Atom >
       Component< Element, L, T, Atom > component(SpaceTimeIndex idx);
 
@@ -84,6 +87,9 @@ namespace Core
 
     public:
       Field< Element, L, T > const &dagger() const;
+
+      typename Field< Element, L, T >::const_iterator begin() const;
+      typename Field< Element, L, T >::const_iterator end() const;
   };
 
   std::complex< double > plus(std::complex< double > const &left, std::complex< double > const &right);

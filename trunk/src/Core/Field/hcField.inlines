@@ -10,4 +10,16 @@ namespace Core
   {
     return d_parent;
   }
+
+  template< typename Element, size_t L, size_t T >
+  inline typename Field< Element, L, T >::const_iterator hcField< Element, L, T >::begin() const
+  {
+    return d_parent.begin();
+  }
+
+  template< typename Element, size_t L, size_t T >
+  inline typename Field< Element, L, T >::const_iterator hcField< Element, L, T >::end() const
+  {
+    return d_parent.end();
+  }
 }

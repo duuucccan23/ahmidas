@@ -2,17 +2,23 @@ class iterator: public std::iterator< std::bidirectional_iterator_tag, Atom >
 {
   friend class Component< Element, L, T, Atom >;
 
-  typename Field< Element, L, T >::iterator d_iterator;
-  short d_component;
+  mutable typename Field< Element, L, T >::iterator d_iterator;
+  SpaceTimeIndex const d_component;
 
-  iterator(typename Field< Element, L, T >::iterator &iterator, short component);
-  iterator(iterator const &other);
+  iterator(typename Field< Element, L, T >::iterator iterator, SpaceTimeIndex const component);
 
   public:
+    iterator(iterator const &other);
+
     iterator &operator--();
     iterator const operator--(int);
     iterator &operator++();
     iterator const operator++(int);
+
+    iterator const &operator--() const;
+    iterator const operator--(int) const;
+    iterator const &operator++() const;
+    iterator const operator++(int) const;
 
     bool operator==(iterator const &other) const;
     bool operator!=(iterator const &other) const;
@@ -23,3 +29,5 @@ class iterator: public std::iterator< std::bidirectional_iterator_tag, Atom >
     Atom *operator->();
     Atom const *operator->() const;
 };
+
+typedef iterator const const_iterator;

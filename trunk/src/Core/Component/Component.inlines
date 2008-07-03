@@ -150,4 +150,35 @@ namespace Core
     for (iterator iter = begin(); iter != end(); ++iter, ++cIter)
       iter->operator/=(*cIter);
   }
+
+  template< typename Element, size_t L, size_t T, typename Atom >
+  inline hcComponent< Element, L, T, Atom > const Component< Element, L, T, Atom >::dagger() const
+  {
+    return hcComponent< Element, L, T, Atom >(*this);
+  }
+
+  template< typename Element, size_t L, size_t T, typename Atom >
+  inline typename Component< Element, L, T, Atom >::const_iterator Component< Element, L, T, Atom >::begin() const
+  {
+    return const_iterator(d_parent.begin(), d_component);
+  }
+
+  template< typename Element, size_t L, size_t T, typename Atom >
+  inline typename Component< Element, L, T, Atom >::const_iterator Component< Element, L, T, Atom >::end() const
+  {
+    return const_iterator(d_parent.end(), d_component);
+  }
+
+  template< typename Element, size_t L, size_t T, typename Atom >
+  inline typename Component< Element, L, T, Atom >::iterator Component< Element, L, T, Atom >::begin()
+  {
+    return iterator(d_parent.begin(), d_component);
+  }
+
+  template< typename Element, size_t L, size_t T, typename Atom >
+  inline typename Component< Element, L, T, Atom >::iterator Component< Element, L, T, Atom >::end()
+  {
+    return iterator(d_parent.end(), d_component);
+  }
+
 }

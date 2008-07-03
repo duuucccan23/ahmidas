@@ -48,20 +48,74 @@ namespace Core
   }
 
   template< typename Element >
-  template< typename fType>
-  inline void Buffer< Element >::leftMultiply(fType const &other)
+  template< typename OtherElement, size_t L, size_t T >
+  inline void Buffer< Element >::leftMultiply(Field< OtherElement, L, T > const &other)
   {
-    typename fType::iterator otherItr = other.begin();
-    for (iterator itr = begin(); itr != itr.end(); ++itr, ++otherItr)
+    typename Field< OtherElement, L, T >::const_iterator otherItr = other.begin();
+    for (iterator itr = begin(); itr != end(); ++itr, ++otherItr)
       itr->leftMultiply(*otherItr);
   }
 
   template< typename Element >
-  template< typename fType>
-  inline void Buffer< Element >::rightMultiply(fType const &other)
+  template< typename OtherElement, size_t L, size_t T >
+  inline void Buffer< Element >::leftMultiply(hcField< OtherElement, L, T > const &other)
   {
-    typename fType::iterator otherItr = other.begin();
-    for (iterator itr = begin(); itr != itr.end(); ++itr, ++otherItr)
-      itr->rightMultiply(*otherItr);
+    typename Field< OtherElement, L, T >::const_iterator otherItr = other.dagger().begin();
+    for (iterator itr = begin(); itr != end(); ++itr, ++otherItr)
+      itr->leftMultiply(otherItr->dagger());
+  }
+
+  template< typename Element >
+  template< typename OtherElement, size_t L, size_t T, typename Atom >
+  inline void Buffer< Element >::leftMultiply(Component< OtherElement, L, T, Atom > const &other)
+  {
+    typename Component< OtherElement, L, T, Atom >::const_iterator otherItr = other.begin();
+    for (iterator itr = begin(); itr != end(); ++itr, ++otherItr)
+      itr->leftMultiply(*otherItr);
+  }
+
+  template< typename Element >
+  template< typename OtherElement, size_t L, size_t T, typename Atom >
+  inline void Buffer< Element >::leftMultiply(hcComponent< OtherElement, L, T, Atom > const &other)
+  {
+    typename Component< OtherElement, L, T, Atom  >::const_iterator otherItr = other.dagger().begin();
+    for (iterator itr = begin(); itr != end(); ++itr, ++otherItr)
+      itr->leftMultiply(otherItr->dagger());
+  }
+
+  template< typename Element >
+  template< typename OtherElement, size_t L, size_t T >
+  inline void Buffer< Element >::rightMultiply(Field< OtherElement, L, T > const &other)
+  {
+    typename Field< OtherElement, L, T >::const_iterator otherItr = other.begin();
+    for (iterator itr = begin(); itr != end(); ++itr, ++otherItr)
+      itr->leftMultiply(*otherItr);
+  }
+
+  template< typename Element >
+  template< typename OtherElement, size_t L, size_t T >
+  inline void Buffer< Element >::rightMultiply(hcField< OtherElement, L, T > const &other)
+  {
+    typename Field< OtherElement, L, T >::const_iterator otherItr = other.begin();
+    for (iterator itr = begin(); itr != end(); ++itr, ++otherItr)
+      itr->leftMultiply(otherItr->dagger());
+  }
+
+  template< typename Element >
+  template< typename OtherElement, size_t L, size_t T, typename Atom >
+  inline void Buffer< Element >::rightMultiply(Component< OtherElement, L, T, Atom > const &other)
+  {
+    typename Component< OtherElement, L, T, Atom >::const_iterator otherItr = other.begin();
+    for (iterator itr = begin(); itr != end(); ++itr, ++otherItr)
+      itr->leftMultiply(*otherItr);
+  }
+
+  template< typename Element >
+  template< typename OtherElement, size_t L, size_t T, typename Atom >
+  inline void Buffer< Element >::rightMultiply(hcComponent< OtherElement, L, T, Atom > const &other)
+  {
+    typename Component< OtherElement, L, T, Atom >::const_iterator otherItr = other.begin();
+    for (iterator itr = begin(); itr != end(); ++itr, ++otherItr)
+      itr->leftMultiply(otherItr->dagger());
   }
 }

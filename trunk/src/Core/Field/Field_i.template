@@ -31,7 +31,8 @@ namespace Core
     if (d_bufferSize != 0)
     {
       d_bufferSize += MPI_BSEND_OVERHEAD; // Nasty little source of segfaults...
-      d_buffer = new Element[(d_bufferSize + elSize - 1) / elSize];
+      d_bufferSize = (d_bufferSize + elSize - 1) / elSize; // Now rounded up in number of elements
+      d_buffer = new Element[d_bufferSize];
     }
   }
 }

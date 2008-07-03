@@ -23,11 +23,29 @@ namespace Core
 
       ~Buffer();
 
-      template< typename fType>
-      void leftMultiply(fType const &other);
+      template< typename OtherElement, size_t L, size_t T >
+      void leftMultiply(Field< OtherElement, L, T > const &other);
 
-      template< typename fType>
-      void rightMultiply(fType const &other);
+      template< typename OtherElement, size_t L, size_t T >
+      void leftMultiply(hcField< OtherElement, L, T > const &other);
+
+      template< typename OtherElement, size_t L, size_t T, typename Atom >
+      void leftMultiply(Component< OtherElement, L, T, Atom > const &other);
+
+      template< typename OtherElement, size_t L, size_t T, typename Atom >
+      void leftMultiply(hcComponent< OtherElement, L, T, Atom > const &other);
+
+      template< typename OtherElement, size_t L, size_t T >
+      void rightMultiply(Field< OtherElement, L, T > const &other);
+
+      template< typename OtherElement, size_t L, size_t T >
+      void rightMultiply(hcField< OtherElement, L, T > const &other);
+
+      template< typename OtherElement, size_t L, size_t T, typename Atom >
+      void rightMultiply(Component< OtherElement, L, T, Atom > const &other);
+
+      template< typename OtherElement, size_t L, size_t T, typename Atom >
+      void rightMultiply(hcComponent< OtherElement, L, T, Atom > const &other);
 
       typedef Element* iterator;
       iterator begin();

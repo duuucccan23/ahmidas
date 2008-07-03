@@ -12,18 +12,21 @@ namespace Core
     friend class Field< Element, L, T >;
 
     Field< Element, L, T > &d_parent;
-    Core::SpaceTimeIndex    d_component;
+    SpaceTimeIndex const d_component;
 
-    Component(Field< Element, L, T > &parent, Core::SpaceTimeIndex component);
+    public:
+      Component(Field< Element, L, T > &parent, Core::SpaceTimeIndex component);
 
 #include "Component.iterator"
 
-    public:
       iterator begin();
       iterator end();
 
+      const_iterator begin() const;
+      const_iterator end() const;
+
       Atom &element(Core::SpaceTimeIndex const *idx);
-      hcComponent< Element, L, T, Atom > const &dagger() const;
+      hcComponent< Element, L, T, Atom > const dagger() const;
 
       #include "Component.operators"
   };
@@ -31,12 +34,17 @@ namespace Core
   template< typename Element, size_t L, size_t T, typename Atom >
   class hcComponent
   {
+    friend class Component< Element, L, T, Atom >;
+
     Component< Element, L, T, Atom > const &d_parent;
 
     hcComponent(Component< Element,  L,  T,  Atom > const &parent);
 
     public:
       Component< Element, L, T, Atom > const &dagger() const;
+
+      typename Component< Element, L, T, Atom >::const_iterator &begin() const;
+      typename Component< Element, L, T, Atom >::const_iterator &end() const;
   };
 
 }

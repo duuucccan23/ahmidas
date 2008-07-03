@@ -15,4 +15,20 @@ namespace Core
     d_parent.increaseIndex(d_idx);
     return result;
   }
+
+  template< typename Element >
+  Field< Element >::const_iterator Field< Element >::iterator:::operator--(int) const
+  {
+    const_iterator result(*this);
+    d_parent.decreaseIndex(d_idx);
+    return result;
+  }
+
+  template< typename Element >
+  Field< Element >::const_iterator Field< Element >::iterator:::operator++(int) const
+  {
+    const_iterator result(*this);
+    d_parent.increaseIndex(d_idx);
+    return result;
+  }
 }

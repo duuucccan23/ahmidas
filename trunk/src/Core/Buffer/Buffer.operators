@@ -23,17 +23,37 @@ template< typename OtherElement, size_t L, size_t T, typename Atom >
 void rightMultiply(hcComponent< OtherElement, L, T, Atom > const &other);
 
 template< typename OtherElement, size_t L, size_t T >
-Buffer &operator+=(Field< OtherElement, L, T > const &other); // NOTE Not yet implemented
+Buffer &operator+=(Field< OtherElement, L, T > const &other);
 
 template< typename OtherElement, size_t L, size_t T >
-Buffer &operator+=(hcField< OtherElement, L, T > const &other); // NOTE Not yet implemented
+Buffer &operator+=(hcField< OtherElement, L, T > const &other);
 
 template< typename OtherElement, size_t L, size_t T, typename Atom >
-Buffer &operator+=(Component< OtherElement, L, T, Atom > const &other); // NOTE Not yet implemented
+Buffer &operator+=(Component< OtherElement, L, T, Atom > const &other);
 
 template< typename OtherElement, size_t L, size_t T, typename Atom >
-Buffer &operator+=(hcComponent< OtherElement, L, T, Atom > const &other); // NOTE Not yet implemented
+Buffer &operator+=(hcComponent< OtherElement, L, T, Atom > const &other);
 
 template< typename OtherElement >
-Buffer &operator+=(Buffer< OtherElement > const &other); // NOTE Not yet implemented
+Buffer &operator+=(Buffer< OtherElement > const &other);
 
+template< typename Type >
+Buffer &operator+=(Type const &other);
+
+template< typename OtherElement, size_t L, size_t T >
+Buffer &operator*=(Field< OtherElement, L, T > const &other);
+
+template< typename OtherElement, size_t L, size_t T >
+Buffer &operator*=(hcField< OtherElement, L, T > const &other);
+
+template< typename OtherElement, size_t L, size_t T, typename Atom >
+Buffer &operator*=(Component< OtherElement, L, T, Atom > const &other);
+
+template< typename OtherElement, size_t L, size_t T, typename Atom >
+Buffer &operator*=(hcComponent< OtherElement, L, T, Atom > const &other);
+
+template< typename OtherElement >
+Buffer &operator*=(Buffer< OtherElement > const &other);
+
+template< typename Type >
+Buffer &operator*=(Type const &other);

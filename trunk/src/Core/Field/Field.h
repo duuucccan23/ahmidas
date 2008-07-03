@@ -47,12 +47,13 @@ namespace Core
 
       Core::Grid< L, T > const &grid() const;
 
-      void increaseIdx(short *idx) const;
-      void decreaseIdx(short *idx) const;
+      void increaseIdx(size_t *idx) const;
+      void decreaseIdx(size_t *idx) const;
 
-      Element &element(short const *idx);
+      Element &element(size_t const *idx);
 
 #include "Field.iterator"
+#include "Field.const_iterator"
 
       iterator begin();
       iterator end();
@@ -97,6 +98,7 @@ namespace Core
 
 #include "Field.inlines"
 #include "Field.iterator.inlines"
+#include "Field.const_iterator.inlines"
 #include "Field_a.template"
 #include "Field_b.template"
 #include "Field_c.template"

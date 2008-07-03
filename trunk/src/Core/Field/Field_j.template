@@ -8,7 +8,7 @@ namespace Core
     // more than one of those!
     if (&other != this)
     {
-      std::copy(other.d_field, other.d_field + d_grid.localVolume, d_field);
+      std::copy(other.d_field, other.d_field + d_grid.localVolume(), d_field);
       std::copy(other.d_offsets, other.d_offsets + 4, d_offsets);
     }
     return *this;

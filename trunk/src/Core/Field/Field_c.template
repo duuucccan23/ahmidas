@@ -4,15 +4,15 @@ namespace Core
   void Field< Element, L, T >::increaseIdx(short *idx) const
   {
     ++(idx[idx_X]);
-    if (!(idx[idx_X] % d_grid.size(idx_X)))
+    if (idx[idx_X] % d_grid.size(idx_X))
       return;
     idx[idx_X] = 0;
     ++(idx[idx_Y]);
-    if (!(idx[idx_Y] % d_grid.size(idx_Y)))
+    if (idx[idx_Y] % d_grid.size(idx_Y))
       return;
     idx[idx_Y] = 0;
     ++(idx[idx_Z]);
-    if (!(idx[idx_Z] % d_grid.size(idx_Z)))
+    if (idx[idx_Z] % d_grid.size(idx_Z))
       return;
     idx[idx_Z] = 0;
     ++(idx[idx_T]);

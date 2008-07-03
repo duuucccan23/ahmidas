@@ -22,10 +22,12 @@ namespace Smearing
       void smear(Core::Field< QCD::Gauge, L, T > &field) const;
 
     private:
-      void accumDirection(Core::Field< QCD::Gauge, L, T > &field, short idx) const;
+      template< size_t L, size_t T >      
+      void accumDirection(Core::Field< QCD::Gauge, L, T > &field, Core::SpaceTimeIndex) const;
   };
 }
 
+#include "Fuzz.inlines"
 #include "Fuzz_a.template"
 #include "Fuzz_b.template"
 

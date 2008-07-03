@@ -114,7 +114,7 @@ namespace Core
   template< typename OtherElement, size_t L, size_t T, typename Atom >
   inline void Buffer< Element >::rightMultiply(hcComponent< OtherElement, L, T, Atom > const &other)
   {
-    typename Component< OtherElement, L, T, Atom >::const_iterator otherItr = other.begin();
+    typename Component< OtherElement, L, T, Atom >::const_iterator otherItr = other.dagger().begin();
     for (iterator itr = begin(); itr != end(); ++itr, ++otherItr)
       itr->rightMultiply(otherItr->dagger());
   }

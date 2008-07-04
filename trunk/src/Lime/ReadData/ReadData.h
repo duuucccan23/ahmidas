@@ -11,7 +11,6 @@ namespace Lime
     public:
       FILE *stream;
       LimeReader *reader;
-      char *headerType;
     
       ReadData(std::string const &filename);
       ~ReadData();

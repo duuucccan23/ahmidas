@@ -1,15 +1,14 @@
 namespace Contraction
 {
   template< size_t L, size_t T, size_t IndexSource, size_t IndexSink >
-  void MesonLightLight< L, T, IndexSource, IndexSink >::contract(Core::Field< QCD::Spinor > const &source,
+  void Meson L, T, IndexSource, IndexSink >::contract(Core::Field< QCD::Spinor > const &source,
                                                                  Core::Field< QCD::Spinor > const &sink)
   {
     Core::Field< QCD::Spinor, L, T >::iterator sourceItr = source.begin();
     Core::Field< QCD::Spinor, L, T >::iterator sinkItr = sink.begin();
     Core::Field< std::complex< double >, L, T >::iterator fieldItr = d_field.begin();
     for (; fieldItr != d_field.end(); ++sourceItr, ++sinkItr, ++fieldItr)
-     *fieldItr = contractTwoPoint(Dirac::Gamma< IndexSink >(), *sinkItr,
-                                Dirac::Gamma< IndexSource >(), *sourceItr);
+     *fieldItr = contractTwoPoint(Dirac::Gamma< IndexSink >(), *sinkItr, Dirac::Gamma< IndexSource >(), *sourceItr);
 
     std::complex< double > buffer[d_field.grid().size(Core::idx_T)];
     d_field.averageTimeSlice(buffer);

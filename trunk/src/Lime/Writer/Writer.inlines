@@ -1,0 +1,12 @@
+namespace Lime
+{
+  inline int Writer::fail() const
+  {
+    return d_fail;
+  }
+  
+  inline uint64_t Writer::written() const
+  {
+    return d_written;
+  }
+}

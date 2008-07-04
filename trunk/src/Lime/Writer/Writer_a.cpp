@@ -1,7 +1,7 @@
-#include "Reader.ih"
+#include "Writer.ih"
 
-Lime::Reader::Reader(std::string const &filename, std::string const &filetype)
-  : d_data(new ReadData(filename)), d_fail(0), d_size(0)
+Lime::Writer::Writer(std::string const &filename, std::string const &filetype)
+  : d_data(new WriteData(filename)), d_fail(0), d_written(0)
 {
   while(!(d_fail = limeReaderNextRecord(d_data->reader)))
   {

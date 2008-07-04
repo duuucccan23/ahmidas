@@ -6,13 +6,13 @@
 
 namespace Lime
 {
-  struct Data;
+  struct ReadData;
 
   class Reader
   {
-    Data        *d_data;
+    ReadData    *d_data;
     int mutable  d_fail;
-    size_t       d_size;
+    uint64_t     d_size;
 
     public:
       Reader(std::string const &filename, std::string const &filetype);
@@ -24,7 +24,7 @@ namespace Lime
       void read(char *buffer, uint64_t elements) const;
 
       template< typename DataType >
-      void read(DataType *buffer, size_t elements) const;
+      void read(DataType *buffer, uint64_t elements) const;
   };
 }
 

@@ -5,13 +5,13 @@ namespace Lime
     return d_fail;
   }
   
-  inline size_t Reader::size() const
+  inline uint64_t Reader::size() const
   {
     return d_size;
   }
   
   template< typename DataType >
-  inline void Reader::read(DataType *data, size_t elements) const
+  inline void Reader::read(DataType *data, uint64_t elements) const
   {
     read(reinterpret_cast< char* >(data), elements * sizeof(DataType));
   }

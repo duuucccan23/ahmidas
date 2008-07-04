@@ -48,6 +48,18 @@ namespace Core
   }
 
   template< typename Element >
+  inline typename Buffer< Element >::const_iterator Buffer< Element >::begin() const
+  {
+    return d_data;
+  }
+
+  template< typename Element >
+  inline typename Buffer< Element >::const_iterator Buffer< Element >::end() const
+  {
+    return d_data + d_size;
+  }
+
+  template< typename Element >
   template< typename OtherElement, size_t L, size_t T >
   inline void Buffer< Element >::leftMultiply(Field< OtherElement, L, T > const &other)
   {

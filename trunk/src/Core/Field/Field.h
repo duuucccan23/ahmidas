@@ -16,6 +16,8 @@ namespace Core
   template< typename Element, size_t L, size_t T, typename Atom >
   class hcComponent;
 
+  template< typename Element >
+  class Buffer;
 
   template< typename Element, size_t L, size_t T >
   class hcField;
@@ -51,6 +53,7 @@ namespace Core
       void decreaseIdx(size_t *idx) const;
 
       Element &element(size_t const *idx);
+      Element const &element(size_t const *idx) const;
 
 #include "Field.iterator"
 #include "Field.const_iterator"

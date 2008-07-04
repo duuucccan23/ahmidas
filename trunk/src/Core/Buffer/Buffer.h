@@ -24,10 +24,14 @@ namespace Core
       ~Buffer();
 
 #include "Buffer.operators"
-      
+
       typedef Element* iterator;
+      typedef Element const* const_iterator;
+
       iterator begin();
       iterator end();
+      const_iterator begin() const;
+      const_iterator end() const;
   };
 
   // Functor definitions for a clean interface

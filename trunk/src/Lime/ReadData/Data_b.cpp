@@ -1,6 +1,6 @@
-#include "Data.ih"
+#include "ReadData.ih"
 
-Lime::Data::~Data()
+Lime::ReadData::~ReadData()
 {
   limeDestroyReader(reader);
   fclose(stream);

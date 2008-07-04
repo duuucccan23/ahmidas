@@ -1,6 +1,6 @@
-#include "Data.ih"
+#include "ReadData.ih"
 
-Lime::Data::Data(std::string const &filename)
+Lime::ReadData::ReadData(std::string const &filename)
 {
   struct stat statusBuffer;
   int readStatus = stat(filename.c_str(), &statusBuffer);

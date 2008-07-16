@@ -4,9 +4,7 @@
 
 Use the standard GTD conventions here. No Someday/Maybe items on this list. Only actionable and well defined items.
 
-  * Generate a 8^4^ test gauge configuration for use with all the unit tests. This file will be about 2.5 Mb in size. A 4^4^ test lattice will obviously be much smaller, but less suitable for MPI tests. Export a decent network connection anyway, so a 2.5Mb testfile should not be any problem
-
-  * Generate test propagators corresponding to the test gauge configuration for use with unit tests.
+  * Generate test propagators corresponding to the 8^4 test gauge configuration for use with unit tests.
 
   * Refactorize functions from some of the longer source files.
 

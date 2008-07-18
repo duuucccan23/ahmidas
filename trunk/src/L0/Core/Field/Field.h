@@ -5,8 +5,8 @@
 #include <complex>
 #include <mpi.h>
 #include <iostream>
-#include <l0/Core/Grid/Grid.h>
-#include <l0/IO/Lime/Reader/Reader.h>
+#include <L0/Core/Grid/Grid.h>
+#include <L0/IO/Lime/Reader/Reader.h>
 
 namespace Core
 {

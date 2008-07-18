@@ -1,7 +1,7 @@
 #ifndef GUARD_FIELDS_BUFFER_H
 #define GUARD_FIELDS_BUFFER_H
 
-#include "../../Core/Grid/Grid.h"
+#include "L0/Core/Grid/Grid.h"
 
 namespace Core
 {

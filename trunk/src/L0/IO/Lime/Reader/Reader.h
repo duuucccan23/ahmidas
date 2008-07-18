@@ -2,7 +2,7 @@
 #define GUARD_LIME_READER_H
 
 #include <string>
-#include <l0/Core/Core.h>
+#include <L0/Core/Core.h>
 
 namespace Lime
 {

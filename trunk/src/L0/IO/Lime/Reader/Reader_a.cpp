@@ -9,7 +9,7 @@ Lime::Reader::Reader(std::string const &filename, std::string const &filetype)
     if(!strcmp(filetype.c_str(), d_data->headerType))
       break;
   }
-  
+
   switch(d_fail)
   {
     case LIME_SUCCESS:
@@ -21,6 +21,6 @@ Lime::Reader::Reader(std::string const &filename, std::string const &filetype)
       std::cerr << "Lime reader exited with I/O error " << d_fail << '.' << std::endl;
       MPI::COMM_WORLD.Abort(EIO);
   }
-  
+
   d_size = limeReaderBytes(d_data->reader);
 }

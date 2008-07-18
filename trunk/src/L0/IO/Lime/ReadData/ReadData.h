@@ -9,9 +9,11 @@ namespace Lime
   class ReadData
   {
     public:
-      FILE *stream;
-      LimeReader *reader;
-    
+      FILE             *stream;
+      LimeReader       *reader;
+      LimeRecordHeader *header;
+      std::string      limeType;
+
       ReadData(std::string const &filename);
       ~ReadData();
   };

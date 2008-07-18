@@ -1,4 +1,5 @@
 ADD_EXECUTABLE(endian endian.cpp)
+TARGET_LINK_LIBRARIES(Core)
 ADD_TEST(endianness endian)
 
 ADD_EXECUTABLE(grid grid.cpp)

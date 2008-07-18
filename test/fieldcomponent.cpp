@@ -1,8 +1,8 @@
 #include <iostream>
 #include <mpi.h>
-#include <Core/Grid/Grid.h>
-#include <Core/Field/Field.h>
-#include <Core/Component/Component.h>
+#include <l0/Core/Grid/Grid.h>
+#include <l0/Core/Field/Field.h>
+#include <l0/Core/Component/Component.h>
 
 int main(int argc, char **argv)
 {

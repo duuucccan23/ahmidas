@@ -6,9 +6,9 @@
 #include <functional>
 #include <iterator>
 
-#include "../../Dirac/Identity/Identity.h"
-#include "../../Dirac/Pauli/Pauli.h"
-#include "../../SU3/Vector/Vector.h"
+#include <L0/Dirac/Identity.h>
+#include <L0/Dirac/Pauli.h>
+#include <L0/SU3/Vector.h>
 
 namespace QCD
 {
@@ -48,7 +48,7 @@ namespace QCD
   };
 }
 
-#include "WeylSpinor.inlines"
-#include "WeylSpinor.templates"
+#include "WeylSpinor/WeylSpinor.inlines"
+#include "WeylSpinor/WeylSpinor.templates"
 
 #endif

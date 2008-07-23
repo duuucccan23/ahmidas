@@ -1,7 +1,7 @@
 #ifndef GUARD_SU3_VECTOR_H
 #define GUARD_SU3_VECTOR_H
 
-#include "../Matrix/Matrix.h"
+#include <L0/SU3/Matrix.h>
 
 #include <complex>
 
@@ -28,25 +28,25 @@ namespace SU3
       static Vector const &zero();
       
       ~Vector();
-      
+
       std::complex< double > &operator()(short idx);
       std::complex< double > const &operator()(short idx) const;
-      
+
       template< typename T >
       Vector &operator+=(T const &rhand);
-      
+
       template< typename T >
       Vector &operator-=(T const &rhand);
-      
+
       template< typename T >
       Vector &operator*=(T const &rhand);
 
       template< typename T >
       Vector &operator/=(T const &rhand);
-      
+
       void leftMultiply(Matrix const &mat);
       void leftMultiply(hcMatrix const &mat);
-      
+
       std::complex< double > &operator[](short component);
       std::complex< double > const &operator[](short component) const;
   };
@@ -54,6 +54,6 @@ namespace SU3
   std::complex< double > innerProduct(Vector const &left, Vector const &right);
 }
 
-#include "Vector.inlines"
-             
+#include "Vector\Vector.inlines"
+
 #endif

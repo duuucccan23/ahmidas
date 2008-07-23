@@ -4,11 +4,11 @@
 #include <algorithm>
 #include <complex>
 
-#include "../../Dirac/Gamma/Gamma.h"
-#include "../../Dirac/Sigma/Sigma.h"
-#include "../../QCD/WeylSpinor/WeylSpinor.h"
-#include "../../SU3/Vector/Vector.h"
-#include "../../SU3/Matrix/Matrix.h"
+#include <L0/Dirac/Gamma.h>
+#include <L0/Dirac/Sigma.h>
+#include <L0/QCD/WeylSpinor.h>
+#include <L0/SU3/Vector.h>
+#include <L0/SU3/Matrix.h>
 
 namespace QCD
 {
@@ -55,7 +55,7 @@ namespace QCD
   std::complex< double > contractTwoPoint(Dirac::Gamma< IndexSink >, Spinor sink, Dirac::Gamma< IndexSource >, Spinor source);
 }
 
-#include "Spinor.inlines"
-#include "Spinor.gamma.inlines"
+#include "Spinor/Spinor.inlines"
+#include "Spinor/Spinor.gamma.inlines"
 
 #endif

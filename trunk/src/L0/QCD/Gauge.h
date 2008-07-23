@@ -4,7 +4,7 @@
 #include <algorithm>
 #include <functional>
 
-#include "L0/SU3/Matrix/Matrix.h"
+#include <L0/SU3/Matrix/Matrix.h>
 
 namespace QCD
 {
@@ -19,13 +19,13 @@ namespace QCD
       Gauge(Gauge const &other);
       Gauge(double const *data);
       Gauge(std::complex< double > const *data);
-      
+
       void reunitarize();
 
       void leftMultiply(Gauge const &other);
-      void leftMultiply(SU3::Matrix const &other);      
+      void leftMultiply(SU3::Matrix const &other);
 
-      void rightMultiply(Gauge const &other);      
+      void rightMultiply(Gauge const &other);
       void rightMultiply(SU3::Matrix const &other);
 
       template< typename T >
@@ -39,12 +39,12 @@ namespace QCD
 
       template< typename T >
       Gauge &operator/=(T const &rhand);
-         
+
       SU3::Matrix &operator[](short component);
       SU3::Matrix const &operator[](short component) const;
   };
 }
 
-#include "Gauge.inlines"
+#include "Gauge/Gauge.inlines"
 
 #endif

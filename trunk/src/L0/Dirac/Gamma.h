@@ -17,6 +17,6 @@ namespace Dirac
   };
 }
 
-#include "Gamma.inlines"
+#include "Gamma\Gamma.inlines"
 
 #endif

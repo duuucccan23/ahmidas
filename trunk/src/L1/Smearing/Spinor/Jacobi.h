@@ -1,9 +1,9 @@
 #ifndef GUARD_SMEARING_JACOBI_H
 #define GUARD_SMEARING_JACOBI_H
 
-#include <Core/Field/Field.h>
-#include <Core/Buffer/Buffer.h>
-#include <Core/Component/Component.h>
+#include <L0/Core/Buffer.h>
+#include <L0/Core/Field.h>
+#include <L0/Core/Component.h>
 
 namespace Smearing
 {
@@ -23,7 +23,7 @@ namespace Smearing
   };
 }
 
-#include "Jacobi.inlines"
-#include "Jacobi_a.template"
+#include "Jacobi/Jacobi.inlines"
+#include "Jacobi/Jacobi_smear.template"
 
 #endif

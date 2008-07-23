@@ -3,11 +3,11 @@
 
 #include <algorithm>
 
-#include <Core/Buffer/Buffer.h>
-#include <Core/Field/Field.h>
-#include <Core/Component/Component.h>
-#include <QCD/Gauge/Gauge.h>
-#include <SU3/Matrix/Matrix.h>
+#include <L0/Core/Buffer.h>
+#include <L0/Core/Component.h>
+#include <L0/Core/Field.h>
+#include <L0/QCD/Gauge.h>
+#include <L0/SU3/Matrix.h>
 
 namespace Smearing
 {
@@ -22,13 +22,13 @@ namespace Smearing
       void smear(Core::Field< QCD::Gauge, L, T > &field) const;
 
     private:
-      template< size_t L, size_t T >      
+      template< size_t L, size_t T >
       void accumDirection(Core::Field< QCD::Gauge, L, T > &field, Core::SpaceTimeIndex) const;
   };
 }
 
 #include "Fuzz.inlines"
-#include "Fuzz_a.template"
-#include "Fuzz_b.template"
+#include "Fuzz_accumDirection.template"
+#include "Fuzz_smear.template"
 
 #endif

@@ -1,11 +1,11 @@
 #ifndef GUARD_SMEARING_APE_H
 #define GUARD_SMEARING_APE_H
 
-#include <l0/Core/Buffer/Buffer.h>
-#include <l0/Core/Field/Field.h>
-#include <l0/Core/Component/Component.h>
-#include <l0/QCD/Gauge/Gauge.h>
-#include <l0/SU3/Matrix/Matrix.h>
+#include <L0/Core/Buffer.h>
+#include <L0/Core/Field.h>
+#include <L0/Core/Component.h>
+#include <L0/QCD/Gauge.h>
+#include <L0/SU3/Matrix.h>
 
 // Performs an APE smearing step.
 namespace Smearing
@@ -25,8 +25,8 @@ namespace Smearing
   };
 }
 
-#include "APE.inlines"
-#include "APE_a.template"
-#include "APE_b.template"
+#include "APE/APE.inlines"
+#include "APE/APE_smear.template"
+#include "APE/APE_smear.template"
 
 #endif

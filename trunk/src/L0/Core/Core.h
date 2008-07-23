@@ -30,6 +30,6 @@ namespace Core
   };
 }
 
-#include "Core.inlines"
+#include "Core/Core.inlines"
 
 #endif

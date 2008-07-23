@@ -14,6 +14,6 @@ Lime::ReadData::ReadData(std::string const &filename)
   stream = fopen(filename.c_str(), "r");
   reader = limeCreateReader(stream);
 
-  if ((!stream) || (!reader))
+  if ( !stream || !reader )
     MPI::COMM_WORLD.Abort(EIO);
 }

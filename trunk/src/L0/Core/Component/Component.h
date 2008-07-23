@@ -1,6 +1,8 @@
 #ifndef GUARD_CORE_COMPONENT_H
 #define GUARD_CORE_COMPONENT_H
 
+#include <L0/Core/Field.h>
+
 namespace Core
 {
   template< typename Element, size_t L, size_t T, typename Atom >
@@ -17,7 +19,7 @@ namespace Core
     public:
       Component(Field< Element, L, T > &parent, Core::SpaceTimeIndex component);
 
-#include "Component.iterator"
+#include "Component/Component.iterator"
 
       iterator begin();
       iterator end();
@@ -28,7 +30,7 @@ namespace Core
       Atom &element(Core::SpaceTimeIndex const *idx);
       hcComponent< Element, L, T, Atom > const dagger() const;
 
-      #include "Component.operators"
+      #include "Component/Component.operators"
   };
 
   template< typename Element, size_t L, size_t T, typename Atom >
@@ -49,8 +51,8 @@ namespace Core
 
 }
 
-#include "Component.inlines"
-#include "Component.iterator.inlines"
-#include "hcComponent.inlines"
+#include "Component/Component.inlines"
+#include "Component/Component.iterator.inlines"
+#include "Component/hcComponent.inlines"
 
 #endif

@@ -1,7 +1,7 @@
 #ifndef GUARD_FIELDS_BUFFER_H
 #define GUARD_FIELDS_BUFFER_H
 
-#include "L0/Core/Grid/Grid.h"
+#include "L0/Core/Grid.h"
 
 namespace Core
 {
@@ -23,7 +23,7 @@ namespace Core
 
       ~Buffer();
 
-#include "Buffer.operators"
+#include "Buffer/Buffer.operators"
 
       typedef Element* iterator;
       typedef Element const* const_iterator;
@@ -51,7 +51,7 @@ namespace Core
   add_buffer< Element > add(Buffer< Element > &buffer); // For further convenience
 }
 
-#include "Buffer.inlines"
-#include "Buffer.functor.inlines"
+#include "Buffer/Buffer.inlines"
+#include "Buffer/Buffer.functor.inlines"
 
 #endif

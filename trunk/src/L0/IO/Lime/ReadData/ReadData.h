@@ -6,16 +6,14 @@
 
 namespace Lime
 {
-  class ReadData
+  struct ReadData
   {
-    public:
-      FILE             *stream;
-      LimeReader       *reader;
-      LimeRecordHeader *header;
-      std::string      limeType;
+    FILE              *stream;
+    LimeReader        *reader;
+    LimeRecordHeader  *header;
 
-      ReadData(std::string const &filename);
-      ~ReadData();
+    ReadData(std::string const &filename);
+    ~ReadData();
   };
 }
 

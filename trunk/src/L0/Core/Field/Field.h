@@ -5,8 +5,8 @@
 #include <complex>
 #include <mpi.h>
 #include <iostream>
-#include <L0/Core/Grid/Grid.h>
-#include <L0/IO/Lime/Reader/Reader.h>
+#include <L0/Core/Grid.h>
+#include <L0/IO/Lime/Reader.h>
 
 namespace Core
 {
@@ -55,8 +55,8 @@ namespace Core
       Element &element(size_t const *idx);
       Element const &element(size_t const *idx) const;
 
-#include "Field.iterator"
-#include "Field.const_iterator"
+#include "Field/Field.iterator"
+#include "Field/Field.const_iterator"
 
       iterator begin();
       iterator end();
@@ -69,7 +69,7 @@ namespace Core
 
       Field< Element, L, T > &shift(SpaceTimeIndex idx, Direction shift);
 
-#include "Field.operators"
+#include "Field/Field.operators"
 
       hcField< Element, L, T > dagger() const;
       void reunitarize();
@@ -99,19 +99,19 @@ namespace Core
   std::complex< double > plus(std::complex< double > const &left, std::complex< double > const &right);
 }
 
-#include "Field.inlines"
-#include "Field.iterator.inlines"
-#include "Field.const_iterator.inlines"
-#include "Field_a.template"
-#include "Field_b.template"
-#include "Field_c.template"
-#include "Field_d.template"
-#include "Field_e.template"
-#include "Field_f.template"
-#include "Field_g.template"
-#include "Field_h.template"
-#include "Field_i.template"
-#include "Field_j.template"
-#include "Field_k.template"
+#include "Field/Field.inlines"
+#include "Field/Field.iterator.inlines"
+#include "Field/Field.const_iterator.inlines"
+#include "Field/Field_a.template"
+#include "Field/Field_b.template"
+#include "Field/Field_c.template"
+#include "Field/Field_d.template"
+#include "Field/Field_e.template"
+#include "Field/Field_f.template"
+#include "Field/Field_g.template"
+#include "Field/Field_h.template"
+#include "Field/Field_i.template"
+#include "Field/Field_j.template"
+#include "Field/Field_k.template"
 
 #endif

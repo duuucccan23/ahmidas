@@ -15,6 +15,6 @@ namespace Core
   };  
 }
 
-#include "Correlator_a.template"
+#include "Correlator/Correlator_a.template"
 
 #endif

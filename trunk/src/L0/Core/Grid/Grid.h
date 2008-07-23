@@ -75,10 +75,9 @@ namespace Core
   };
 }
 
-#include "Grid.inlines"
-#include "Grid_a.template"
-#include "Grid_b.template"
-#include "Grid_c.template"
-#include "Grid_d.template"
+#include "Grid/Grid.inlines"
+#include "Grid/Grid_a.template"
+#include "Grid/Grid_b.template"
+#include "Grid/Grid_c.template"
 
 #endif

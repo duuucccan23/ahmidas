@@ -54,6 +54,6 @@ namespace SU3
   std::complex< double > innerProduct(Vector const &left, Vector const &right);
 }
 
-#include "Vector\Vector.inlines"
+#include "Vector/Vector.inlines"
 
 #endif

@@ -43,7 +43,7 @@ namespace SU3
       std::complex< double > &operator()(int i, int j);
       std::complex< double > const &operator()(int i, int j) const;
 
-#include "Matrix.operators"
+#include "Matrix/Matrix.operators"
 
       hcMatrix const dagger() const;
 
@@ -78,7 +78,7 @@ namespace SU3
   };
 }
 
-#include "Matrix.inlines"
-#include "hcMatrix.inlines"
+#include "Matrix/Matrix.inlines"
+#include "Matrix/hcMatrix.inlines"
 
 #endif

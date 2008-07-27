@@ -2,5 +2,6 @@
 
 Lime::Reader::~Reader()
 {
-  delete d_data;
+  limeDestroyWriter(d_reader);
+  fclose(d_stream);
 }

@@ -1,15 +1,15 @@
 namespace Lime
-{ 
+{
   inline int Reader::fail() const
   {
     return d_fail;
   }
-  
+
   inline uint64_t Reader::size() const
   {
-    return d_size;
-  }
-  
+    return d_recordSizes[d_currentRecord];
+  }  inline void findRecord(int32_t const message, int32_t const record)
+
   template< typename DataType >
   inline void Reader::read(DataType *data, uint64_t elements) const
   {

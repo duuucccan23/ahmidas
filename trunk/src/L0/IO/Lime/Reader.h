@@ -46,10 +46,13 @@ namespace IO
         uint32_t records() const;
         uint64_t size() const;
 
+        uint32_t currentMessage() const;
+        uint32_t currentRecord() const;
+
+        std::string const &limeType() const;
+        void read(char *buffer, uint64_t elements) const;
         template< typename DataType >
         void read(DataType *buffer, uint64_t elements) const;
-
-        void read(char *buffer, uint64_t elements) const;
     };
   }
 }

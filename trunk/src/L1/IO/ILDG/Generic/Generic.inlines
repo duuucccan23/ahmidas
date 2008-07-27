@@ -1,0 +1,11 @@
+namespace IO
+{
+  namespace ILDG
+  {
+    inline Generic::Generic(std::string const &filename)
+      : d_filename(filename), d_reader(0)
+    {
+      readFile(d_filename);
+    }
+  }
+}

@@ -47,6 +47,21 @@ namespace IO
       return d_recordSizes[d_currentRecord];
     }
 
+    inline uint32_t Reader::currentMessage() const
+    {
+      return d_messageIndices[d_currentRecord];
+    }
+
+    inline uint32_t Reader::currentRecord() const
+    {
+      return d_currentRecord;
+    }
+
+    inline std::string const &Reader::limeType() const
+    {
+      return d_limeTypes[d_currentRecord];
+    }
+
     template< typename DataType >
     inline void Reader::read(DataType *data, uint64_t elements) const
     {

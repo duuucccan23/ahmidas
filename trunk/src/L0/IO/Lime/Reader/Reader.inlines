@@ -2,6 +2,31 @@ namespace IO
 {
   namespace Lime
   {
+    inline void Reader::nextMessage()
+    {
+      retrieveRecord(d_messageIndices[d_currentRecord] + 1, 0);
+    }
+
+    inline void Reader::previousMessage()
+    {
+      retrieveRecord(d_messageIndices[d_currentRecord] - 1, 0);
+    }
+
+    inline void Reader::nextRecord()
+    {
+      d_fail = limeReaderNextRecord(d_reader);
+    }
+
+    inline void Reader::previousRecord()
+    {
+      d_fail = limeSetReaderPointer(d_reader, d_recordOffsets[--d_currentRecord]);
+    }
+
+    inline void Reader::retrieveRecord(int32_t const record)
+    {
+      retrieveRecord(d_messageIndices[d_currentRecord], record);
+    }
+
     inline int Reader::fail() const
     {
       return d_fail;

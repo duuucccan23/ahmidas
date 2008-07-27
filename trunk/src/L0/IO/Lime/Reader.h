@@ -32,6 +32,13 @@ namespace IO
         Reader(std::string const &filename);
         ~Reader();
 
+        void nextMessage();
+        void previousMessage();
+
+        void nextRecord();
+        void previousRecord();
+
+        void retrieveRecord(int32_t const record);
         void retrieveRecord(int32_t const message, int32_t const record);
 
         int fail() const;

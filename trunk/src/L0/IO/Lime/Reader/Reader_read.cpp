@@ -1,6 +1,6 @@
 #include "Reader.ih"
 
-void Lime::Reader::read(char *buffer, uint64_t elements) const
+void IO::Lime::Reader::read(char *buffer, uint64_t elements) const
 {
   if (!elements)
     return; // Lime does not handle this gracefully.

@@ -1,7 +1,7 @@
 #include "Reader.ih"
 
 IO::Lime::Reader::Reader(std::string const &filename)
-  : d_filename(filename), d_size(0), d_fail(0)
+  : d_filename(filename), d_stream(0), d_reader(0), d_currentRecord(0), d_fail(0)
 {
   {
     struct stat statusBuffer;
@@ -14,7 +14,7 @@ IO::Lime::Reader::Reader(std::string const &filename)
     }
 
     d_stream = fopen(filename.c_str(), "r");
-    d_reader = limeCreateReader(stream);
+    d_reader = limeCreateReader(d_stream);
 
     if (!d_stream || !d_reader)
       MPI::COMM_WORLD.Abort(EIO);

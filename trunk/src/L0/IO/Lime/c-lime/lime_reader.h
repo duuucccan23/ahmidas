@@ -8,7 +8,8 @@
 
 
 /** A structure to hold the state of the reader */
-typedef struct {
+struct LimeReader
+{
   int first_read;        /**< Have we read the first record header yet? */
   int is_last;           /**< Is  the last record */
   int header_nextP;      /**< Are we supposed to be reading a header? */
@@ -22,7 +23,7 @@ typedef struct {
 			      ranges 0 to bytes_total - 1 */
   n_uint64_t rec_start;       /**< File pointer at start of record payload */
   size_t bytes_pad;      /**< Padding bytes at end of current record */
-} LimeReader;
+};
 
 /** \brief Create a LIME reader
  *

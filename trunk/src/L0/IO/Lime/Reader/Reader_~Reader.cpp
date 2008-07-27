@@ -1,7 +1,7 @@
 #include "Reader.ih"
 
-Lime::Reader::~Reader()
+IO::Lime::Reader::~Reader()
 {
-  limeDestroyWriter(d_reader);
+  limeDestroyReader(d_reader);
   fclose(d_stream);
 }

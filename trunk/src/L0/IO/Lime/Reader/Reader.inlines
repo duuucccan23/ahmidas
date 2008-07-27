@@ -1,18 +1,31 @@
-namespace Lime
+namespace IO
 {
-  inline int Reader::fail() const
+  namespace Lime
   {
-    return d_fail;
-  }
+    inline int Reader::fail() const
+    {
+      return d_fail;
+    }
 
-  inline uint64_t Reader::size() const
-  {
-    return d_recordSizes[d_currentRecord];
-  }  inline void findRecord(int32_t const message, int32_t const record)
+    inline uint32_t Reader::messages() const
+    {
+      return d_messageIndices.back();
+    }
 
-  template< typename DataType >
-  inline void Reader::read(DataType *data, uint64_t elements) const
-  {
-    read(reinterpret_cast< char* >(data), elements * sizeof(DataType));
+    inline uint32_t Reader::records() const
+    {
+      return std::count(d_messageIndices.begin(), d_messageIndices.end(), d_messageIndices[d_currentRecord]);
+    }
+
+    inline uint64_t Reader::size() const
+    {
+      return d_recordSizes[d_currentRecord];
+    }
+
+    template< typename DataType >
+    inline void Reader::read(DataType *data, uint64_t elements) const
+    {
+      read(reinterpret_cast< char* >(data), elements * sizeof(DataType));
+    }
   }
 }

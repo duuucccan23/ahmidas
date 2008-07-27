@@ -6,13 +6,14 @@
 #include "lime_fixed_types.h"
 
 /** \brief -- The header structure for a lime record */
-typedef struct {
+struct LimeRecordHeader
+{
   unsigned int lime_version;   /**< LIME Version */
   int MB_flag;                 /**< Message begin Flag */
   int ME_flag;                 /**< Message end Flag */
   char *type;                  /**< The LimeType string */
   n_uint64_t data_length;        /**< The length of the data to follow */
-} LimeRecordHeader;
+};
 
 
 /** \brief Creates a partially filled out header.

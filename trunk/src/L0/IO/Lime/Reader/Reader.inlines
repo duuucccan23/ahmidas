@@ -24,7 +24,8 @@ namespace IO
 
     inline void Reader::retrieveRecord(int32_t const record)
     {
-      retrieveRecord(d_messageIndices[d_currentRecord], record);
+      d_currentRecord = record;
+      d_fail = limeSetReaderPointer(d_reader, d_recordOffsets[d_currentRecord]);
     }
 
     inline int Reader::fail() const
@@ -63,7 +64,7 @@ namespace IO
     }
 
     template< typename DataType >
-    inline void Reader::read(DataType *data, uint64_t elements) const
+    inline void Reader::read(DataType *data, uint64_t const elements) const
     {
       read(reinterpret_cast< char* >(data), elements * sizeof(DataType));
     }

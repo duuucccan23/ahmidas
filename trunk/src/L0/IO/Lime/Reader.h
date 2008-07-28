@@ -39,7 +39,7 @@ namespace IO
         void previousRecord();
 
         void retrieveRecord(int32_t const record);
-        void retrieveRecord(int32_t const message, int32_t const record);
+        void retrieveRecord(int32_t const message, int32_t const relativeRecord);
 
         int fail() const;
         uint32_t messages() const;
@@ -50,13 +50,13 @@ namespace IO
         uint32_t currentRecord() const;
 
         std::string const &limeType() const;
-        void read(char *buffer, uint64_t elements) const;
+
         template< typename DataType >
-        void read(DataType *buffer, uint64_t elements) const;
+        void read(DataType *buffer, uint64_t const elements) const;
+        void read(char *buffer, uint64_t const elements) const;
     };
   }
 }
-
 
 #include "Reader/Reader.inlines"
 

@@ -7,5 +7,10 @@ namespace IO
     {
       readFile(d_filename);
     }
+
+    inline int Generic::fail() const
+    {
+      return d_reader.fail();
+    }
   }
 }

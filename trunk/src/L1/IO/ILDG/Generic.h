@@ -33,12 +33,19 @@ namespace IO
 
       public:
         Generic(std::string const &filename);
+        void openFile(std::string const &filename);
+        int fail() const;
 
-        int readFile(std::string const &filename);
+        template< typename DataType >
+        void read(DataType *buffer, uint64_t const elements) const;
+
+      private:
+        void parseXmlFormat(char *data);
     };
   }
 }
 
 #include "Generic/Generic.inlines"
+#include "Generic/Generic_read.template"
 
 #endif

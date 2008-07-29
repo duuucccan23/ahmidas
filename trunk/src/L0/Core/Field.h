@@ -100,7 +100,6 @@ namespace Core
 }
 
 #include "Field/Field.inlines"
-#include "Field/Field.operators"
 #include "Field/Field.iterator.inlines"
 #include "Field/Field.const_iterator.inlines"
 #include "Field/Field_Field_a.template"

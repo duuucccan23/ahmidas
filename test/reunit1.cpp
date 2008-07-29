@@ -1,5 +1,5 @@
 #include <iostream>
-#include <l0/SU3/Matrix/Matrix.h>
+#include <L0/SU3/Matrix.h>
 
 int main(int, char **)
 {

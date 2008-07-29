@@ -26,7 +26,7 @@ namespace Smearing
 }
 
 #include "APE/APE.inlines"
-#include "APE/APE_smear.template"
-#include "APE/APE_smear.template"
+#include "APE/APE_smear_a.template"
+#include "APE/APE_smear_b.template"
 
 #endif

@@ -1,12 +1,12 @@
 #include <iostream>
 #include <mpi.h>
-#include <l0/IO/Lime/Reader/Reader.h>
-#include <l0/QCD/Spinor/Spinor.h>
-#include <l0/QCD/Gauge/Gauge.h>
-#include <l0/Core/Core.h>
-#include <l0/Core/Grid/Grid.h>
-#include <l0/Core/Field/Field.h>
-#include <l1/Smearing/Gauge/APE/APE.h>
+#include <L0/IO/Lime/Reader.h>
+#include <L0/QCD/Spinor.h>
+#include <L0/QCD/Gauge.h>
+#include <L0/Core/Core.h>
+#include <L0/Core/Grid.h>
+#include <L0/Core/Field.h>
+#include <L1/Smearing/Gauge/APE.h>
 
 using namespace std;
 

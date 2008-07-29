@@ -27,8 +27,8 @@ namespace Smearing
   };
 }
 
-#include "Fuzz.inlines"
-#include "Fuzz_accumDirection.template"
-#include "Fuzz_smear.template"
+#include "Fuzz/Fuzz.inlines"
+#include "Fuzz/Fuzz_accumDirection.template"
+#include "Fuzz/Fuzz_smear.template"
 
 #endif

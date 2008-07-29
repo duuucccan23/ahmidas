@@ -4,7 +4,7 @@
 #include <algorithm>
 #include <functional>
 
-#include <L0/SU3/Matrix/Matrix.h>
+#include <L0/SU3/Matrix.h>
 
 namespace QCD
 {

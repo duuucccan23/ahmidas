@@ -109,7 +109,7 @@ namespace Core
 #include "Field/Field_Field_d.template"
 #include "Field/Field_decreaseIndex.template"
 #include "Field/Field_increaseIndex.template"
-#include "Field/Field_operator=.template"
+#include "Field/Field_operator_eq.template"
 #include "Field/Field_readFromFile.template"
 #include "Field/Field_setSurfaces.template"
 #include "Field/Field_shift.template"

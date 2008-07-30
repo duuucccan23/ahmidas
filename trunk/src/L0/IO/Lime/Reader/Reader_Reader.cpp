@@ -1,7 +1,8 @@
 #include "Reader.ih"
 
 IO::Lime::Reader::Reader(std::string const &filename)
-  : d_filename(filename), d_stream(0), d_reader(0), d_currentRecord(0), d_fail(0)
+  : d_filename(filename), d_stream(0), d_reader(0),
+    d_currentRecord(0), d_fail(0)
 {
   {
     struct stat statusBuffer;
@@ -23,6 +24,8 @@ IO::Lime::Reader::Reader(std::string const &filename)
   int32_t messageCtr = -1; // This would indicate a missing message start
   while (true)
   {
+    d_recordOffsets.push_back(limeGetReaderPointer(d_reader)); 
+
     d_fail = limeReaderNextRecord(d_reader);
     if (d_fail != LIME_SUCCESS)
       break;
@@ -35,7 +38,6 @@ IO::Lime::Reader::Reader(std::string const &filename)
     d_messageIndices.push_back(messageCtr);
     d_limeTypes.push_back(limeReaderType(d_reader));
     d_recordSizes.push_back(limeReaderBytes(d_reader));
-    d_recordOffsets.push_back(limeGetReaderPointer(d_reader));
   }
 
   if (d_fail != LIME_EOF)
@@ -45,5 +47,4 @@ IO::Lime::Reader::Reader(std::string const &filename)
   }
 
   d_fail = limeSetReaderPointer(d_reader, d_recordOffsets[0]);
-  d_currentRecord = 0;
 }

@@ -4,35 +4,37 @@ void IO::ILDG::Generic::openFile(std::string const &filename)
 {
   delete d_reader;
   d_reader = new Lime::Reader(filename);
-  if (d_reader->messages() < 2)
-    MPI::COMM_WORLD.Abort(EIO);
 
-  while (!d_reader->fail())
+  std::vector< std::string > const &types = d_reader->limeTypes();
+  d_formatRecord = std::find(types.begin(), types.end(), std::string("ildg-format")) - types.begin();
+  d_dataRecord = std::find(types.begin(), types.end(), std::string("ildg-binary-data")) - types.begin();
+  d_lfnRecord = std::find(types.begin(), types.end(), std::string("ildg-data-lfn")) - types.begin();
+  
+  if (d_formatRecord == types.size() || d_dataRecord == types.size())
+    MPI::COMM_WORLD.Abort(EIO); // NOTE Invalid ILDG file, mandatory fields missing
+  
+  d_reader->retrieveRecord(d_formatRecord);
+  d_payloadMessage = d_reader->currentMessage();
+    
+  char *format = new char[d_reader->size()];
+  d_reader->read(format, d_reader->size());
+  parseXmlFormat(format);
+  delete[] format;
+
+  if (d_lfnRecord == types.size())
   {
-    d_reader->nextRecord();
-    if (d_reader->limeType() == std::string("ildg-binary-data"))
-    {
-      d_dataRecord = d_reader->currentRecord();
-      continue;
-    }
-    if (d_reader->limeType() == std::string("ildg-data-lfn"))
-    {
-      d_lfnRecord = d_reader->currentRecord();
-      char *lfn = new char[d_reader->size()];
-      d_reader->read(lfn, d_reader->size());
-      d_lfn = std::string(lfn);
-      delete[] lfn;
-      continue;
-    }
-    if (d_reader->limeType() == std::string("ildg-format"))
-    {
-      d_payloadMessage = d_reader->currentMessage();
-      d_formatRecord = d_reader->currentRecord();
-      char *format = new char[d_reader->size()];
-      d_reader->read(format, d_reader->size());
-      parseXmlFormat(format);
-      delete[] format;
-    }
+    std::cerr << "Mandatory LFN LIME record missing from file!\n"
+              << "See ILDG Binary File Format description rev 1.1 for details.\n"
+              << "Permitting file read in for now, however." << std::endl;
   }
+  else
+  {
+    d_reader->retrieveRecord(d_lfnRecord);
+    char *lfn = new char[d_reader->size()];
+    d_reader->read(lfn, d_reader->size());
+    d_lfn = std::string(lfn);
+    delete[] lfn;
+  }
+  
   d_reader->retrieveRecord(d_dataRecord); // Be kind, rewind :)
 }

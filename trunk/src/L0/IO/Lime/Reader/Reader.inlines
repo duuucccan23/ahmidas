@@ -37,6 +37,11 @@ namespace IO
       return d_limeTypes[d_currentRecord];
     }
 
+    inline std::vector< std::string > const &Reader::limeTypes() const
+    {
+      return d_limeTypes;
+    }
+
     template< typename DataType >
     inline void Reader::read(DataType *data, uint64_t const elements) const
     {

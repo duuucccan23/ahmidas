@@ -50,6 +50,7 @@ namespace IO
         uint32_t currentRecord() const;
 
         std::string const &limeType() const;
+        std::vector< std::string > const &limeTypes() const;
 
         template< typename DataType >
         void read(DataType *buffer, uint64_t const elements) const;

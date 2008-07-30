@@ -4,6 +4,8 @@
 #include <L0/Core/Buffer.h>
 #include <L0/Core/Field.h>
 #include <L0/Core/Component.h>
+#include <L0/QCD/Gauge.h>
+#include <L0/QCD/Spinor.h>
 
 namespace Smearing
 {

@@ -3,13 +3,10 @@ namespace IO
   namespace ILDG
   {
     template< typename DataType >
-    inline void read(DataType *buffer, uint64_t const elements) const
+    inline void Generic::read(DataType *buffer, uint64_t const elements) const
     {
-      if (d_currentRecord != d_dataRecord)
-      {
-        retrieveRecord(d_dataRecord);
-        d_currentRecord = d_dataRecord;
-      }
+      if (d_reader->currentRecord() != d_dataRecord)
+        d_reader->retrieveRecord(d_dataRecord);
       d_reader->read(buffer, elements);
     }
   }

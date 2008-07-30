@@ -5,12 +5,12 @@ namespace IO
     inline Generic::Generic(std::string const &filename)
       : d_filename(filename), d_reader(0)
     {
-      readFile(d_filename);
+      openFile(d_filename);
     }
 
     inline int Generic::fail() const
     {
-      return d_reader.fail();
+      return d_reader->fail();
     }
   }
 }

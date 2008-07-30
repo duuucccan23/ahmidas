@@ -38,7 +38,7 @@ IO::Lime::Reader::Reader(std::string const &filename)
     d_recordOffsets.push_back(limeGetReaderPointer(d_reader));
   }
 
-  if (d_fail != LIME_SUCCESS)
+  if (d_fail != LIME_EOF)
   {
     std::cerr << "File " << filename << " gave an I/O error." << std::endl;
     MPI::COMM_WORLD.Abort(EIO);

@@ -1,6 +1,6 @@
 #include "Generic.ih"
 
-void IO::ILDG::Generic::readFile(std::string const &filename)
+void IO::ILDG::Generic::openFile(std::string const &filename)
 {
   delete d_reader;
   d_reader = new Lime::Reader(filename);
@@ -10,26 +10,26 @@ void IO::ILDG::Generic::readFile(std::string const &filename)
   while (!d_reader->fail())
   {
     d_reader->nextRecord();
-    if (d_reader.limeType() == std::string("ildg-binary-data"))
+    if (d_reader->limeType() == std::string("ildg-binary-data"))
     {
       d_dataRecord = d_reader->currentRecord();
       continue;
     }
-    if (d_reader.limeType() == std::string("ildg-data-lfn"))
+    if (d_reader->limeType() == std::string("ildg-data-lfn"))
     {
       d_lfnRecord = d_reader->currentRecord();
-      char *lfn = new char[d_reader.size()];
+      char *lfn = new char[d_reader->size()];
       d_reader->read(lfn, d_reader->size());
       d_lfn = std::string(lfn);
       delete[] lfn;
       continue;
     }
-    if (d_reader.limeType() == std::string("ildg-format"))
+    if (d_reader->limeType() == std::string("ildg-format"))
     {
       d_payloadMessage = d_reader->currentMessage();
       d_formatRecord = d_reader->currentRecord();
-      char *format = new char[d_reader.size()];
-      d_reader->read(format, d_reader->size()];
+      char *format = new char[d_reader->size()];
+      d_reader->read(format, d_reader->size());
       parseXmlFormat(format);
       delete[] format;
     }

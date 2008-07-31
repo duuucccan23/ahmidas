@@ -81,7 +81,7 @@ namespace Core
 
     private:
       void setSurfaces();
-      size_t moveBufferToData(size_t written);
+      size_t moveBufferToData(char *fileBuffer, size_t written, size_t precision);
   };
 
   template< typename Element, size_t L, size_t T >
@@ -99,7 +99,7 @@ namespace Core
       typename Field< Element, L, T >::const_iterator end() const;
   };
 
-  std::complex< double > plus(std::complex< double > const &left, std::complex< double > const &right);
+  std::complex< double > plus(std::complex< double > const &left, std::complex< double > const &right);  
 }
 
 #include "Field/Field.inlines"
@@ -112,8 +112,15 @@ namespace Core
 #include "Field/Field_decreaseIndex.template"
 #include "Field/Field_increaseIndex.template"
 #include "Field/Field_loadDataFromIO.template"
+#include "Field/Field_moveBufferToData.template"
 #include "Field/Field_operator_eq.template"
 #include "Field/Field_setSurfaces.template"
 #include "Field/Field_shift.template"
+
+#ifdef FLAG_L1_IO_ILDG_GENERIC_IS_KNOWN
+#include <L1/IO/ILDG/Generic/Field_loadDataFromIO.template>
+#endif
+
+#define FLAG_L0_CORE_FIELD_IS_KNOWN
 
 #endif

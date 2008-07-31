@@ -20,11 +20,17 @@ namespace Core
   class Buffer;
 
   template< typename Element, size_t L, size_t T >
+  class Field;
+  
+  template< typename Element, size_t L, size_t T >
   class hcField;
-
+  
   template< typename Element, size_t L, size_t T >
   class Field
   {
+    template< typename IOClass, typename fElement, size_t fL, size_t fT >
+    friend loadData();
+
     Grid< L, T >  &d_grid;
     size_t         d_offsets[4];
     size_t         d_bufferSize;
@@ -76,6 +82,9 @@ namespace Core
 
       void averageTimeSlice(std::complex< double > *result);
 
+      template< typename IOClass >
+      void loadDataFromIO(IOClass &inputIO);
+
     private:
       void setSurfaces();
       size_t moveBufferToData(size_t written);
@@ -109,8 +118,9 @@ namespace Core
 #include "Field/Field_decreaseIndex.template"
 #include "Field/Field_increaseIndex.template"
 #include "Field/Field_operator_eq.template"
-//#include "Field/Field_readFromFile.template"
 #include "Field/Field_setSurfaces.template"
 #include "Field/Field_shift.template"
+
+#include "Field/loadData.template"
 
 #endif

@@ -20,17 +20,11 @@ namespace Core
   class Buffer;
 
   template< typename Element, size_t L, size_t T >
-  class Field;
-  
-  template< typename Element, size_t L, size_t T >
   class hcField;
   
   template< typename Element, size_t L, size_t T >
   class Field
   {
-    template< typename IOClass, typename fElement, size_t fL, size_t fT >
-    friend loadData();
-
     Grid< L, T >  &d_grid;
     size_t         d_offsets[4];
     size_t         d_bufferSize;
@@ -117,10 +111,9 @@ namespace Core
 #include "Field/Field_Field_d.template"
 #include "Field/Field_decreaseIndex.template"
 #include "Field/Field_increaseIndex.template"
+#include "Field/Field_loadDataFromIO.template"
 #include "Field/Field_operator_eq.template"
 #include "Field/Field_setSurfaces.template"
 #include "Field/Field_shift.template"
-
-#include "Field/loadData.template"
 
 #endif

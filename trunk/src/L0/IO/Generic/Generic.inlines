@@ -9,4 +9,9 @@ namespace IO
   {
     read(reinterpret_cast< char* >(data), elements * sizeof(DataType));
   }
+  
+  inline bool Generic::fail() const
+  {
+    return d_stream.fail();
+  }
 }

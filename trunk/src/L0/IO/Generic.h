@@ -14,7 +14,9 @@ namespace IO
       Generic(std::string const &filename);
       
       template< typename DataType >
-      void read(DataType *buffer, uint64_t const elements) const
+      void read(DataType *buffer, uint64_t const elements) const;
+      
+      bool fail() const;
   };
 }
 

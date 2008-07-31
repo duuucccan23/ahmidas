@@ -8,6 +8,12 @@
 #include <L0/Core/Grid.h>
 #include <L0/IO/Lime/Reader.h>
 
+namespace IO
+{
+  template< typename IOClass, typename Element, size_t L, size_t T >
+  class Bridge;
+}
+
 namespace Core
 {
   template< typename Element, size_t L, size_t T, typename Atom >
@@ -25,6 +31,9 @@ namespace Core
   template< typename Element, size_t L, size_t T >
   class Field
   {
+    template< typename fIOClass, typename fElement, size_t fL, size_t fT >
+    friend class IO::Bridge;
+    
     Grid< L, T >  &d_grid;
     size_t         d_offsets[4];
     size_t         d_bufferSize;
@@ -116,11 +125,5 @@ namespace Core
 #include "Field/Field_operator_eq.template"
 #include "Field/Field_setSurfaces.template"
 #include "Field/Field_shift.template"
-
-#ifdef FLAG_L1_IO_ILDG_GENERIC_IS_KNOWN
-#include <L1/IO/ILDG/Generic/Field_loadDataFromIO.template>
-#endif
-
-#define FLAG_L0_CORE_FIELD_IS_KNOWN
 
 #endif

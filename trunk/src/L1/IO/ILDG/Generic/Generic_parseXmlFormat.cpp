@@ -2,6 +2,7 @@
 
 void IO::ILDG::Generic::parseXmlFormat(char *data)
 {
+  std::cerr << "[DEBUG] Arrived in XML parser." << std::endl;
   std::istringstream xmlFormat(data);
   std::string word;
   while (true)
@@ -9,6 +10,7 @@ void IO::ILDG::Generic::parseXmlFormat(char *data)
     xmlFormat >> word;
     if (!xmlFormat)
       return; // String has been fully read.
+    std::cout << word << std::endl;
     if (word == std::string("<version>"))
     {
       xmlFormat >> d_format.version;

@@ -4,6 +4,7 @@
 #include <string>
 
 #include <L0/Core/Core.h>
+#include <L0/IO/Bridge.h>
 #include <L0/IO/Lime/Reader.h>
 
 namespace IO
@@ -52,12 +53,7 @@ namespace IO
 
 #include "Generic/Generic.inlines"
 #include "Generic/Generic_read.template"
-
-// Add a specialization for the Core::Field::readDataFromIO method if needed
-#ifdef FLAG_L0_CORE_FIELD_IS_KNOWN 
-#include "Generic/Field_loadDataFromIO.template"
-#endif
-             
-#define FLAG_L1_IO_ILDG_GENERIC_IS_KNOWN
  
+#include "Generic/Bridge.specialization"
+
 #endif

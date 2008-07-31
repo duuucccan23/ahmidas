@@ -1,8 +1,7 @@
 #include "Reader.ih"
 
 IO::Lime::Reader::Reader(std::string const &filename)
-  : d_filename(filename), d_stream(0), d_reader(0),
-    d_currentRecord(0), d_fail(0)
+  : d_filename(filename), d_stream(0), d_reader(0), d_currentRecord(0), d_fail(0)
 {
   {
     struct stat statusBuffer;
@@ -21,10 +20,12 @@ IO::Lime::Reader::Reader(std::string const &filename)
       MPI::COMM_WORLD.Abort(EIO);
   }
 
+  
   int32_t messageCtr = -1; // This would indicate a missing message start
   while (true)
   {
     d_recordOffsets.push_back(limeGetReaderPointer(d_reader)); 
+    std::cerr << "[DEBUG] offset: " << d_recordOffsets.back() << std::endl;
 
     d_fail = limeReaderNextRecord(d_reader);
     if (d_fail != LIME_SUCCESS)
@@ -36,8 +37,12 @@ IO::Lime::Reader::Reader(std::string const &filename)
     // This data is only available serially in the file,
     // but we'd like random access to it.
     d_messageIndices.push_back(messageCtr);
+    std::cerr << "[DEBUG] message: " << d_messageIndices.back() << std::endl;
     d_limeTypes.push_back(limeReaderType(d_reader));
+    std::cerr << "[DEBUG] type: " << d_limeTypes.back() << std::endl;
     d_recordSizes.push_back(limeReaderBytes(d_reader));
+    std::cerr << "[DEBUG] size: " << d_recordSizes.back() << std::endl;
+    std::cerr << "[DEBUG] ***-----------------*** " << std::endl;
   }
 
   if (d_fail != LIME_EOF)

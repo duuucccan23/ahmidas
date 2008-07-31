@@ -1,0 +1,25 @@
+#include <L0/Core/Field.h>
+
+namespace IO
+{
+  template< typename Element, size_t L, size_t T >
+  class Bridge< ILDG::Generic, Element, L, T >
+  {
+    friend class Core::Field< Element, L, T >;
+
+    ILDG::Generic &d_io;
+    Core::Field< Element, L, T > &d_field;
+    
+    private:
+      Bridge(ILDG::Generic &io, Core::Field< Element, L, T > &field);
+      void loadDataFromIO();
+      void saveDataToIO();
+  };
+  
+  template< typename Element, size_t L, size_t T >
+  Bridge< ILDG::Generic, Element, L, T >::Bridge(ILDG::Generic &io, Core::Field< Element, L, T > &field)
+    : d_io(io), d_field(field)
+  {}
+}
+
+#include "Bridge_loadDataFromIO.template"

@@ -4,50 +4,7 @@ namespace Core
   template< typename IOClass >
   void Field< Element, L, T >::loadDataFromIO(IOClass &inputIO)
   {
-    size_t written = 0; // Number of locally written elements
-    // We assume Element is natively a collection of doubles
-    size_t const elementSize = sizeof(Element) / sizeof(double);
-    
-    // We process all input as chars, to avoid any unpleasantness with floating point registers.
-    if (d_grid.rank()) // Prepare to receive
-    {
-      char *fileBuffer = new char[elementSize * sizeof(double) * d_grid.contiguousBlock()];
-      for (size_t ctr = 0; ctr < (d_grid.localVolume() / d_grid.contiguousBlock()); ++ctr, written += d_grid.contiguousBlock())
-      {
-        d_grid.grid().Recv(fileBuffer, d_grid.contiguousBlock() * elementSize * sizeof(double), MPI::BYTE, 0, TAG_FILE_DISTRIBUTION);
-	      std::copy(reinterpret_cast< double* >(fileBuffer), 
-                 reinterpret_cast< double* >(fileBuffer) + (d_grid.contiguousBlock() * elementSize),
-		             reinterpret_cast< double* >(d_field + written));
-      }
-      delete[] fileBuffer;
-      return;
-    }
-
-    // At this point, we know we're node 0
-    // Check the content of this file for a simple sanity condition -- is there enough data to begin with.
-    char *fileBuffer = new char[elementSize * sizeof(double) * d_grid.contiguousBlock()];
-
-    size_t nBlocks = d_grid.totalVolume() / d_grid.contiguousBlock();
-    for (size_t ctr = 0; ctr < nBlocks; ++ctr)
-    {
-      inputIO.read(fileBuffer, d_grid.contiguousBlock() * elementSize * sizeof(double));
-      if (inputIO.fail())
-      {
-	      std::cerr << "Unexpected error during I/O.\nAborting." << std::endl;
-        MPI::COMM_WORLD.Abort(EIO);
-      }
-
-      size_t destination = d_grid.rank(ctr * d_grid.contiguousBlock());
-      if (!destination) // This block of data should be stored locally
-      {
-        std::copy(reinterpret_cast< double* >(fileBuffer), 
-                  reinterpret_cast< double* >(fileBuffer) + (d_grid.contiguousBlock() * elementSize), 
-		              reinterpret_cast< double* >(d_field + written));
-        written += d_grid.contiguousBlock();
-        continue;
-      }
-      d_grid.grid().Send(fileBuffer, d_grid.contiguousBlock() * elementSize * sizeof(double), MPI::BYTE, destination, TAG_FILE_DISTRIBUTION);
-    }
-    delete[] fileBuffer;
+    IO::Bridge< IOClass, Element, L, T > bridge(inputIO, *this);
+    bridge.loadDataFromIO();
   }
 }

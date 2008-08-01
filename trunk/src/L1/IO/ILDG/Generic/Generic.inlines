@@ -2,6 +2,10 @@ namespace IO
 {
   namespace ILDG
   {
+    inline Generic::Generic()
+      : d_reader(0)
+    {}
+      
     inline Generic::Generic(std::string const &filename)
       : d_reader(0)
     {

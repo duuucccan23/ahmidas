@@ -32,6 +32,7 @@ namespace IO
       uint32_t          d_lfnRecord;
 
       public:
+        Generic();
         Generic(std::string const &filename);
         void openFile(std::string const &filename);
         int fail() const;

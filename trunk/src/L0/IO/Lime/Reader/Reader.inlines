@@ -10,7 +10,8 @@ namespace IO
 
     inline void Reader::retrieveRecord(size_t const record)
     {
-      d_in.seekg(d_offsets[d_currentRecord = record], std::ios::beg);
+      d_currentRecord = record;
+      d_in.seekg(d_offsets[d_currentRecord], std::ios::beg);
     }
     
     inline void Reader::retrieveMessageAndRecord(size_t const message, size_t const record)

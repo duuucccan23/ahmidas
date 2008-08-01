@@ -23,9 +23,9 @@ namespace Core
   }
   
   template< typename T >
-  inline void swapEndian(T value)
+  inline void swapEndian(T &value)
   {
     char *chVal = reinterpret_cast< char* >(&value);
-    std::reverse(chVal, chVal + sizeof(value));
+    std::reverse(chVal, chVal + sizeof(T));
   }
 }

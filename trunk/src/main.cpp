@@ -13,7 +13,7 @@ int main(int argc, char **argv)
   
   Core::Grid< 8, 8 > grid;
   Core::Field< QCD::Gauge, 8, 8 > field(grid);
-
+  
   IO::ILDG::Generic io("../test/conf.88");
   field.loadDataFromIO(io);
 

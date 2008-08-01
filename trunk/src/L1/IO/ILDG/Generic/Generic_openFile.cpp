@@ -13,14 +13,11 @@ void IO::ILDG::Generic::openFile(std::string const &filename)
     MPI::COMM_WORLD.Abort(EIO); // NOTE Invalid ILDG file, mandatory fields missing
   
   d_reader->retrieveRecord(d_formatRecord);
-  
   d_payloadMessage = d_reader->currentMessage();
-  std::cerr  << "[DEBUG] Record:" << d_reader->currentRecord() << std::endl;
     
   char *format = new char[d_reader->recordSize() + 1];
   d_reader->read(format, d_reader->recordSize());
   format[d_reader->recordSize()] = '\0';
-  std::cerr << "[DEBUG] setup:" << d_reader->recordSize() << "  " << format << std::endl;
   parseXmlFormat(format);
   delete[] format;
 

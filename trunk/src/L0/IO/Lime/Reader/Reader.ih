@@ -1,8 +1,0 @@
-#include <L0/IO/Lime/c-lime/lime.h>
-#include <L0/IO/Lime/Reader.h>
-#include <algorithm>
-#include <iostream>
-
-#include <errno.h>
-#include <mpi.h>
-#include <sys/stat.h>

@@ -3,9 +3,9 @@ namespace IO
   namespace ILDG
   {
     inline Generic::Generic(std::string const &filename)
-      : d_filename(filename), d_reader(0)
+      : d_reader(0)
     {
-      openFile(d_filename);
+      openFile(filename);
     }
 
     inline int Generic::fail() const

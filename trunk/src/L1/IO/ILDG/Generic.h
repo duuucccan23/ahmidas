@@ -21,16 +21,15 @@ namespace IO
 
     class Generic
     {
-      std::string const  d_filename;
-      Lime::Reader      *d_reader;
+      Lime::Reader     *d_reader;
 
-      Format             d_format;
-      std::string        d_lfn;
+      Format            d_format;
+      std::string       d_lfn;
 
-      uint32_t           d_payloadMessage;
-      uint32_t           d_formatRecord;
-      uint32_t           d_dataRecord;
-      uint32_t           d_lfnRecord;
+      uint32_t          d_payloadMessage;
+      uint32_t          d_formatRecord;
+      uint32_t          d_dataRecord;
+      uint32_t          d_lfnRecord;
 
       public:
         Generic(std::string const &filename);

@@ -44,7 +44,6 @@ namespace IO
       
       public:
         Reader(std::string const &filename);
-        ~Reader();
         
         template< typename DataType >
         void read(DataType *buffer, size_t elements);

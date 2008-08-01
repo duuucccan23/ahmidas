@@ -21,4 +21,11 @@ namespace Core
     for (char *iter = reinterpret_cast< char* >(begin); iter < chEnd; iter += block)
       std::reverse(iter, iter + block);
   }
+  
+  template< typename T >
+  inline void swapEndian(T value)
+  {
+    char *chVal = reinterpret_cast< char* >(&value);
+    std::reverse(chVal, chVal + sizeof(value));
+  }
 }

@@ -24,4 +24,4 @@ ADD_TEST(fieldcomponent fieldcomponent)
 
 ADD_EXECUTABLE(fieldIncreaseIndex fieldIncreaseIndex.cpp)
 TARGET_LINK_LIBRARIES(fieldIncreaseIndex Core)
-ADD_TEST(fieldIncreaseIndex fieldIncreaseIndex)
+ADD_TEST(fieldincreaseindex fieldIncreaseIndex)

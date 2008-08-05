@@ -14,7 +14,7 @@ namespace IO
       static uint32_t const s_limeMagic = 0x456789ab;
       static char const s_mesBeginMask = 0x80;
       static char const s_mesEndMask = 0x40;
-      static char const s_padding[8] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+      static char const s_padding[8];
 
       union uHeader
       {
@@ -26,7 +26,7 @@ namespace IO
 
       struct Record
       {
-        char[128]      type;
+        char           type[128];
         uint64_t       size;
         std::streampos offset;
         int16_t        version;
@@ -50,15 +50,16 @@ namespace IO
         template< typename DataType >
         void write(DataType *buffer, uint64_t elements) const;
 
-        bool fail();
-        bool good();
+        bool fail() const;
+        bool good() const;
 
       private:
         void finalize();
+        void reserveHeader();
     };
   }
 }
 
-#include "Writer.inlines"
+#include "Writer/Writer.inlines"
 
 #endif

@@ -10,12 +10,9 @@ using namespace std;
 int main(int argc, char **argv)
 {
   MPI::Init(argc, argv);
-  
-  Core::Grid< 8, 8 > grid;
-  Core::Field< QCD::Gauge, 8, 8 > field(grid);
-  
-  IO::ILDG::Generic io("../test/conf.88");
-  field.loadDataFromIO(io);
+
+  IO::Lime::Reader io("../test/conf.88");
+  IO::Lime::Writer out("../test/out.88");
 
   MPI::Finalize();
   return 0;

@@ -27,10 +27,10 @@ void IO::Lime::Writer::finalize()
   if (!bigEndian)
     Core::swapEndian(header.as64[1]);
 
-  std::copy(d_reader.type, d_reader.type + 128, header.as8 + 16);
+  std::copy(d_record.type, d_record.type + 128, header.as8 + 16);
 
   // Go back and do the actual writing
-  d_stream.seekp(d_reader.offset);
+  d_stream.seekp(d_record.offset);
   d_stream.write(header.as8, 144);
   d_stream.seekp(startOfNextRecord);
 }

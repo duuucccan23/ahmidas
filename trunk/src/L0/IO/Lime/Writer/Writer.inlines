@@ -20,12 +20,12 @@ namespace IO
       finalize();
     }
 
-    inline int Writer::fail() const
+    inline bool Writer::fail() const
     {
       return d_stream.fail();
     }
 
-    inline int Writer::good() const
+    inline bool Writer::good() const
     {
       return d_stream.good();
     }
@@ -33,7 +33,6 @@ namespace IO
     inline void Writer::finishMessage()
     {
       d_record.mesEnd = true;
-      d_messageRunning = false;
     }
   }
 }

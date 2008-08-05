@@ -1,12 +1,39 @@
-namespace Lime
+namespace IO
 {
-  inline int Writer::fail() const
+  namespace Lime
   {
-    return d_fail;
-  }
-  
-  inline uint64_t Writer::written() const
-  {
-    return d_written;
+    inline Writer::Record::Record()
+      : size(0), offset(0), version(1), mesBeg(false), mesEnd(false)
+    {
+      type[127] = '\0';
+    }
+
+    inline Writer::Writer(std::string const &filename)
+      : d_stream(filename.c_str())
+    {
+      d_record.mesBeg = true;
+      reserveHeader();
+    }
+
+    inline Writer::~Writer()
+    {
+      finalize();
+    }
+
+    inline int Writer::fail() const
+    {
+      return d_stream.fail();
+    }
+
+    inline int Writer::good() const
+    {
+      return d_stream.good();
+    }
+
+    inline void Writer::finishMessage()
+    {
+      d_record.mesEnd = true;
+      d_messageRunning = false;
+    }
   }
 }

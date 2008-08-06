@@ -39,6 +39,8 @@ namespace IO
       private:
         std::ofstream     d_stream;
         Record            d_record;
+        bool              d_hasWritten;
+        bool              d_messageRunning;
 
       public:
         Writer(std::string const &filename);
@@ -48,7 +50,7 @@ namespace IO
         void newRecord(std::string const &type);
 
         template< typename DataType >
-        void write(DataType *buffer, uint64_t elements) const;
+        void write(DataType *buffer, uint64_t elements);
 
         bool fail() const;
         bool good() const;
@@ -61,5 +63,6 @@ namespace IO
 }
 
 #include "Writer/Writer.inlines"
+#include "Writer/Writer_write.template"
 
 #endif

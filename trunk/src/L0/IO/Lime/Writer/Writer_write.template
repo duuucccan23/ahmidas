@@ -1,7 +1,5 @@
 template <typename DataType >
-void Writer::write(DataType *buffer, uint64_t elements)
+void IO::Lime::Writer::write(DataType *buffer, uint64_t elements)
 {
-  int64_t free = d_records[d_currentRecord].offset + d_records[d_currentRecord].size - d_stream.tellp();
-  free = std::max(free, 0);
-  d_stream.write(reinterpret_cast< char* >(buffer), std::min(elements * sizeof(DataType), free));
+  d_stream.write(reinterpret_cast< const char* >(buffer), elements * sizeof(DataType));
 }

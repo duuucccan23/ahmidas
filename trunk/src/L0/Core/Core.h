@@ -23,6 +23,21 @@ namespace Core
     dir_UP = 1
   };
 
+  enum ColourIndex
+  {
+    col_RED = 0,
+    col_GREEN = 1,
+    col_BLUE = 2
+  };
+
+  enum DiracIndex
+  {
+    gam_1 = 0,
+    gam_2 = 1,
+    gam_3 = 2,
+    gam_4 = 3
+  };
+
   enum MpiTags
   {
     TAG_GAUGEFIELD,

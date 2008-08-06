@@ -1,0 +1,38 @@
+template< size_t Stride >
+class const_iterator;
+
+template< size_t Stride >
+class iterator: public std::iterator< std::bidirectional_iterator_tag, Core::Field< QCD::Spinor, L, T > >
+{
+  friend class Tensor;
+  friend class Tensor::const_iterator< Stride >;
+
+  Core::Field< QCD::Spinor, L, T >  **d_target;
+
+  iterator(Core::Field< QCD::Spinor, L, T > **target);
+
+  public:
+    iterator(iterator< Stride > const &other);
+
+    bool operator==(iterator< Stride > const &other) const;
+    bool operator==(const_iterator< Stride > const &other) const;
+
+    bool operator!=(iterator< Stride > const &other) const;
+    bool operator!=(const_iterator< Stride > const &other) const;
+
+    Core::Field< QCD::Spinor, L, T > &operator*();
+    Core::Field< QCD::Spinor, L, T > const &operator*() const;
+
+    Core::Field< QCD::Spinor, L, T > *operator->();
+    Core::Field< QCD::Spinor, L, T > const *operator->() const;
+
+    iterator &operator--();
+    iterator operator--(int);
+
+    iterator &operator++();
+    iterator operator++(int);
+};
+
+typedef iterator< 1 > iterator_full;
+typedef iterator< 4 > iterator_colour;
+typedef iterator< 1 > iterator_dirac;

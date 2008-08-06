@@ -5,18 +5,17 @@ void IO::Lime::Writer::finalize()
   bool bigEndian = Core::big_endian();
 
   uint64_t written = d_stream.tellp() - d_record.offset - 144;
-  d_stream.write(s_padding, ((written + 7) / 8) * 8);
+  d_stream.write(s_padding, (8 - (written % 8)) % 8);
   std::streampos startOfNextRecord = d_stream.tellp();
 
   uHeader header;
   std::fill(header.as8, header.as8 + s_headerSize, 0x00);
 
   header.as32[0] = s_limeMagic;
-
   if (!bigEndian)
     Core::swapEndian(header.as32[0]);
-  header.as16[2] = d_record.version;
 
+  header.as16[2] = d_record.version;
   if (!bigEndian)
     Core::swapEndian(header.as16[2]);
 
@@ -30,7 +29,7 @@ void IO::Lime::Writer::finalize()
   std::copy(d_record.type, d_record.type + 128, header.as8 + 16);
 
   // Go back and do the actual writing
-  d_stream.seekp(d_record.offset);
+  d_stream.seekp(d_record.offset, std::ios::beg);
   d_stream.write(header.as8, 144);
-  d_stream.seekp(startOfNextRecord);
+  d_stream.seekp(startOfNextRecord, std::ios::beg);
 }

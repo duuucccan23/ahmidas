@@ -27,13 +27,13 @@ namespace Core
 
   template< typename Element, size_t L, size_t T >
   class hcField;
-  
+
   template< typename Element, size_t L, size_t T >
   class Field
   {
     template< typename fIOClass, typename fElement, size_t fL, size_t fT >
     friend class IO::Bridge;
-    
+
     Grid< L, T >  &d_grid;
     size_t         d_offsets[4];
     size_t         d_bufferSize;
@@ -108,7 +108,7 @@ namespace Core
       typename Field< Element, L, T >::const_iterator end() const;
   };
 
-  std::complex< double > plus(std::complex< double > const &left, std::complex< double > const &right);  
+  std::complex< double > plus(std::complex< double > const &left, std::complex< double > const &right);
 }
 
 #include "Field/Field.inlines"

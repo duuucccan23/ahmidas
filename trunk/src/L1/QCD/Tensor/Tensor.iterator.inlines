@@ -1,0 +1,88 @@
+namespace QCD
+{
+  template< size_t L, size_t T >
+  template< size_t Stride >
+  inline Tensor< L, T >::iterator< Stride >::iterator(Core::Field< QCD::Spinor, L, T > **target)
+    : d_target(target)
+  {}
+
+  template< size_t L, size_t T >
+  template< size_t Stride >
+  inline Tensor< L, T >::iterator< Stride >::iterator(Tensor< L, T >::iterator< Stride > const &other)
+    : d_target(other.d_target)
+  {}
+
+  template< size_t L, size_t T >
+  template< size_t Stride >
+  inline bool Tensor< L, T >::iterator< Stride >::operator==(Tensor< L, T >::iterator< Stride > const &other) const
+  {
+    return (d_target == other.d_target);
+  }
+
+  template< size_t L, size_t T >
+  template< size_t Stride >
+  inline bool Tensor< L, T >::iterator< Stride >::operator==(Tensor< L, T >::const_iterator< Stride > const &other) const
+  {
+    return (d_target == other.d_target);
+  }
+
+  template< size_t L, size_t T >
+  template< size_t Stride >
+  inline bool Tensor< L, T >::iterator< Stride >::operator!=(Tensor< L, T >::iterator< Stride > const &other) const
+  {
+    return (d_target != other.d_target);
+  }
+
+  template< size_t L, size_t T >
+  template< size_t Stride >
+  inline bool Tensor< L, T >::iterator< Stride >::operator!=(Tensor< L, T >::const_iterator< Stride > const &other) const
+  {
+    return (d_target != other.d_target);
+  }
+
+  template< size_t L, size_t T >
+  template< size_t Stride >
+  inline Core::Field< QCD::Spinor, L, T > &Tensor< L, T >::iterator< Stride >::operator*()
+  {
+    return **d_target;
+  }
+
+  template< size_t L, size_t T >
+  template< size_t Stride >
+  inline Core::Field< QCD::Spinor, L, T > *Tensor< L, T >::iterator< Stride >::operator->()
+  {
+    return *d_target;
+  }
+
+  template< size_t L, size_t T >
+  template< size_t Stride >
+  inline Tensor< L, T >::iterator< Stride > &Tensor< L, T >::iterator< Stride >::operator--()
+  {
+    d_target -= Stride;
+    return *this;
+  }
+
+  template< size_t L, size_t T >
+  template< size_t Stride >
+  inline Tensor< L, T >::iterator< Stride > Tensor< L, T >::iterator< Stride >::operator--(int)
+  {
+    d_target -= Stride;
+    return iterator< Stride >(d_target + Stride);
+  }
+
+  template< size_t L, size_t T >
+  template< size_t Stride >
+  inline Tensor< L, T >::iterator< Stride > &Tensor< L, T >::iterator< Stride >::operator++()
+  {
+    d_target += Stride;
+    return *this;
+  }
+
+  template< size_t L, size_t T >
+  template< size_t Stride >
+  inline Tensor< L, T >::iterator< Stride > Tensor< L, T >::iterator< Stride >::operator++(int)
+  {
+    d_target += Stride;
+    return iterator< Stride >(d_target - Stride);
+  }
+}

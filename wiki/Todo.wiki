@@ -1,0 +1,15 @@
+#summary All the things we should at some point prior to release do, but don't want to clutter up the Issues list with.
+
+= Introduction =
+
+Use the standard GTD conventions here. No Someday/Maybe items on this list. Only actionable and well defined items.
+
+  * Generate test propagators corresponding to the 8^4 test gauge configuration for use with unit tests.
+
+  * Refactorize functions from some of the longer source files.
+
+  * Define and implement a proper naming convention for the source files. See [NamingConventions].
+
+  * Include proper licenses and comments on all files.
+
+  * Decide about a documentation system (Doxygen?)

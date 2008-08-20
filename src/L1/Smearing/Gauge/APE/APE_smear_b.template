@@ -1,0 +1,144 @@
+namespace Smearing
+{
+  // Performs an APE smearing step.
+  template< size_t L, size_t T >
+  void APE::smear(Core::Field< QCD::Gauge, L, T > &field) const
+  {
+    // Create memory for storing the links
+    // NOTE This is a busload of extra memory we need here.
+    // More memory efficient implementations are available,
+
+    Core::Field< QCD::Gauge, L, T > shifter(field);
+
+    // We create buffers as we need them...
+    SU3::Matrix baseMatrix = SU3::Matrix::identity();
+    baseMatrix *= d_alpha; // For filling up the buffer with the weighing factor immediately.
+    Core::Buffer< SU3::Matrix > stapleXplusY(field.grid(), baseMatrix);
+    Core::Buffer< SU3::Matrix > stapleXplusZ(field.grid(), baseMatrix);
+    Core::Buffer< SU3::Matrix > stapleXminZ(field.grid(), baseMatrix);
+    Core::Buffer< SU3::Matrix > stapleYplusX(field.grid(), baseMatrix);
+    Core::Buffer< SU3::Matrix > stapleZplusY(field.grid(), baseMatrix);
+    Core::Buffer< SU3::Matrix > stapleZplusX(field.grid(), baseMatrix);
+    Core::Buffer< SU3::Matrix > stapleYminZ(field.grid(), baseMatrix);
+
+    Core::Component< QCD::Gauge, L, T, SU3::Matrix > shiftX(shifter, Core::idx_X);
+    Core::Component< QCD::Gauge, L, T, SU3::Matrix > shiftY(shifter, Core::idx_Y);
+    Core::Component< QCD::Gauge, L, T, SU3::Matrix > shiftZ(shifter, Core::idx_Z);
+
+    Core::Component< QCD::Gauge, L, T, SU3::Matrix > fieldX(field, Core::idx_X);
+    Core::Component< QCD::Gauge, L, T, SU3::Matrix > fieldY(field, Core::idx_Y);
+    Core::Component< QCD::Gauge, L, T, SU3::Matrix > fieldZ(field, Core::idx_Z);
+
+    // We start from (0, 0, 0), where we will end as well...
+      stapleYplusX.rightMultiply(shiftX); // 1
+      stapleZplusY.rightMultiply(shiftY); // 1
+      stapleXplusZ.rightMultiply(shiftZ); // 1
+      stapleZplusX.rightMultiply(shiftX); // 1
+
+    shifter.shift(Core::idx_X, Core::dir_UP);   // ( 1, 0, 0)   1
+
+      stapleXplusY.leftMultiply(shiftY); // 1
+      stapleYplusX.rightMultiply(shiftY); // 2
+      stapleZplusX.rightMultiply(shiftZ); // 2
+
+    shifter.shift(Core::idx_Z, Core::dir_DOWN); // ( 1, 0,-1)   2
+
+      stapleXminZ.leftMultiply(shiftZ); // 1
+
+    shifter.shift(Core::idx_X, Core::dir_DOWN); // ( 0, 0,-1)   3
+
+      stapleXminZ.leftMultiply(shiftX); // 2
+      stapleXminZ.leftMultiply(shiftZ.dagger()); // 3
+      stapleYminZ.rightMultiply(shiftZ.dagger()); // 1
+      stapleYminZ.rightMultiply(shiftY); // 2
+
+      // Finished a staple! Add and reassign the memory
+      std::for_each(shiftX.begin(), shiftX.end(), Core::add(stapleXminZ));
+      Core::Buffer< SU3::Matrix > stapleYplusZ(stapleXminZ, baseMatrix);
+
+    shifter.shift(Core::idx_Y, Core::dir_UP);   // ( 0, 1,-1)   4
+
+      stapleYminZ.rightMultiply(fieldZ); // 3
+
+      // Finished a staple! Add and reassign the memory
+      std::for_each(shiftY.begin(), shiftY.end(), Core::add(stapleYminZ));
+      Core::Buffer< SU3::Matrix > stapleZminX(stapleYminZ, baseMatrix);
+
+    shifter.shift(Core::idx_Z, Core::dir_UP);    // ( 0, 1, 0)   5
+
+      stapleXplusY.leftMultiply(shiftX);
+      stapleYplusX.rightMultiply(shiftX.dagger());
+      stapleYplusZ.leftMultiply(shiftZ.dagger());
+      stapleZplusY.rightMultiply(shiftZ);
+
+      std::for_each (shiftY.begin(), shiftY.end(), Core::add(stapleYplusX));
+      Core::Buffer< SU3::Matrix > stapleYminX(stapleYplusX, baseMatrix);
+
+    shifter.shift(Core::idx_X, Core::dir_DOWN); // (-1, 1, 0)   6
+
+      stapleYminX.leftMultiply(shiftX);
+
+    shifter.shift(Core::idx_Y, Core::dir_DOWN); // (-1, 0, 0)   7
+
+      stapleYminX.leftMultiply(shiftY);
+      stapleYminX.leftMultiply(shiftX.dagger());
+      stapleZminX.rightMultiply(shiftX.dagger());
+      stapleZminX.rightMultiply(shiftZ);
+
+      std::for_each (shiftY.begin(), shiftY.end(), Core::add(stapleYminX));
+      Core::Buffer< SU3::Matrix > stapleXminY(stapleYminX, baseMatrix);
+
+    shifter.shift(Core::idx_Z, Core::dir_UP);   // (-1, 0, 1)   8
+
+      stapleZminX.rightMultiply(shiftX);
+
+      std::for_each (shiftZ.begin(), shiftZ.end(), Core::add(stapleZminX));
+      Core::Buffer< SU3::Matrix > stapleZminY(stapleZminX, baseMatrix);
+
+    shifter.shift(Core::idx_X, Core::dir_UP);   // ( 0, 0, 1)   9
+
+      stapleZminY.leftMultiply(shiftY.dagger());
+      stapleXplusZ.rightMultiply(shiftX);
+      stapleYplusZ.leftMultiply(shiftY);
+      stapleZplusX.rightMultiply(shiftX.dagger());
+
+      std::for_each (shiftZ.begin(), shiftZ.end(), Core::add(stapleZplusX));
+      std::for_each (shiftZ.begin(), shiftZ.end(), Core::add(stapleZplusY));
+
+    shifter.shift(Core::idx_Y, Core::dir_DOWN); // ( 0,-1, 1)  10
+
+      stapleZminY.leftMultiply(shiftY);
+
+    shifter.shift(Core::idx_Z, Core::dir_DOWN); // ( 0,-1, 0)  11
+
+      stapleXminY.rightMultiply(shiftY.dagger());
+      stapleXminY.rightMultiply(shiftX);
+      stapleZminY.leftMultiply(shiftZ);
+      stapleZminY.leftMultiply(shiftY.dagger());
+
+      std::for_each (shiftZ.begin(), shiftZ.end(), Core::add(stapleZminY));
+
+    shifter.shift(Core::idx_X, Core::dir_UP);   // ( 1,-1, 0)  12
+
+      stapleXminY.rightMultiply(shiftY);
+
+      std::for_each (shiftX.begin(), shiftX.end(), Core::add(stapleXminY));
+
+    shifter.shift(Core::idx_Y, Core::dir_UP);   // ( 1, 0, 0)  13
+
+      stapleXplusZ.rightMultiply(shiftZ.dagger());
+
+      std::for_each (shiftX.begin(), shiftX.end(), Core::add(stapleXminY));
+
+    shifter.shift(Core::idx_X, Core::dir_DOWN); // ( 0, 0, 0)  14
+      stapleXplusY.leftMultiply(shiftY);
+      stapleYplusZ.leftMultiply(shiftZ);
+
+      std::for_each (shiftX.begin(), shiftX.end(), Core::add(stapleXplusY));
+      std::for_each (shiftY.begin(), shiftY.end(), Core::add(stapleYplusZ));
+
+    // That should be it! We made a full round and summed 12 staples over the field in total.
+    // All that remains is making sure we get an SU(3) matrix back.
+    field.reunitarize();
+  }
+}

@@ -1,0 +1,18 @@
+namespace Core
+{
+  template< typename Element >
+  Field< Element >::const_iterator Field< Element >::const_iterator:::operator--(int)
+  {
+    iterator result(*this);
+    d_parent.decreaseIndex(d_idx);
+    return result;
+  }
+
+  template< typename Element >
+  Field< Element >::const_iterator Field< Element >::const_iterator:::operator++(int)
+  {
+    iterator result(*this);
+    d_parent.increaseIndex(d_idx);
+    return result;
+  }
+}

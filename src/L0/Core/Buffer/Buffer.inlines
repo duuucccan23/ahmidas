@@ -1,0 +1,249 @@
+namespace Core
+{
+  template< typename Element >
+  template< size_t L, size_t T >
+  inline Buffer< Element >::Buffer(Core::Grid< L, T > const &grid)
+    : d_size(grid.localVolume()), d_data(new Element[d_size])
+  {}
+
+  template< typename Element >
+  template< size_t L, size_t T >
+  inline Buffer< Element >::Buffer(Core::Grid< L, T > const &grid, Element const &defValue)
+    : d_size(grid.localVolume()), d_data(new Element[d_size])
+  {
+    std::fill(begin(), end(), defValue);
+  }
+
+  template< typename Element >
+  inline Buffer< Element >::Buffer(Buffer< Element > &other) // Pilfers resources
+    : d_size(other.d_size), d_data(other.d_data)
+  {
+    other.d_data = 0;
+  }
+
+  template< typename Element >
+  inline Buffer< Element >::Buffer(Buffer< Element > &other, Element const &defValue) // Pilfers resources
+    : d_size(other.d_size), d_data(other.d_data)
+  {
+    other.d_data = 0;
+    std::fill(begin(), end(), defValue);
+  }
+
+  template< typename Element >
+  inline Buffer< Element >::~Buffer()
+  {
+    delete[] d_data;
+  }
+
+  template< typename Element >
+  inline typename Buffer< Element >::iterator Buffer< Element >::begin()
+  {
+    return d_data;
+  }
+
+  template< typename Element >
+  inline typename Buffer< Element >::iterator Buffer< Element >::end()
+  {
+    return d_data + d_size;
+  }
+
+  template< typename Element >
+  inline typename Buffer< Element >::const_iterator Buffer< Element >::begin() const
+  {
+    return d_data;
+  }
+
+  template< typename Element >
+  inline typename Buffer< Element >::const_iterator Buffer< Element >::end() const
+  {
+    return d_data + d_size;
+  }
+
+  template< typename Element >
+  template< typename OtherElement, size_t L, size_t T >
+  inline void Buffer< Element >::leftMultiply(Field< OtherElement, L, T > const &other)
+  {
+    typename Field< OtherElement, L, T >::const_iterator otherItr = other.begin();
+    for (iterator itr = begin(); itr != end(); ++itr, ++otherItr)
+      itr->leftMultiply(*otherItr);
+  }
+
+  template< typename Element >
+  template< typename OtherElement, size_t L, size_t T >
+  inline void Buffer< Element >::leftMultiply(hcField< OtherElement, L, T > const &other)
+  {
+    typename Field< OtherElement, L, T >::const_iterator otherItr = other.dagger().begin();
+    for (iterator itr = begin(); itr != end(); ++itr, ++otherItr)
+      itr->leftMultiply(otherItr->dagger());
+  }
+
+  template< typename Element >
+  template< typename OtherElement, size_t L, size_t T, typename Atom >
+  inline void Buffer< Element >::leftMultiply(Component< OtherElement, L, T, Atom > const &other)
+  {
+    typename Component< OtherElement, L, T, Atom >::const_iterator otherItr = other.begin();
+    for (iterator itr = begin(); itr != end(); ++itr, ++otherItr)
+      itr->leftMultiply(*otherItr);
+  }
+
+  template< typename Element >
+  template< typename OtherElement, size_t L, size_t T, typename Atom >
+  inline void Buffer< Element >::leftMultiply(hcComponent< OtherElement, L, T, Atom > const &other)
+  {
+    typename Component< OtherElement, L, T, Atom  >::const_iterator otherItr = other.dagger().begin();
+    for (iterator itr = begin(); itr != end(); ++itr, ++otherItr)
+      itr->leftMultiply(otherItr->dagger());
+  }
+
+  template< typename Element >
+  template< typename OtherElement, size_t L, size_t T >
+  inline void Buffer< Element >::rightMultiply(Field< OtherElement, L, T > const &other)
+  {
+    typename Field< OtherElement, L, T >::const_iterator otherItr = other.begin();
+    for (iterator itr = begin(); itr != end(); ++itr, ++otherItr)
+      itr->rightMultiply(*otherItr);
+  }
+
+  template< typename Element >
+  template< typename OtherElement, size_t L, size_t T >
+  inline void Buffer< Element >::rightMultiply(hcField< OtherElement, L, T > const &other)
+  {
+    typename Field< OtherElement, L, T >::const_iterator otherItr = other.begin();
+    for (iterator itr = begin(); itr != end(); ++itr, ++otherItr)
+      itr->rightMultiply(otherItr->dagger());
+  }
+
+  template< typename Element >
+  template< typename OtherElement, size_t L, size_t T, typename Atom >
+  inline void Buffer< Element >::rightMultiply(Component< OtherElement, L, T, Atom > const &other)
+  {
+    typename Component< OtherElement, L, T, Atom >::const_iterator otherItr = other.begin();
+    for (iterator itr = begin(); itr != end(); ++itr, ++otherItr)
+      itr->rightMultiply(*otherItr);
+  }
+
+  template< typename Element >
+  template< typename OtherElement, size_t L, size_t T, typename Atom >
+  inline void Buffer< Element >::rightMultiply(hcComponent< OtherElement, L, T, Atom > const &other)
+  {
+    typename Component< OtherElement, L, T, Atom >::const_iterator otherItr = other.dagger().begin();
+    for (iterator itr = begin(); itr != end(); ++itr, ++otherItr)
+      itr->rightMultiply(otherItr->dagger());
+  }
+
+  template< typename Element >
+  template< typename OtherElement, size_t L, size_t T >
+  Buffer< Element > &Buffer< Element >::operator+=(Field< OtherElement, L, T > const &other)
+  {
+    typename Field< OtherElement, L, T >::const_iterator otherItr = other.begin();
+    for (iterator itr = begin(); itr != end(); ++itr, ++otherItr)
+      itr->operator+=(*otherItr);
+    return *this;
+  }
+
+  template< typename Element >
+  template< typename OtherElement, size_t L, size_t T >
+  Buffer< Element > &Buffer< Element >::operator+=(hcField< OtherElement, L, T > const &other)
+  {
+    typename Field< OtherElement, L, T >::const_iterator otherItr = other.dagger().begin();
+    for (iterator itr = begin(); itr != end(); ++itr, ++otherItr)
+      itr->operator+=(otherItr->dagger());
+    return *this;
+  }
+
+  template< typename Element >
+  template< typename OtherElement, size_t L, size_t T, typename Atom >
+  Buffer< Element > &Buffer< Element >::operator+=(Component< OtherElement, L, T, Atom > const &other)
+  {
+    typename Component< OtherElement, L, T, Atom >::const_iterator otherItr = other.begin();
+    for (iterator itr = begin(); itr != end(); ++itr, ++otherItr)
+      itr->operator+=(*otherItr);
+    return *this;
+  }
+
+  template< typename Element >
+  template< typename OtherElement, size_t L, size_t T, typename Atom >
+  Buffer< Element > &Buffer< Element >::operator+=(hcComponent< OtherElement, L, T, Atom > const &other)
+  {
+    typename Component< OtherElement, L, T, Atom >::const_iterator otherItr = other.dagger().begin();
+    for (iterator itr = begin(); itr != end(); ++itr, ++otherItr)
+      itr->operator+=(otherItr->dagger());
+    return *this;
+  }
+
+  template< typename Element >
+  template< typename OtherElement >
+  Buffer< Element > &Buffer< Element >::operator+=(Buffer< OtherElement > const &other)
+  {
+    for (size_t ctr = 0; ctr < d_size; ++ctr)
+      d_data[ctr] *= other.d_data[ctr];
+    return *this;
+  }
+
+  template< typename Element >
+  template< typename Type >
+  Buffer< Element > &Buffer< Element >::operator+=(Type const &other)
+  {
+    for (iterator itr = d_data; itr < d_data + d_size; ++itr)
+      itr->operator+=(other);
+    return *this;
+  }
+
+  template< typename Element >
+  template< typename OtherElement, size_t L, size_t T >
+  Buffer< Element > &Buffer< Element >::operator*=(Field< OtherElement, L, T > const &other)
+  {
+    typename Field< OtherElement, L, T >::const_iterator otherItr = other.begin();
+    for (iterator itr = begin(); itr != end(); ++itr, ++otherItr)
+      itr->operator*=(*otherItr);
+    return *this;
+  }
+
+  template< typename Element >
+  template< typename OtherElement, size_t L, size_t T >
+  Buffer< Element > &Buffer< Element >::operator*=(hcField< OtherElement, L, T > const &other)
+  {
+    typename Field< OtherElement, L, T >::const_iterator otherItr = other.dagger().begin();
+    for (iterator itr = begin(); itr != end(); ++itr, ++otherItr)
+      itr->operator*=(otherItr->dagger());
+    return *this;
+  }
+
+  template< typename Element >
+  template< typename OtherElement, size_t L, size_t T, typename Atom >
+  Buffer< Element > &Buffer< Element >::operator*=(Component< OtherElement, L, T, Atom > const &other)
+  {
+    typename Component< OtherElement, L, T, Atom >::const_iterator otherItr = other.begin();
+    for (iterator itr = begin(); itr != end(); ++itr, ++otherItr)
+      itr->operator*=(*otherItr);
+    return *this;
+  }
+
+  template< typename Element >
+  template< typename OtherElement, size_t L, size_t T, typename Atom >
+  Buffer< Element > &Buffer< Element >::operator*=(hcComponent< OtherElement, L, T, Atom > const &other)
+  {
+    typename Component< OtherElement, L, T, Atom >::const_iterator otherItr = other.dagger().begin();
+    for (iterator itr = begin(); itr != end(); ++itr, ++otherItr)
+      itr->operator*=(otherItr->dagger());
+    return *this;
+  }
+
+  template< typename Element >
+  template< typename OtherElement >
+  Buffer< Element > &Buffer< Element >::operator*=(Buffer< OtherElement > const &other)
+  {
+    for (size_t ctr = 0; ctr < d_size; ++ctr)
+      d_data[ctr] *= other.d_data[ctr];
+    return *this;
+  }
+
+  template< typename Element >
+  template< typename Type >
+  Buffer< Element > &Buffer< Element >::operator*=(Type const &other)
+  {
+    for (Element *itr = d_data; itr < d_data + d_size; ++itr)
+      itr->operator*=(other);
+    return *this;
+  }
+}

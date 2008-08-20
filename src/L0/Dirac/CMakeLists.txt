@@ -1,0 +1,5 @@
+SET(Sources_Gamma Gamma/Gamma.cpp Gamma.h)
+SET(Sources_Identity Identity.h)
+SET(Sources_Pauli Pauli.h)
+SET(Sources_Sigma Sigma.h)
+ADD_LIBRARY(Dirac ${Sources_Gamma} ${Sources_Identity} ${Sources_Pauli} ${Sources_Sigma})

@@ -1,0 +1,95 @@
+\documentclass[a4paper,10pt]{article}
+
+
+\begin{document}
+\section{SU(3) projection}
+The smeared gauge link $\hat{U}$
+\begin{displaymath}
+ U_{\mu}(x) \rightarrow\hat{U}_{\mu}(x)=U_{\mu}(x)+f(U_{\nu}(y))
+\end{displaymath}
+need not necessarily be unitary anymore, but rather can be seen as a (hopefully still invertible) $3\times 3$ matrix $M$. To preserve the unitarity, a \emph{reunitarization} procedure is needed, also know as a projection onto $SU(3)$. There is no unique way of defining the $SU(3)$ matrix that should be associated with a non-$SU(3)$ matrix, so a choice has to be made. A common choice is based on the observation that for any $M$, it can be uniquely decomposed as $UH$ with $U$ in $U(3)$, and $H$ a positive definite (so also hermitian) matrix. The projection of $M$ onto $SU(3)$, denoted by $\tilde{U}$, is then given by
+\begin{displaymath}
+ \tilde{U} = \frac{U}{\sqrt[3]{\det(U)}}.
+\end{displaymath}
+This unitarization needs to be performed of the order of $V\cdot N$ times, with $V$ the volume of the lattice, and $N$ the number of smearing steps needed. This is an expensive step in for example source generation, so a clever $SU(3)$ projection can potentially be a useful speedup.
+Another way of decomposing $M$ is $M=QR$, with $Q$ unitary and $R$ upper triangular, a form used in the very stable $QR$-algorithm for solving a linear system of equations. Because this factorization is less restrictive on the matrix $R$ than the previous factorization is on the matrix $H$, it can be hoped that this factorization can be performed at less computational cost. The factorisation is performed using Givens rotations.
+\subsection{Givens rotations}
+See \ref{567809}. Given $f$ and $g$, a Givens rotation is a 2-by-2 unitary matrix $R(c,s)$ such that
+\begin{displaymath}
+R(c,s)\cdot\left[\begin{array}{c}f\\g\end{array}\right] \equiv
+\left[\begin{array}{cc}c & s \\ -\bar{s} & \bar{c} \end{array}\right] \cdot
+\left[\begin{array}{c}f\\g\end{array}\right]=\left[\begin{array}{c}r\\0\end{array}\right]
+\end{displaymath}
+It is not yet possible determine $c$ and $s$ uniquely, as for any complex $\omega$ with $||\omega||=1$,
+\begin{displaymath}
+ c=\omega\cdot \frac{\bar{f}}{\sqrt{|f|^{2}+|g|^{2}}}
+\end{displaymath}
+\begin{displaymath}
+ s=\omega\cdot \frac{\bar{g}}{\sqrt{|f|^{2}+|g|^{2}}}
+\end{displaymath}
+\begin{displaymath}
+ r=\omega\cdot \sqrt{|f|^{2}+|g|^{2}}
+\end{displaymath}
+all generate a valid Givens rotation matrix. We follow \ref{567809}, to aim for compatibility, consistency, continuity and efficiency. Introducing the following function:
+\begin{displaymath}
+ \textrm{sign}(x)\equiv\left \{\begin{array}{cc}
+x/|x| & \textrm{if} x \neq 0 \\
+1 & \textrm{if} x = 0 \end{array} \right.
+\end{displaymath}
+We choose:
+\begin{displaymath}
+ c=\frac{|f|}{\sqrt{|f|^{2}+|g|^{2}}}
+\end{displaymath}
+\begin{displaymath}
+ s=\textrm{sign}(f)\cdot\frac{\bar{g}}{\sqrt{|f|^{2}+|g|^{2}}}
+\end{displaymath}
+\begin{displaymath}
+ r=\textrm{sign}(f)\cdot \sqrt{|f|^{2}+|g|^{2}}
+\end{displaymath}
+The algorithm is then defined, except for a set of special cases (zeros, NaNs and infinities), all of which are handled as in \ref{567809}.
+
+To effectively use the Givens rotations in the reunitarization procedure, observe that for $M$
+\begin{displaymath}
+ M = \left(\begin{array}{ccc}a&b&c\\d&e&f\\g&h&i \end{array}\right)
+\end{displaymath}
+to be decomposed as $M=UT$ (where $U=Q$ and $T=R$ in $QR$ to prevent some confusion in the notation), if we can find a way to make the upper triangular matrix $T$ with Givens rotations, we are automatically assured that $U$ is indeed unitary. Rotate first $\left(\begin{array}{c}a\\d\end{array}\right)$ into $\left(\begin{array}{c}\tilde{a}\\0\end{array}\right)$. This will affect the rest of the row as well. The Givens rotation matrix $G_{1}$ associated with this step is
+\begin{displaymath}
+ G_{1} = \left(\begin{array}{ccc}c_{1}&s_{1}&0\\-\bar{s}_{1}&\bar{c}_{1}&0\\0&0&1 \end{array}\right).
+\end{displaymath}
+Then rotate $\left(\begin{array}{c}\tilde{a}\\g\end{array}\right)$ into $\left(\begin{array}{c}\hat{a}\\0\end{array}\right)$ with $G_{2}$
+\begin{displaymath}
+ G_{2} = \left(\begin{array}{ccc}c_{2}&0&s_{2}\\0&1&0\\-\bar{s}_{2}&0&\bar{c}_{2} \end{array}\right).
+\end{displaymath}
+Finally rotate the now changed $\left(\begin{array}{c}\tilde{e}\\ \tilde{h}\end{array}\right)$ into $\left(\begin{array}{c}\hat{e}\\0\end{array}\right)$ with $G_{3}$
+\begin{displaymath}
+ G_{3} = \left(\begin{array}{ccc}1&0&0\\0&c_{3}&s_{3}\\0&-\bar{s}_{3}&\bar{c}_{3}\end{array}\right).
+\end{displaymath}
+The $3$ matrices $G_{i}$ are clearly unitary, so $G^{\dagger}=G^{-1}$
+\begin{displaymath}
+ G_{3}G_{2}G_{1}M=T \quad \Rightarrow \quad M = G_{1}^{\dagger}G_{2}^{\dagger}G_{3}^{\dagger}R =UR
+\end{displaymath}
+So, knowing the coefficients that build up the Givens rotation matrices, $U$ is completely defined. Write out the matrix $U=G_{1}^{\dagger}G_{2}^{\dagger}G_{3}^{\dagger}$ in terms of its coefficients:
+\begin{eqnarray*}
+ U=\left(\begin{array}{ccc}\bar{c}_{1}&-s_{1}&0\\\bar{s}_{1}&c_{1}&0\\0&0&1 \end{array}\right)
+\left(\begin{array}{ccc}\bar{c}_{2}&0&-s_{2}\\0&1&0\\\bar{s}_{2}&0&c_{2} \end{array}\right)
+\left(\begin{array}{ccc}1&0&0\\0&\bar{c}_{3}&-s_{3}\\0&\bar{s}_{3}&c_{3}\end{array}\right)=\\
+\left(\begin{array}{ccc}
+\bar{c}_{1}\bar{c}_{2} & -\bar{c}_{1}s_{2}\bar{s}_{3} - s_{1}\bar{c}_{3} & -\bar{c}_{1}s_{2}c_{3} + s_{1}s_{3}\\
+\bar{s}_{1}\bar{c}_{2} & -\bar{s}_{1}s_{2}\bar{s}_{3} + c_{1}\bar{c}_{3} & -\bar{s}_{1}s_{2}c_{3} - c_{1}s_{3}\\
+\bar{s}_{2} & c_{2}\bar{s}_{3} & c_{2}c_{3}
+\end{array}\right)
+\end{eqnarray*}
+\begin{displaymath}
+\left(\begin{array}{ccc}a&b&c\\d&e&f\\g&h&i \end{array}\right)
+\rightarrow \left(\begin{array}{ccc}\tilde{a}&\tilde{b}&\tilde{c}\\0&\tilde{e}&\tilde{f}\\g&h&i \end{array}\right)
+\rightarrow \left(\begin{array}{ccc}\hat{a}&\hat{b}&\hat{c}\\0&\tilde{e}&\tilde{f}\\0&\tilde{h}&\tilde{i} \end{array}\right)
+\rightarrow \left(\begin{array}{ccc}\hat{a}&\hat{b}&\hat{c}\\0&\hat{e}&\hat{f}\\0&0&\hat{i} \end{array}\right)
+\end{displaymath}
+\begin{eqnarray*}
+ c_{1},s_{1} &=& f(a,d) \quad \tilde{a} = c_{1}a+s_{1}b \quad \tilde{b}=c_{1}b+s_{1}e \quad \tilde{e} = -\bar{s}_{1}b+\bar{c}_{1}e \\
+ c_{2},s_{2} &=& f(\tilde{a},g) \quad \tilde{h} = -\bar{s}_{2}\tilde{b} + \bar{c}_{2}h \\
+ c_{3},s_{3} &=& f(\tilde{e},\tilde{h})
+\end{eqnarray*}
+The implementation of the determination of the Givens rotation coefficients $c,s$, ($f$) is as in \ref{567809}, the rest is bookkeeping.
+
+\end{document}

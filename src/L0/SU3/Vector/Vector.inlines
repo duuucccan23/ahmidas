@@ -1,0 +1,113 @@
+namespace SU3
+{
+  inline Vector::Vector()
+  {}
+
+  inline Vector::Vector(double *data)
+  {
+    std::copy(data, data + 6, reinterpret_cast< double* >(d_data));
+  }
+
+  inline Vector::Vector(std::complex< double > *data)
+  {
+    std::copy(data, data + 3, d_data);
+  }
+
+  inline Vector::Vector(Vector const &other)
+  {
+    std::copy(other.d_data, other.d_data + 3, d_data);
+  }
+  
+  inline Vector::~Vector()
+  {}
+  
+  inline Vector &Vector::operator=(Vector const &other)
+  {
+    if (&other != this)
+      std::copy(other.d_data, other.d_data + 3, d_data);
+    return *this;
+  }
+  
+  inline Vector const &Vector::basis(short idx)
+  {
+    return s_basis[idx];
+  } 
+  
+  inline Vector const &Vector::zero()
+  {
+    return s_zero;
+  }
+
+  inline std::complex< double > &Vector::operator()(short idx)
+  {
+    return d_data[idx];
+  }
+  
+  inline std::complex< double > const &Vector::operator()(short idx) const
+  {
+    return d_data[idx];
+  }
+
+  template< typename T >
+  inline Vector &Vector::operator+=(T const &rhand)
+  {
+    for (size_t idx = 0; idx < 3; ++idx)
+      d_data[idx] += rhand;
+    return *this;
+  }
+      
+  template< >
+  inline Vector &Vector::operator+=(Vector const &rhand)
+  {
+    for (size_t idx = 0; idx < 3; ++idx)
+      d_data[idx] += rhand.d_data[idx];
+    return *this;
+  }
+
+  template< typename T >
+  inline Vector &Vector::operator-=(T const &rhand)
+  {
+    for (size_t idx = 0; idx < 3; ++idx)
+      d_data[idx] -= rhand;
+    return *this;
+  }
+      
+  template< >
+  inline Vector &Vector::operator-=(Vector const &rhand)
+  {
+    for (size_t idx = 0; idx < 3; ++idx)
+      d_data[idx] -= rhand.d_data[idx];
+    return *this;
+  }
+
+  template< typename T >
+  inline Vector &Vector::operator*=(T const &rhand)
+  {
+    for (size_t idx = 0; idx < 3; ++idx)
+      d_data[idx] *= rhand;
+    return *this;
+  }
+
+  template< typename T >
+  inline Vector &Vector::operator/=(T const &rhand)
+  {
+    for (size_t idx = 0; idx < 3; ++idx)
+      d_data[idx] /= rhand;
+    return *this;
+  }
+  
+  inline std::complex< double > &Vector::operator[](short component)
+  {
+    return d_data[component];
+  }
+      
+  inline std::complex< double > const &Vector::operator[](short component) const
+  {
+    return d_data[component];    
+  }
+  
+  inline std::complex< double > innerProduct(Vector const &left, Vector const &right)
+  {
+    return std::conj(left(0)) * right(0) + std::conj(left(1)) * right(1) + std::conj(left(2)) * right(2);
+  }
+}

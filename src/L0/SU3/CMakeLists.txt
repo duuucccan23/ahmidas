@@ -1,0 +1,9 @@
+SET(Sources_Matrix Matrix/Matrix_givens.cpp Matrix/Matrix_cout_operator<<.cpp
+                   Matrix/Matrix_leftMultiply_a.cpp Matrix/Matrix_leftMultiply_b.cpp
+                   Matrix/Matrix_Matrix.cpp Matrix/Matrix_random.cpp
+                   Matrix/Matrix_reunitarize.cpp Matrix/Matrix_rightMultiply_a.cpp
+                   Matrix/Matrix_rightMultiply_b.cpp Matrix/Matrix.cpp Matrix.h
+                   Matrix/Matrix_operator_mineq.cpp Matrix/Matrix_operator_pluseq.cpp)
+SET(Sources_Vector Vector/Vector_leftMultiply_a.cpp Vector/Vector_leftMultiply_b.cpp
+                   Vector/Vector.cpp Vector.h)
+ADD_LIBRARY(SU3 ${Sources_Vector} ${Sources_Matrix})

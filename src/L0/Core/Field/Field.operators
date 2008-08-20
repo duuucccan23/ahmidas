@@ -1,0 +1,83 @@
+template< typename Type >
+void leftMultiply(Field< Type, L, T > const &other);
+
+template< typename Type >
+void leftMultiply(hcField< Type, L, T > const &other);
+
+template< typename Type, typename Atom >
+void leftMultiply(Component< Type, L, T, Atom > const &other);
+
+template< typename Type, typename Atom >
+void leftMultiply(hcComponent< Type, L, T, Atom > const &other);
+
+template< typename Type >
+void rightMultiply(Field< Type, L, T > const &other);
+
+template< typename Type >
+void rightMultiply(hcField< Type, L, T > const &other);
+
+template< typename Type, typename Atom >
+void rightMultiply(Component< Type, L, T, Atom > const &other);
+
+template< typename Type, typename Atom >
+void rightMultiply(hcComponent< Type, L, T, Atom > const &other);
+
+template< typename Type >
+Field< Element, L, T > &operator+=(Type const &rhand);
+
+template< typename Type >
+Field< Element, L, T > &operator+=(Buffer< Type > const &other);
+
+template< typename Type >
+Field< Element, L, T > &operator+=(Field< Type, L, T > const &other);
+
+template< typename Type >
+Field< Element, L, T > &operator+=(hcField< Type, L, T > const &other);
+
+template< typename Type, typename Atom >
+Field< Element, L, T > &operator+=(Component< Type, L, T, Atom > const &other);
+
+template< typename Type, typename Atom >
+Field< Element, L, T > &operator+=(hcComponent< Type, L, T, Atom > const &other);
+
+template< typename Type >
+Field< Element, L, T > &operator-=(Type const &rhand);
+
+template< typename Type >
+Field< Element, L, T > &operator-=(Buffer< Type > const &other);
+
+template< typename Type >
+Field< Element, L, T > &operator-=(Field< Type, L, T > const &rhand);
+
+template< typename Type >
+Field< Element, L, T > &operator-=(hcField< Type, L, T > const &rhand);
+
+template< typename Type, typename Atom >
+Field< Element, L, T > &operator-=(Component< Type, L, T, Atom > const &other);
+
+template< typename Type, typename Atom >
+Field< Element, L, T > &operator-=(hcComponent< Type, L, T, Atom > const &other);
+
+template< typename Type >
+Field< Element, L, T > &operator*=(Type const &rhand);
+
+template< typename Type >
+Field< Element, L, T > &operator*=(Buffer< Type > const &other);
+
+template< typename Type >
+Field< Element, L, T > &operator*=(Field< Type, L, T > const &rhand);
+
+template< typename Type >
+Field< Element, L, T > &operator*=(hcField< Type, L, T > const &rhand);
+
+template< typename Type, typename Atom >
+Field< Element, L, T > &operator*=(Component< Type, L, T, Atom > const &other);
+
+template< typename Type, typename Atom >
+Field< Element, L, T > &operator*=(hcComponent< Type, L, T, Atom > const &other);
+
+template< typename Type >
+Field< Element, L, T > &operator/=(Type const &rhand);
+
+template< typename Type >
+Field< Element, L, T > &operator/=(Buffer< Type > const &other);

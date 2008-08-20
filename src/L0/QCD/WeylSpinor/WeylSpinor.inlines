@@ -1,0 +1,70 @@
+namespace QCD
+{
+  // WeylSpinor is meant as an interface, so we don't bother copying any data
+  inline WeylSpinor::WeylSpinor(SU3::Vector *data)
+    : d_data(data)
+  {}
+  
+  inline WeylSpinor &WeylSpinor::operator*=(std::complex< double > const &rhand)
+  {
+    std::transform(reinterpret_cast< std::complex< double >* >(d_data), 
+                   reinterpret_cast< std::complex< double >* >(d_data) + 6, 
+                   reinterpret_cast< std::complex< double >* >(d_data),
+                   bind2nd(std::multiplies< std::complex< double > >(), rhand));
+    return *this;
+  }
+
+  // This is obviously just a dummy function, but it could make
+  // notation more transparent here and there.
+  inline void WeylSpinor::leftMultiply(Dirac::Identity)
+  {}
+
+  template< >
+  inline void WeylSpinor::leftMultiply(Dirac::Pauli< 1 >)
+  {
+    std::iter_swap(d_data, d_data + 1);
+  }
+
+  template< >
+  inline void WeylSpinor::leftMultiply(Dirac::Pauli< 3 >)
+  {
+    d_data[1] *= -1.0;
+  }
+
+  template< >
+  inline void WeylSpinor::leftMultiply(Dirac::Pauli< 3 >, std::complex< double > const &factor)
+  {
+    d_data[1] *= -factor;
+  }
+
+  inline void WeylSpinor::swap(WeylSpinor &other)
+  {
+    std::swap_ranges(begin(), end(), other.begin());
+  }
+
+  inline WeylSpinor::iterator WeylSpinor::begin()
+  {
+    return d_data;
+  }
+
+  inline WeylSpinor::iterator WeylSpinor::end()
+  {
+    return d_data + 2;
+  }
+
+  inline WeylSpinor::reverse_iterator WeylSpinor::rbegin()
+  {
+    return reverse_iterator(end());
+  }
+
+  inline WeylSpinor::reverse_iterator WeylSpinor::rend()
+  {
+    return reverse_iterator(begin());
+  }
+  
+  inline void WeylSpinor::swap(std::complex< double > const &myFac, WeylSpinor other, 
+                               std::complex< double > const &hisFac, Dirac::Identity)
+  {
+    swap(myFac, other, hisFac);
+  }  
+}

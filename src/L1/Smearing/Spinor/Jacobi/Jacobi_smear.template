@@ -1,0 +1,49 @@
+namespace Smearing
+{
+  template< size_t L, size_t T >
+  void Jacobi::smear(Core::Field< QCD::Spinor, L, T > &spinorField, Core::Field< QCD::Gauge, L, T > &gaugeField) const
+  {
+    Core::Buffer< QCD::Spinor > spinorBuffer(spinorField.grid());
+    Core::Field< QCD::Spinor, L, T > shiftedSpinor(spinorField);
+    
+    Core::Component< QCD::Gauge, L, T, SU3::Matrix > gaugeX(gaugeField, Core::idx_X);
+    Core::Component< QCD::Gauge, L, T, SU3::Matrix > gaugeY(gaugeField, Core::idx_Y);
+    Core::Component< QCD::Gauge, L, T, SU3::Matrix > gaugeZ(gaugeField, Core::idx_Z);
+    
+    shiftedSpinor.shift(Core::idx_X, Core::dir_UP);
+    shiftedSpinor.leftMultiply(gaugeX);
+    spinorBuffer += shiftedSpinor;
+      
+    shiftedSpinor = spinorField;
+    shiftedSpinor.shift(Core::idx_Y, Core::dir_UP);
+    shiftedSpinor.leftMultiply(gaugeY);
+    spinorBuffer += shiftedSpinor;
+
+    shiftedSpinor = spinorField;
+    shiftedSpinor.shift(Core::idx_Z, Core::dir_UP);
+    shiftedSpinor.leftMultiply(gaugeZ);
+    spinorBuffer += shiftedSpinor;
+    
+    // We now calculate the backwards gauge part
+    
+    shiftedSpinor = spinorField;
+    shiftedSpinor.leftMultiply(gaugeX);
+    shiftedSpinor.shift(Core::idx_X, Core::dir_UP);
+    spinorBuffer += shiftedSpinor;
+      
+    shiftedSpinor = spinorField;
+    shiftedSpinor.shift(Core::idx_Y, Core::dir_UP);
+    shiftedSpinor.leftMultiply(gaugeY);
+    spinorBuffer += shiftedSpinor;
+
+    shiftedSpinor = spinorField;
+    shiftedSpinor.shift(Core::idx_Z, Core::dir_UP);
+    shiftedSpinor.leftMultiply(gaugeZ);
+    spinorBuffer += shiftedSpinor;
+
+    // Combine all the results here
+    spinorBuffer *= d_kappa;
+    spinorField += spinorBuffer;
+    spinorField *= d_weight;
+  }
+}

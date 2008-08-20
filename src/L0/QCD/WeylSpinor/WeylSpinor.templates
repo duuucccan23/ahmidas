@@ -1,0 +1,12 @@
+namespace QCD
+{ 
+  // NOTE To avoid enormous clutter in what is probably non-essential code, I reuse the above code
+  // incurring a penalty on additional copies. This may have to change later on.
+  template< size_t Index >
+  void WeylSpinor::swap(std::complex< double > const &myFac, WeylSpinor other, std::complex< double > const &hisFac, Dirac::Pauli< Index >)
+  {
+    leftMultiply(Dirac::Pauli< Index >(), myFac);
+    other.leftMultiply(Dirac::Pauli< Index >(), hisFac);
+    swap(other);   
+  }
+}

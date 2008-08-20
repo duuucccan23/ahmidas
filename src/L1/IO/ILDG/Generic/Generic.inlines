@@ -1,0 +1,40 @@
+namespace IO
+{
+  namespace ILDG
+  {
+    inline Generic::Generic()
+      : d_reader(0)
+    {}
+      
+    inline Generic::Generic(std::string const &filename)
+      : d_reader(0)
+    {
+      openFile(filename);
+    }
+
+    inline int Generic::fail() const
+    {
+      return d_reader->fail();
+    }
+    
+    inline std::string const &Generic::version() const
+    {
+      return d_format.version;
+    }
+
+    inline std::string const &Generic::field() const
+    {
+      return d_format.field;
+    }
+
+    inline size_t const Generic::precision() const
+    {
+      return d_format.precision;
+    }
+
+    inline size_t const *Generic::dimensions() const
+    {
+      return d_format.dimensions;
+    }
+  }
+}

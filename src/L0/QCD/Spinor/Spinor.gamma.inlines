@@ -1,0 +1,80 @@
+namespace QCD
+{
+  template< >
+  inline void Spinor::leftMultiply(Dirac::Gamma< 1 > const)
+  {
+    upper().swap(std::complex< double >(0, 1), lower(), std::complex< double >(0, -1), Dirac::Pauli< 1 >());
+  }
+
+  template< >
+  inline void Spinor::leftMultiply(Dirac::Gamma< 2 > const)
+  {
+    upper().swap(std::complex< double >(0, 1), lower(), std::complex< double >(0, -1), Dirac::Pauli< 2 >());
+  }
+
+  template< >
+  inline void Spinor::leftMultiply(Dirac::Gamma< 3 > const)
+  {
+    upper().swap(std::complex< double >(0, 1), lower(), std::complex< double >(0, -1), Dirac::Pauli< 3 >());
+  }
+
+  template< >
+  inline void Spinor::leftMultiply(Dirac::Gamma< 4 > const)
+  {
+    upper().swap(-1, lower(), -1);
+  }
+
+  template< >
+  inline void Spinor::leftMultiply(Dirac::Gamma< 5 > const)
+  {
+    lower() *= -1;
+  }
+
+  template< >
+  inline void Spinor::leftMultiply(Dirac::Gamma< 15 > const)
+  {
+    upper().swap(std::complex< double >(0, 1), lower(), std::complex< double >(0, 1), Dirac::Pauli< 1 >());
+  }
+
+  template< >
+  inline void Spinor::leftMultiply(Dirac::Gamma< 25 > const)
+  {
+    upper().swap(std::complex< double >(0, 1), lower(), std::complex< double >(0, 1), Dirac::Pauli< 2 >());
+  }
+
+  template< >
+  inline void Spinor::leftMultiply(Dirac::Gamma< 35 > const)
+  {
+    upper().swap(std::complex< double >(0, 1), lower(), std::complex< double >(0, 1), Dirac::Pauli< 3 >());
+  }
+
+  template< >
+  inline void Spinor::leftMultiply(Dirac::Gamma< 45 > const)
+  {
+    upper().swap(-1, lower(), 1);
+  }
+
+  template< >
+  inline void Spinor::leftMultiply(Dirac::Gamma< 51 > const)
+  {
+    upper().swap(std::complex< double >(0, -1), lower(), std::complex< double >(0, -1), Dirac::Pauli< 1 >());
+  }
+
+  template< >
+  inline void Spinor::leftMultiply(Dirac::Gamma< 52 > const)
+  {
+    upper().swap(std::complex< double >(0, -1), lower(), std::complex< double >(0, -1), Dirac::Pauli< 2 >());
+  }
+
+  template< >
+  inline void Spinor::leftMultiply(Dirac::Gamma< 53 > const)
+  {
+    upper().swap(std::complex< double >(0, -1), lower(), std::complex< double >(0, -1), Dirac::Pauli< 3 >());
+  }
+
+  template< >
+  inline void Spinor::leftMultiply(Dirac::Gamma< 54 > const)
+  {
+    upper().swap(1, lower(), -1);
+  }
+}

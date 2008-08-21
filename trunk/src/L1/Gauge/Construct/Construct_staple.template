@@ -1,0 +1,54 @@
+namespace Gauge
+{
+  namespace Construct
+  {
+    template< size_t L, size_t T >
+    Core::Buffer< SU3::Matrix > Gauge::Construct::staple(Core::Field< QCD::Gauge, L, T > &field, Core::SpaceTimeIndex towards, Core::Direction dirTo, Core::SpaceTimeIndex over, Core::Direction dirOver)
+    {
+      Core::Buffer< SU3::Matrix > result(field.grid(), SU3::Matrix::identity());
+      if (dirTo == Core::dir_UP && dirOver == Core::dir_UP)
+      {
+        result.rightMultiply(field.component(over));
+        field.shift(over, Core::dir_UP);
+        result.rightMultiply(field.component(towards));
+        field.shift(towards, Core::dir_UP);
+        field.shift(over, Core::dir_DOWN);
+        result.rightMultiply(field.component(over).dagger());
+        field.shift(towards, Core::dir_DOWN); // Back to its initial position
+        return result;
+      }
+      if (dirTo == Core::dir_UP && dirOver == Core::dir_DOWN)
+      {
+        field.shift(over, Core::dir_DOWN);
+        result.rightMultiply(field.component(over).dagger());
+        result.rightMultiply(field.component(towards));
+        field.shift(towards, Core::dir_UP);
+        result.rightMultiply(field.component(over));
+        field.shift(over, Core::dir_UP);
+        field.shift(towards, Core::dir_DOWN); // Back to its initial position
+        return result;
+      }
+      if (dirTo == Core::dir_DOWN && dirOver == Core::dir_UP)
+      {
+        result.rightMultiply(field.component(over));
+        field.shift(over, Core::dir_UP);
+        field.shift(towards, Core::dir_DOWN);
+        result.rightMultiply(field.component(towards).dagger());
+        field.shift(over, Core::dir_DOWN);
+        result.rightMultiply(field.component(over).dagger());
+        field.shift(towards, Core::dir_UP); // Back to its initial position
+        return result;
+      }
+
+      // Remaining case
+      field.shift(over, Core::dir_DOWN);
+      result.rightMultiply(field.component(over).dagger());
+      field.shift(towards, Core::dir_DOWN);
+      result.rightMultiply(field.component(towards).dagger());
+      result.rightMultiply(field.component(over));
+      field.shift(over, Core::dir_UP);
+      field.shift(towards, Core::dir_UP); // Back to its initial position
+      return result;
+    }
+  }
+}

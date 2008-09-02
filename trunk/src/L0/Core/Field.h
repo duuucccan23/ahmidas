@@ -8,6 +8,10 @@
 #include <L0/Core/Grid.h>
 #include <L0/IO/Lime/Reader.h>
 
+/* A field is a 4 dimensional object, with an X,Y,Z and T dimension. X=Y=Z=L.
+ *
+ */
+
 namespace IO
 {
   template< typename IOClass, typename Element, size_t L, size_t T >
@@ -81,7 +85,6 @@ namespace Core
 #include "Field/Field.operators"
 
       hcField< Element, L, T > dagger() const;
-      void reunitarize();
 
       void averageTimeSlice(std::complex< double > *result);
 
@@ -108,7 +111,6 @@ namespace Core
       typename Field< Element, L, T >::const_iterator end() const;
   };
 
-  std::complex< double > plus(std::complex< double > const &left, std::complex< double > const &right);
 }
 
 #include "Field/Field.inlines"

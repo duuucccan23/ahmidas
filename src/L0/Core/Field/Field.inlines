@@ -59,12 +59,6 @@ namespace Core
     return Component< Element, L, T, Atom >(*this, idx);
   }
 
-  template< typename Element, size_t L, size_t T >
-  inline void Field< Element, L, T >::reunitarize()
-  {
-    for (iterator iter = begin(); iter != end(); ++iter)
-      iter->reunitarize();
-  }
 
   template< typename Element, size_t L, size_t T >
   template< typename Type >

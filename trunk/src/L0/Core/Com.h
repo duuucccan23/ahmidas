@@ -5,13 +5,19 @@
 
 namespace Core
 {
+  template< typename Element >
   class Com
   {
-    static Com * s_Com;
-    Com(); // Private constructor: singleton
-    public:
-      static Com &setup();
+    Grid< L, T>   &d_grid;
+    MPI::Datatype  d_surfaces[4];
 
+    public:
+      Com(Com const &other);
+      Com(Core::Grid< L, T > &grid, Element const &value);
+
+      Com< Element > &operator=(Com< Element > const &other);
+
+      ~Com();
 
   };
 

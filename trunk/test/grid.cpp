@@ -1,23 +1,20 @@
 #include <iostream>
 #include <mpi.h>
-#include <L0/IO/Lime/Reader.h>
-#include <L0/QCD/Spinor.h>
-#include <L0/QCD/Gauge.h>
-#include <L0/Core/Core.h>
 #include <L0/Core/Grid.h>
-#include <L0/Core/Field.h>
-#include <L1/Smearing/Gauge/APE.h>
-
-using namespace std;
 
 int main(int argc, char **argv)
 {
   MPI::Init(argc, argv);
-  Core::Grid<8, 8> grid;
-  if (!grid.rank())
-    cout << "MPI and Grid initialized (on node 0).\n";
-  size_t index = 2048;
-  cout << grid.rank(index) << endl;
+  Core::Grid< 4, 4 > *gridp0;
+  {
+    Core::Grid< 4, 4 > &grid0 = Core::Grid< 4, 4 >::instance();
+    gridp0 = &grid0;
+    std::cout << "Grid created, adress is: " << gridp0 << std::endl;
+  }
+  Core::Grid< 4, 4 > &grid1 = Core::Grid< 4, 4 >::instance();
+  std::cout << "Another grid created, adress is: " << &grid1 << std::endl;
+  bool c0 = &grid1 != gridp0;
+
   MPI::Finalize();
-  return 0;
+  return c0;
 }

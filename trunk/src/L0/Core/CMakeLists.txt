@@ -1,6 +1,6 @@
 SET(Sources_Buffer Buffer.h)
 SET(Sources_Component Component.h)
-SET(Sources_Com Com/Com.cpp Com.h Com/Com_setup.cpp Com/Com_Com.cpp)
+SET(Sources_Com Com.h Com/Com_Com.template)
 SET(Sources_Correlator Correlator.h)
 SET(Sources_Field Field.h)
 SET(Sources_Grid Grid.h)

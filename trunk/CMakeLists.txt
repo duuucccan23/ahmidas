@@ -11,7 +11,7 @@ ADD_SUBDIRECTORY(src)
 ADD_SUBDIRECTORY(test)
 
 ADD_EXECUTABLE(main src/main.cpp)
-TARGET_LINK_LIBRARIES(main ILDG Lime SU3)
+TARGET_LINK_LIBRARIES(main)
 
-ADD_EXECUTABLE(comtest src/L0/Core/Com/test.cpp)
-TARGET_LINK_LIBRARIES(comtest Core)
+ADD_EXECUTABLE(gridtest src/L0/Core/Grid/test.cpp)
+TARGET_LINK_LIBRARIES(gridtest Core)

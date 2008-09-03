@@ -1,0 +1,27 @@
+#include "../Com.h"
+#include <mpi.h>
+
+namespace Core
+{
+  template< typename Element >
+  Com< Element >::Com()
+  {
+    size_t const elSize = sizeof(Element) / sizeof(double);
+
+    d_surfaces[idx_T] = MPI::DOUBLE.Create_vector(d_grid.localVolume() / d_grid.localVolume(),
+        d_grid.surface(idx_T) * elSize, d_grid.localVolume() * elSize);
+    d_surfaces[idx_T].Commit();
+
+    d_surfaces[idx_X] = MPI::DOUBLE.Create_vector(d_grid.localVolume() / d_grid.surface(idx_T),
+        d_grid.surface(idx_X) * elSize, d_grid.surface(idx_T) * elSize);
+    d_surfaces[idx_X].Commit();
+
+    d_surfaces[idx_Y] = MPI::DOUBLE.Create_vector(d_grid.localVolume() / d_grid.surface(idx_X),
+        d_grid.surface(idx_Y) * elSize, d_grid.surface(idx_X) * elSize);
+    d_surfaces[idx_Y].Commit();
+
+    d_surfaces[idx_Z] = MPI::DOUBLE.Create_vector(d_grid.localVolume() / d_grid.surface(idx_Y),
+        d_grid.surface(idx_Z) * elSize, d_grid.surface(idx_Y) * elSize);
+    d_surfaces[idx_Z].Commit();
+  }
+}

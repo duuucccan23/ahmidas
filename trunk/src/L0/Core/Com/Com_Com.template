@@ -3,8 +3,9 @@
 
 namespace Core
 {
-  template< typename Element >
-  Com< Element >::Com()
+  template< typename Element , size_t L, size_t T>
+  Com< Element, L, T >::Com()
+  : d_grid(Core::Grid< L, T >::instance())
   {
     size_t const elSize = sizeof(Element) / sizeof(double);
 

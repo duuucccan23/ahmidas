@@ -4,8 +4,7 @@
 int main(int argc, char **argv)
 {
   MPI::Init(argc, argv);
-  Core::Grid< 4, 4 > grid = Core::Grid< 4, 4 >::instance();
-  Core::Field< double, 4, 4 > field(grid);
+  Core::Field< double, 4, 4 > field;
   size_t idx[4] = {0, 0, 0, 0};
   for (size_t ctr = 0; ctr < 4; ++ctr)
     field.increaseIdx(idx);

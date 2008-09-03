@@ -15,6 +15,8 @@ namespace Core
   template< size_t L, size_t T >
   class Grid
   {
+    static Grid * s_grid;
+
     MPI::Cartcomm d_grid;
     MPI::Cartcomm d_timeSlice;
     MPI::Cartcomm d_backbone;
@@ -31,11 +33,13 @@ namespace Core
 
     bool d_bigEndian;
 
+    Grid(); //NOTE: protected? private constructor! (singleton)
     public:
-      Grid();
-      ~Grid();
+      ~Grid(); //Public "destructor" for now
 
-      MPI::Cartcomm &grid();
+      static Grid &instance(); //Public "constructor"
+
+      MPI::Cartcomm &grid(); //NOTE: world?
       MPI::Cartcomm &timeSlice();
       MPI::Cartcomm &backbone();
 
@@ -69,16 +73,19 @@ namespace Core
       bool bigEndian() const;
 
     private:
-      Grid(const Grid& other); // Sterile constructor
       void initContiguousBlock();
       size_t greatestCommonDivisor(size_t x, size_t y);
   };
 }
+
+template< size_t L, size_t T >
+typename Core::Grid< L, T >* Core::Grid< L, T >::s_grid = 0;
 
 #include "Grid/Grid.inlines"
 #include "Grid/Grid_Grid.template"
 #include "Grid/Grid_greatestCommonDivisor.template"
 #include "Grid/Grid_initContiguousBlock.template"
 #include "Grid/Grid_rank.template"
+#include "Grid/Grid_instance.template"
 
 #endif

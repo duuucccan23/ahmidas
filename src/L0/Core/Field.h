@@ -3,10 +3,12 @@
 
 #include <cassert>
 #include <complex>
-#include <mpi.h>
-#include <iostream>
-#include <L0/Core/Grid.h>
+#include <iostream> //needed?
 #include <L0/IO/Lime/Reader.h>
+
+#include <mpi.h>
+#include <L0/Core/Grid.h>
+#include <L0/Core/Com.h>
 
 /* A field is a 4 dimensional object, with an X,Y,Z and T dimension. X=Y=Z=L.
  *
@@ -38,19 +40,25 @@ namespace Core
     template< typename fIOClass, typename fElement, size_t fL, size_t fT >
     friend class IO::Bridge;
 
-    Grid< L, T >  &d_grid;
-    size_t         d_offsets[4];
-    size_t         d_bufferSize;
-    MPI::Datatype  d_surfaces[4];
+    Grid< L, T >         &d_grid;
+    size_t                d_offsets[4];
+    size_t                d_bufferSize;
+    MPI::Datatype         d_surfaces[4];
+    Com< Element, L, T>   d_com;
 
     Element  *d_buffer;
     Element  *d_field;
 
     public:
-      Field(Core::Grid< L, T > &grid);
+      Field();
+      Field(Element const &value);
+      Field(Field const &other);
+//      Field(Field const &other, Element const &value); //Grid Removal
+      
+/*      Field(Core::Grid< L, T > &grid); //Commented out in Grid removal part
       Field(Field const &other);
       Field(Core::Grid< L, T > &grid, Element const &value);
-      Field(Field const &other, Element const &value);
+      Field(Field const &other, Element const &value); */
 
       explicit Field(hcField< Element, L, T > const &other);
       Field< Element, L, T > &operator=(Field< Element, L, T > const &other);
@@ -60,7 +68,7 @@ namespace Core
       template< typename Precision >
       void readFromFile(char const* fileName, char const* fileType);
 
-      Core::Grid< L, T > const &grid() const;
+//      Core::Grid< L, T > const &grid() const; //Grid removal
 
       void increaseIdx(size_t *idx) const;
       void decreaseIdx(size_t *idx) const;
@@ -92,7 +100,7 @@ namespace Core
       void loadDataFromIO(IOClass &inputIO);
 
     private:
-      void setSurfaces();
+ //     void setSurfaces(); //Grid removal
       size_t moveBufferToData(char *fileBuffer, size_t written, size_t precision);
   };
 
@@ -117,15 +125,16 @@ namespace Core
 #include "Field/Field.iterator.inlines"
 #include "Field/Field.const_iterator.inlines"
 #include "Field/Field_Field_a.template"
-#include "Field/Field_Field_b.template"
+//#include "Field/Field_Field_b.template" //Grid removal
 #include "Field/Field_Field_c.template"
 #include "Field/Field_Field_d.template"
+#include "Field/Field_Field_e.template"
 #include "Field/Field_decreaseIndex.template"
 #include "Field/Field_increaseIndex.template"
 #include "Field/Field_loadDataFromIO.template"
 #include "Field/Field_moveBufferToData.template"
 #include "Field/Field_operator_eq.template"
-#include "Field/Field_setSurfaces.template"
+//#include "Field/Field_setSurfaces.template" // Grid removal
 #include "Field/Field_shift.template"
 
 #endif

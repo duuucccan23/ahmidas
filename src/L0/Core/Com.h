@@ -5,21 +5,22 @@
 
 namespace Core
 {
-  template< typename Element >
+  template< typename Element, size_t L, size_t T >
   class Com
   {
     Grid< L, T>   &d_grid;
     MPI::Datatype  d_surfaces[4];
 
     public:
+      Com();
       Com(Com const &other);
-      Com(Core::Grid< L, T > &grid, Element const &value);
-
-      Com< Element > &operator=(Com< Element > const &other);
-
-      ~Com();
+      Com< Element, L, T > &operator=(Com< Element, L, T > const &other);
+//      ~Com();
 
   };
 
 }
+
+#include "Com/Com_Com.template" 
+
 #endif

@@ -3,7 +3,8 @@ namespace Gauge
   namespace Construct
   {
     template< size_t L, size_t T >
-    Core::Buffer< SU3::Matrix > Gauge::Construct::staple(Core::Field< QCD::Gauge, L, T > &field, Core::SpaceTimeIndex towards, Core::Direction dirTo, Core::SpaceTimeIndex over, Core::Direction dirOver)
+    Core::Buffer< SU3::Matrix > Gauge::Construct::staple(Core::Field< QCD::Gauge, L, T > &field, Core::SpaceTimeIndex towards, 
+                                                         Core::Direction dirTo, Core::SpaceTimeIndex over, Core::Direction dirOver)
     {
       Core::Buffer< SU3::Matrix > result(field.grid(), SU3::Matrix::identity());
       if (dirTo == Core::dir_UP && dirOver == Core::dir_UP)

@@ -1,7 +1,9 @@
 #ifndef COM_H
 #define COM_H
 
-/* MPI Communication handling */
+#include <L0/Core/Grid.h>
+
+// MPI Communication handling
 
 namespace Core
 {

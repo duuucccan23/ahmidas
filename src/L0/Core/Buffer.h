@@ -9,6 +9,7 @@ namespace Core
   class Buffer
   {
     size_t   d_size;
+    size_t  *d_offsets;
     Element *d_data;
 
     public:

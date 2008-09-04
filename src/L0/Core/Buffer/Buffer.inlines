@@ -3,28 +3,33 @@ namespace Core
   template< typename Element >
   template< size_t L, size_t T >
   inline Buffer< Element >::Buffer(Core::Grid< L, T > const &grid)
-    : d_size(grid.localVolume()), d_data(new Element[d_size])
-  {}
+    : d_size(grid.localVolume()), d_offsets(new size_t[4]), d_data(new Element[d_size])
+  {
+    std::fill_n(d_offsets, 4, 0);
+  }
 
   template< typename Element >
   template< size_t L, size_t T >
   inline Buffer< Element >::Buffer(Core::Grid< L, T > const &grid, Element const &defValue)
-    : d_size(grid.localVolume()), d_data(new Element[d_size])
+  : d_size(grid.localVolume()), d_offsets(new size_t[4]), d_data(new Element[d_size])
   {
+    std::fill_n(d_offsets, 4, 0);
     std::fill(begin(), end(), defValue);
   }
 
   template< typename Element >
   inline Buffer< Element >::Buffer(Buffer< Element > &other) // Pilfers resources
-    : d_size(other.d_size), d_data(other.d_data)
+    : d_size(other.d_size), d_offsets(other.d_offsets), d_data(other.d_data)
   {
+    other.d_offsets = 0;
     other.d_data = 0;
   }
 
   template< typename Element >
   inline Buffer< Element >::Buffer(Buffer< Element > &other, Element const &defValue) // Pilfers resources
-    : d_size(other.d_size), d_data(other.d_data)
+    : d_size(other.d_size), d_offsets(other.d_offsets), d_data(other.d_data)
   {
+    other.d_offsets = 0;
     other.d_data = 0;
     std::fill(begin(), end(), defValue);
   }
@@ -32,6 +37,7 @@ namespace Core
   template< typename Element >
   inline Buffer< Element >::~Buffer()
   {
+    delete[] d_offsets;
     delete[] d_data;
   }
 

@@ -14,6 +14,9 @@ namespace Gauge
   {
     template< size_t L, size_t T >
     Core::Buffer< SU3::Matrix > staple(Core::Field< QCD::Gauge, L, T > &field, Core::SpaceTimeIndex towards, Core::Direction dirTo, Core::SpaceTimeIndex over, Core::Direction dirOver);
+
+    template< size_t L, size_t T >
+    Core::Buffer< std::complex< double > > plaquette(Core::Field< QCD::Gauge, L, T > &field, Core::SpaceTimeIndex towards, Core::Direction dirTo, Core::SpaceTimeIndex over, Core::Direction dirOver));
   }
 }
 

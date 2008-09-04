@@ -12,6 +12,3 @@ ADD_SUBDIRECTORY(test)
 
 ADD_EXECUTABLE(main src/main.cpp)
 TARGET_LINK_LIBRARIES(main)
-
-ADD_EXECUTABLE(gridtest src/L0/Core/Grid/test.cpp)
-TARGET_LINK_LIBRARIES(gridtest Core)

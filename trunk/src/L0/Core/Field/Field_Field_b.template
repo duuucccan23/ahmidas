@@ -7,6 +7,6 @@ namespace Core
     d_field(other.d_field),
     d_offsets(other.d_offsets)
   {
-    *d_references += 1;
+    d_references->operator+=(1);
   }
 }

@@ -86,6 +86,8 @@ namespace Core
 
     private:
       size_t moveBufferToData(char *fileBuffer, size_t written, size_t precision);
+      size_t shiftIdxToZero(size_t idx) const;
+      size_t shiftIdxToOffset(size_t idx) const;
   };
 
   template< typename Element, size_t L, size_t T >
@@ -111,10 +113,7 @@ namespace Core
 #include "Field/Field_Field_a.template"
 #include "Field/Field_Field_c.template"
 #include "Field/Field_Field_d.template"
-#include "Field/Field_Field_e.template"
 #include "Field/Field_~Field.template"
-#include "Field/Field_decreaseIndex.template"
-#include "Field/Field_increaseIndex.template"
 #include "Field/Field_loadDataFromIO.template"
 #include "Field/Field_moveBufferToData.template"
 #include "Field/Field_operator_eq.template"

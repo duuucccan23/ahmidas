@@ -6,7 +6,7 @@ class iterator: public std::iterator< std::bidirectional_iterator_tag, Element >
 
   Field< Element, L, T >  &d_parent;
 
-  size_t d_idx[4];
+  size_t d_idx;
 
   iterator(Field< Element, L, T > &parent, size_t *idx);
 

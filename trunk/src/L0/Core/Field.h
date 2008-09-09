@@ -55,11 +55,8 @@ namespace Core
       template< typename Precision >
       void readFromFile(char const* fileName, char const* fileType);
 
-      void increaseIdx(size_t *idx) const;
-      void decreaseIdx(size_t *idx) const;
-
-      Element &element(size_t const *idx);
-      Element const &element(size_t const *idx) const;
+      Element &element(size_t idx);
+      Element const &element(size_t idx) const;
 
 #include "Field/Field.iterator"
 #include "Field/Field.const_iterator"
@@ -86,8 +83,11 @@ namespace Core
 
     private:
       size_t moveBufferToData(char *fileBuffer, size_t written, size_t precision);
+
       size_t shiftIdxToZero(size_t idx) const;
       size_t shiftIdxToOffset(size_t idx) const;
+
+      void isolate();
   };
 
   template< typename Element, size_t L, size_t T >
@@ -114,6 +114,7 @@ namespace Core
 #include "Field/Field_Field_c.template"
 #include "Field/Field_Field_d.template"
 #include "Field/Field_~Field.template"
+#include "Field/Field_isolate.template"
 #include "Field/Field_loadDataFromIO.template"
 #include "Field/Field_moveBufferToData.template"
 #include "Field/Field_operator_eq.template"

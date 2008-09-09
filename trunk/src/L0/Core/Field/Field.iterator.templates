@@ -4,7 +4,7 @@ namespace Core
   Field< Element >::iterator Field< Element >::iterator:::operator--(int)
   {
     iterator result(*this);
-    d_parent.decreaseIndex(d_idx);
+    --d_idx;
     return result;
   }
 
@@ -12,7 +12,7 @@ namespace Core
   Field< Element >::iterator Field< Element >::iterator:::operator++(int)
   {
     iterator result(*this);
-    d_parent.increaseIndex(d_idx);
+    ++d_idx;
     return result;
   }
 }

@@ -8,7 +8,7 @@ class iterator: public std::iterator< std::bidirectional_iterator_tag, Element >
 
   size_t d_idx;
 
-  iterator(Field< Element, L, T > &parent, size_t *idx);
+  iterator(Field< Element, L, T > &parent, size_t idx);
 
   public:
     iterator(iterator const &other);

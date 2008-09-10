@@ -13,6 +13,7 @@ namespace Core
   {
     friend class Field< Element, L, T >;
 
+    Unifold< L, T > &d_unifold;
     Field< Element, L, T > &d_parent;
     size_t const d_component;
 
@@ -33,6 +34,10 @@ namespace Core
       Atom const &getMemoryIndex(size_t const idx) const;
 
       #include "Component/Component.operators"
+
+    private:
+      Atom &getPhysicalIndex(size_t const idx);
+      Atom const &getPhysicalIndex(size_t const idx) const;
   };
 
   template< typename Element, size_t L, size_t T, typename Atom >

@@ -1,0 +1,11 @@
+template< typename Element, size_t L, size_t T >
+void Core::Field< Element, L, T >::destroy()
+{
+  d_references->operator-=(1);
+  if (d_references == 0)
+  {
+    delete   d_references;
+    delete[] d_field;
+    delete[] d_offsets;
+  }
+}

@@ -1,6 +1,12 @@
 namespace Core
 {
   template< typename Element, size_t L, size_t T >
+  inline Field< Element, L, T >::~Field()
+  {
+    destroy();
+  }
+
+  template< typename Element, size_t L, size_t T >
   inline typename Field< Element, L, T >::iterator Field< Element, L, T >::begin()
   {
     return iterator(*this, 0);
@@ -26,264 +32,37 @@ namespace Core
 
   template< typename Element, size_t L, size_t T >
   template< typename Atom >
-  inline Component< Element, L, T, Atom > Field< Element, L, T >::component(SpaceTimeIndex idx)
+  inline Component< Element, L, T, Atom > Field< Element, L, T >::component(size_t idx)
   {
     return Component< Element, L, T, Atom >(*this, idx);
   }
 
   template< typename Element, size_t L, size_t T >
-  template< typename Type >
-  inline void Field< Element, L, T >::leftMultiply(Field< Type, L, T > const &other)
+  inline Element &Field< Element, L, T >::operator[](size_t const idx)
   {
-    isolate();
-    for (size_t ctr = 0; ctr < d_com.localVolume(); ++ctr)
-      d_field[ctr].leftMultiply(other.d_field[other.shiftIdxToOffset(shiftIdxToZero(ctr))]);
+    return d_field[shiftIdxToOffset(idx)];
   }
 
   template< typename Element, size_t L, size_t T >
-  template< typename Type >
-  inline void Field< Element, L, T >::leftMultiply(hcField< Type, L, T > const &other)
+  inline Element const &Field< Element, L, T >::operator[](size_t const idx) const
   {
-    isolate();
-    for (size_t ctr = 0; ctr < d_com.localVolume(); ++ctr)
-      d_field[ctr].leftMultiply(other.d_field[other.shiftIdxToOffset(shiftIdxToZero(ctr))].dagger());
+    return d_field[shiftIdxToOffset(idx)];
   }
 
   template< typename Element, size_t L, size_t T >
-  template< typename Type, typename Atom >
-  inline void Field< Element, L, T >::leftMultiply(Component< Type, L, T, Atom > const &other)
+  inline Element &Field< Element, L, T >::getMemoryIndex(size_t const idx)
   {
-    typename Component< Type, L, T, Atom >::const_iterator hisIter = other.begin();
-    for (iterator myIter = begin(); myIter != end(); ++myIter, ++hisIter)
-      myIter->leftMultiply(*hisIter);
+    return d_field[idx];
   }
 
   template< typename Element, size_t L, size_t T >
-  template< typename Type, typename Atom >
-  inline void Field< Element, L, T >::leftMultiply(hcComponent< Type, L, T, Atom > const &other)
+  inline Element const &Field< Element, L, T >::getMemoryIndex(size_t const idx) const
   {
-    typename Component< Type, L, T, Atom >::const_iterator hisIter = other.parent().begin();
-    for (iterator myIter = begin(); myIter != end(); ++myIter, ++hisIter)
-      myIter->leftMultiply(hisIter->dagger());
+    return d_field[idx];
   }
 
   template< typename Element, size_t L, size_t T >
-  template< typename Type >
-  inline void Field< Element, L, T >::rightMultiply(Field< Type, L, T > const &other)
-  {
-    isolate();
-    for (size_t ctr = 0; ctr < d_com.localVolume(); ++ctr)
-      d_field[ctr].rightMultiply(other.d_field[other.shiftIdxToOffset(shiftIdxToZero(ctr))]);
-  }
-
-  template< typename Element, size_t L, size_t T >
-  template< typename Type >
-  inline void Field< Element, L, T >::rightMultiply(hcField< Type, L, T > const &other)
-  {
-    isolate();
-    for (size_t ctr = 0; ctr < d_com.localVolume(); ++ctr)
-      d_field[ctr].rightMultiply(other.d_field[other.shiftIdxToOffset(shiftIdxToZero(ctr))].dagger());
-  }
-
-  template< typename Element, size_t L, size_t T >
-  template< typename Type, typename Atom >
-  inline void Field< Element, L, T >::rightMultiply(Component< Type, L, T, Atom > const &other)
-  {
-    typename Component< Type, L, T, Atom >::const_iterator hisIter = other.begin();
-    for (iterator myIter = begin(); myIter != end(); ++myIter, ++hisIter)
-      myIter->righttMultiply(*hisIter);
-  }
-
-  template< typename Element, size_t L, size_t T >
-  template< typename Type, typename Atom >
-  inline void Field< Element, L, T >::rightMultiply(hcComponent< Type, L, T, Atom > const &other)
-  {
-    typename Component< Type, L, T, Atom >::const_iterator hisIter = other.parent().begin();
-    for (iterator myIter = begin(); myIter != end(); ++myIter, ++hisIter)
-      myIter->rightMultiply(hisIter->dagger());
-  }
-
-  template< typename Element, size_t L, size_t T >
-  template< typename Type >
-  inline Field< Element, L, T > &Field< Element, L, T >::operator+=(Type const &rhand)
-  {
-    isolate();
-    for (Element *iter = d_field; iter != d_field + d_com.localVolume(); ++iter)
-      *iter += rhand;
-    return *this;
-  }
-
-  template< typename Element, size_t L, size_t T >
-  template< typename Type >
-  inline Field< Element, L, T > &Field< Element, L, T >::operator+=(Field< Type, L, T > const &other)
-  {
-    isolate();
-    for (size_t ctr = 0; ctr < d_com.localVolume(); ++ctr)
-      d_field[ctr].operator+=(other.d_field[other.shiftIdxToOffset(shiftIdxToZero(ctr))]);
-    return *this;
-  }
-
-  template< typename Element, size_t L, size_t T >
-  template< typename Type >
-  inline Field< Element, L, T > &Field< Element, L, T >::operator+=(hcField< Type, L, T > const &other)
-  {
-    isolate();
-    for (size_t ctr = 0; ctr < d_com.localVolume(); ++ctr)
-      d_field[ctr].operator+=(other.d_field[other.shiftIdxToOffset(shiftIdxToZero(ctr))].dagger());
-    return *this;
-  }
-
-  template< typename Element, size_t L, size_t T >
-  template< typename Type, typename Atom >
-  inline Field< Element, L, T > &Field< Element, L, T >::operator+=(Component< Type, L, T, Atom > const &other)
-  {
-    typename Component< Type, L, T, Atom >::const_iterator hisIter = other.begin();
-    for (iterator myIter = begin(); myIter != end(); ++myIter, ++hisIter)
-      myIter->operator+=(*hisIter);
-    return *this;
-  }
-
-  template< typename Element, size_t L, size_t T >
-  template< typename Type, typename Atom >
-  inline Field< Element, L, T > &Field< Element, L, T >::operator+=(hcComponent< Type, L, T, Atom > const &other)
-  {
-    typename Component< Type, L, T, Atom >::const_iterator hisIter = other.parent().begin();
-    for (iterator myIter = begin(); myIter != end(); ++myIter, ++hisIter)
-      myIter->operator+=(hisIter->dagger());
-    return *this;
-  }
-
-  /// ARRIVED HERE WITH CHANGES!!! NOTE THAT COMPONENT HAS NOT YET BEEN TAKEN CARE OF
-  
-  template< typename Element, size_t L, size_t T >
-  template< typename Type >
-  inline Field< Element, L, T > &Field< Element, L, T >::operator-=(Type const &rhand)
-  {
-    for (Element *iter = d_field; iter != d_field + d_grid.localVolume(); ++iter)
-      *iter -= rhand;
-    return *this;
-  }
-
-  template< typename Element, size_t L, size_t T >
-  template< typename Type >
-  inline Field< Element, L, T > &Field< Element, L, T >::operator-=(Buffer< Type > const &other)
-  {
-    typename Buffer< Type >::const_iterator hisIter = other.begin();
-    for (iterator myIter = begin(); myIter != end(); ++myIter, ++hisIter)
-      myIter->operator-=(*hisIter);
-    return *this;
-  }
-
-  template< typename Element, size_t L, size_t T >
-  template< typename Type >
-  inline Field< Element, L, T > &Field< Element, L, T >::operator-=(Field< Type, L, T > const &other)
-  {
-    typename Field< Type, L, T >::const_iterator hisIter  = other.begin();
-    for (iterator myIter = begin(); myIter != end(); ++myIter, ++hisIter)
-      *myIter -= *hisIter;
-    return *this;
-  }
-
-  template< typename Element, size_t L, size_t T >
-  template< typename Type >
-  inline Field< Element, L, T > &Field< Element, L, T >::operator-=(hcField< Type, L, T > const &other)
-  {
-    typename hcField< Type, L, T >::const_iterator hisIter  = other.parent().begin();
-    for (iterator myIter = begin(); myIter != end(); ++myIter, ++hisIter)
-      *myIter->operator-=(hisIter->dagger());
-    return *this;
-  }
-
-  template< typename Element, size_t L, size_t T >
-  template< typename Type, typename Atom >
-  inline Field< Element, L, T > &Field< Element, L, T >::operator-=(Component< Type, L, T, Atom > const &other)
-  {
-    typename Component< Type, L, T, Atom >::const_iterator hisIter = other.begin();
-    for (iterator myIter = begin(); myIter != end(); ++myIter, ++hisIter)
-      myIter->operator-=(*hisIter);
-    return *this;
-  }
-
-  template< typename Element, size_t L, size_t T >
-  template< typename Type, typename Atom >
-  inline Field< Element, L, T > &Field< Element, L, T >::operator-=(hcComponent< Type, L, T, Atom > const &other)
-  {
-    typename Component< Type, L, T, Atom >::const_iterator hisIter = other.parent().begin();
-    for (iterator myIter = begin(); myIter != end(); ++myIter, ++hisIter)
-      myIter->operator-=(hisIter->dagger());
-    return *this;
-  }
-
-  template< typename Element, size_t L, size_t T >
-  template< typename Type >
-  inline Field< Element, L, T > &Field< Element, L, T >::operator*=(Type const &rhand)
-  {
-    for (Element *iter = d_field; iter != d_field + d_grid.localVolume(); ++iter)
-      *iter *= rhand;
-    return *this;
-  }
-
-  template< typename Element, size_t L, size_t T >
-  template< typename Type >
-  inline Field< Element, L, T > &Field< Element, L, T >::operator*=(Buffer< Type > const &other)
-  {
-    typename Buffer< Type >::const_iterator hisIter = other.begin();
-    for (iterator myIter = begin(); myIter != end(); ++myIter, ++hisIter)
-      myIter->operator*=(*hisIter);
-    return *this;
-  }
-
-  template< typename Element, size_t L, size_t T >
-  template< typename Type >
-  inline Field< Element, L, T > &Field< Element, L, T >::operator*=(Field< Type, L, T > const &other)
-  {
-    typename hcField< Type, L, T >::const_iterator hisIter = other.d_parent.begin();
-    for (iterator myIter = begin(); myIter != end(); ++myIter, ++hisIter)
-      *myIter *= hisIter->dagger();
-    return *this;
-  }
-
-  template< typename Element, size_t L, size_t T >
-  template< typename Type, typename Atom >
-  inline Field< Element, L, T > &Field< Element, L, T >::operator*=(Component< Type, L, T, Atom > const &other)
-  {
-    typename Component< Type, L, T, Atom >::const_iterator hisIter = other.begin();
-    for (iterator myIter = begin(); myIter != end(); ++myIter, ++hisIter)
-      myIter->operator-=(*hisIter);
-    return *this;
-  }
-
-  template< typename Element, size_t L, size_t T >
-  template< typename Type, typename Atom >
-  inline Field< Element, L, T > &Field< Element, L, T >::operator*=(hcComponent< Type, L, T, Atom > const &other)
-  {
-    typename Component< Type, L, T, Atom >::const_iterator hisIter = other.parent().begin();
-    for (iterator myIter = begin(); myIter != end(); ++myIter, ++hisIter)
-      myIter->operator*=(hisIter->dagger());
-    return *this;
-  }
-
-  template< typename Element, size_t L, size_t T >
-  template< typename Type >
-  inline Field< Element, L, T > &Field< Element, L, T >::operator/=(Type const &rhand)
-  {
-    for (Element *iter = d_field; iter != d_field + d_grid.localVolume(); ++iter)
-      *iter /= rhand;
-    return *this;
-  }
-
-  template< typename Element, size_t L, size_t T >
-  template< typename Type >
-  inline Field< Element, L, T > &Field< Element, L, T >::operator/=(Buffer< Type > const &other)
-  {
-    typename Buffer< Type >::const_iterator hisIter = other.begin();
-    for (iterator myIter = begin(); myIter != end(); ++myIter, ++hisIter)
-      myIter->operator/=(*hisIter);
-    return *this;
-  }
-
-  template< typename Element, size_t L, size_t T >
-  inline size_t Field< Element, L, T >::shiftIdxToZero(size_t idx) const
+  inline size_t Field< Element, L, T >::shiftIdxToZero(size_t const idx) const
   {
     return ((idx % L)  + L - d_offsets[idx_Z]) % L +
            ((idx / L % L) + L - d_offsets[idx_Y]) % L * L +
@@ -292,23 +71,11 @@ namespace Core
   }
 
   template< typename Element, size_t L, size_t T >
-  inline size_t Field< Element, L, T >::shiftIdxToOffset(size_t idx) const
+  inline size_t Field< Element, L, T >::shiftIdxToOffset(size_t const idx) const
   {
     return ((idx % L)  + d_offsets[idx_Z]) % L +
            ((idx / L % L) + d_offsets[idx_Y]) % L * L +
            ((idx / (L * L) % L) + d_offsets[idx_X]) % L * L * L +
            ((idx / (L * L * L) + d_offsets[idx_T]) % L * L * L * L;
-  }
-
-  template< typename Element, size_t L, size_t T >
-  inline Element &Field< Element, L, T >::element(size_t idx)
-  {
-    return d_field[shiftIdxToOffset(idx)];
-  }
-
-  template< typename Element, size_t L, size_t T >
-  inline Element const &Field< Element, L, T >::element(size_t idx) const
-  {
-    return d_field[shiftIdxToOffset(idx)];
   }
 }

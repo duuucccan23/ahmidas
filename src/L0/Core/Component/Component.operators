@@ -1,3 +1,7 @@
+Atom &operator[](size_t const idx);
+
+Atom const &operator[](size_t const idx) const;
+
 template< typename Scalar >
 void leftMultiply(Scalar const &other);
 

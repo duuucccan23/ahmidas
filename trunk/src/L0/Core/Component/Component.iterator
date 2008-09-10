@@ -5,7 +5,7 @@ class iterator: public std::iterator< std::bidirectional_iterator_tag, Atom >
   mutable typename Field< Element, L, T >::iterator d_iterator;
   SpaceTimeIndex const d_component;
 
-  iterator(typename Field< Element, L, T >::iterator iterator, SpaceTimeIndex const component);
+  iterator(typename Field< Element, L, T >::iterator iterator, size_t const component);
 
   public:
     iterator(iterator const &other);

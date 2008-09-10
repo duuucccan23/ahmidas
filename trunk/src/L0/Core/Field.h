@@ -1,23 +1,33 @@
+/*******************************************************************************
+ *    This file is part of Ahmidas.                                            *
+ *                                                                             *
+ *    Ahmidas is free software: you can redistribute it and/or modify          *
+ *    it under the terms of the GNU General Public License as published by     *
+ *    the Free Software Foundation, either version 3 of the License, or        *
+ *    (at your option) any later version.                                      *
+ *                                                                             *
+ *    Ahmidas is distributed in the hope that it will be useful,               *
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of           *
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the            *
+ *    GNU General Public License for more details. You should have received    *
+ *    a copy of the GNU General Public License along with Ahmidas. If not,     *
+ *    see <http://www.gnu.org/licenses/>.                                      *
+ *                                                                             *
+ *    Although we hereby grant the right to use Ahmidas or its parts as you    *
+ *    see fit, we kindly ask that you mention its use in any scientific        *
+ *    papers that benefit from it. In that case, please refer to               *
+ *    < add reference here >.                                                  *
+ *******************************************************************************/
+
 #ifndef GUARD_CORE_FIELD_H
 #define GUARD_CORE_FIELD_H
 
-#include <cassert>
-#include <complex>
-#include <L0/IO/Lime/Reader.h>
+#include <algorithm>
+#include <L0/Core/Unifold.h>
 
-#include <mpi.h>
-#include <L0/Core/Grid.h>
-#include <L0/Core/Com.h>
-
-/* A field is a 4 dimensional object, with an X,Y,Z and T dimension. X=Y=Z=L.
- *
+/* A field is a 4 dimensional object with an X, Y, Z and T dimension. X = Y = Z = L.
+ * 
  */
-
-namespace IO
-{
-  template< typename IOClass, typename Element, size_t L, size_t T >
-  class Bridge;
-}
 
 namespace Core
 {
@@ -33,14 +43,11 @@ namespace Core
   template< typename Element, size_t L, size_t T >
   class Field
   {
-    template< typename fIOClass, typename fElement, size_t fL, size_t fT >
-    friend class IO::Bridge;
+    size_t           *d_references;
 
-    size_t               *d_references;
-
-    Com< Element, L, T>  &d_com;
-    Element              *d_field;
-    size_t               *d_offsets;
+    Unifold< L, T >  &d_unifold;
+    Element          *d_field;
+    size_t           *d_offsets;
 
     public:
       Field();
@@ -51,12 +58,6 @@ namespace Core
       Field< Element, L, T > &operator=(Field< Element, L, T > const &other);
 
       ~Field();
-
-      template< typename Precision >
-      void readFromFile(char const* fileName, char const* fileType);
-
-      Element &element(size_t idx);
-      Element const &element(size_t idx) const;
 
 #include "Field/Field.iterator"
 #include "Field/Field.const_iterator"
@@ -76,17 +77,14 @@ namespace Core
 
       hcField< Element, L, T > dagger() const;
 
-      void averageTimeSlice(std::complex< double > *result);
-
-      template< typename IOClass >
-      void loadDataFromIO(IOClass &inputIO);
+      Element &getMemoryIndex(size_t const idx);
+      Element const &getMemoryIndex(size_t const idx) const;
 
     private:
-      size_t moveBufferToData(char *fileBuffer, size_t written, size_t precision);
+      size_t shiftIdxToZero(size_t const idx) const;
+      size_t shiftIdxToOffset(size_t const idx) const;
 
-      size_t shiftIdxToZero(size_t idx) const;
-      size_t shiftIdxToOffset(size_t idx) const;
-
+      void destroy();
       void isolate();
   };
 
@@ -104,20 +102,21 @@ namespace Core
       typename Field< Element, L, T >::const_iterator begin() const;
       typename Field< Element, L, T >::const_iterator end() const;
   };
-
 }
 
 #include "Field/Field.inlines"
 #include "Field/Field.iterator.inlines"
 #include "Field/Field.const_iterator.inlines"
 #include "Field/Field_Field_a.template"
+#include "Field/Field_Field_b.template"
 #include "Field/Field_Field_c.template"
 #include "Field/Field_Field_d.template"
 #include "Field/Field_~Field.template"
-#include "Field/Field_isolate.template"
-#include "Field/Field_loadDataFromIO.template"
-#include "Field/Field_moveBufferToData.template"
 #include "Field/Field_operator_eq.template"
 #include "Field/Field_shift.template"
+#include "Field/Field_isolate.template"
+#include "Field/Field_destroy.template"
+
+#include "Field/hcField.inlines"
 
 #endif

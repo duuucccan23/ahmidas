@@ -14,12 +14,12 @@ namespace Core
     friend class Field< Element, L, T >;
 
     Field< Element, L, T > &d_parent;
-    SpaceTimeIndex const d_component;
+    size_t const d_component;
 
     public:
-      Component(Field< Element, L, T > &parent, Core::SpaceTimeIndex component);
+      Component(Field< Element, L, T > &parent, size_t const component);
 
-#include "Component/Component.iterator"
+      #include "Component/Component.iterator"
 
       iterator begin();
       iterator end();
@@ -27,8 +27,10 @@ namespace Core
       const_iterator begin() const;
       const_iterator end() const;
 
-      Atom &element(Core::SpaceTimeIndex const *idx);
       hcComponent< Element, L, T, Atom > const dagger() const;
+
+      Atom &getMemoryIndex(size_t const idx);
+      Atom const &getMemoryIndex(size_t const idx) const;
 
       #include "Component/Component.operators"
   };
@@ -48,7 +50,6 @@ namespace Core
       typename Component< Element, L, T, Atom >::const_iterator &begin() const;
       typename Component< Element, L, T, Atom >::const_iterator &end() const;
   };
-
 }
 
 #include "Component/Component.inlines"

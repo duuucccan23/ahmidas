@@ -20,11 +20,17 @@ void rightMultiply(Field< OtherElement, L, T > const &other);
 template< typename OtherElement, typename OtherAtom  >
 void rightMultiply(Component< OtherElement, L, T, OtherAtom > const &other);
 
+template< typename Scalar >
+Component< Element, L, T, Atom > &operator+=(Scalar const &other);
+
 template< typename OtherElement >
 Component< Element, L, T, Atom > &operator+=(Field< OtherElement, L, T > const &other);
 
 template< typename OtherElement, typename OtherAtom  >
 Component< Element, L, T, Atom > &operator+=(Component< OtherElement, L, T, OtherAtom > const &other);
+
+template< typename Scalar >
+Component< Element, L, T, Atom > &operator-=(Scalar const &other);
 
 template< typename OtherElement >
 Component< Element, L, T, Atom > &operator-=(Field< OtherElement, L, T > const &other);

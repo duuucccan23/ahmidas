@@ -7,8 +7,8 @@ namespace Core
       return;
     d_references->operator-=(1);
     d_references = new size_t(1);
-    Element *field = new Element[d_com.localVolume()];
-    std::copy(d_field, d_field + d_com.localVolume(), field);
+    Element *field = new Element[d_unifold.localVolume()];
+    std::copy(d_field, d_field + d_unifold.localVolume(), field);
     d_field = field;
     size_t offsets = new size_t[4];
     std::copy(d_offsets, d_offsets + 4, offsets);

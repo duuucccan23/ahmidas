@@ -5,7 +5,7 @@ namespace Core
   Field< Element, L, T > &Field< Element, L, T >::leftMultiply(Scalar const &other)
   {
     isolate();
-    for (size_t idx = 0; idx < d_com.localVolume(); ++idx)
+    for (size_t idx = 0; idx < d_unifold.localVolume(); ++idx)
       d_field[idx].leftMultiply(other);
     return *this;
   }
@@ -15,7 +15,7 @@ namespace Core
   Field< Element, L, T > &Field< Element, L, T >::leftMultiply(Field< Scalar, L, T > const &other)
   {
     isolate();
-    for (size_t idx = 0; idx < d_com.localVolume(); ++idx)
+    for (size_t idx = 0; idx < d_unifold.localVolume(); ++idx)
       d_field[idx].leftMultiply(other[shiftIdxToZero(idx)]);
     return *this;
   }
@@ -25,7 +25,7 @@ namespace Core
   Field< Element, L, T > &Field< Element, L, T >::leftMultiply(hcField< Scalar, L, T > const &other)
   {
     isolate();
-    for (size_t idx = 0; idx < d_com.localVolume(); ++idx)
+    for (size_t idx = 0; idx < d_unifold.localVolume(); ++idx)
       d_field[idx].leftMultiply(other[shiftIdxToZero(idx)].dagger();
     return *this;
   }
@@ -35,7 +35,7 @@ namespace Core
   Field< Element, L, T > &Field< Element, L, T >::leftMultiply(Component< Scalar, L, T, Atom > const &other)
   {
     isolate();
-    for (size_t idx = 0; idx < d_com.localVolume(); ++idx )
+    for (size_t idx = 0; idx < d_unifold.localVolume(); ++idx )
       d_field[idx].leftMultiply(other[shiftIdxToZero(idx)]);
     return *this;
   }
@@ -45,7 +45,7 @@ namespace Core
   Field< Element, L, T > &Field< Element, L, T >::leftMultiply(hcComponent< Scalar, L, T, Atom > const &other)
   {
     isolate();
-    for (size_t idx = 0; idx < d_com.localVolume(); ++idx)
+    for (size_t idx = 0; idx < d_unifold.localVolume(); ++idx)
       d_field[idx].leftMultiply(other[shiftIdxToZero(idx)].dagger());
     return *this;
   }
@@ -55,7 +55,7 @@ namespace Core
   Field< Element, L, T > &Field< Element, L, T >::rightMultiply(Scalar const &other)
   {
     isolate();
-    for (size_t idx = 0; idx < d_com.localVolume(); ++idx)
+    for (size_t idx = 0; idx < d_unifold.localVolume(); ++idx)
       d_field[idx].rightMultiply(other);
     return *this;
   }
@@ -65,7 +65,7 @@ namespace Core
   Field< Element, L, T > &Field< Element, L, T >::rightMultiply(Field< Scalar, L, T > const &other)
   {
     isolate();
-    for (size_t idx = 0; idx < d_com.localVolume(); ++idx)
+    for (size_t idx = 0; idx < d_unifold.localVolume(); ++idx)
       d_field[idx].rightMultiply(other[shiftIdxToZero(idx)]);
     return *this;
   }
@@ -75,7 +75,7 @@ namespace Core
   Field< Element, L, T > &Field< Element, L, T >::rightMultiply(hcField< Scalar, L, T > const &other)
   {
     isolate();
-    for (size_t idx = 0; idx < d_com.localVolume(); ++idx)
+    for (size_t idx = 0; idx < d_unifold.localVolume(); ++idx)
       d_field[idx].rightMultiply(other[shiftIdxToZero(idx)].dagger();
     return *this;
   }
@@ -85,7 +85,7 @@ namespace Core
   Field< Element, L, T > &Field< Element, L, T >::rightMultiply(Component< Scalar, L, T, Atom > const &other)
   {
     isolate();
-    for (size_t idx = 0; idx < d_com.localVolume(); ++idx )
+    for (size_t idx = 0; idx < d_unifold.localVolume(); ++idx )
       d_field[idx].rightMultiply(other[shiftIdxToZero(idx)]);
     return *this;
   }
@@ -95,7 +95,7 @@ namespace Core
   Field< Element, L, T > &Field< Element, L, T >::rightMultiply(hcComponent< Scalar, L, T, Atom > const &other)
   {
     isolate();
-    for (size_t idx = 0; idx < d_com.localVolume(); ++idx )
+    for (size_t idx = 0; idx < d_unifold.localVolume(); ++idx )
       d_field[idx].rightMultiply(other[shiftIdxToZero(idx)].dagger());
     return *this;
   }
@@ -105,7 +105,7 @@ namespace Core
   Field< Element, L, T > &Field< Element, L, T >::operator+=(Scalar const &other)
   {
     isolate();
-    for (size_t idx = 0; idx < d_com.localVolume(); ++idx)
+    for (size_t idx = 0; idx < d_unifold.localVolume(); ++idx)
       d_field[idx] += other;
     return *this;
   }
@@ -115,7 +115,7 @@ namespace Core
   Field< Element, L, T > &Field< Element, L, T >::operator+=(Field< Scalar, L, T > const &other)
   {
     isolate();
-    for (size_t idx = 0; idx < d_com.localVolume(); ++idx)
+    for (size_t idx = 0; idx < d_unifold.localVolume(); ++idx)
       d_field[idx] += other[shiftIdxToZero(idx)];
     return *this;
   }
@@ -125,7 +125,7 @@ namespace Core
   Field< Element, L, T > &Field< Element, L, T >::operator+=(hcField< Scalar, L, T > const &other)
   {
     isolate();
-    for (size_t idx = 0; idx < d_com.localVolume(); ++idx)
+    for (size_t idx = 0; idx < d_unifold.localVolume(); ++idx)
       d_field[idx] += other[shiftIdxToZero(idx)].dagger();
     return *this;
   }
@@ -135,7 +135,7 @@ namespace Core
   Field< Element, L, T > &Field< Element, L, T >::operator+=(Component< Scalar, L, T, Atom > const &other)
   {
     isolate();
-    for (size_t idx = 0; idx < d_com.localVolume(); ++idx )
+    for (size_t idx = 0; idx < d_unifold.localVolume(); ++idx )
       d_field[idx] += other[shiftIdxToZero(idx)];
     return *this;
   }
@@ -145,7 +145,7 @@ namespace Core
   Field< Element, L, T > &Field< Element, L, T >::operator+=(hcComponent< Scalar, L, T, Atom > const &other)
   {
     isolate();
-    for (size_t idx = 0; idx < d_com.localVolume(); ++idx )
+    for (size_t idx = 0; idx < d_unifold.localVolume(); ++idx )
       d_field[idx] += other[shiftIdxToZero(idx)].dagger();
     return *this;
   }
@@ -155,7 +155,7 @@ namespace Core
   Field< Element, L, T > &Field< Element, L, T >::operator-=(Scalar const &other)
   {
     isolate();
-    for (size_t idx = 0; idx < d_com.localVolume(); ++idx)
+    for (size_t idx = 0; idx < d_unifold.localVolume(); ++idx)
       d_field[idx] -= other;
     return *this;
   }
@@ -165,7 +165,7 @@ namespace Core
   Field< Element, L, T > &Field< Element, L, T >::operator-=(Field< Scalar, L, T > const &other)
   {
     isolate();
-    for (size_t idx = 0; idx < d_com.localVolume(); ++idx)
+    for (size_t idx = 0; idx < d_unifold.localVolume(); ++idx)
       d_field[idx] -= other[shiftIdxToZero(idx)];
     return *this;
   }
@@ -175,7 +175,7 @@ namespace Core
   Field< Element, L, T > &Field< Element, L, T >::operator-=(hcField< Scalar, L, T > const &other)
   {
     isolate();
-    for (size_t idx = 0; idx < d_com.localVolume(); ++idx)
+    for (size_t idx = 0; idx < d_unifold.localVolume(); ++idx)
       d_field[idx] -= other[shiftIdxToZero(idx)].dagger();
     return *this;
   }
@@ -185,7 +185,7 @@ namespace Core
   Field< Element, L, T > &Field< Element, L, T >::operator-=(Component< Scalar, L, T, Atom > const &other)
   {
     isolate();
-    for (size_t idx = 0; idx < d_com.localVolume(); ++idx )
+    for (size_t idx = 0; idx < d_unifold.localVolume(); ++idx )
       d_field[idx] -= other[shiftIdxToZero(idx)];
     return *this;
   }
@@ -195,7 +195,7 @@ namespace Core
   Field< Element, L, T > &Field< Element, L, T >::operator-=(hcComponent< Scalar, L, T, Atom > const &other)
   {
     isolate();
-    for (size_t idx = 0; idx < d_com.localVolume(); ++idx )
+    for (size_t idx = 0; idx < d_unifold.localVolume(); ++idx )
       d_field[idx] -= other[shiftIdxToZero(idx)].dagger();
     return *this;
   }
@@ -205,7 +205,7 @@ namespace Core
   Field< Element, L, T > &Field< Element, L, T >::operator*=(Scalar const &other)
   {
     isolate();
-    for (size_t idx = 0; idx < d_com.localVolume(); ++idx)
+    for (size_t idx = 0; idx < d_unifold.localVolume(); ++idx)
       d_field[idx] *= other;
     return *this;
   }
@@ -215,7 +215,7 @@ namespace Core
   Field< Element, L, T > &Field< Element, L, T >::operator*=(Field< Scalar, L, T > const &other)
   {
     isolate();
-    for (size_t idx = 0; idx < d_com.localVolume(); ++idx)
+    for (size_t idx = 0; idx < d_unifold.localVolume(); ++idx)
       d_field[idx] *= other[shiftIdxToZero(idx)];
     return *this;
   }
@@ -225,7 +225,7 @@ namespace Core
   Field< Element, L, T > &Field< Element, L, T >::operator*=(hcField< Scalar, L, T > const &other)
   {
     isolate();
-    for (size_t idx = 0; idx < d_com.localVolume(); ++idx)
+    for (size_t idx = 0; idx < d_unifold.localVolume(); ++idx)
       d_field[idx] *= other[shiftIdxToZero(idx)].dagger();
     return *this;
   }
@@ -235,7 +235,7 @@ namespace Core
   Field< Element, L, T > &Field< Element, L, T >::operator*=(Component< Scalar, L, T, Atom > const &other)
   {
     isolate();
-    for (size_t idx = 0; idx < d_com.localVolume(); ++idx )
+    for (size_t idx = 0; idx < d_unifold.localVolume(); ++idx )
       d_field[idx] *= other[shiftIdxToZero(idx)];
     return *this;
   }
@@ -245,7 +245,7 @@ namespace Core
   Field< Element, L, T > &Field< Element, L, T >::operator*=(hcComponent< Scalar, L, T, Atom > const &other)
   {
     isolate();
-    for (size_t idx = 0; idx < d_com.localVolume(); ++idx )
+    for (size_t idx = 0; idx < d_unifold.localVolume(); ++idx )
       d_field[idx] *= other[shiftIdxToZero(idx)].dagger();
     return *this;
   }
@@ -265,7 +265,7 @@ namespace Core
   Field< Element, L, T > &Field< Element, L, T >::operator/=(Field< Scalar, L, T > const &other)
   {
     isolate();
-    for (size_t idx = 0; idx < d_com.localVolume(); ++idx)
+    for (size_t idx = 0; idx < d_unifold.localVolume(); ++idx)
       d_field[idx] /= other[shiftIdxToZero(idx)];
     return *this;
   }
@@ -275,7 +275,7 @@ namespace Core
   Field< Element, L, T > &Field< Element, L, T >::operator/=(hcField< Scalar, L, T > const &other)
   {
     isolate();
-    for (size_t idx = 0; idx < d_com.localVolume(); ++idx)
+    for (size_t idx = 0; idx < d_unifold.localVolume(); ++idx)
       d_field[idx] /= other[shiftIdxToZero(idx)].dagger();
     return *this;
   }
@@ -285,7 +285,7 @@ namespace Core
   Field< Element, L, T > &Field< Element, L, T >::operator/=(Component< Scalar, L, T, Atom > const &other)
   {
     isolate();
-    for (size_t idx = 0; idx < d_com.localVolume(); ++idx )
+    for (size_t idx = 0; idx < d_unifold.localVolume(); ++idx )
       d_field[idx] /= other[shiftIdxToZero(idx)];
     return *this;
   }
@@ -295,7 +295,7 @@ namespace Core
   Field< Element, L, T > &Field< Element, L, T >::operator/=(hcComponent< Scalar, L, T, Atom > const &other)
   {
     isolate();
-    for (size_t idx = 0; idx < d_com.localVolume(); ++idx )
+    for (size_t idx = 0; idx < d_unifold.localVolume(); ++idx )
       d_field[idx] /= other[shiftIdxToZero(idx)].dagger();
     return *this;
   }

@@ -30,5 +30,5 @@ class const_iterator: public std::iterator< std::bidirectional_iterator_tag, Cor
 };
 
 typedef const_iterator< 1 > const_iterator_full;
-typedef const_iterator< 4 > const_iterator_colour;
+typedef const_iterator< 3 > const_iterator_colour;
 typedef const_iterator< 1 > const_iterator_dirac;

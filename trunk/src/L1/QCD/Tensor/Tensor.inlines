@@ -1,31 +1,15 @@
 namespace QCD
 {
   template< size_t L, size_t T >
-  inline Tensor< L, T >::Tensor(Core::Grid< L, T > &grid)
-  {
-    for (Core::Field< Spinor, L, T > **iter = d_components; iter != d_components + 12; ++iter)
-      *iter = new Core::Field< Spinor, L, T >(grid);
-  }
-
-  template< size_t L, size_t T >
   inline Tensor< L, T >::Tensor(Tensor< L, T > const &other)
   {
-    for (size_t ctr = 0; ctr < 12; ++ctr)
-      d_components[ctr] = new Core::Field< Spinor, L, T >(other.d_components[ctr]);
+    std::copy(other.d_components, other.d_components + 12, d_components)
   }
 
   template< size_t L, size_t T >
   inline Tensor< L, T >::Tensor(Core::Field< Spinor, L, T > *data)
   {
-    // NOTE We assume control over the array of fields -- would be nice to signal this somehow.
     std::copy(data, data + 12, d_components);
-  }
-
-  template< size_t L, size_t T >
-  inline Tensor< L, T >::~Tensor()
-  {
-    for (Core::Field< Spinor, L, T > **iter = d_components; iter != d_components + 12; ++iter)
-      delete(*iter);
   }
 
   template< size_t L, size_t T >
@@ -79,24 +63,48 @@ namespace QCD
   template< size_t L, size_t T >
   inline typename Tensor< L, T >::iterator_dirac Tensor< L, T >::begin(Core::DiracIndex const index)
   {
-    return iterator_dirac(d_components + 4 * index, 1);
+    return iterator_dirac(d_components + 3 * index, 1);
   }
 
   template< size_t L, size_t T >
   inline typename Tensor< L, T >::iterator_dirac Tensor< L, T >::end(Core::DiracIndex const index)
   {
-    return iterator_dirac(d_components + 4 * (index + 1), 1);
+    return iterator_dirac(d_components + 3 * (index + 1), 1);
   }
 
   template< size_t L, size_t T >
   inline typename Tensor< L, T >::const_iterator_dirac Tensor< L, T >::begin(Core::DiracIndex const index) const
   {
-    return const_iterator_dirac(d_components + 4 * index, 1);
+    return const_iterator_dirac(d_components + 3 * index, 1);
   }
 
   template< size_t L, size_t T >
   inline typename Tensor< L, T >::const_iterator_dirac Tensor< L, T >::end(Core::DiracIndex const index) const
   {
-    return const_iterator_dirac(d_components + 4 * (index + 1), 1);
+    return const_iterator_dirac(d_components + 3 * (index + 1), 1);
+  }
+
+  template< size_t L, size_t T >
+    inline Core::Field< Spinor, L, T > &Tensor< L, T >::operator[](size_t idx)
+  {
+    return d_components[idx];
+  }
+
+  template< size_t L, size_t T >
+  inline Core::Field< Spinor, L, T > const &Tensor< L, T >::operator[](size_t idx) const
+  {
+    return d_components[idx];
+  }
+
+  template< size_t L, size_t T >
+  inline Core::Field< Spinor, L, T > &Tensor< L, T >::operator()(Core::ColourIndex const colIdx, Core::DiracIndex const dirIdx)
+  {
+    return d_components[colIdx + 3 * dirIdx]
+  }
+
+  template< size_t L, size_t T >
+  inline Core::Field< Spinor, L, T > const &Tensor< L, T >::operator()(Core::ColourIndex const colIdx, Core::DiracIndex const dirIdx) const
+  {
+    return d_components[colIdx + 3 * dirIdx]
   }
 }

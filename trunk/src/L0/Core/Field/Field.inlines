@@ -61,6 +61,8 @@ namespace Core
     return d_field[idx];
   }
 
+  /// NOTE THE TWO FUNCTIONS BELOW SHOULD BE MODIFIED TO USE "LOCAL" VALUES OF L AND T!!!
+  
   template< typename Element, size_t L, size_t T >
   inline size_t Field< Element, L, T >::shiftIdxToZero(size_t const idx) const
   {

@@ -1,0 +1,21 @@
+namespace QCD
+{
+  inline Tensor::Tensor()
+    : d_references(new size_t(1)), d_data(new std::complex< double >[12])
+  {
+    std::fill_n(d_data, 12, std::complex< double >(0.0, 0.0));
+  }
+
+  inline QCD::Tensor::Tensor(QCD::Tensor const &other)
+    : d_references(other.d_references), d_data(other.d_data)
+  {
+    *d_references += 1;
+  }
+
+  inline QCD::Tensor::Tensor(std::complex< double > *data)
+  : d_references(new size_t(1)), d_data(new std::complex< double >[12])
+  {
+    std::copy(data, data + 12, d_data);
+  }
+
+}

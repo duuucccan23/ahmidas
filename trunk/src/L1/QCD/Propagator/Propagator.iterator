@@ -4,8 +4,8 @@ class const_iterator;
 template< size_t Stride >
 class iterator: public std::iterator< std::bidirectional_iterator_tag, Core::Field< QCD::Spinor, L, T > >
 {
-  friend class Tensor;
-  friend class Tensor::const_iterator< Stride >;
+  friend class Propagator;
+  friend class Propagator::const_iterator< Stride >;
 
   Core::Field< QCD::Spinor, L, T >  **d_target;
 

@@ -8,16 +8,16 @@
 namespace QCD
 {
   template< size_t L, size_t T >
-  class Tensor
+  class Propagator
   {
     Core::Field< Spinor, L, T > d_components[12];
 
     public:
-      Tensor(Tensor const &other);
-      Tensor(Core::Field< Spinor, L, T > *data);
+      Propagator(Propagator const &other);
+      Propagator(Core::Field< Spinor, L, T > *data);
 
-#include "Tensor/Tensor.iterator"
-#include "Tensor/Tensor.const_iterator"
+#include "Propagator/Propagator.iterator"
+#include "Propagator/Propagator.const_iterator"
 
       iterator_full begin();
       iterator_full end();
@@ -37,12 +37,12 @@ namespace QCD
       const_iterator_dirac begin(Core::DiracIndex const idx) const;
       const_iterator_dirac end(Core::DiracIndex const idx) const;
 
-#include "Tensor/Tensor.operators"
+#include "Propagator/Propagator.operators"
   };
 }
 
-#include "Tensor/Tensor.inlines"
-#include "Tensor/Tensor.iterator.inlines"
-#include "Tensor/Tensor.const_iterator.inlines"
+#include "Propagator/Propagator.inlines"
+#include "Propagator/Propagator.iterator.inlines"
+#include "Propagator/Propagator.const_iterator.inlines"
 
 #endif

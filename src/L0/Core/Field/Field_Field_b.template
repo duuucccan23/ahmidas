@@ -1,7 +1,7 @@
 template< typename Element, size_t L, size_t T >
 Core::Field< Element, L, T >::Field(Field< Element, L, T > const &other)
 : d_references(other.d_references),
-  d_unifold(Core::Unifold< Element, L, T >::instance()),
+  d_unifold(Base::Unifold< Element, L, T >::instance()),
   d_field(other.d_field),
   d_offsets(other.d_offsets)
 {

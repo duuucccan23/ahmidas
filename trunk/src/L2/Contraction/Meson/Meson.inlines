@@ -1,7 +1,7 @@
 namespace Contraction
 {
   template< size_t L, size_t T, size_t IndexSource, size_t IndexSink >
-  inline Meson< L, T, IndexSource, IndexSink >::Meson(Core::Grid< L, T > &grid)
+  inline Meson< L, T, IndexSource, IndexSink >::Meson(Base::Grid< L, T > &grid)
     : d_correlator(0), d_field(grid)
   {}
 }

@@ -23,7 +23,8 @@
 #define GUARD_CORE_FIELD_H
 
 #include <algorithm>
-#include <L0/Core/Unifold.h>
+#include <L0/Base/Base.h>
+#include <L0/Base/Unifold.h>
 
 /* A field is a 4 dimensional object with an X, Y, Z and T dimension. X = Y = Z = L.
  * 
@@ -43,11 +44,11 @@ namespace Core
   template< typename Element, size_t L, size_t T >
   class Field
   {
-    size_t           *d_references;
+    size_t                 *d_references;
 
-    Unifold< L, T >  &d_unifold;
-    Element          *d_field;
-    size_t           *d_offsets;
+    Base::Unifold< L, T >  &d_unifold;
+    Element                *d_field;
+    size_t                 *d_offsets;
 
     public:
       Field();
@@ -69,9 +70,9 @@ namespace Core
       const_iterator end() const;
 
       template< typename Atom >
-      Component< Element, L, T, Atom > component(SpaceTimeIndex idx);
+      Component< Element, L, T, Atom > component(Base::SpaceTimeIndex idx);
 
-      Field< Element, L, T > &shift(SpaceTimeIndex idx, Direction shift);
+      Field< Element, L, T > &shift(Base::SpaceTimeIndex idx, Base::Direction shift);
 
 #include "Field/Field.operators"
 

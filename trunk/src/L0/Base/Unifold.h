@@ -2,7 +2,7 @@
 #define GUARD_BASE_UNIFOLD_H
 
 #include <L0/Base/Grid.h>
-
+#include <mpi/mpi.h>
 // This particular version of Unifold is tailored for an MPI setup.
 
 namespace Base

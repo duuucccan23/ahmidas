@@ -1,6 +1,0 @@
-namespace Smearing
-{
-  inline APE::APE(double alpha)
-    : d_alpha(alpha)
-  {}
-}

@@ -1,4 +1,0 @@
-template< size_t L, size_t T >
-Core::Unifold< L, T >::Unifold()
-{
-}

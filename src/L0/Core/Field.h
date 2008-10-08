@@ -23,6 +23,7 @@
 #define GUARD_CORE_FIELD_H
 
 #include <algorithm>
+
 #include <L0/Base/Base.h>
 #include <L0/Base/Unifold.h>
 

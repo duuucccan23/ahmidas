@@ -1,0 +1,10 @@
+namespace Base
+{
+  template< size_t L, size_t T >
+  inline size_t Weave< L, T >::localVolume() const
+  {
+    return (L * L * L * T);
+  }
+
+  
+}

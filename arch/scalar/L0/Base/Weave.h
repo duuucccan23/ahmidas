@@ -16,7 +16,6 @@ namespace Base
     public:
       static Weave< L, T > &instance();
 
-
       size_t localVolume() const;
       size_t dim(Base::SpaceTimeIndex idx) const;
 

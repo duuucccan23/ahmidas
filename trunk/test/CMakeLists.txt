@@ -13,11 +13,11 @@ ADD_EXECUTABLE(weave weave.cpp)
 TARGET_LINK_LIBRARIES(weave Base)
 ADD_TEST(weave weave)
 
-IF(USE_MPI) # THIS SHOULD NOT BE NECESSARY!
+#IF(USE_MPI) # THIS SHOULD NOT BE NECESSARY!
 ADD_EXECUTABLE(limereader limereader.cpp)
 TARGET_LINK_LIBRARIES(limereader Lime)
 ADD_TEST(limereader limereader ../../test/conf.88)
-ENDIF(USE_MPI)
+#ENDIF(USE_MPI)
 
 ADD_EXECUTABLE(fieldcomponent fieldcomponent.cpp)
 TARGET_LINK_LIBRARIES(fieldcomponent Core)

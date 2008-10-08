@@ -26,5 +26,7 @@ ADD_EXECUTABLE(fieldIncreaseIndex fieldIncreaseIndex.cpp)
 TARGET_LINK_LIBRARIES(fieldIncreaseIndex Core)
 ADD_TEST(fieldincreaseindex fieldIncreaseIndex)
 
+IF(USE_MPI)
 ADD_EXECUTABLE(MPIstartstop MPIstartstop.cpp)
 ADD_TEST(MPIstarting_stopping MPIstartstop)
+ENDIF(USE_MPI)

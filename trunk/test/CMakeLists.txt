@@ -1,5 +1,4 @@
 ADD_EXECUTABLE(endian endian.cpp)
-TARGET_LINK_LIBRARIES(Core)
 ADD_TEST(endianness endian)
 
 ADD_EXECUTABLE(reunit1 reunit1.cpp)
@@ -9,6 +8,10 @@ ADD_TEST(reunitarization_1 reunit1)
 ADD_EXECUTABLE(reunit2 reunit2.cpp)
 TARGET_LINK_LIBRARIES(reunit2 SU3)
 ADD_TEST(reunitarization_2 reunit2)
+
+ADD_EXECUTABLE(weave weave.cpp)
+TARGET_LINK_LIBRARIES(weave)
+ADD_TEST(weave weave)
 
 IF(USE_MPI) # THIS SHOULD NOT BE NECESSARY!
 ADD_EXECUTABLE(limereader limereader.cpp)

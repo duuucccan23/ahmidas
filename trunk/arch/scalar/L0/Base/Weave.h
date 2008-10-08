@@ -8,8 +8,11 @@ namespace Base
   template< size_t L, size_t T >
   class Weave
   {
+    static Weave< L, T> *s_Weave;
+    Weave< L, T>();
+
     public:
-      Weave< L, T > &instance();
+      static Weave< L, T > &instance();
 
       size_t localVolume() const;
       size_t dim(size_t idx) const;

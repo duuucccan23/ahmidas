@@ -11,5 +11,11 @@ namespace Base
   {
     return d_dims[idx];
   }
-  
+
+  template< size_t L, size_t T >
+  template< typename Element >
+  inline void Weave< L, T>::fieldShift(Base::SpaceTimeIndex, Base::Direction, Element *, size_t const *) const
+  {
+
+  }
 }

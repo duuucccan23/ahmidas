@@ -7,7 +7,7 @@ namespace Core
       return *this;
 
     destroy();
-    std::copy(other.d_field, other.d_field + d_com.localVolume(), d_field);
+    std::copy(other.d_field, other.d_field + d_weave.localVolume(), d_field);
     std::copy(other.d_offsets, other.d_offsets + 4, d_offsets);
     return *this;
   }

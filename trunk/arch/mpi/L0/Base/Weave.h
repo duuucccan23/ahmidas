@@ -1,14 +1,14 @@
-#ifndef GUARD_BASE_UNIFOLD_H
-#define GUARD_BASE_UNIFOLD_H
+#ifndef GUARD_BASE_WEAVE_H
+#define GUARD_BASE_WEAVE_H
 
 #include <L0/Base/Grid.h>
 #include <mpi/mpi.h>
-// This particular version of Unifold is tailored for an MPI setup.
+// This particular version of Weave is tailored for an MPI setup.
 
 namespace Base
 {
   template< size_t L, size_t T >
-  class Unifold
+  class Weave
   {
     static MPI::Grid<L,T> s_grid;
 
@@ -21,19 +21,19 @@ namespace Base
 }
 
 template< size_t L, size_t T >
-MPI::Grid Base::Unifold< L, T > s_grid();
+MPI::Grid Base::Weave< L, T > s_grid();
 
 // CHECK MPI DOCUMENTATION FOR THE FOLLOWING CALLS
 template< size_t L, size_t T >
-size_t const Base::Unifold::s_nodes = MPI::Get_size(s_grid.d_grid);
+size_t const Base::Weave::s_nodes = MPI::Get_size(s_grid.d_grid);
 
 template< size_t L, size_t T >
-size_t const Base::Unifold< L, T >::s_volume = L * L * L * T / s_nodes;
+size_t const Base::Weave< L, T >::s_volume = L * L * L * T / s_nodes;
 
 template< size_t L, size_t T >
-size_t const Base::Unifold< L, T >::s_size[0] = ;
+size_t const Base::Weave< L, T >::s_size[0] = ;
 
 template< size_t L, size_t T >
-size_t const Base::Unifold< L, T >::s_rank = MPI::Get_rank(s_grid.d_grid);
+size_t const Base::Weave< L, T >::s_rank = MPI::Get_rank(s_grid.d_grid);
 
 #endif

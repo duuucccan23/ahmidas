@@ -1,4 +1,4 @@
 template< size_t L, size_t T >
-Base::Unifold< L, T >::Unifold()
+Base::Weave< L, T >::Weave()
 {
 }

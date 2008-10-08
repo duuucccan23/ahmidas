@@ -25,7 +25,7 @@
 #include <algorithm>
 
 #include <L0/Base/Base.h>
-#include <L0/Base/Unifold.h>
+#include <L0/Base/Weave.h>
 
 /* A field is a 4 dimensional object with an X, Y, Z and T dimension. X = Y = Z = L.
  * 
@@ -45,11 +45,11 @@ namespace Core
   template< typename Element, size_t L, size_t T >
   class Field
   {
-    size_t                 *d_references;
+    size_t                *d_references;
 
-    Base::Unifold< L, T >  &d_unifold;
-    Element                *d_field;
-    size_t                 *d_offsets;
+    Base::Weave< L, T >   &d_weave;
+    Element               *d_field;
+    size_t                *d_offsets;
 
     public:
       Field();
@@ -117,7 +117,6 @@ namespace Core
 #include "Field/Field_operator_eq.template"
 #include "Field/Field_shift.template"
 #include "Field/Field_isolate.template"
-#include "Field/Field_destroy.template"
 
 #include "Field/hcField.inlines"
 

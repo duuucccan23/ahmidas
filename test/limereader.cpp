@@ -1,5 +1,4 @@
 #include <iostream>
-#include <mpi.h>
 #include <L0/Base/IO/Lime/Reader.h>
 
 int main(int argc, char **argv)

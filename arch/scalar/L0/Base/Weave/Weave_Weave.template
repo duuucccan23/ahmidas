@@ -3,7 +3,7 @@
 namespace Base
 {
   template< size_t L, size_t T >
-  Weave::Weave()
+  Weave< L, T >::Weave()
   {
 
   }

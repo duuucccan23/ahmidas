@@ -11,6 +11,7 @@ Base::IO::Lime::Reader::Reader(std::string const &filename)
 
   while (d_in.good())
   {
+    std::cerr << "Still going strong!" << std::endl;
     d_in.read(header.as8, s_headerSize);
 
     if (!bigEndian)

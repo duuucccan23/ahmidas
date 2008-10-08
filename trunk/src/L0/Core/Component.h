@@ -1,6 +1,8 @@
 #ifndef GUARD_CORE_COMPONENT_H
 #define GUARD_CORE_COMPONENT_H
 
+#include <L0/Base/Base.h>
+#include <L0/Base/Weave.h>
 #include <L0/Core/Field.h>
 
 namespace Core
@@ -13,7 +15,7 @@ namespace Core
   {
     friend class Field< Element, L, T >;
 
-    Unifold< L, T > &d_unifold;
+    Base::Weave< L, T > &d_weave;
     Field< Element, L, T > &d_parent;
     size_t const d_component;
 

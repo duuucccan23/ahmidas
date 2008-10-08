@@ -19,11 +19,9 @@ TARGET_LINK_LIBRARIES(limereader Lime)
 ADD_TEST(limereader limereader ../../test/conf.88)
 ENDIF(USE_MPI)
 
-IF(USE_MPI) # THIS SHOULD NOT BE NECESSARY!
 ADD_EXECUTABLE(fieldcomponent fieldcomponent.cpp)
 TARGET_LINK_LIBRARIES(fieldcomponent Core)
 ADD_TEST(fieldcomponent fieldcomponent)
-ENDIF(USE_MPI)
 
 IF(USE_MPI)
 ADD_EXECUTABLE(MPIstartstop MPIstartstop.cpp)

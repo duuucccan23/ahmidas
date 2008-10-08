@@ -11,11 +11,11 @@ Base::IO::Lime::Reader::Reader(std::string const &filename)
 
   while (d_in.good())
   {
-    std::cerr << "Still going strong!" << std::endl;
     d_in.read(header.as8, s_headerSize);
 
     if (!bigEndian)
       Base::swapEndian(header.as32[0]);
+    
     if (header.as32[0] != s_limeMagic)
       break; // We're done, apparently.
 
@@ -53,6 +53,9 @@ Base::IO::Lime::Reader::Reader(std::string const &filename)
     d_offsets.push_back(d_in.tellg());
     d_in.seekg(((d_sizes.back() + 7) / 8) * 8 , std::ios::cur);
   }
-  d_in.clear();
-  d_in.seekg(d_offsets.front(), std::ios::beg);
+  if (!d_offsets.empty())
+  {
+    d_in.clear();
+    d_in.seekg(d_offsets.front(), std::ios::beg);
+  }
 }

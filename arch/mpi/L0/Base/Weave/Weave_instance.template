@@ -1,7 +1,7 @@
 template< size_t L, size_t T >
-inline Base::Unifold< L, T > &Unifold< L, T >::instance()
+inline Base::Weave< L, T > &Weave< L, T >::instance()
 {
   if (!s_instance)
-    s_instance = new Unifold< L, T >();
+    s_instance = new Weave< L, T >();
   return *d_instance;
 }

@@ -1,10 +1,10 @@
 template< typename Element, size_t L, size_t T >
 Core::Field< Element, L, T >::Field(Element const &value)
 : d_references(new size_t(1)),
-  d_com(Base::Unifold< Element, L, T >::instance())
-  d_field(new Element[L * L * L * T / d_com.nodes()]),
+  d_weave(Base::Weave< L, T >::instance()),
+  d_field(new Element[d_weave.localVolume()]),
   d_offsets(new size_t[4])
 {
-  std::fill_n(d_field, L * L * L * T / d_com.nodes(), value);
+  std::fill_n(d_field, d_weave.localVolume(), value);
   std::fill(d_offsets, d_offsets + 4, 0);
 }

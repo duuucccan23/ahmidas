@@ -6,5 +6,10 @@ namespace Base
     return (L * L * L * T);
   }
 
+  template< size_t L, size_t T >
+  inline size_t Weave< L, T >::dim(Base::SpaceTimeIndex idx) const
+  {
+    return d_dims[idx];
+  }
   
 }

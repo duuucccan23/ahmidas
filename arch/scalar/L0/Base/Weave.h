@@ -22,4 +22,8 @@ namespace Base
   };
 }
 
+#include "Weave/Weave.template"
+#include "Weave/Weave_Weave.template"
+#include "Weave/Weave_instance.template"
+
 #endif

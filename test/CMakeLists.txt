@@ -10,7 +10,7 @@ TARGET_LINK_LIBRARIES(reunit2 SU3)
 ADD_TEST(reunitarization_2 reunit2)
 
 ADD_EXECUTABLE(weave weave.cpp)
-TARGET_LINK_LIBRARIES(weave)
+TARGET_LINK_LIBRARIES(weave Base)
 ADD_TEST(weave weave)
 
 ADD_EXECUTABLE(limereader limereader.cpp)

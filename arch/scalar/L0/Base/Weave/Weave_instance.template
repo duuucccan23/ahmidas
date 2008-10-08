@@ -1,13 +1,12 @@
 /* Publicly accessible static singleton creation function */
 
-#include "../Weave.h"
-
 namespace Base
 {
-  Weave &Weave::instance()
+  template< size_t L, size_t T >
+  Weave< L, T> &Weave< L, T >::instance()
   {
     if (!s_Weave)
-      s_Weave = new Weave();
+      s_Weave = new Weave< L, T>();
     return *s_Weave;
   }
 }

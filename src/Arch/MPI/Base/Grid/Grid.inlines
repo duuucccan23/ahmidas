@@ -1,0 +1,129 @@
+namespace Base
+{
+  template< size_t L, size_t T >
+  inline Grid< L, T >::~Grid()
+  {}
+
+  template< size_t L, size_t T >
+  inline MPI::Cartcomm &Grid< L, T >::grid()
+  {
+    return d_grid;
+  }
+
+  template< size_t L, size_t T >
+  inline MPI::Cartcomm &Grid< L, T >::timeSlice()
+  {
+    return d_timeSlice;
+  }
+
+  template< size_t L, size_t T >
+  inline size_t Grid< L, T >::rank() const
+  {
+    return d_grid.Get_rank();
+  }
+
+  template< size_t L, size_t T >
+  inline size_t Grid< L, T >::rank(int const *coord) const
+  {
+    return d_grid.Get_cart_rank(coord);
+  }
+
+  template< size_t L, size_t T >
+  inline size_t const* Grid< L, T >::coords() const
+  {
+    return d_coords;
+  }
+
+  template< size_t L, size_t T >
+  inline size_t Grid< L, T >::coord(size_t idx) const
+  {
+    return d_coords[idx];
+  }
+
+  template< size_t L, size_t T >
+  inline size_t const *Grid< L, T >::dims() const
+  {
+    return d_dims;
+  }
+
+  template< size_t L, size_t T >
+  inline size_t Grid< L, T >::dim(size_t idx) const
+  {
+    return d_dims[idx];
+  }
+
+  template< size_t L, size_t T >
+  inline size_t const *Grid< L, T >::sizes() const
+  {
+    return d_sizes;
+  }
+
+  template< size_t L, size_t T >
+  inline size_t Grid< L, T >::size(size_t idx) const
+  {
+    return d_sizes[idx];
+  }
+
+  template< size_t L, size_t T >
+  inline size_t const *Grid< L, T >::surfaces() const
+  {
+    return d_surfaces;
+  }
+
+  template< size_t L, size_t T >
+  inline size_t Grid< L, T >::surface(size_t idx) const
+  {
+    return d_surfaces[idx];
+  }
+
+  template< size_t L, size_t T >
+  inline size_t Grid< L, T >::localVolume() const
+  {
+    return d_localVolume;
+  }
+
+  template< size_t L, size_t T >
+  inline size_t Grid< L, T >::totalVolume() const
+  {
+    return (L * L * L * T);
+  }
+
+  template< size_t L, size_t T >
+  inline size_t const *Grid< L, T >::dimSizes() const
+  {
+    return d_dimSizes;
+  }
+
+  template< size_t L, size_t T >
+  inline size_t Grid< L, T >::dimSize(size_t idx) const
+  {
+    return (idx == 4 ? d_localVolume : d_dimSizes[idx]);
+  }
+
+  template< size_t L, size_t T >
+  inline size_t Grid< L, T >::neighbour(SpaceTimeIndex idx, Direction dir) const
+  {
+    int result, rank = d_grid.Get_rank();
+    d_grid.Shift(idx, dir, rank, result);
+    return result;
+  }
+
+  template< size_t L, size_t T >
+  inline size_t Grid< L, T >::bufferVolume() const
+  {
+    return d_bufferVolume;
+  }
+
+  template< size_t L, size_t T >
+  inline size_t Grid< L, T >::contiguousBlock() const
+  {
+    return d_contiguousBlock;
+  }
+
+  template< size_t L, size_t T >
+  inline bool Grid< L, T >::bigEndian() const
+  {
+    return d_bigEndian;
+  }
+
+}

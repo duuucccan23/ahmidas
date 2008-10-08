@@ -9,7 +9,6 @@ namespace Base
   class Weave
   {
     static Weave< L, T> *s_Weave;
-    size_t d_dims[4]; //number of nodes in each dimension
 
     Weave< L, T>();
 
@@ -18,6 +17,7 @@ namespace Base
 
       size_t localVolume() const;
       size_t dim(Base::SpaceTimeIndex idx) const;
+      size_t localSize(Base::SpaceTimeIndex idx) const;
 
       template< typename Element >
       void fieldShift(Base::SpaceTimeIndex idx, Base::Direction dir, Element *field, size_t const *offsets) const;

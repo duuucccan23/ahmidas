@@ -1,0 +1,16 @@
+namespace Base
+{
+  template< size_t L, size_t T >
+  size_t Grid< L, T >::greatestCommonDivisor(size_t x, size_t y)
+  {
+    size_t high = std::max(x, y);
+    size_t low  = std::min(x, y);
+
+    while (high % low)
+    {
+      std::swap(high, low);
+      low = low % high;
+    }
+    return low;
+  }
+}

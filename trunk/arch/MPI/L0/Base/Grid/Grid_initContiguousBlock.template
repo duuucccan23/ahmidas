@@ -1,0 +1,11 @@
+namespace Base
+{
+  template< size_t L, size_t T >
+  void Base::Grid< L, T >::initContiguousBlock()
+  {
+    size_t cutIdx = 0;
+    while ((d_dims[cutIdx] == 1) && (cutIdx < 4))
+      ++cutIdx;
+    d_contiguousBlock = dimSize(cutIdx);
+  }
+}

@@ -1,0 +1,7 @@
+template< size_t L, size_t T >
+inline Base::Unifold< L, T > &Unifold< L, T >::instance()
+{
+  if (!s_instance)
+    s_instance = new Unifold< L, T >();
+  return *d_instance;
+}

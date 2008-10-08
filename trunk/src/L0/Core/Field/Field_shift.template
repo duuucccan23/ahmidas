@@ -6,8 +6,8 @@ namespace Core
     d_weave.fieldShift(idx, dir, d_field, d_offsets);
 
     // Now all we need to do is shift the offset to reflect the new situation
-    d_offsets[idx] += dir + d_weave.dim(idx);
-    d_offsets[idx] %= d_weave.dim(idx);
+    d_offsets[idx] += dir + d_weave.localSize(idx);
+    d_offsets[idx] %= d_weave.localSize(idx);
 
     return *this;
   }

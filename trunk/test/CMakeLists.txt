@@ -3,27 +3,31 @@ ADD_TEST(endianness endian)
 
 ADD_EXECUTABLE(reunit1 reunit1.cpp)
 TARGET_LINK_LIBRARIES(reunit1 SU3)
-ADD_TEST(reunitarization_1 reunit1)
+ADD_TEST(reunitarization_unitarity reunit1)
 
 ADD_EXECUTABLE(reunit2 reunit2.cpp)
 TARGET_LINK_LIBRARIES(reunit2 SU3)
-ADD_TEST(reunitarization_2 reunit2)
+ADD_TEST(reunitarization_invariance reunit2)
 
 ADD_EXECUTABLE(reunit3 reunit3.cpp)
 TARGET_LINK_LIBRARIES(reunit3 SU3)
-ADD_TEST(reunitarization_3 reunit3)
+ADD_TEST(reunitarization_known_issues reunit3)
+
+ADD_EXECUTABLE(reunit4 reunit4.cpp)
+TARGET_LINK_LIBRARIES(reunit4 SU3)
+ADD_TEST(reunitarization_stress_test reunit4)
 
 ADD_EXECUTABLE(weave weave.cpp)
 TARGET_LINK_LIBRARIES(weave Base)
-ADD_TEST(weave weave)
+ADD_TEST(weave_initialization weave)
 
 ADD_EXECUTABLE(limereader limereader.cpp)
 TARGET_LINK_LIBRARIES(limereader Lime)
-ADD_TEST(limereader limereader ../../test/conf.88)
+ADD_TEST(limereader_read_in limereader ../../test/conf.88)
 
 ADD_EXECUTABLE(fieldcomponent fieldcomponent.cpp)
 TARGET_LINK_LIBRARIES(fieldcomponent Core)
-ADD_TEST(fieldcomponent fieldcomponent)
+ADD_TEST(fieldcomponent_setup fieldcomponent)
 
 IF(USE_MPI)
 ADD_EXECUTABLE(MPIstartstop MPIstartstop.cpp)

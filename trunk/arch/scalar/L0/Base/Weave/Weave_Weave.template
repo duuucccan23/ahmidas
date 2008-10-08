@@ -1,9 +1,8 @@
 /* Privately accessible constructor */
 
-#include "../Weave.h"
-
 namespace Base
 {
+  template< size_t L, size_t T >
   Weave::Weave()
   {
 

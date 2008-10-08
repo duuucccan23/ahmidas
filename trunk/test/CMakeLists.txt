@@ -9,14 +9,10 @@ ADD_EXECUTABLE(reunit2 reunit2.cpp)
 TARGET_LINK_LIBRARIES(reunit2 SU3)
 ADD_TEST(reunitarization_2 reunit2)
 
-<<<<<<< .mine
-=======
 ADD_EXECUTABLE(weave weave.cpp)
 TARGET_LINK_LIBRARIES(weave)
 ADD_TEST(weave weave)
 
-IF(USE_MPI) # THIS SHOULD NOT BE NECESSARY!
->>>>>>> .r190
 ADD_EXECUTABLE(limereader limereader.cpp)
 TARGET_LINK_LIBRARIES(limereader Lime)
 ADD_TEST(limereader limereader ../../test/conf.88)

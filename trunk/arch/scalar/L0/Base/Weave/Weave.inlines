@@ -1,15 +1,22 @@
 namespace Base
 {
   template< size_t L, size_t T >
+  inline size_t Weave< L, T >::dim(Base::SpaceTimeIndex idx) const
+  {
+    return 1;
+  }
+  
+  template< size_t L, size_t T >
+  inline size_t Weave< L, T >::localSize(Base::SpaceTimeIndex idx) const
+  {
+    return (idx == Base::idx_T ? T : L);
+  }
+
+  
+  template< size_t L, size_t T >
   inline size_t Weave< L, T >::localVolume() const
   {
     return (L * L * L * T);
-  }
-
-  template< size_t L, size_t T >
-  inline size_t Weave< L, T >::dim(Base::SpaceTimeIndex idx) const
-  {
-    return d_dims[idx];
   }
 
   template< size_t L, size_t T >

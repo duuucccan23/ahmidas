@@ -5,6 +5,6 @@ namespace Base
   template< size_t L, size_t T >
   Weave< L, T >::Weave()
   {
-    std::fill_n(d_dims, 4, 1);
+  
   }
 }

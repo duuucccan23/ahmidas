@@ -1,21 +1,9 @@
 ADD_EXECUTABLE(endian endian.cpp)
 ADD_TEST(endianness endian)
 
-ADD_EXECUTABLE(reunit1 reunit1.cpp)
-TARGET_LINK_LIBRARIES(reunit1 SU3)
-ADD_TEST(reunitarization_unitarity reunit1)
-
-ADD_EXECUTABLE(reunit2 reunit2.cpp)
-TARGET_LINK_LIBRARIES(reunit2 SU3)
-ADD_TEST(reunitarization_invariance reunit2)
-
-ADD_EXECUTABLE(reunit3 reunit3.cpp)
-TARGET_LINK_LIBRARIES(reunit3 SU3)
-ADD_TEST(reunitarization_known_issues reunit3)
-
-ADD_EXECUTABLE(reunit4 reunit4.cpp)
-TARGET_LINK_LIBRARIES(reunit4 SU3)
-ADD_TEST(reunitarization_stress_test reunit4)
+ADD_EXECUTABLE(reunit reunit.cpp)
+TARGET_LINK_LIBRARIES(reunit SU3)
+ADD_TEST(reunitarization_stress_test reunit)
 
 ADD_EXECUTABLE(weave weave.cpp)
 TARGET_LINK_LIBRARIES(weave Base)

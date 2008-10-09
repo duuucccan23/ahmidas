@@ -63,8 +63,6 @@ void SU3::Matrix::reunitarize()
 
   if (Q < precision || (R > -precision && R < precision)) // We should already be (almost) unitary
   {
-    std::cerr << "[DEBUG] Precision found: Q = " << Q << ", R = " << R << std::endl;
-    std::cerr << "[DEBUG] Determinant was found to be " << det(d_data) << std::endl;
     operator*=(std::pow(det(d_data), -fac_1_3));
     return;
   }

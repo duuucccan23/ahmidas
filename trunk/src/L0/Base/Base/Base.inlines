@@ -1,7 +1,7 @@
 namespace Base
 {
   // Check for endian style of the machine in use (thanks, Carsten or Marc!)  
-  inline bool big_endian()
+  inline bool bigEndian()
   {
     union
     {

@@ -26,6 +26,7 @@
 
 #include <L0/Base/Base.h>
 #include <L0/Base/Weave.h>
+#include <L0/Base/IO.h>
 
 /* A field is a 4 dimensional object with an X, Y, Z and T dimension. X = Y = Z = L.
  * 
@@ -45,6 +46,8 @@ namespace Core
   template< typename Element, size_t L, size_t T >
   class Field
   {
+#include <L0/Base/IO/field.friends>
+
     size_t                *d_references;
 
     Base::Weave< L, T >   &d_weave;

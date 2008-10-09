@@ -5,7 +5,7 @@ Base::IO::Lime::Reader::Reader(std::string const &filename)
     d_fail(false), d_messagesCorrect(true)
 {
   uHeader header;
-  bool bigEndian = Base::big_endian();
+  bool bigEndian = Base::bigEndian();
   int32_t message = -1;
   bool messageOpened = true;
 

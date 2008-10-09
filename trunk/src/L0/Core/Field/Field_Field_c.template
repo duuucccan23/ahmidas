@@ -1,9 +1,9 @@
 template< typename Element, size_t L, size_t T >
 Core::Field< Element, L, T >::Field(hcField< Element, L, T > const &other)
-  : d_references(new size_t(1)),
-    d_weave(Base::Weave< L, T >::instance()),
-    d_field(new Element[d_weave.localVolume()]),
-    d_offsets(new size_t[4])
+: d_references(new size_t(1)),
+  d_weave(Base::Weave< L, T >::instance()),
+  d_field(new Element[d_weave.localVolume()]),
+  d_offsets(new size_t[4])
 {
   std::copy(other.d_parent.d_offsets, other.d_parent.d_offsets + 4, d_offsets);
   for (size_t ctr = 0; ctr < d_weave.localVolume(); ++ctr)

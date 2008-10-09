@@ -5,7 +5,6 @@
 int main(int, char **)
 {
   srand(time(0));
-  std::ofstream out("reunit4.results");      
   
   for (size_t ctr = 0; ctr < 10000; ++ctr)
   {
@@ -17,7 +16,7 @@ int main(int, char **)
     for (size_t idx_x = 0; idx_x < 3; ++idx_x)
       for (size_t idx_y = 0; idx_y < 3; ++idx_y)
 	error += std::abs(mat(idx_x, idx_y));
-    if (std::abs(error) > 1e-11)
+    if (std::abs(error) > 1e-10)
     {
       std::cout << "Stress test failed on unitarity with total deviation " << error << '!' << std::endl;
       return 1;
@@ -30,14 +29,13 @@ int main(int, char **)
     for (size_t idx_x = 0; idx_x < 3; ++idx_x)
       for (size_t idx_y = 0; idx_y < 3; ++idx_y)
 	error += std::abs(mat(idx_x, idx_y) - copy(idx_x, idx_y));
-    if (std::abs(error) > 1e-11)
+    if (std::abs(error) > 1e-10)
     {
       std::cout << "Stress test failed on double reunitarization with total deviation " << error << '!' << std::endl;
       return 1;
     }
   }
 
-  out.close();
   std::cout << "All matrices properly reunitarized in stress test." << std::endl;
   return 0;
 }

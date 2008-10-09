@@ -1,10 +1,11 @@
-//Gauge only for now.
-
 template< typename Element, size_t L, size_t T >
 void Base::IO::loadILDG(Core::Field< Element, L, T > *field, std::string const &filename)
 {
   Lime::Reader reader(filename);
   reader.retrieveRecord(reader.findRecord("ildg-binary-data"));
+
+  //Poor man's parser for reading the precision should be inserted here, beyond we now assume double as input
+
   reader.read(field->d_field, L * L * L * T);
   std::fill_n(field->d_offsets, 4, 0);
   if (!bigEndian())

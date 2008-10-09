@@ -5,11 +5,13 @@
 
 int main(int argc, char **argv)
 {
-  std::cout << "Dumb test code that should at least compile under all circumstances." << std::endl;
   Core::Field< QCD::Gauge, 8, 8 > myfield;
   Base::IO::loadILDG(&myfield, "../test/conf.88");
-  myfield[0][0].reunitarize();
   std::cout << myfield[0][0] << std::endl;
+  Base::IO::saveILDG(&myfield, "../test/conf.out");
+  Base::IO::loadILDG(&myfield, "../test/conf.out");
+  std::cout << myfield[0][0] << std::endl;
+
   return 0;
 }
 

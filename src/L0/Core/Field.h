@@ -57,7 +57,12 @@ namespace Core
     public:
       Field();
       Field(Element const &value);
-      Field(Field const &other);
+      Field(Field< Element, L, T> const &other);
+
+      template< typename Super >
+      Field(Component< Super, L, T, Element> const &component); //Creation of a field true a component of another field.
+      template< typename Super >
+      Field(hcComponent< Super, L, T, Element> const &component); //Creation of a field true a component of another field.
 
       explicit Field(hcField< Element, L, T > const &other);
       Field< Element, L, T > &operator=(Field< Element, L, T > const &other);
@@ -74,7 +79,7 @@ namespace Core
       const_iterator end() const;
 
       template< typename Atom >
-      Component< Element, L, T, Atom > component(Base::SpaceTimeIndex idx);
+      Component< Element, L, T, Atom > component(size_t const component);
 
       Field< Element, L, T > &shift(Base::SpaceTimeIndex idx, Base::Direction shift);
 

@@ -1,52 +1,50 @@
-namespace Path
+template< size_t L, size_t T >
+Core::Field< SU3::Matrix, L, T > Path::staple(Core::Field< QCD::Gauge, L, T > &field, Base::SpaceTimeIndex via, Base::Direction dirVia, Base::SpaceTimeIndex to, Base::Direction dirTo)
 {
-  template< size_t L, size_t T >
-  Core::Buffer< SU3::Matrix > Path::staple(Core::Field< QCD::Gauge, L, T > &field, Core::SpaceTimeIndex towards, 
-                                                        Core::Direction dirTo, Core::SpaceTimeIndex over, Core::Direction dirOver)
+  if (via == to)
+    return (dirVia == Base::dir_UP ? field.component(via) : field.component(via).dagger());
+  if (dirVia == Base::dir_UP && dirTo = Base::dir_UP)
   {
-    Core::Buffer< SU3::Matrix > result(field.grid(), SU3::Matrix::identity());
-    if (dirTo == Core::dir_UP && dirOver == Core::dir_UP)
-    {
-      result.rightMultiply(field.component(over));
-      field.shift(over, Core::dir_UP);
-      result.rightMultiply(field.component(towards));
-      field.shift(towards, Core::dir_UP);
-      field.shift(over, Core::dir_DOWN);
-      result.rightMultiply(field.component(over).dagger());
-      field.shift(towards, Core::dir_DOWN); // Back to its initial position
-      return result;
-    }
-    if (dirTo == Core::dir_UP && dirOver == Core::dir_DOWN)
-    {
-      field.shift(over, Core::dir_DOWN);
-      result.rightMultiply(field.component(over).dagger());
-      result.rightMultiply(field.component(towards));
-      field.shift(towards, Core::dir_UP);
-      result.rightMultiply(field.component(over));
-      field.shift(over, Core::dir_UP);
-      field.shift(towards, Core::dir_DOWN); // Back to its initial position
-      return result;
-    }
-    if (dirTo == Core::dir_DOWN && dirOver == Core::dir_UP)
-    {
-      result.rightMultiply(field.component(over));
-      field.shift(over, Core::dir_UP);
-      field.shift(towards, Core::dir_DOWN);
-      result.rightMultiply(field.component(towards).dagger());
-      field.shift(over, Core::dir_DOWN);
-      result.rightMultiply(field.component(over).dagger());
-      field.shift(towards, Core::dir_UP); // Back to its initial position
-      return result;
-    }
-
-    // Remaining case
-    field.shift(over, Core::dir_DOWN);
-    result.rightMultiply(field.component(over).dagger());
-    field.shift(towards, Core::dir_DOWN);
-    result.rightMultiply(field.component(towards).dagger());
-    result.rightMultiply(field.component(over));
-    field.shift(over, Core::dir_UP);
-    field.shift(towards, Core::dir_UP); // Back to its initial position
+    Core::Field< SU3::Matrix, L, T > result(field.component(via)); //Store first link as result (up direction)
+    field.shift(via, Base::dir_UP); //Move over first link
+    result.rightMultiply(field.component(to)); //Multiply with second link (up direction)
+    field.shift(to, Base::dir_UP); //Move over second link
+    field.shift(via, Base::dir_DOWN); //Move over third link
+    result.rightMultiply(field.component(via).dagger()); //Multiply with third link hc'ed (down direction)
+    field.shift(to, Base::dir_DOWN); //Move over fourth link, back to starting point
+    return result;
+  }
+  if (dirVia == Base::dir_UP && dirTo = Base::dir_DOWN)
+  {
+    Core::Field< SU3::Matrix, L, T > result(field.component(via)); //Store first link as result (up direction)
+    field.shift(via, dirVia); //Move over first link
+    field.shift(to, Base::dir_DOWN); //Move over second link
+    result.rightMultiply(field.component(to).dagger()); //Multiply with second link hc'ed (down direction)
+    field.shift(via, Base::dir_DOWN); //Move over third link
+    result.rightMultiply(field.component(via).dagger()); //Multiply with third link hc'ed (down direction)
+    field.shift(to, Base::dir_UP); //Move over fourth link, back to starting point
+    return result;
+  }
+  if (dirVia == Base::dir_DOWN && dirTo = Base::dir_UP)
+  {
+    field.shift(via, dirVia); //Move over first link
+    Core::Field< SU3::Matrix, L, T > result(field.component(via).dagger()); //Store first link hc'ed as result (down direction)
+    result.rightMultiply(field.component(to)); //Multiply with second link (up direction)
+    field.shift(to, Base::dir_UP); //Move over second link
+    result.rightMultiply(field.component(via)); //Multiply with third link (up direction)
+    field.shift(via, Base::dir_UP); //Move over third link
+    field.shift(to, Base::dir_DOWN); //Move over fourth link, back to starting point
+    return result;
+  }
+  if (dirVia == Base::dir_DOWN && dirTo = Base::dir_DOWN)
+  {
+    field.shift(via, dirVia); //Move over first link
+    Core::Field< SU3::Matrix, L, T > result(field.component(via).dagger()); //Store first link hc'ed as result (down direction)
+    field.shift(to, Base::dir_DOWN); //Move over second link
+    result.rightMultiply(field.component(to).dagger()); //Multiply with second link hc'ed (down direction)
+    result.rightMultiply(field.component(via)); //Multiply with third link (up direction)
+    field.shift(via, Base::dir_UP); //Move over third link
+    field.shift(to, Base::dir_UP); //Move over fourth link, back to starting point
     return result;
   }
 }

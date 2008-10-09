@@ -34,4 +34,4 @@ ADD_SUBDIRECTORY(src)
 ADD_SUBDIRECTORY(test)
 
 ADD_EXECUTABLE(main src/main.cpp)
-TARGET_LINK_LIBRARIES(main Base Lime SU3 Smear)
+TARGET_LINK_LIBRARIES(main Base Lime SU3 Path)

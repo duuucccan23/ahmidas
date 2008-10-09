@@ -4,6 +4,8 @@
 #include <L0/QCD/Gauge.h>
 #include <L0/Base/IO.h>
 #include <L1/Path.h>
+#include <L0/Core/Component.h>
+#include <L0/SU3/Matrix.h>
 
 int main(int argc, char **argv)
 {
@@ -12,7 +14,8 @@ int main(int argc, char **argv)
   std::cout << myfield[0][0];
   myfield[0][0].reunitarize();
   std::cout << myfield[0][0];
-  Core::Field< SU3::Matrix, 8, 8 > staple(myfield, Base::idx_X, Base::dir_UP, Base::idx_Y, Base::dir_UP);
+  Core::Field< SU3::Matrix, 8, 8 > result(myfield.component< SU3::Matrix >(Base::idx_X));
+  Core::Field< SU3::Matrix, 8, 8 > mystaple = Path::staple(myfield, Base::idx_X, Base::dir_UP, Base::idx_Y, Base::dir_UP);
   return 0;
 }
 

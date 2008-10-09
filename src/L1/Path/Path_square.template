@@ -3,7 +3,7 @@ Core::Field< SU3::Matrix, L, T > Path::square(Core::Field< QCD::Gauge, L, T > &f
 {
   if (via == to)
     return Core::Field< SU3::Matrix, L, T > (SU3::Matrix::identity());
-  if (dirVia == Base::dir_UP && dirTo = Base::dir_UP)
+  if (dirVia == Base::dir_UP && dirTo == Base::dir_UP)
   {
     Core::Field< SU3::Matrix, L, T > result(field.component(via)); //Store first link as result (up direction)
     field.shift(via, Base::dir_UP); //Move over first link
@@ -15,7 +15,7 @@ Core::Field< SU3::Matrix, L, T > Path::square(Core::Field< QCD::Gauge, L, T > &f
     result.rightMultiply(field.component(to).dagger()); //Multiply with fourth link hc'ed (down direction)
     return result;
   }
-  if (dirVia == Base::dir_UP && dirTo = Base::dir_DOWN)
+  if (dirVia == Base::dir_UP && dirTo == Base::dir_DOWN)
   {
     Core::Field< SU3::Matrix, L, T > result(field.component(via)); //Store first link as result (up direction)
     field.shift(via, dirVia); //Move over first link
@@ -27,7 +27,7 @@ Core::Field< SU3::Matrix, L, T > Path::square(Core::Field< QCD::Gauge, L, T > &f
     field.shift(to, Base::dir_UP); //Move over fourth link, back to starting point
     return result;
   }
-  if (dirVia == Base::dir_DOWN && dirTo = Base::dir_UP)
+  if (dirVia == Base::dir_DOWN && dirTo == Base::dir_UP)
   {
     field.shift(via, dirVia); //Move over first link
     Core::Field< SU3::Matrix, L, T > result(field.component(via).dagger()); //Store first link hc'ed as result (down direction)
@@ -39,7 +39,7 @@ Core::Field< SU3::Matrix, L, T > Path::square(Core::Field< QCD::Gauge, L, T > &f
     result.rightMultiply(field.component(to).dagger()); //Multiply with fourth link hc'ed (down direction)
     return result;
   }
-  if (dirVia == Base::dir_DOWN && dirTo = Base::dir_DOWN)
+  if (dirVia == Base::dir_DOWN && dirTo == Base::dir_DOWN)
   {
     field.shift(via, dirVia); //Move over first link
     Core::Field< SU3::Matrix, L, T > result(field.component(via).dagger()); //Store first link hc'ed as result (down direction)

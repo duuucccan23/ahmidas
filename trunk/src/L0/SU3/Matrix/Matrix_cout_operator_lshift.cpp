@@ -40,6 +40,6 @@ std::ostream &SU3::operator<<(std::ostream &out, SU3::Matrix const &mat)
               << std::setw(15) << std::scientific << std::setprecision(13) << std::abs(mat.d_data[8].real()) 
               << ((mat.d_data[8].imag() > 0) ? " + " : " - ") 
               << std::setw(15) << std::scientific << std::setprecision(13) << std::abs(mat.d_data[8].imag()) << " * i   ]"
-      << std::endl;
+	      << std::endl;
   return out;
 }

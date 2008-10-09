@@ -10,8 +10,12 @@
 
 void SU3::Matrix::reunitarize()
 {
-  // We calculate the distinct elements of H2, using hermiticity to avoid calculations left and right.
+  // There are issues as we approach matrices close to unitarity. In that case, we want to avoid
+  // doing some of the transformations below and bail out early. This constant sets a limit of
+  // precision on this.
+  static double const precision = 1E-15;
 
+  // We calculate the distinct elements of H2, using hermiticity to avoid calculations left and right.
   static double const fac_1_3 = 1.0 / 3.0;
   static double const fac_2pi_3 = fac_1_3 * 4 * std::acos(0.0);
 
@@ -31,6 +35,16 @@ void SU3::Matrix::reunitarize()
 
   double H2_off_norm[3] = {std::norm(H2_off[0]), std::norm(H2_off[1]), std::norm(H2_off[2])};
 
+  // c = - det(H2)
+  double c = - H2_diag[0] * H2_diag[1] * H2_diag[2]
+             - 2 * std::real(H2_off[0] * std::conj(H2_off[1]) * H2_off[2])
+             + H2_diag[0] * H2_off_norm[2] + H2_diag[1] * H2_off_norm[1]
+             + H2_diag[2] * H2_off_norm[0];
+
+  // This algorithm won't work (reunitarization is ill defined, actually) for matrices that aren't full rank!
+  if (c == 0)
+    return;
+
   // a_3 = -(1/3) * tr(H2)
   double a_3 = - fac_1_3 * (H2_diag[0] + H2_diag[1] + H2_diag[2]);
   double a_3_2 = a_3 * a_3;
@@ -38,15 +52,6 @@ void SU3::Matrix::reunitarize()
   // b = c2(H2)
   double b =     H2_diag[0] * (H2_diag[1] + H2_diag[2]) + H2_diag[1] * H2_diag[2]
                - H2_off_norm[0] - H2_off_norm[1] - H2_off_norm[2];
-  // c = - det(H2)
-  double c = - H2_diag[0] * H2_diag[1] * H2_diag[2]
-             - 2 * std::real(H2_off[0] * std::conj(H2_off[1]) * H2_off[2])
-             + H2_diag[0] * H2_off_norm[2] + H2_diag[1] * H2_off_norm[1]
-             + H2_diag[2] * H2_off_norm[0];
-
-  // This algorithm won't work for matrices that aren't full rank!
-  if (c == 0)
-    return;
 
   double Q  = a_3_2 - fac_1_3 * b; 
 
@@ -54,23 +59,19 @@ void SU3::Matrix::reunitarize()
   // In that case, we find that R and Q are very close to 0, 
   // so we can explicitly check here.
 
-  if (Q <= 0) // We should already be (almost) unitary
+  double R = a_3_2 * a_3 + 0.5 * (c - a_3 * b);
+
+  if (Q < precision || (R > -precision && R < precision)) // We should already be (almost) unitary
   {
+    std::cerr << "[DEBUG] Precision found: Q = " << Q << ", R = " << R << std::endl;
+    std::cerr << "[DEBUG] Determinant was found to be " << det(d_data) << std::endl;
     operator*=(std::pow(det(d_data), -fac_1_3));
     return;
   }
 
   double sqrt_Q = std::sqrt(Q);
 
-  double R_div_Q_sqrt_Q = (a_3_2 * a_3 + 0.5 * (c - a_3 * b)) / (Q * sqrt_Q);
-
-  if (R_div_Q_sqrt_Q < -1 || R_div_Q_sqrt_Q > 1) // This implies all sort of nastiness
-  {
-    operator*=(std::pow(det(d_data), -fac_1_3));
-    return;
-  }
-
-  double theta_3 = fac_1_3 * std::acos(R_div_Q_sqrt_Q);
+  double theta_3 = fac_1_3 * std::acos(R / (Q * sqrt_Q));
 
   double sqrt_min_2Q = -2 * sqrt_Q;
   double lambda[3] = { sqrt_min_2Q * std::cos(theta_3) - a_3,

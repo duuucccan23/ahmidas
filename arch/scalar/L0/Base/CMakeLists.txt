@@ -1,4 +1,5 @@
 SET(Sources_Weave Weave.h)
-ADD_LIBRARY(Base ${Sources_Weave})
+SET(Sources_IO IO.h)
+ADD_LIBRARY(Base ${Sources_Weave} ${Sources_IO})
 SET_TARGET_PROPERTIES(Base PROPERTIES LINKER_LANGUAGE CXX)
 ADD_SUBDIRECTORY(IO)

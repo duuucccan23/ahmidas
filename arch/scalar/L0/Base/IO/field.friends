@@ -1,0 +1,1 @@
+friend void Base::IO::loadILDG<Element, L, T>(Field< Element, L, T > *, std::string const &);

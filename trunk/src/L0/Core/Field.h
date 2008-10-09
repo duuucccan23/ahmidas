@@ -60,9 +60,9 @@ namespace Core
       Field(Field< Element, L, T> const &other);
 
       template< typename Super >
-      Field(Component< Super, L, T, Element> const &component); //Creation of a field true a component of another field.
+      Field(Component< Super, L, T, Element> const &component); //Creation of a field through a component of another field.
       template< typename Super >
-      Field(hcComponent< Super, L, T, Element> const &component); //Creation of a field true a component of another field.
+      Field(hcComponent< Super, L, T, Element> const &component); //Creation of a field through a component of another field.
 
       explicit Field(hcField< Element, L, T > const &other);
       Field< Element, L, T > &operator=(Field< Element, L, T > const &other);

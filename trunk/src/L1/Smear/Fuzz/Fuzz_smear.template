@@ -1,13 +1,13 @@
 namespace Smear
 {
   template< size_t L, size_t T >
-  void Fuzz::smear(Core::Field< QCD::Gauge, L, T > &field) const
+  void Fuzz::smear(Core::Field< QCD::Gauge, L, T > *field) const
   {
     if (d_length <= 1) // Or we'll be making 3 pointless copies...
       return;
 
-    accumDirection(field, Core::idx_X);
-    accumDirection(field, Core::idx_Y);
-    accumDirection(field, Core::idx_Z);
+    accumDirection(field, Base::idx_X);
+    accumDirection(field, Base::idx_Y);
+    accumDirection(field, Base::idx_Z);
   }
 }

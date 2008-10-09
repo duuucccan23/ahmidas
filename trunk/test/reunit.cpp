@@ -2,8 +2,12 @@
 #include <fstream>
 #include <L0/SU3/Matrix.h>
 
-int main(int, char **)
+int main(int argc, char **argv)
 {
+  std::ofstream *out = 0;
+  if (argc > 1)
+    out = new std::ofstream(argv[1]);
+  
   srand(time(0));
   
   for (size_t ctr = 0; ctr < 10000; ++ctr)
@@ -12,14 +16,19 @@ int main(int, char **)
     mat.reunitarize();
     SU3::hcMatrix hc = mat.dagger();
     mat.rightMultiply(hc);
-    double error = -3.0;
+    double error = 0.0;
     for (size_t idx_x = 0; idx_x < 3; ++idx_x)
       for (size_t idx_y = 0; idx_y < 3; ++idx_y)
-	error += std::abs(mat(idx_x, idx_y));
-    if (std::abs(error) > 1e-10)
+	error = std::max((idx_x == idx_y) ? std::abs(1.0 - mat(idx_x, idx_y)) : std::abs(mat(idx_x, idx_y)), error);
+    if (std::abs(error) > 5e-10)
     {
+      std::cout << "At matrix number " << ctr << ':' << std::endl;
       std::cout << "Stress test failed on unitarity with total deviation " << error << '!' << std::endl;
-      return 1;
+      if (out)
+      {
+	out->close();
+	delete out;
+      }
     }
     
     SU3::Matrix copy(mat);
@@ -29,13 +38,25 @@ int main(int, char **)
     for (size_t idx_x = 0; idx_x < 3; ++idx_x)
       for (size_t idx_y = 0; idx_y < 3; ++idx_y)
 	error += std::abs(mat(idx_x, idx_y) - copy(idx_x, idx_y));
-    if (std::abs(error) > 1e-10)
+    if (std::abs(error) > 4e-15)
     {
+      std::cout << "At matrix number " << ctr << ':' << std::endl;
       std::cout << "Stress test failed on double reunitarization with total deviation " << error << '!' << std::endl;
+      if (out)
+      {
+	out->close();
+	delete out;
+      }
       return 1;
     }
   }
 
+  if (out)
+  {
+    out->close();
+    delete out;
+  }
+  
   std::cout << "All matrices properly reunitarized in stress test." << std::endl;
   return 0;
 }

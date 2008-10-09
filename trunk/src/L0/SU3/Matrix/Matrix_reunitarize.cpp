@@ -13,7 +13,7 @@ void SU3::Matrix::reunitarize()
   // There are issues as we approach matrices close to unitarity. In that case, we want to avoid
   // doing some of the transformations below and bail out early. This constant sets a limit of
   // precision on this.
-  static double const precision = 1E-15;
+  static double const precision = 5E-16;
 
   // We calculate the distinct elements of H2, using hermiticity to avoid calculations left and right.
   static double const fac_1_3 = 1.0 / 3.0;

@@ -20,6 +20,8 @@ int main(int argc, char **argv)
     for (size_t idx_x = 0; idx_x < 3; ++idx_x)
       for (size_t idx_y = 0; idx_y < 3; ++idx_y)
 	error = std::max((idx_x == idx_y) ? std::abs(1.0 - mat(idx_x, idx_y)) : std::abs(mat(idx_x, idx_y)), error);
+    if (out)
+      (*out) << error;
     if (std::abs(error) > 5e-10)
     {
       std::cout << "At matrix number " << ctr << ':' << std::endl;
@@ -38,6 +40,8 @@ int main(int argc, char **argv)
     for (size_t idx_x = 0; idx_x < 3; ++idx_x)
       for (size_t idx_y = 0; idx_y < 3; ++idx_y)
 	error += std::abs(mat(idx_x, idx_y) - copy(idx_x, idx_y));
+    if (out)
+      (*out) << "\t" << error << std::endl;
     if (std::abs(error) > 4e-15)
     {
       std::cout << "At matrix number " << ctr << ':' << std::endl;

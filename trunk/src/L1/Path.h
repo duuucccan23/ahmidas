@@ -1,9 +1,8 @@
 #ifndef GUARD_PATH_H
 #define GUARD_PATH_H
 
+#include <L0/Base/Base.h>
 #include <L0/Core/Component.h>
-#include <L0/Core/Core.h>
-#include <L0/Core/Buffer.h>
 #include <L0/Core/Field.h>
 #include <L0/QCD/Gauge.h>
 #include <L0/SU3/Matrix.h>
@@ -11,10 +10,10 @@
 namespace Path
 {
   template< size_t L, size_t T >
-  Core::Buffer< SU3::Matrix > staple(Core::Field< QCD::Gauge, L, T > &field, Core::SpaceTimeIndex towards, Core::Direction dirTo, Core::SpaceTimeIndex over, Core::Direction dirOver);
+  Core::Field< SU3::Matrix, L, T > staple(Core::Field< QCD::Gauge, L, T > &field, Base::SpaceTimeIndex via, Base::Direction dirVia, Base::SpaceTimeIndex to, Base::Direction dirTo);
 
   template< size_t L, size_t T >
-  Core::Buffer< std::complex< double > > plaquette(Core::Field< QCD::Gauge, L, T > &field, Core::SpaceTimeIndex towards, Core::Direction dirTo, Core::SpaceTimeIndex over, Core::Direction dirOver));
+  Core::Field< SU3::Matrix, L, T > square(Core::Field< QCD::Gauge, L, T > &field, Base::SpaceTimeIndex via, Base::Direction dirVia, Base::SpaceTimeIndex to, Base::Direction dirTo);
 }
 
 #include "Path/Path_staple.template"

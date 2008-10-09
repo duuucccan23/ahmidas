@@ -1,0 +1,3 @@
+SET(Sources_Smear Fuzz.h)
+ADD_LIBRARY(Smear ${Sources_Smear})
+SET_TARGET_PROPERTIES(Smear PROPERTIES LINKER_LANGUAGE CXX)

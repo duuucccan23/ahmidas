@@ -3,7 +3,6 @@
 
 #include <algorithm>
 
-#include <L0/Core/Buffer.h>
 #include <L0/Core/Component.h>
 #include <L0/Core/Field.h>
 #include <L0/QCD/Gauge.h>
@@ -19,11 +18,11 @@ namespace Smear
       Fuzz(size_t length);
 
       template< size_t L, size_t T >
-      void smear(Core::Field< QCD::Gauge, L, T > &field) const;
+      void smear(Core::Field< QCD::Gauge, L, T > *field) const;
 
     private:
       template< size_t L, size_t T >
-      void accumDirection(Core::Field< QCD::Gauge, L, T > &field, Core::SpaceTimeIndex) const;
+      void accumDirection(Core::Field< QCD::Gauge, L, T > *field, Base::SpaceTimeIndex) const;
   };
 }
 

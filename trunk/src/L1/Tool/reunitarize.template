@@ -1,0 +1,7 @@
+template< size_t L, size_t T >
+void Tool::reunitarize(Core::Field< QCD::Gauge, L, T > *field)
+{
+  Base::Weave< L, T > myWeave(Base::Weave< L, T >::instance());
+  for (size_t ctr = 0; ctr < myWeave.localVolume(); ++ctr)
+    field->getMemoryIndex(ctr).reunitarize();
+}

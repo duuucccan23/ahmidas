@@ -1,0 +1,13 @@
+template< size_t L, size_t T >
+void Tool::randomGauge(Core::Field< QCD::Gauge, L, T > *field)
+{
+  Base::Weave< L, T > myWeave(Base::Weave< L, T >::instance());
+  for (size_t ctr = 0; ctr < myWeave.localVolume(); ++ctr)
+  {
+    field->getMemoryIndex(ctr)[Base::idx_X] = SU3::Matrix::random();
+    field->getMemoryIndex(ctr)[Base::idx_Y] = SU3::Matrix::random();
+    field->getMemoryIndex(ctr)[Base::idx_Z] = SU3::Matrix::random();
+    field->getMemoryIndex(ctr)[Base::idx_T] = SU3::Matrix::random();
+  }
+  reunitarize(field);
+}

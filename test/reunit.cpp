@@ -10,7 +10,7 @@ int main(int argc, char **argv)
   
   srand(time(0));
   
-  for (size_t ctr = 0; ctr < 400000; ++ctr)
+  for (size_t ctr = 0; ctr < 5000; ++ctr)
   {
     SU3::Matrix mat = SU3::Matrix::random(rand());
     mat.reunitarize();

@@ -5,6 +5,9 @@ namespace Base
   template< size_t L, size_t T >
   Weave< L, T >::Weave()
   {
-  
+    d_surfaces[idx_X] = 1;
+    d_surfaces[idx_Y] = L * d_surfaces[idx_X];
+    d_surfaces[idx_Z] = L * d_surfaces[idx_Y];
+    d_surfaces[idx_T] = L * d_surfaces[idx_Z];
   }
 }

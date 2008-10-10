@@ -1,11 +1,11 @@
 #ifndef GUARD_SMEAR_APE_H
 #define GUARD_SMEAR_APE_H
 
-#include <L0/Core/Buffer.h>
 #include <L0/Core/Field.h>
-#include <L0/Core/Component.h>
 #include <L0/QCD/Gauge.h>
 #include <L0/SU3/Matrix.h>
+#include <L1/Path.h>
+#include <L1/Tool.h>
 
 // Performs an APE smearing step.
 namespace Smear

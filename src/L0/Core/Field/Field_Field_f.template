@@ -8,7 +8,6 @@ Core::Field< Element, L, T >::Field(Core::hcComponent< Super, L, T, Element> con
 {
   std::cout << "Hello!\n";
   for (size_t ctr = 0; ctr < d_weave.localVolume(); ++ctr)
-    d_field[ctr] = component.parentIdx(ctr);
-//  std::copy(component.begin(), component.end(), d_field);
-  std::fill(d_offsets, d_offsets + 4, 0); //There is some choice implied here.
+    d_field[ctr] = component.parentIdx(ctr).dagger();
+  std::fill(d_offsets, d_offsets + 4, 0);
 }

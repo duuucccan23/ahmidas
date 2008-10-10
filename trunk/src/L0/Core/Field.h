@@ -61,6 +61,7 @@ namespace Core
 
       template< typename Super >
       Field(Component< Super, L, T, Element> const &component); //Creation of a field through a Component of another field.
+
       template< typename Super >
       Field(hcComponent< Super, L, T, Element> const &component); //Creation of a field through a hcComponent of another field.
 

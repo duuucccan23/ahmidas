@@ -7,3 +7,4 @@ SET(Sources_Matrix Matrix/Matrix_givens.cpp Matrix/Matrix_cout_operator_lshift.c
 SET(Sources_Vector Vector/Vector_leftMultiply_a.cpp Vector/Vector_leftMultiply_b.cpp
                    Vector/Vector.cpp Vector.h)
 ADD_LIBRARY(SU3 ${Sources_Vector} ${Sources_Matrix})
+TARGET_LINK_LIBRARIES(SU3 Base)

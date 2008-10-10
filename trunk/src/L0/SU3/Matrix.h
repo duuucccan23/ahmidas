@@ -36,7 +36,7 @@ namespace SU3
 
       static Matrix const &identity();
       static Matrix const &zero();
-      static Matrix random(int seed = 0);
+      static Matrix random();
 
       ~Matrix();
 

@@ -1,20 +1,10 @@
 #include "Matrix.ih"
 
-namespace
+SU3::Matrix SU3::Matrix::random()
 {
-  double randDouble()
-  {
-    return (1 - (2.0 * rand()) / RAND_MAX);
-  }
-}
-
-SU3::Matrix SU3::Matrix::random(int seed)
-{
-  if (seed)
-    srand(seed);
-  else
-    srand(time(0));
+  Base::Ranlux &mything(Base::Ranlux::instance());
   double data[18];
-  std::generate(data, data + 18, randDouble);
+  for (size_t ctr = 0; ctr < 18; ++ctr)
+    data[ctr] = mything();
   return Matrix(data);
 }

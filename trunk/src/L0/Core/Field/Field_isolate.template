@@ -10,7 +10,7 @@ namespace Core
     Element *field = new Element[d_weave.localVolume()];
     std::copy(d_field, d_field + d_weave.localVolume(), field);
     d_field = field;
-    size_t offsets = new size_t[4];
+    size_t *offsets = new size_t[4];
     std::copy(d_offsets, d_offsets + 4, offsets);
     d_offsets = offsets;
   }

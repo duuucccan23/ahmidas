@@ -49,13 +49,15 @@ namespace Core
 
     Component< Element, L, T, Atom > const &d_parent;
 
-    hcComponent(Component< Element,  L,  T,  Atom > const &parent);
 
     public:
-      Component< Element, L, T, Atom > const &dagger() const;
+      hcComponent(Component< Element,  L,  T,  Atom > const &parent);
+      Component< Element, L, T, Atom > const &dagger() const; //NOTE We want to move this
 
       typename Component< Element, L, T, Atom >::const_iterator &begin() const;
       typename Component< Element, L, T, Atom >::const_iterator &end() const;
+      Atom const &parentIdx(size_t const idx) const;
+
   };
 }
 

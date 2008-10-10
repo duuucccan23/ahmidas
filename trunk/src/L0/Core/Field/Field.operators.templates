@@ -26,7 +26,7 @@ namespace Core
   {
     isolate();
     for (size_t idx = 0; idx < d_weave.localVolume(); ++idx)
-      d_field[idx].leftMultiply(other[shiftIdxToZero(idx)].dagger();
+      d_field[idx].leftMultiply(other[shiftIdxToZero(idx)].dagger());
     return *this;
   }
 
@@ -76,7 +76,7 @@ namespace Core
   {
     isolate();
     for (size_t idx = 0; idx < d_weave.localVolume(); ++idx)
-      d_field[idx].rightMultiply(other[shiftIdxToZero(idx)].dagger();
+      d_field[idx].rightMultiply(other[shiftIdxToZero(idx)].dagger());
     return *this;
   }
 
@@ -96,7 +96,7 @@ namespace Core
   {
     isolate();
     for (size_t idx = 0; idx < d_weave.localVolume(); ++idx )
-      d_field[idx].rightMultiply(other[shiftIdxToZero(idx)].dagger());
+      d_field[idx].rightMultiply(other.parentIdx(idx).dagger());
     return *this;
   }
 

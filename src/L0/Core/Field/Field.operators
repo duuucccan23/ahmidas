@@ -86,3 +86,8 @@ Field< Element, L, T > &operator/=(Field< Scalar, L, T > const &other);
 template< typename Scalar >
 Field< Element, L, T > &operator/=(hcField< Scalar, L, T > const &other);
 
+template< typename Scalar, typename Atom>
+Field< Element, L, T > &operator/=(Component< Scalar, L, T, Atom > const &other);
+
+template< typename Scalar, typename Atom >
+Field< Element, L, T > &operator/=(hcComponent< Scalar, L, T, Atom > const &other);

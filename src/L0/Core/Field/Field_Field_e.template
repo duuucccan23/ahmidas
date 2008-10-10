@@ -1,0 +1,11 @@
+template< typename Element, size_t L, size_t T >
+template< typename Super>
+Core::Field< Element, L, T >::Field(Core::Component< Super, L, T, Element> const &component) //Creation of a field through a component of another field.
+: d_references(new size_t(1)),
+  d_weave(Base::Weave< L, T >::instance()),
+  d_field(new Element[d_weave.localVolume()]),
+  d_offsets(new size_t[4])
+{
+  std::copy(component.begin(), component.end(), d_field);
+  std::fill(d_offsets, d_offsets + 4, 0); //There is some choice implied here.
+}

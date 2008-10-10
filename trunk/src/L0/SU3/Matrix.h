@@ -33,6 +33,7 @@ namespace SU3
       explicit Matrix(hcMatrix const &other);
 
       Matrix &operator=(Matrix const &other);
+      Matrix &operator=(hcMatrix const &other);
 
       static Matrix const &identity();
       static Matrix const &zero();

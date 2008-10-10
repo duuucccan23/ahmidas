@@ -1,6 +1,8 @@
 #ifndef GUARD_BASE_RANLUX_H
 #define GUARD_BASE_RANLUX_H
 
+#include <cstdlib>
+
 namespace Base
 {
   class Ranlux

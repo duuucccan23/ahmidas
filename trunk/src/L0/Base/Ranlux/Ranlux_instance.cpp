@@ -1,4 +1,5 @@
 #include "Ranlux.ih"
+#include <iostream>
 
 Base::Ranlux &Base::Ranlux::instance(int const seed)
 {

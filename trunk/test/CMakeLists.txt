@@ -17,6 +17,10 @@ ADD_EXECUTABLE(fieldcomponent fieldcomponent.cpp)
 TARGET_LINK_LIBRARIES(fieldcomponent Core)
 ADD_TEST(fieldcomponent_setup fieldcomponent)
 
+ADD_EXECUTABLE(random random.cpp)
+TARGET_LINK_LIBRARIES(random Base)
+ADD_TEST(random_performance random)
+
 IF(USE_MPI)
 ADD_EXECUTABLE(MPIstartstop MPIstartstop.cpp)
 ADD_TEST(MPIstarting_stopping MPIstartstop)

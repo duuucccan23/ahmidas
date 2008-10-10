@@ -8,11 +8,9 @@ int main(int argc, char **argv)
   if (argc > 1)
     out = new std::ofstream(argv[1]);
   
-  srand(time(0));
-  
   for (size_t ctr = 0; ctr < 5000; ++ctr)
   {
-    SU3::Matrix mat = SU3::Matrix::random(rand());
+    SU3::Matrix mat = SU3::Matrix::random();
     mat.reunitarize();
     SU3::hcMatrix hc = mat.dagger();
     mat.rightMultiply(hc);

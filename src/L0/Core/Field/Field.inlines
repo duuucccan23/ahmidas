@@ -61,22 +61,35 @@ namespace Core
     return d_field[idx];
   }
 
-  /// NOTE THE TWO FUNCTIONS BELOW SHOULD BE MODIFIED TO USE "LOCAL" VALUES OF L AND T!!!
   template< typename Element, size_t L, size_t T >
   inline size_t Field< Element, L, T >::shiftIdxToZero(size_t const idx) const
   {
-    return ((idx % L) + L - d_offsets[Base::idx_X]) % L +
-           ((idx / L) % L + L - d_offsets[Base::idx_Y]) % L * L +
-           ((idx / (L * L) % L) + L - d_offsets[Base::idx_Z]) % L * L * L +
-           (idx / (L * L * L) + T - d_offsets[Base::idx_T]) % T * L * L * L;
+    return ((idx                                % d_weave.localSize(Base::idx_X)) + d_weave.localSize(Base::idx_X)
+             - d_offsets[Base::idx_X]) % d_weave.localSize(Base::idx_X) +
+        
+           ((idx / d_weave.localSurface(Base::idx_Y) % d_weave.localSize(Base::idx_Y)) + d_weave.localSize(Base::idx_Y)
+             - d_offsets[Base::idx_Y]) % d_weave.localSize(Base::idx_Y) * d_weave.localSurface(Base::idx_Y) +
+        
+           ((idx / d_weave.localSurface(Base::idx_Z) % d_weave.localSize(Base::idx_Z)) + d_weave.localSize(Base::idx_Z)
+             - d_offsets[Base::idx_Z]) % d_weave.localSize(Base::idx_Z) * d_weave.localSurface(Base::idx_Z) +
+        
+           ((idx / d_weave.localSurface(Base::idx_T) % d_weave.localSize(Base::idx_T)) + d_weave.localSize(Base::idx_T)
+             - d_offsets[Base::idx_T]) % d_weave.localSize(Base::idx_T) * d_weave.localSurface(Base::idx_T);
   }
 
   template< typename Element, size_t L, size_t T >
   inline size_t Field< Element, L, T >::shiftIdxToOffset(size_t const idx) const
   {
-    return ((idx % L) + d_offsets[Base::idx_X]) % L +
-           ((idx / L % L) + d_offsets[Base::idx_Y]) % L * L +
-           ((idx / (L * L) % L) + d_offsets[Base::idx_Z]) % L * L * L +
-           (idx / (L * L * L) + d_offsets[Base::idx_T]) % T * L * L * L;
+    return ((idx                               % d_weave.localSize(Base::idx_X)) + d_offsets[Base::idx_X])
+             % d_weave.localSize(Base::idx_X) +
+        
+           ((idx / d_weave.localSurface(Base::idx_Y) % d_weave.localSize(Base::idx_Y)) + d_offsets[Base::idx_Y])
+             % d_weave.localSize(Base::idx_Y) * d_weave.localSurface(Base::idx_Y) +
+        
+           ((idx / d_weave.localSurface(Base::idx_Z) % d_weave.localSize(Base::idx_Z)) + d_offsets[Base::idx_Z])
+             % d_weave.localSize(Base::idx_Z) * d_weave.localSurface(Base::idx_Z) +
+        
+           ( idx / d_weave.localSurface(Base::idx_T)                             + d_offsets[Base::idx_T])
+             % d_weave.localSize(Base::idx_T) * d_weave.localSurface(Base::idx_T);
   }
 }

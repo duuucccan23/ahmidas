@@ -95,8 +95,8 @@ namespace Core
   Field< Element, L, T > &Field< Element, L, T >::rightMultiply(hcComponent< Scalar, L, T, Atom > const &other)
   {
     isolate();
-    for (size_t idx = 0; idx < d_weave.localVolume(); ++idx )
-      d_field[idx].rightMultiply(other.parentIdx(shiftIdxToZero(idx)).dagger());
+    for (size_t idx = 0; idx < d_weave.localVolume(); ++idx)
+    d_field[idx].rightMultiply(other.parentIdx(shiftIdxToZero(idx)).dagger());
     return *this;
   }
 

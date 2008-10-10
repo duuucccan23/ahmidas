@@ -12,6 +12,11 @@ namespace Base
     return (idx == Base::idx_T ? T : L);
   }
 
+  template< size_t L, size_t T >
+  inline size_t Weave< L, T >::localSurface(Base::SpaceTimeIndex idx) const
+  {
+    return d_surfaces[idx];
+  }
   
   template< size_t L, size_t T >
   inline size_t Weave< L, T >::localVolume() const

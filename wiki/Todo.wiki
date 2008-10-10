@@ -13,3 +13,18 @@ Use the standard GTD conventions here. No Someday/Maybe items on this list. Only
   * Include proper licenses and comments on all files.
 
   * Decide about a documentation system (Doxygen?)
+
+  * Properly organize all the libraries (this is a persistent action item, but Mac OS X seems to be very picky about this, so it should serve as a good test.
+
+  * Create a separate shift and multiply function to be used in the staple and square paths.
+
+  * Create a function to create a random gauge field.
+
+  * Implement proper ILDG headers.
+
+  * Gaussian random number generator.
+
+  * Benchmarking code.
+
+  * Documentation.
+  

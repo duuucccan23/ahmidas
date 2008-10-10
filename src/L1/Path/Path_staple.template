@@ -6,23 +6,12 @@ Core::Field< SU3::Matrix, L, T > Path::staple(Core::Field< QCD::Gauge, L, T > &f
   if (dirVia == Base::dir_UP && dirTo == Base::dir_UP)
   {
     Core::Field< SU3::Matrix, L, T > result(field.template component< SU3::Matrix >(via)); //Store first link as result (up direction)
-    std::cout << result[0];
     result.shift(via, Base::dir_UP); //Move over first link
-    std::cout << result[1];
     result.rightMultiply(field.template component< SU3::Matrix >(to)); //Multiply with second link (up direction)
-    std::cout << result[1];
     result.shift(to, Base::dir_UP); //Move over second link
-    std::cout << result[9];
     result.shift(via, Base::dir_DOWN); //Move over third link
-    std::cout << result[8];
     result.rightMultiply(field.template component< SU3::Matrix >(via).dagger()); //Multiply with third link hc'ed (down direction)
-    
-    Core::Field< SU3::Matrix, L, T > temp(field.template component< SU3::Matrix >(via).dagger());
-    std::cout << temp[8];
-    
-    std::cout << result[8];
     result.shift(to, Base::dir_DOWN); //Move over fourth link, back to starting point
-    std::cout << result[0];
     return result;
   }
   if (dirVia == Base::dir_UP && dirTo == Base::dir_DOWN)

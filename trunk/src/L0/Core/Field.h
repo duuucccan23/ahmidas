@@ -121,6 +121,7 @@ namespace Core
 #include "Field/Field_Field_b.template"
 #include "Field/Field_Field_c.template"
 #include "Field/Field_Field_d.template"
+#include "Field/Field_Field_e.template"
 #include "Field/Field_destroy.template"
 #include "Field/Field_operator_eq.template"
 #include "Field/Field_shift.template"

@@ -9,7 +9,7 @@ int main(int argc, char **argv)
     out = new std::ofstream(argv[1]);
 
   bool problem = false;
-  for (size_t ctr = 0; ctr < 300000; ++ctr)
+  for (size_t ctr = 0; ctr < 1000; ++ctr)
   {
     SU3::Matrix mat = SU3::Matrix::random();
     mat.reunitarize();

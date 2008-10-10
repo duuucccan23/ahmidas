@@ -52,7 +52,7 @@ namespace Core
 
     public:
       hcComponent(Component< Element,  L,  T,  Atom > const &parent);
-      Component< Element, L, T, Atom > const &dagger() const; //NOTE We want to move this
+      Component< Element, L, T, Atom > const &dagger() const; //NOTE We wanted to move this
 
       typename Component< Element, L, T, Atom >::const_iterator &begin() const;
       typename Component< Element, L, T, Atom >::const_iterator &end() const;

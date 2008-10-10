@@ -14,7 +14,7 @@ TARGET_LINK_LIBRARIES(limereader Lime)
 ADD_TEST(limereader_read_in limereader ../../test/conf.88)
 
 ADD_EXECUTABLE(fieldcomponent fieldcomponent.cpp)
-TARGET_LINK_LIBRARIES(fieldcomponent Core)
+TARGET_LINK_LIBRARIES(fieldcomponent)
 ADD_TEST(fieldcomponent_setup fieldcomponent)
 
 ADD_EXECUTABLE(random random.cpp)

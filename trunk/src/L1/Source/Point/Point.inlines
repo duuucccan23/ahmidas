@@ -1,0 +1,5 @@
+template< size_t L, size_t T >
+inline Source::Point< L, T >::coord(Base::SpaceTimeIndex const idx)
+{
+  return d_coord[idx];
+}

@@ -1,0 +1,7 @@
+template< size_t L, size_t T >
+Source::Point< L, T >::Point(size_t x, size_t y, size_t z)
+{
+  d_coord[Base::idx_X] = x;
+  d_coord[Base::idx_Y] = y;
+  d_coord[Base::idx_Z] = z;
+}

@@ -10,12 +10,19 @@
 namespace Path
 {
   template< size_t L, size_t T >
+  void step(Core::Field< SU3::Matrix, L, T > &path, Core::Field< QCD::Gauge, L, T > &field, Base::SpaceTimeIndex idx, Base::Direction dir);
+
+  template< size_t L, size_t T >
+  Core::Field< SU3::Matrix, L, T > step(Core::Field< QCD::Gauge, L, T > &field, Base::SpaceTimeIndex idx, Base::Direction dir);
+
+  template< size_t L, size_t T >
   Core::Field< SU3::Matrix, L, T > staple(Core::Field< QCD::Gauge, L, T > &field, Base::SpaceTimeIndex via, Base::Direction dirVia, Base::SpaceTimeIndex to, Base::Direction dirTo);
 
   template< size_t L, size_t T >
   Core::Field< SU3::Matrix, L, T > square(Core::Field< QCD::Gauge, L, T > &field, Base::SpaceTimeIndex via, Base::Direction dirVia, Base::SpaceTimeIndex to, Base::Direction dirTo);
 }
 
+#include "Path/Path_step.template"
 #include "Path/Path_staple.template"
 #include "Path/Path_square.template"
 

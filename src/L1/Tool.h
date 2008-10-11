@@ -15,7 +15,7 @@ namespace Tool
   void randomGauge(Core::Field< QCD::Gauge, L, T > *field);
 }
 
-#include "Tool/reunitarize.template"
-#include "Tool/randomGauge.template"
+#include "Tool/Tool_reunitarize.template"
+#include "Tool/Tool_randomGauge.template"
 
 #endif

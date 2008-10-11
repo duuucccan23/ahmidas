@@ -3,50 +3,9 @@ Core::Field< SU3::Matrix, L, T > Path::square(Core::Field< QCD::Gauge, L, T > &f
 { //Note that we shift the result field around, it will be smaller
   if (via == to)
     return Core::Field< SU3::Matrix, L, T > (SU3::Matrix::identity());
-  if (dirVia == Base::dir_UP && dirTo == Base::dir_UP)
-  {
-    Core::Field< SU3::Matrix, L, T > result(field.template component< SU3::Matrix >(via)); //Store first link as result (up direction)
-    result.shift(via, Base::dir_UP); //Move over first link
-    result.rightMultiply(field.template component< SU3::Matrix >(to)); //Multiply with second link (up direction)
-    result.shift(to, Base::dir_UP); //Move over second link
-    result.shift(via, Base::dir_DOWN); //Move over third link
-    result.rightMultiply(field.template component< SU3::Matrix >(via).dagger()); //Multiply with third link hc'ed (down direction)
-    result.shift(to, Base::dir_DOWN); //Move over fourth link, back to starting point
-    result.rightMultiply(field.template component< SU3::Matrix >(to).dagger()); //Multiply with fourth link hc'ed (down direction)
-    return result;
-  }
-  if (dirVia == Base::dir_UP && dirTo == Base::dir_DOWN)
-  {
-    Core::Field< SU3::Matrix, L, T > result(field.template component< SU3::Matrix >(via)); //Store first link as result (up direction)
-    result.shift(via, dirVia); //Move over first link
-    result.shift(to, Base::dir_DOWN); //Move over second link
-    result.rightMultiply(field.template component< SU3::Matrix >(to).dagger()); //Multiply with second link hc'ed (down direction)
-    result.shift(via, Base::dir_DOWN); //Move over third link
-    result.rightMultiply(field.template component< SU3::Matrix >(via).dagger()); //Multiply with third link hc'ed (down direction)
-    result.rightMultiply(field.template component< SU3::Matrix >(to)); //Multiply with fourth link (up direction)
-    result.shift(to, Base::dir_UP); //Move over fourth link, back to starting point
-    return result;
-  }
-  if (dirVia == Base::dir_DOWN && dirTo == Base::dir_UP)
-  {
-    Core::Field< SU3::Matrix, L, T > result(field.template component< SU3::Matrix >(via).dagger()); //Store first link hc'ed as result (down direction)
-    result.rightMultiply(field.template component< SU3::Matrix >(to)); //Multiply with second link (up direction)
-    result.shift(to, Base::dir_UP); //Move over second link
-    result.rightMultiply(field.template component< SU3::Matrix >(via)); //Multiply with third link (up direction)
-    result.shift(via, Base::dir_UP); //Move over third link
-    result.shift(to, Base::dir_DOWN); //Move over fourth link, back to starting point
-    result.rightMultiply(field.template component< SU3::Matrix >(to).dagger()); //Multiply with fourth link hc'ed (down direction)
-    return result;
-  }
-  if (dirVia == Base::dir_DOWN && dirTo == Base::dir_DOWN)
-  {
-    Core::Field< SU3::Matrix, L, T > result(field.template component< SU3::Matrix >(via).dagger()); //Store first link hc'ed as result (down direction)
-    result.shift(to, Base::dir_DOWN); //Move over second link
-    result.rightMultiply(field.template component< SU3::Matrix >(to).dagger()); //Multiply with second link hc'ed (down direction)
-    result.rightMultiply(field.template component< SU3::Matrix >(via)); //Multiply with third link (up direction)
-    result.shift(via, Base::dir_UP); //Move over third link
-    result.rightMultiply(field.template component< SU3::Matrix >(to)); //Multiply with fourth link (up direction)
-    result.shift(to, Base::dir_UP); //Move over fourth link, back to starting point
-    return result;
-  }
+  Core::Field< SU3::Matrix, L, T > result(Path::step(field, via, dirVia)); //step1
+  Path::step(result, field, to, dirTo); //step2
+  Path::step(result, field, via, (dirVia == Base::dir_UP ? Base::dir_DOWN : Base::dir_UP)); //step3
+  Path::step(result, field, to, (dirTo == Base::dir_UP ? Base::dir_DOWN : Base::dir_UP)); //back to starting point
+  return result;
 }

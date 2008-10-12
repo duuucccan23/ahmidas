@@ -18,10 +18,10 @@ namespace Smear
       Jacobi(double kappa);
       
       template< size_t L, size_t T >
-      void smear(Core::Field< QCD::Spinor, L, T > &spinorField, Core::Field< QCD::Gauge, L, T > &gaugeField) const;
+      void smear(Core::Field< QCD::Spinor, L, T > *spinorField, Core::Field< QCD::Gauge, L, T > &gaugeField) const;
 
       template< size_t L, size_t T >
-      void smear(Core::Field< QCD::Spinor, L, T > &spinorField, Core::Field< QCD::Gauge, L, T > &gaugeField, size_t iterations) const;
+      void smear(Core::Field< QCD::Spinor, L, T > *spinorField, Core::Field< QCD::Gauge, L, T > &gaugeField, size_t iterations) const;
   };
 }
 

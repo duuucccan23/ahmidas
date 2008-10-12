@@ -1,49 +1,43 @@
 namespace Smear
 {
   template< size_t L, size_t T >
-  void Jacobi::smear(Core::Field< QCD::Spinor, L, T > &spinorField, Core::Field< QCD::Gauge, L, T > &gaugeField) const
+  void Jacobi::smear(Core::Field< QCD::Spinor, L, T > *spinorField, Core::Field< QCD::Gauge, L, T > &gaugeField) const
   {
-    Core::Buffer< QCD::Spinor > spinorBuffer(spinorField.grid());
-    Core::Field< QCD::Spinor, L, T > shiftedSpinor(spinorField);
-    
-    Core::Component< QCD::Gauge, L, T, SU3::Matrix > gaugeX(gaugeField, Core::idx_X);
-    Core::Component< QCD::Gauge, L, T, SU3::Matrix > gaugeY(gaugeField, Core::idx_Y);
-    Core::Component< QCD::Gauge, L, T, SU3::Matrix > gaugeZ(gaugeField, Core::idx_Z);
-    
-    shiftedSpinor.shift(Core::idx_X, Core::dir_UP);
-    shiftedSpinor.leftMultiply(gaugeX);
-    spinorBuffer += shiftedSpinor;
-      
-    shiftedSpinor = spinorField;
-    shiftedSpinor.shift(Core::idx_Y, Core::dir_UP);
-    shiftedSpinor.leftMultiply(gaugeY);
-    spinorBuffer += shiftedSpinor;
+    // We need some copies to be able to 'reset' the spinor field.
+    // NOTE There seems to be ample room for optimization here, avoiding some copies probably.
+    Core::Field< QCD::Spinor, L, T > neighbourSpinor(*spinorField);
+    (*spinorField) *= d_weight;
+    neighbourSpinor *= d_kappa;
+    Core::Field< QCD::Spinor, L, T > shiftingSpinor(neighbourSpinor);
 
-    shiftedSpinor = spinorField;
-    shiftedSpinor.shift(Core::idx_Z, Core::dir_UP);
-    shiftedSpinor.leftMultiply(gaugeZ);
-    spinorBuffer += shiftedSpinor;
+    // Do the forward factors
+    shiftingSpinor.shift(Base::idx_X, Base::dir_DOWN);
+    shiftingSpinor.leftMultiply(gaugeField.component(Base::idx_X));
+    (*spinorField) += shiftingSpinor;
+      
+    shiftingSpinor = neighbourSpinor;
+    shiftingSpinor.shift(Base::idx_Y, Base::dir_DOWN);
+    shiftingSpinor.leftMultiply(gaugeField.component(Base::idx_Y));
+    (*spinorField) += shiftingSpinor;
+
+    shiftingSpinor = neighbourSpinor;
+    shiftingSpinor.shift(Base::idx_Z, Base::dir_DOWN);
+    shiftingSpinor.leftMultiply(gaugeField.component(Base::idx_Z));
+    (*spinorField) += shiftedSpinor;
     
     // We now calculate the backwards gauge part
-    
-    shiftedSpinor = spinorField;
-    shiftedSpinor.leftMultiply(gaugeX);
-    shiftedSpinor.shift(Core::idx_X, Core::dir_UP);
-    spinorBuffer += shiftedSpinor;
+    shiftingSpinor = neighbourSpinor;
+    shiftingSpinor.leftMultiply(gaugeField.component(Base::idx_X).dagger());
+    shiftingSpinor.shift(Base::idx_X, Base::dir_UP);
+    (*spinorField) += shiftedSpinor;
       
-    shiftedSpinor = spinorField;
-    shiftedSpinor.shift(Core::idx_Y, Core::dir_UP);
-    shiftedSpinor.leftMultiply(gaugeY);
-    spinorBuffer += shiftedSpinor;
+    shiftingSpinor = neighbourSpinor;
+    shiftingSpinor.leftMultiply(gaugeField.component(Base::idx_Y).dagger());
+    shiftingSpinor.shift(Base::idx_Y, Base::dir_UP);
+    (*spinorField) += shiftedSpinor;
 
-    shiftedSpinor = spinorField;
-    shiftedSpinor.shift(Core::idx_Z, Core::dir_UP);
-    shiftedSpinor.leftMultiply(gaugeZ);
-    spinorBuffer += shiftedSpinor;
-
-    // Combine all the results here
-    spinorBuffer *= d_kappa;
-    spinorField += spinorBuffer;
-    spinorField *= d_weight;
+    neighbourSpinor.leftMultiply(gaugeField.component(Base::idx_Z).dagger());
+    neighbourSpinor.shift(Base::idx_Z, Base::dir_UP);
+    (*spinorField) += neighbourSpinor;
   }
 }

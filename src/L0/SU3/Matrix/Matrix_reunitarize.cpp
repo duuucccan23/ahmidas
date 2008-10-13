@@ -1,5 +1,4 @@
 #include "Matrix.ih"
-#include <iostream>
 
 // This reunitarization procedure implements the 'French method' in an explicit way.
 // It has been written like this to avoid the single dependency on the LAPACK library
@@ -13,7 +12,7 @@ void SU3::Matrix::reunitarize()
   // There are issues as we approach matrices close to unitarity. In that case, we want to avoid
   // doing some of the transformations below and bail out early. This constant sets a limit of
   // precision on this.
-  static double const precision = 5E-16;
+  static double const precision = 4 * std::numeric_limits< double >::epsilon();
 
   // We calculate the distinct elements of H2, using hermiticity to avoid calculations left and right.
   static double const fac_1_3 = 1.0 / 3.0;
@@ -42,7 +41,7 @@ void SU3::Matrix::reunitarize()
              + H2_diag[2] * H2_off_norm[0];
 
   // This algorithm won't work (reunitarization is ill defined, actually) for matrices that aren't full rank!
-  if (c == 0)
+  if (c < precision && c > -precision)
     return;
 
   // a_3 = -(1/3) * tr(H2)
@@ -63,7 +62,7 @@ void SU3::Matrix::reunitarize()
 
   if (Q < precision || (R > -precision && R < precision)) // We should already be (almost) unitary
   {
-    operator*=(std::pow(det(d_data), -fac_1_3));
+    operator/=(std::pow(det(d_data), fac_1_3));
     return;
   }
 
@@ -133,5 +132,5 @@ void SU3::Matrix::reunitarize()
 
   // We're almost done! All that remains is finishing off the matrix...
   rightMultiply(H);
-  operator*=(std::pow(det(d_data), -fac_1_3));
+  operator/=(std::pow(det(d_data), fac_1_3));
 }

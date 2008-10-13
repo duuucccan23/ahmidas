@@ -2,7 +2,7 @@
 
 SU3::Matrix SU3::Matrix::random()
 {
-  double data[18];
-  std::generate_n(data, 18, Base::Random::uniform);
-  return Matrix(data);
+  Matrix result;
+  std::generate_n(result.d_data, 18, Base::Random::uniform);
+  return result;
 }

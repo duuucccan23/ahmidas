@@ -6,6 +6,7 @@
 #include <L0/Core/Component.h>
 #include <L0/QCD/Gauge.h>
 #include <L0/QCD/Spinor.h>
+#include <L1/Source/Point.h>
 
 namespace Smear
 {
@@ -22,10 +23,19 @@ namespace Smear
 
       template< size_t L, size_t T >
       void smear(Core::Field< QCD::Spinor, L, T > *spinorField, Core::Field< QCD::Gauge, L, T > &gaugeField, size_t iterations) const;
+
+      template< size_t L, size_t T >
+      void smear(Source::Point< L, T > *source, Core::Field< QCD::Gauge, L, T > &gaugeField, Base::ColourIndex, Base::DiracIndex) const;
+
+      template< size_t L, size_t T >
+      void smear(Source::Point< L, T > *source, Core::Field< QCD::Gauge, L, T > &gaugeField,
+                 Base::ColourIndex, Base::DiracIndex, size_t iterations) const;
+      
   };
 }
 
 #include "Jacobi/Jacobi.inlines"
-#include "Jacobi/Jacobi_smear.template"
+#include "Jacobi/Jacobi_smear_a.template"
+#include "Jacobi/Jacobi_smear_b.template"
 
 #endif

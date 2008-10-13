@@ -1,0 +1,6 @@
+namespace Smear
+{
+  inline HYP::HYP(double alpha)
+    : d_alpha(alpha)
+  {}
+}

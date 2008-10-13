@@ -1,14 +1,14 @@
 template< size_t L, size_t T >
-void Path::step(Core::Field< SU3::Matrix, L, T > &path, Core::Field< QCD::Gauge, L, T > &field, Base::SpaceTimeIndex idx, Base::Direction dir)
+void Path::step(Core::Field< SU3::Matrix, L, T > *path, Core::Field< QCD::Gauge, L, T > &field, Base::SpaceTimeIndex idx, Base::Direction dir)
 {
   if (dir == Base::dir_UP)
   {
-    path.rightMultiply(field.template component< SU3::Matrix >(idx));
-    path.shift(idx, Base::dir_UP);
+    path->rightMultiply(field.template component< SU3::Matrix >(idx));
+    path->shift(idx, Base::dir_UP);
     return;
   }
-  path.shift(idx, Base::dir_DOWN);
-  path.rightMultiply(field.template component< SU3::Matrix >(idx).dagger());
+  path->shift(idx, Base::dir_DOWN);
+  path->rightMultiply(field.template component< SU3::Matrix >(idx).dagger());
 }
 
 //To be used in first steps
@@ -21,6 +21,5 @@ Core::Field< SU3::Matrix, L, T > Path::step(Core::Field< QCD::Gauge, L, T > &fie
     result.shift(idx, Base::dir_UP);
     return result;
   }
-  Core::Field< SU3::Matrix, L, T > result(field.template component< SU3::Matrix >(idx).dagger());
-  return result;
+  return Core::Field< SU3::Matrix, L, T > (field.template component< SU3::Matrix >(idx).dagger());
 }

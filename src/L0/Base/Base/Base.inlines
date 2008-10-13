@@ -10,7 +10,7 @@ namespace Base
     } u;
 
     u.l = 1;
-    return(u.c[sizeof(int) - 1] == 1);
+    return (u.c[sizeof(int) - 1] == 1);
   }
 
   // Reverses byteorder, STL version
@@ -27,5 +27,10 @@ namespace Base
   {
     char *chVal = reinterpret_cast< char* >(&value);
     std::reverse(chVal, chVal + sizeof(T));
+  }
+  
+  inline Direction opposite(Direction dir)
+  {
+    return (dir == dir_UP ? dir_DOWN : dir_UP);
   }
 }

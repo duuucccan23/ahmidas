@@ -7,7 +7,7 @@
 
 namespace Base
 {
-  // Definitions for clarity in refering to indices -- beware the inverted order...
+  // Definitions for clarity in refering to indices
   enum SpaceTimeIndex
   {
     idx_X = 0,

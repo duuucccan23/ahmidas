@@ -4,6 +4,8 @@
 #include <complex>
 #include <iostream>
 
+#include <L0/Base/Random.h>
+
 namespace SU3
 {
   class Matrix;
@@ -38,6 +40,10 @@ namespace SU3
       static Matrix const &identity();
       static Matrix const &zero();
       static Matrix random();
+
+      void setToIdentity();
+      void setToZero();
+      void setToRandom();
 
       ~Matrix();
 

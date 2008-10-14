@@ -6,10 +6,8 @@
 
 int main(int argc, char **argv)
 {
-  Core::Field< QCD::Gauge, 24, 1 > myfield;
-  Base::IO::loadILDG(&myfield, "../test/conf.2448");
-  Smear::APE ape(0.5);
-  ape.smear(myfield, 20);
-
+  Core::Field< QCD::Gauge, 8, 8 > myfield;
+  Base::IO::loadILDG(&myfield, "../test/conf.88");
+  std::cout << myfield[0][0];
   return 0;
 }

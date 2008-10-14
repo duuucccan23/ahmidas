@@ -9,14 +9,13 @@
 #include <mpi/mpi.h>
 
 #include "L0/Base/Base.h"
+#include "L0/Base/Weave.h"
 
 namespace Base
 {
   template< size_t L, size_t T >
   class Grid
   {
-    static Grid * s_grid;
-
     MPI::Cartcomm d_grid;
     MPI::Cartcomm d_timeSlice;
     MPI::Cartcomm d_backbone;
@@ -33,11 +32,9 @@ namespace Base
 
     bool d_bigEndian;
 
-    Grid(); //NOTE: protected? private constructor! (singleton)
     public:
       ~Grid(); //Public "destructor" for now
-
-      static Grid &instance(); //Public "constructor"
+      Grid();
 
       MPI::Cartcomm &grid(); //NOTE: world?
       MPI::Cartcomm &timeSlice();
@@ -78,14 +75,10 @@ namespace Base
   };
 }
 
-template< size_t L, size_t T >
-typename Base::Grid< L, T >* Base::Grid< L, T >::s_grid = 0;
-
 #include "Grid/Grid.inlines"
 #include "Grid/Grid_Grid.template"
 #include "Grid/Grid_greatestCommonDivisor.template"
 #include "Grid/Grid_initContiguousBlock.template"
 #include "Grid/Grid_rank.template"
-#include "Grid/Grid_instance.template"
 
 #endif

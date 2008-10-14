@@ -2,14 +2,14 @@ namespace Base
 {
   template< size_t L, size_t T >
   Grid< L, T >::Grid()
-    : d_bufferVolume(0), d_bigEndian(big_endian())
+    : d_bufferVolume(0), d_bigEndian(bigEndian())
   {
+    MPI::Init();
     size_t gridSize = static_cast< size_t >(MPI::COMM_WORLD.Get_size());
     if (totalVolume() % gridSize) // No balanced distribution available
       MPI::COMM_WORLD.Abort(EDEADLK);
 
     d_localVolume = totalVolume() / gridSize;
-
     // Compute the gcd using the Euclidian algorithm
     d_dims[idx_T] = greatestCommonDivisor(T, gridSize);
 

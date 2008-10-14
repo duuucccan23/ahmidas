@@ -45,6 +45,21 @@ namespace SU3
     return s_zero;
   }
   
+  inline void SU3::Matrix::setToZero()
+  {
+    std::fill_n(reinterpret_cast< double* >(d_data), 18, 0.0);
+  }
+  
+  inline void SU3::Matrix::setToIdentity()
+  {
+    std::copy(s_identity.d_data, s_identity.d_data + 9, d_data);
+  }
+  
+  inline void SU3::Matrix::setToRandom()
+  {
+    std::generate_n(reinterpret_cast< double* >(d_data), 18, Base::Random::symmetric);
+  }
+
   inline Matrix::~Matrix()
   {}
 

@@ -1,8 +1,8 @@
 #ifndef GUARD_BASE_WEAVE_H
 #define GUARD_BASE_WEAVE_H
 
+#include <L0/Base/Base.h>
 #include <L0/Base/Grid.h>
-#include <mpi/mpi.h>
 // This particular version of Weave is tailored for an MPI setup.
 
 namespace Base
@@ -10,30 +10,33 @@ namespace Base
   template< size_t L, size_t T >
   class Weave
   {
-    static MPI::Grid<L,T> s_grid;
+    static Weave< L, T> *s_Weave;
+
+    size_t d_surfaces[4]; //Surface size in direction
+    size_t d_localVolume; //Local volume
+    size_t d_localSize[4]; //Local size in direction
 
     public:
-      static size_t const s_nodes;
-      static size_t const s_volume;
-      static size_t const s_size[4];
-      static size_t const s_rank;
+      Grid< L, T > d_grid;
+
+      static Weave< L, T > &instance();
+      size_t localVolume() const;
+      size_t localSurface(Base::SpaceTimeIndex idx) const;
+      size_t dim(Base::SpaceTimeIndex idx) const;
+      size_t localSize(Base::SpaceTimeIndex idx) const;
+
+      template< typename Element >
+      void fieldShift(Base::SpaceTimeIndex idx, Base::Direction dir, Element *field, size_t const *offsets) const;
+
+    private:
+      Weave< L, T>();
   };
 }
 
-template< size_t L, size_t T >
-MPI::Grid Base::Weave< L, T > s_grid();
-
-// CHECK MPI DOCUMENTATION FOR THE FOLLOWING CALLS
-template< size_t L, size_t T >
-size_t const Base::Weave::s_nodes = MPI::Get_size(s_grid.d_grid);
-
-template< size_t L, size_t T >
-size_t const Base::Weave< L, T >::s_volume = L * L * L * T / s_nodes;
-
-template< size_t L, size_t T >
-size_t const Base::Weave< L, T >::s_size[0] = ;
-
-template< size_t L, size_t T >
-size_t const Base::Weave< L, T >::s_rank = MPI::Get_rank(s_grid.d_grid);
+#include "Weave/Weave.template"
+#include "Weave/Weave.inlines"
+#include "Weave/Weave_instance.template"
+#include "Weave/Weave_Weave.template"
+#include "Weave/Weave_fieldShift.template"
 
 #endif

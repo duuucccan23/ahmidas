@@ -1,0 +1,6 @@
+template< size_t L, size_t T >
+template< typename Element >
+void Base::Weave< L, T >::fieldShift(Base::SpaceTimeIndex idx, Base::Direction dir, Element *field, size_t const *offsets) const
+{
+  
+}

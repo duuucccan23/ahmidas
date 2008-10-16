@@ -7,6 +7,8 @@ namespace Base
   {
     double uniform();
     double symmetric();
+    double fastUniform();
+    double fastSymmetric();
   }
 }
 

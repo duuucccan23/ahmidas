@@ -20,7 +20,7 @@ namespace Base
     double d_carry;
 
     public:
-      static Base::Ranlux &instance(int const seed = 0);
+      static Ranlux &instance(int const seed = 0);
       double operator()();
 
       ~Ranlux();

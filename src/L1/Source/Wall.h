@@ -8,4 +8,6 @@ namespace Source
   {};
 }
 
+namespace Sink = Source;
+
 #endif

@@ -12,11 +12,15 @@ namespace Source
 
     public:
       Point(size_t const x, size_t const y, size_t const z);
-      coord(Base::SpaceTimeIndex const idx);
+      Point(size_t const *coord);
+      size_t coord(Base::SpaceTimeIndex const idx);
+      size_t const *coord();
   };
 }
 
+namespace Sink = Source;
+
 #include "Point/Point.inlines"
-#include "Point/Point_coord.template"
+#include "Point/Point_Point.template"
 
 #endif

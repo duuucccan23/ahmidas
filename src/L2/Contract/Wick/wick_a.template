@@ -1,0 +1,13 @@
+template< size_t L, size_t T >
+Core::Correlator< T >  wick(Core::Source::Point< L, T > const &source, Core::Field< QCD::Spinor, L, T > const &field)
+{
+  Base::Weave &weave = Base::Weave::instance();
+  size_t index = weave.globalToLocalIndex(source.coord());
+
+  Core::Correlator< T > result(std::complex< double >(0.0, 0.0));
+  if (index != L * L * L * T) // Error condition - not on local volume
+    for (size_t ctr = 0; size_t ctr < weave.localSize(idx_T); ++ctr)
+      result[ctr] = field[index + ctr * weave.localSurface(idx_T)];
+
+  return result;
+}

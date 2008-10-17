@@ -1,5 +1,17 @@
 template< size_t L, size_t T >
-inline Source::Point< L, T >::coord(Base::SpaceTimeIndex const idx)
+inline Source::Point< L, T >::Point(size_t const *coord)
+{
+  std::copy(coord, coord + 3, d_coord);
+}
+
+template< size_t L, size_t T >
+inline size_t Source::Point< L, T >::coord(Base::SpaceTimeIndex const idx)
 {
   return d_coord[idx];
+}
+
+template< size_t L, size_t T >
+inline size_t const *Source::Point< L, T >::coord()
+{
+  returnd d_coord;
 }

@@ -1,5 +1,0 @@
-template< typename FieldLeft, typename FieldRight >
-inline Contract::Expression(FieldLeft &left, FieldRight &right)
-  : d_left(left), d_right(right)
-{}
-

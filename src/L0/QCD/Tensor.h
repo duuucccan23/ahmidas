@@ -4,7 +4,6 @@
 #include <complex>
 
 #include <L0/Base/Base.h>
-#include <L0/Core/Core.h>
 
 namespace QCD
 {

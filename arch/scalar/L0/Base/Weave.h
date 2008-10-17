@@ -2,7 +2,6 @@
 #define GUARD_BASE_WEAVE_H
 
 #include <L0/Base/Base.h>
-//Scalar Weave
 
 namespace Base
 {

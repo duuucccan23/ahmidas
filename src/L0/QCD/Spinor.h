@@ -38,8 +38,11 @@ namespace QCD
       void leftMultiply(SU3::Matrix const &mat);
       void leftMultiply(SU3::hcMatrix const &mat);
 
-      SU3::Vector &operator[](short component);
-      SU3::Vector const &operator[](short component) const;
+      SU3::Vector &operator[](size_t const index);
+      SU3::Vector const &operator[](size_t const index) const;
+
+      std::complex< double > &operator()(Base::DiracIndex const dir, Base::ColourIndex const col);
+      std::complex< double > const &operator()(Base::DiracIndex const dir, Base::ColourIndex const col) const;
 
       template< size_t Index >
       void leftMultiply(Dirac::Gamma< Index > const);
@@ -50,9 +53,6 @@ namespace QCD
       WeylSpinor upper();
       WeylSpinor lower();
   };
-
-  template< size_t IndexSink, size_t IndexSource >
-  std::complex< double > contractTwoPoint(Dirac::Gamma< IndexSink >, Spinor sink, Dirac::Gamma< IndexSource >, Spinor source);
 }
 
 #include "Spinor/Spinor.inlines"

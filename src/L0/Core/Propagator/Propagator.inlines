@@ -49,49 +49,49 @@ namespace Core
   }
 
   template< size_t L, size_t T >
-  inline typename Propagator< L, T >::iterator_colour Propagator< L, T >::begin(Core::ColourIndex const index)
+  inline typename Propagator< L, T >::iterator_colour Propagator< L, T >::begin(Base::ColourIndex const index)
   {
     return iterator_colour(d_components + index, 4);
   }
 
   template< size_t L, size_t T >
-  inline typename Propagator< L, T >::iterator_colour Propagator< L, T >::end(Core::ColourIndex const index)
+  inline typename Propagator< L, T >::iterator_colour Propagator< L, T >::end(Base::ColourIndex const index)
   {
     return iterator_colour(d_components + index + 12, 4);
   }
 
   template< size_t L, size_t T >
-  inline typename Propagator< L, T >::const_iterator_colour Propagator< L, T >::begin(Core::ColourIndex const index) const
+  inline typename Propagator< L, T >::const_iterator_colour Propagator< L, T >::begin(Base::ColourIndex const index) const
   {
     return const_iterator_colour(d_components + index, 4);
   }
 
   template< size_t L, size_t T >
-  inline typename Propagator< L, T >::const_iterator_colour Propagator< L, T >::end(Core::ColourIndex const index) const
+  inline typename Propagator< L, T >::const_iterator_colour Propagator< L, T >::end(Base::ColourIndex const index) const
   {
     return const_iterator_colour(d_components + index + 12, 4);
   }
 
   template< size_t L, size_t T >
-  inline typename Propagator< L, T >::iterator_dirac Propagator< L, T >::begin(Core::DiracIndex const index)
+  inline typename Propagator< L, T >::iterator_dirac Propagator< L, T >::begin(Base::DiracIndex const index)
   {
     return iterator_dirac(d_components + 3 * index, 1);
   }
 
   template< size_t L, size_t T >
-  inline typename Propagator< L, T >::iterator_dirac Propagator< L, T >::end(Core::DiracIndex const index)
+  inline typename Propagator< L, T >::iterator_dirac Propagator< L, T >::end(Base::DiracIndex const index)
   {
     return iterator_dirac(d_components + 3 * (index + 1), 1);
   }
 
   template< size_t L, size_t T >
-  inline typename Propagator< L, T >::const_iterator_dirac Propagator< L, T >::begin(Core::DiracIndex const index) const
+  inline typename Propagator< L, T >::const_iterator_dirac Propagator< L, T >::begin(Base::DiracIndex const index) const
   {
     return const_iterator_dirac(d_components + 3 * index, 1);
   }
 
   template< size_t L, size_t T >
-  inline typename Propagator< L, T >::const_iterator_dirac Propagator< L, T >::end(Core::DiracIndex const index) const
+  inline typename Propagator< L, T >::const_iterator_dirac Propagator< L, T >::end(Base::DiracIndex const index) const
   {
     return const_iterator_dirac(d_components + 3 * (index + 1), 1);
   }
@@ -109,13 +109,13 @@ namespace Core
   }
 
   template< size_t L, size_t T >
-  inline Core::Field< Spinor, L, T > &Propagator< L, T >::operator()(Core::ColourIndex const colIdx, Core::DiracIndex const dirIdx)
+  inline Core::Field< Spinor, L, T > &Propagator< L, T >::operator()(Base::ColourIndex const colIdx, Base::DiracIndex const dirIdx)
   {
     return d_components[colIdx + 3 * dirIdx]
   }
 
   template< size_t L, size_t T >
-  inline Core::Field< Spinor, L, T > const &Propagator< L, T >::operator()(Core::ColourIndex const colIdx, Core::DiracIndex const dirIdx) const
+  inline Core::Field< Spinor, L, T > const &Propagator< L, T >::operator()(Base::ColourIndex const colIdx, Base::DiracIndex const dirIdx) const
   {
     return d_components[colIdx + 3 * dirIdx]
   }

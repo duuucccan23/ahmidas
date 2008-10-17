@@ -32,9 +32,10 @@ namespace Base
   template< size_t L, size_t T >
   inline size_t Weave< L, T >::globalCoordToLocalIndex(size_t *global) const
   {
-    return (global[idx_x] * localSurface(idx_X) + global[idx_y] * localSurface(idx_Y) + global[idx_z] * localSurface(idx_Z));
+    return (global[idx_X] * localSurface(idx_X) + global[idx_Y] * localSurface(idx_Y) + global[idx_Z] * localSurface(idx_Z));
   }
 
+  template< size_t L, size_t T >
   template< typename Element >
   inline void Weave< L, T >::sumOverTimeSlices(Element *data) const
   {}

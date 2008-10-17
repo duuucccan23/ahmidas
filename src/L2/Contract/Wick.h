@@ -8,11 +8,13 @@
 namespace Contract
 {
   template< size_t L, size_t T >
-  Core::Correlator &wick(Core::Source::Point< L, T > source, Core::Field< QCD::Spinor, L, T > field);
+  Core::Correlator &wick(Core::Source::Point< L, T > const &source, Base::DiracIndex const &dir,Base::ColourIndex const &col,
+                         Core::Field< QCD::Spinor, L, T > const &field);
 
-  
   template< size_t L, size_t T >
-  Core::TMatrix< T > &wick(Core::Source::Point< L, T >, Core::Propagator< L, T >);
+  Core::TMatrix< T > &wick(Core::Source::Point< L, T > const &source, Core::Propagator< L, T > const &propagator);
 }
+
+#include "Wick/wick_a.template"
 
 #endif

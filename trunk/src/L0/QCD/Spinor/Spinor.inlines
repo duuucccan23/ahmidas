@@ -15,7 +15,7 @@ namespace QCD
   
   inline Spinor::Spinor(double const *data)
   {
-    std::copy(data, data + 24, reinterpret_cast< double* >(d_data)); // NOTE Tricky... check this!
+    std::copy(data, data + 24, reinterpret_cast< double* >(d_data));
   }
 
   inline Spinor::Spinor(std::complex< double > const *data)
@@ -84,14 +84,24 @@ namespace QCD
       iter->leftMultiply(mat);
   }
 
-  inline SU3::Vector &Spinor::operator[](short component)
+  inline SU3::Vector &Spinor::operator[](size_t const index)
   {
-    return d_data[component];
+    return d_data[index];
   }
   
-  inline SU3::Vector const &Spinor::operator[](short component) const
+  inline SU3::Vector const &Spinor::operator[](size_t const index) const
   {
-    return d_data[component];
+    return d_data[index];
+  }
+
+  inline std::complex< double > &Spinor::operator()(Base::DiracIndex const dir, Base::ColourIndex const col)
+  {
+    return d_data[dir][col];
+  }
+  
+  inline std::complex< double > const &Spinor::operator()(Base::DiracIndex const dir, Base::ColourIndex const col) const
+  {
+    return d_data[dir][col];    
   }
   
   inline WeylSpinor Spinor::upper()

@@ -1,4 +1,4 @@
-#infdef GUARD_SOURCE_POINT_H
+#ifndef GUARD_SOURCE_POINT_H
 #define GUARD_SOURCE_POINT_H
 
 #include <L0/Base/Base.h>

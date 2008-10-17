@@ -3,23 +3,23 @@ namespace Core
   template< size_t L, size_t T >
   inline Propagator< L, T >::Propagator(Propagator< L, T > const &other)
   {
-    std::copy(other.d_components, other.d_components + 12, d_components)
+    std::copy(other.d_components, other.d_components + 12, d_components);
   }
 
   template< size_t L, size_t T >
-  inline Propagator< L, T >::Propagator(Core::Field< Spinor, L, T > *data)
+  inline Propagator< L, T >::Propagator(Core::Field< QCD::Spinor, L, T > *data)
   {
     std::copy(data, data + 12, d_components);
   }
 
-  template< size_t L, size_T T >
-  inline Core::Field< Spinor, L, T > &Propagator::operator[](size_t const idx)
+  template< size_t L, size_t T >
+  inline Core::Field< QCD::Spinor, L, T > &Propagator< L, T >::operator[](size_t const idx)
   {
     return d_components[idx];
   }
 
-  template< size_t L, size_T T >
-  inline Core::Field< Spinor, L, T > const &operator[](size_t const idx) const
+  template< size_t L, size_t T >
+  inline Core::Field< QCD::Spinor, L, T > const &Propagator< L, T >::operator[](size_t const idx) const
   {
     return d_components[idx];
   }
@@ -97,26 +97,14 @@ namespace Core
   }
 
   template< size_t L, size_t T >
-    inline Core::Field< Spinor, L, T > &Propagator< L, T >::operator[](size_t idx)
+  inline Core::Field< QCD::Spinor, L, T > &Propagator< L, T >::operator()(Base::ColourIndex const colIdx, Base::DiracIndex const dirIdx)
   {
-    return d_components[idx];
+    return d_components[colIdx + 3 * dirIdx];
   }
 
   template< size_t L, size_t T >
-  inline Core::Field< Spinor, L, T > const &Propagator< L, T >::operator[](size_t idx) const
+  inline Core::Field< QCD::Spinor, L, T > const &Propagator< L, T >::operator()(Base::ColourIndex const colIdx, Base::DiracIndex const dirIdx) const
   {
-    return d_components[idx];
-  }
-
-  template< size_t L, size_t T >
-  inline Core::Field< Spinor, L, T > &Propagator< L, T >::operator()(Base::ColourIndex const colIdx, Base::DiracIndex const dirIdx)
-  {
-    return d_components[colIdx + 3 * dirIdx]
-  }
-
-  template< size_t L, size_t T >
-  inline Core::Field< Spinor, L, T > const &Propagator< L, T >::operator()(Base::ColourIndex const colIdx, Base::DiracIndex const dirIdx) const
-  {
-    return d_components[colIdx + 3 * dirIdx]
+    return d_components[colIdx + 3 * dirIdx];
   }
 }

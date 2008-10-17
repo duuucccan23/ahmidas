@@ -23,7 +23,7 @@ namespace Core
     private:
       void destroy();
       void isolate();
-  }
+  };
 }
 
 #include "TMatrix/TMatrix.inlines"

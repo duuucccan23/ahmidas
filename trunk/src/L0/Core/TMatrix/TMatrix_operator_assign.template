@@ -1,12 +1,12 @@
 template< size_t T >
-Core::TMatrix &Core::TMatrix::operator=(Core::TMatrix const &other)
+Core::TMatrix< T > &Core::TMatrix< T >::operator=(Core::TMatrix< T > const &other)
 {
-  if (d_data != other.d_data)
+  if (d_transfer != other.d_transfer)
   {
     destroy();
-    d_data = other.d_data;
-    d_ref = other.d_ref;
-    *d_ref += d_ref;
+    d_transfer = other.d_transfer;
+    d_references = other.d_references;
+    *d_references += d_references;
   }
   return *this;
 }

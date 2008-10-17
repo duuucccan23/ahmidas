@@ -1,13 +1,11 @@
 #include <iostream>
-#include <L0/Core/Field.h>
-#include <L0/QCD/Gauge.h>
-#include <L0/Base/IO.h>
-#include <L1/Smear/APE.h>
+#include <L0/Base/Random.h>
 
 int main(int argc, char **argv)
 {
-  Core::Field< QCD::Gauge, 8, 8 > myfield;
-  Base::IO::loadILDG(&myfield, "../test/conf.88");
-  std::cout << myfield[0][0];
+  double t = 0.0;
+  for (size_t ctr = 0; ctr < 100000; ++ctr)
+    std::cout << Base::Random::fastSymmetric() << std::endl;
+
   return 0;
 }

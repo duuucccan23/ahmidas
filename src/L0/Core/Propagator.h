@@ -10,11 +10,14 @@ namespace Core
   template< size_t L, size_t T >
   class Propagator
   {
-    Core::Field< Spinor, L, T > d_components[12];
+    Core::Field< Spinor, L, T >  d_components[12];
 
     public:
       Propagator(Propagator const &other);
       Propagator(Core::Field< Spinor, L, T > *data);
+
+      Core::Field< Spinor, L, T > &operator[](size_t const idx);
+      Core::Field< Spinor, L, T > const &operator[](size_t const idx) const;
 
 #include "Propagator/Propagator.iterator"
 #include "Propagator/Propagator.const_iterator"

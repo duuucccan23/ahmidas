@@ -1,0 +1,10 @@
+template< size_t T >
+void TMatrix< T >::destroy()
+{
+  *d_references -= 1;
+  if (*d_references == 0)
+  {
+    delete   d_references;
+    delete[] d_transfer;
+  }
+}

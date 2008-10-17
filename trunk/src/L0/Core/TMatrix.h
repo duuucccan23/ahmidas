@@ -1,6 +1,7 @@
 #ifndef GUARD_CORE_TMATRIX_H
 #define GUARD_CORE_TMATRIX_H
 
+#include <algorithm>
 #include <L0/QCD/Tensor.h>
 
 namespace Core

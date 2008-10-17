@@ -5,32 +5,32 @@ namespace QCD
     std::fill_n(d_data, 144, std::complex< double >(0.0, 0.0));
   }
 
-  inline QCD::Tensor::Tensor(QCD::Tensor const &other)
+  inline Tensor::Tensor(Tensor const &other)
   {
     std::copy(other.d_data, other.d_data + 144, d_data);
   }
 
-  inline QCD::Tensor::Tensor(std::complex< double > *data)
+  inline Tensor::Tensor(std::complex< double > *data)
   {
     std::copy(data, data + 144, d_data);
   }
 
-  inline std::complex &Tensor::operator[](size_t const idx)
+  inline std::complex< double > &Tensor::operator[](size_t const idx)
   {
     return d_data[idx];
   }
 
-  inline std::complex const &operator[](size_t const idx) const
+  inline std::complex< double > const &Tensor::operator[](size_t const idx) const
   {
     return d_data[idx];
   }
   
-  inline std::complex &Tensor::operator()(size_t dirSink, size_t colSink, size_t dirSource, size_t colSource)
+  inline std::complex< double > &Tensor::operator()(size_t dirSink, size_t colSink, size_t dirSource, size_t colSource)
   {
     return d_data[dirSink * 36 + colSink * 12 + dirSource * 4 + colSource];
   }
   
-  inline std::complex const &Tensor::operator()(size_t dirSink, size_t colSink, size_t dirSource, size_t colSource) const
+  inline std::complex< double > const &Tensor::operator()(size_t dirSink, size_t colSink, size_t dirSource, size_t colSource) const
   {
     return d_data[dirSink * 36 + colSink * 12 + dirSource * 4 + colSource];
   }

@@ -11,7 +11,7 @@ inline Core::TMatrix< T >::TMatrix(QCD::Tensor *transfer)
 }
 
 template< size_t T >
-inline Core::TMatrix< T >::TMatrix(Core::TMatrix const &other)
+inline Core::TMatrix< T >::TMatrix(Core::TMatrix< T > const &other)
   : d_references(other.d_references), d_transfer(other.d_transfer)
 {
   *d_references += 1;

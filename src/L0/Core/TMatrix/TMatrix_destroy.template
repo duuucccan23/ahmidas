@@ -1,5 +1,5 @@
 template< size_t T >
-void TMatrix< T >::destroy()
+void Core::TMatrix< T >::destroy()
 {
   *d_references -= 1;
   if (*d_references == 0)

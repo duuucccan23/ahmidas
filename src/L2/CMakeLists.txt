@@ -1,1 +1,1 @@
-ADD_SUBDIRECTORY(Contraction)
+ADD_SUBDIRECTORY(Contract)

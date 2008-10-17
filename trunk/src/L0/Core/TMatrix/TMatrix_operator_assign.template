@@ -1,0 +1,12 @@
+template< size_t T >
+Core::TMatrix &Core::TMatrix::operator=(Core::TMatrix const &other)
+{
+  if (d_data != other.d_data)
+  {
+    destroy();
+    d_data = other.d_data;
+    d_ref = other.d_ref;
+    *d_ref += d_ref;
+  }
+  return *this;
+}

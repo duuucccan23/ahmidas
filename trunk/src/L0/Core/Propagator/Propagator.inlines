@@ -12,6 +12,18 @@ namespace Core
     std::copy(data, data + 12, d_components);
   }
 
+  template< size_t L, size_T T >
+  inline Core::Field< Spinor, L, T > &Propagator::operator[](size_t const idx)
+  {
+    return d_components[idx];
+  }
+
+  template< size_t L, size_T T >
+  inline Core::Field< Spinor, L, T > const &operator[](size_t const idx) const
+  {
+    return d_components[idx];
+  }
+  
   template< size_t L, size_t T >
   inline typename Propagator< L, T >::iterator_full Propagator< L, T >::begin()
   {

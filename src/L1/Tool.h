@@ -11,11 +11,11 @@ namespace Tool
   template< size_t L, size_t T >
   void reunitarize(Core::Field< QCD::Gauge, L, T > *field);
 
-  template< size_t L, size_t T >
-  void randomGauge(Core::Field< QCD::Gauge, L, T > *field);
+  template< typename Element, size_t L, size_t T >
+  void randomize(Core::Field< Element, L, T > *field);
 }
 
 #include "Tool/Tool_reunitarize.template"
-#include "Tool/Tool_randomGauge.template"
+#include "Tool/Tool_randomize.template"
 
 #endif

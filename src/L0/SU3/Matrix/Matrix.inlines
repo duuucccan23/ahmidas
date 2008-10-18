@@ -58,6 +58,7 @@ namespace SU3
   inline void SU3::Matrix::setToRandom()
   {
     std::generate_n(reinterpret_cast< double* >(d_data), 18, Base::Random::fastSymmetric);
+    reunitarize();
   }
 
   inline Matrix::~Matrix()

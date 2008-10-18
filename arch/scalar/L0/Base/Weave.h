@@ -22,7 +22,7 @@ namespace Base
       template< typename Element >
       void fieldShift(Base::SpaceTimeIndex idx, Base::Direction dir, Element *field, size_t const *offsets) const;
 
-      size_t globalCoordToLocalIndex(size_t *global) const;
+      size_t globalCoordToLocalIndex(size_t * const global) const;
 
       template< typename Element >
       void sumOverTimeSlices(Element *data) const;

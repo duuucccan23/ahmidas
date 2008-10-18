@@ -113,4 +113,14 @@ namespace QCD
   {
     return WeylSpinor(d_data + 2);
   }
+
+  inline void Spinor::setToRandom()
+  {
+    std::generate_n(reinterpret_cast< double* >(d_data), reinterpret_cast< double* >(d_data) + 24, Base::Random::fastSymmetric);
+  }
+  
+  inline void Spinor::setToZero()
+  {
+    std::fill_n(reinterpret_cast< double * >(d_data), reinterpret_cast< double * >(d_data) + 12, 0.0);
+  }
 }

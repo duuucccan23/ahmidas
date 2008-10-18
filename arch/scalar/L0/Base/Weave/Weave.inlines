@@ -30,7 +30,7 @@ namespace Base
   {}
 
   template< size_t L, size_t T >
-  inline size_t Weave< L, T >::globalCoordToLocalIndex(size_t *global) const
+  inline size_t Weave< L, T >::globalCoordToLocalIndex(size_t * const global) const
   {
     return (global[idx_X] * localSurface(idx_X) + global[idx_Y] * localSurface(idx_Y) + global[idx_Z] * localSurface(idx_Z));
   }

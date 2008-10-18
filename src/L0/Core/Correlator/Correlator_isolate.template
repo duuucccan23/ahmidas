@@ -1,11 +1,11 @@
-template< size_t T >
-void Core::Correlator< T >::isolate()
+template< size_t L, size_t T >
+void Core::Correlator< L, T >::isolate()
 {
   if (*d_references == 1)
     return;
 
   *d_references -= 1;
-  references = new size_t(1);
+  d_references = new size_t(1);
 
   std::complex< double > *data = new std::complex< double >[T];
   std::copy(d_data, d_data + T, data);

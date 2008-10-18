@@ -1,8 +1,8 @@
-template< size_t T >
-Core::Correlator< T >::Correlator(std::complex< double > const &value)
+template< size_t L, size_t T >
+Core::Correlator< L, T >::Correlator(std::complex< double > const &value)
   : d_references(new size_t(1))
 {
-  Base::Weave &weave = Base::Weave::instance();
+  Base::Weave< L, T > &weave = Base::Weave< L, T >::instance();
   d_data = new std::complex< double >[L / weave.dim(Base::idx_T)];
   std::fill_n(d_data, L / weave.dim(Base::idx_T), value);
 }

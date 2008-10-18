@@ -6,7 +6,7 @@
 
 namespace Core
 {
-  template< size_t T >
+  template< size_t L, size_t T >
   class TMatrix
   {
     size_t      *d_references;

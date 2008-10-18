@@ -13,8 +13,8 @@ namespace Source
     public:
       Point(size_t const x, size_t const y, size_t const z);
       Point(size_t const *coord);
-      size_t coord(Base::SpaceTimeIndex const idx);
-      size_t const *coord();
+      size_t coord(Base::SpaceTimeIndex const idx) const;
+      size_t const *coord() const;
   };
 }
 

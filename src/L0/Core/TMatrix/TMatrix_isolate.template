@@ -1,5 +1,5 @@
-template< size_t T >
-void Core::TMatrix< T >::isolate()
+template< size_t L, size_t T >
+void Core::TMatrix< L, T >::isolate()
 {
   if (*d_references == 1)
     return;

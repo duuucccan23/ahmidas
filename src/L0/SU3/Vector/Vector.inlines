@@ -27,8 +27,23 @@ namespace SU3
       std::copy(other.d_data, other.d_data + 3, d_data);
     return *this;
   }
+
+  inline void SU3::Vector::setToRandom()
+  {
+    std::generate_n(reinterpret_cast< double* >(d_data), 6, Base::Random::fastSymmetric);
+  }
   
-  inline Vector const &Vector::basis(short idx)
+  inline void SU3::Vector::setToZero()
+  {
+    std::fill_n(d_data, 3, std::complex< double >(0.0, 0.0));
+  }
+
+  inline void SU3::Vector::setToBasis(size_t idx)
+  {
+    std::copy(s_basis[idx].d_data, s_basis[idx].d_data + 3, d_data);
+  }
+  
+  inline Vector const &Vector::basis(size_t idx)
   {
     return s_basis[idx];
   } 

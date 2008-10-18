@@ -52,6 +52,9 @@ namespace QCD
 
       WeylSpinor upper();
       WeylSpinor lower();
+
+      void setToRandom();
+      void setToZero();
   };
 }
 

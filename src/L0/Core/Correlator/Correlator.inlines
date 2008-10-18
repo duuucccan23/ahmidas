@@ -1,24 +1,24 @@
-template< size_t T >
-inline Core::Correlator< T >::Correlator(Core::Correlator< T > const &other)
+template< size_t L, size_t T >
+inline Core::Correlator< L, T >::Correlator(Core::Correlator< L, T > const &other)
   : d_references(other.d_references), d_data(other.d_data)
 {
   *d_references += 1;
 }
 
-template< size_t T >
-inline Core::~Correlator< T >::Correlator()
+template< size_t L, size_t T >
+inline Core::Correlator< L, T >::~Correlator()
 {
   destroy(); 
 }
 
-template< size_t T >
-inline std::complex< double > &Core::Correlator< T >::Correlator::operator[](size_t const idx)
+template< size_t L, size_t T >
+inline std::complex< double > &Core::Correlator< L, T >::Correlator::operator[](size_t const idx)
 {
   return d_data[idx];
 }
 
-template< size_t T >
-inline std::complex< double > const &Core::Correlator< T >::Correlator::operator[](size_t const idx) const
+template< size_t L, size_t T >
+inline std::complex< double > const &Core::Correlator< L, T >::Correlator::operator[](size_t const idx) const
 {
   return d_data[idx];
 }

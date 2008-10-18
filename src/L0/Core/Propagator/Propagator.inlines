@@ -1,21 +1,30 @@
 namespace Core
 {
   template< size_t L, size_t T >
-  inline Propagator< L, T >::Propagator(Propagator< L, T > const &other)
+  inline Propagator< L, T >::Propagator()
+    : d_references(new size_t(1)), d_components(new Field< QCD::Spinor, L, T >*[12])
   {
-    std::copy(other.d_components, other.d_components + 12, d_components);
+    for (size_t idx = 0; idx < 12; ++idx)
+      d_components[idx] = new Field< QCD::Spinor, L, T >();
+  }
+  
+  template< size_t L, size_t T >
+  inline Propagator< L, T >::Propagator(Propagator< L, T > const &other)
+    : d_references(other.d_references), d_components(other.d_components)
+  {
+    *d_references += 1;
   }
 
   template< size_t L, size_t T >
-  inline Propagator< L, T >::Propagator(Core::Field< QCD::Spinor, L, T > *data)
+  inline Propagator< L, T >::~Propagator()
   {
-    std::copy(data, data + 12, d_components);
+    destroy();
   }
-
+  
   template< size_t L, size_t T >
   inline Core::Field< QCD::Spinor, L, T > &Propagator< L, T >::operator[](size_t const idx)
   {
-    return d_components[idx];
+    return *(d_components[idx]);
   }
 
   template< size_t L, size_t T >

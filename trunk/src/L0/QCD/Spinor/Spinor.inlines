@@ -116,11 +116,13 @@ namespace QCD
 
   inline void Spinor::setToRandom()
   {
-    std::generate_n(reinterpret_cast< double* >(d_data), reinterpret_cast< double* >(d_data) + 24, Base::Random::fastSymmetric);
+    for (SU3::Vector *iter = d_data; iter < d_data + 4; ++iter)
+      iter->setToRandom();
   }
   
   inline void Spinor::setToZero()
   {
-    std::fill_n(reinterpret_cast< double * >(d_data), reinterpret_cast< double * >(d_data) + 12, 0.0);
+    for (SU3::Vector *iter = d_data; iter < d_data + 4; ++iter)
+      iter->setToZero();
   }
 }

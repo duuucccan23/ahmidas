@@ -1,0 +1,7 @@
+template< typename Element, size_t L, size_t T >
+void Tool::randomize(Core::Field< Element, L, T > *field)
+{
+  Base::Weave< L, T > myWeave(Base::Weave< L, T >::instance());
+  for (size_t ctr = 0; ctr < myWeave.localVolume(); ++ctr)
+    field->getMemoryIndex(ctr).setToRandom();
+}

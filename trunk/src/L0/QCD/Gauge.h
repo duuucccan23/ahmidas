@@ -21,6 +21,9 @@ namespace QCD
       Gauge(std::complex< double > const *data);
 
       void reunitarize();
+      void setToRandom();
+      void setToZero();
+      void setToIdentity();
 
       void leftMultiply(Gauge const &other);
       void leftMultiply(SU3::Matrix const &other);

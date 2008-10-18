@@ -34,6 +34,24 @@ namespace QCD
       iter->reunitarize();
   }
 
+  inline void Gauge::setToRandom()
+  {
+    for (SU3::Matrix *iter = d_data; iter != d_data + 4; ++iter)
+      iter->setToRandom();
+  }
+  
+  inline void Gauge::setToZero()
+  {
+    for (SU3::Matrix *iter = d_data; iter != d_data + 4; ++iter)
+      iter->setToZero();
+  }
+
+  inline void Gauge::setToIdentity()
+  {
+    for (SU3::Matrix *iter = d_data; iter != d_data + 4; ++iter)
+      iter->setToIdentity();
+  }
+  
   inline void Gauge::leftMultiply(SU3::Matrix const &other)
   {
     for (SU3::Matrix *iter = d_data; iter != d_data + 4; ++iter)

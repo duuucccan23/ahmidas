@@ -10,14 +10,15 @@ namespace Core
   template< size_t L, size_t T >
   class Propagator
   {
-    Core::Field< QCD::Spinor, L, T >  d_components[12];
+    size_t                            *d_references;
+    Core::Field< QCD::Spinor, L, T > **d_components;
 
     public:
+      Propagator();
       Propagator(Propagator const &other);
-      Propagator(Core::Field< QCD::Spinor, L, T > *data);
+      ~Propagator();
 
-      Core::Field< QCD::Spinor, L, T > &operator[](size_t const idx);
-      Core::Field< QCD::Spinor, L, T > const &operator[](size_t const idx) const;
+#include "Propagator/Propagator.operators"
 
 #include "Propagator/Propagator.iterator"
 #include "Propagator/Propagator.const_iterator"
@@ -40,12 +41,17 @@ namespace Core
       const_iterator_dirac begin(Base::DiracIndex const idx) const;
       const_iterator_dirac end(Base::DiracIndex const idx) const;
 
-#include "Propagator/Propagator.operators"
+    private:
+      void destroy();
+      void isolate();      
   };
 }
 
 #include "Propagator/Propagator.inlines"
 #include "Propagator/Propagator.iterator.inlines"
 #include "Propagator/Propagator.const_iterator.inlines"
+
+#include "Propagator/Propagator_destroy.template"
+#include "Propagator/Propagator_isolate.template"
 
 #endif

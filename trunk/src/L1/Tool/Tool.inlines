@@ -1,0 +1,6 @@
+template< size_t L, size_t T >
+void Tool::randomize(Core::Propagator< L, T > *propagator)
+{
+  for (size_t idx = 0; idx < 12; ++idx)
+    Tool::randomize(&((*propagator)[idx]));
+}

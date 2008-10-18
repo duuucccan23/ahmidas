@@ -1,0 +1,16 @@
+template< size_t L, size_t T >
+Core::Correlator< L, T >  Contract::wick(Source::Point< L, T > const &source, Core::Propagator< L, T > const &propagator)
+{
+  Base::Weave< L, T > &weave = Base::Weave< L, T >::instance();
+  size_t localCoord[3];
+  std::copy(source.coord(), source.coord() + 3, localCoord);
+  size_t index = weave.globalCoordToLocalIndex(localCoord);
+
+  Core::TMatrix< L, T > result;
+  if (index != L * L * L * T)
+  {
+    
+  }
+
+  return result;
+}

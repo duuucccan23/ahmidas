@@ -1,4 +1,5 @@
 #include <iostream>
+#include <L0/Core/Correlator.h>
 #include <L0/Core/Field.h>
 #include <L0/QCD/Gauge.h>
 #include <L0/Base/IO.h>
@@ -7,9 +8,10 @@
 
 int main(int argc, char **argv)
 {
-  Core::Field< QCD::Gauge, 8, 8 > myfield;
-  Base::IO::loadILDG(&myfield, "../test/conf.88");
+  Core::Field< QCD::Spinor, 8, 8 > myfield;
+  for (size_t idx = 0; idx < 64 * 64; ++idx)
+    myfield[idx].setToRandom();
   Source::Point< 8, 8 > mysource(1, 1, 1);
-  Core::Correlator< 8 > mycorr = Contract::wick(mysource, Base::col_RED, Base::dir_0, myfield);
+  Core::Correlator< 8, 8 > mycorr = Contract::wick(mysource, Base::gam_1, Base::col_RED, myfield);
   return 0;
 }

@@ -1,5 +1,5 @@
-template< size_t T >
-void Core::TMatrix< T >::destroy()
+template< size_t L, size_t T >
+void Core::TMatrix< L, T >::destroy()
 {
   *d_references -= 1;
   if (*d_references == 0)

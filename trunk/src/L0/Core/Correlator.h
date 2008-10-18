@@ -8,7 +8,7 @@
 
 namespace Core
 {
-  template< size_t T >
+  template< size_t L, size_t T >
   class Correlator
   {
     size_t                 *d_references;
@@ -31,6 +31,8 @@ namespace Core
       void isolate();
   };  
 }
+
+#include "Correlator/Correlator.inlines"
 
 #include "Correlator/Correlator_Correlator_a.template"
 #include "Correlator/Correlator_Correlator_b.template"

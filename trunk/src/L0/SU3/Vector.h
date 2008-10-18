@@ -23,8 +23,13 @@ namespace SU3
       Vector(std::complex< double > *data);
       Vector(Vector const &other);
       Vector &operator=(Vector const &other);
+
+      void setToRandom();
+      void setToBasis(size_t idx);
+      void setToZero();
       
-      static Vector const &basis(short idx);
+      static Vector        random();
+      static Vector const &basis(size_t idx);
       static Vector const &zero();
       
       ~Vector();

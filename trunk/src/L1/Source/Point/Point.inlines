@@ -5,13 +5,13 @@ inline Source::Point< L, T >::Point(size_t const *coord)
 }
 
 template< size_t L, size_t T >
-inline size_t Source::Point< L, T >::coord(Base::SpaceTimeIndex const idx)
+inline size_t Source::Point< L, T >::coord(Base::SpaceTimeIndex const idx) const
 {
   return d_coord[idx];
 }
 
 template< size_t L, size_t T >
-inline size_t const *Source::Point< L, T >::coord()
+inline size_t const *Source::Point< L, T >::coord() const
 {
   return d_coord;
 }

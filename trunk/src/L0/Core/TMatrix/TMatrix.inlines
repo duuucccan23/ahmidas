@@ -1,24 +1,24 @@
-template< size_t T >
-inline Core::TMatrix< T >::TMatrix()
+template< size_t L, size_t T >
+inline Core::TMatrix< L, T >::TMatrix()
   : d_references(new size_t(1)), d_transfer(new QCD::Tensor[T])
 {}
 
-template< size_t T >
-inline Core::TMatrix< T >::TMatrix(QCD::Tensor *transfer)
+template< size_t L, size_t T >
+inline Core::TMatrix< L, T >::TMatrix(QCD::Tensor *transfer)
   : d_references(new size_t(1)), d_transfer(new QCD::Tensor[T])
 {
   std::copy(transfer, transfer + T, d_transfer);
 }
 
-template< size_t T >
-inline Core::TMatrix< T >::TMatrix(Core::TMatrix< T > const &other)
+template< size_t L, size_t T >
+inline Core::TMatrix< L, T >::TMatrix(Core::TMatrix< L, T > const &other)
   : d_references(other.d_references), d_transfer(other.d_transfer)
 {
   *d_references += 1;
 }
 
-template< size_t T >
-inline Core::TMatrix< T >::~TMatrix()
+template< size_t L, size_t T >
+inline Core::TMatrix< L, T >::~TMatrix()
 {
   destroy();
 }

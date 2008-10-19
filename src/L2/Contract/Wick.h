@@ -14,9 +14,10 @@ namespace Contract
                                  Base::ColourIndex const &col, Core::Field< QCD::Spinor, L, T > const &field);
 
   template< size_t L, size_t T >
-  Core::TMatrix< L, T >     wick(Source::Point< L, T > const &source, Core::Propagator< QCD::Spinor, L, T > const &propagator);
+  Core::TMatrix< L, T >     wick(Source::Point< L, T > const &source, Core::Propagator<  L, T > const &propagator);
 }
 
 #include "Wick/wick_a.template"
+#include "Wick/wick_b.template"
 
 #endif

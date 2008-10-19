@@ -17,6 +17,9 @@ namespace Core
       TMatrix(QCD::Tensor *transfer);
       TMatrix(TMatrix const &other);
       TMatrix &operator=(TMatrix const &other);
+
+      QCD::Tensor &operator[](size_t const idx);
+      QCD::Tensor const &operator[](size_t const idx) const;
       
       ~TMatrix();
 

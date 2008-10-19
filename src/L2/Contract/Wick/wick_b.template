@@ -1,16 +1,19 @@
 template< size_t L, size_t T >
-Core::Correlator< L, T >  Contract::wick(Source::Point< L, T > const &source, Core::Propagator< L, T > const &propagator)
+Core::TMatrix< L, T >  Contract::wick(Source::Point< L, T > const &source, Core::Propagator< L, T > const &propagator)
 {
   Base::Weave< L, T > &weave = Base::Weave< L, T >::instance();
   size_t localCoord[3];
   std::copy(source.coord(), source.coord() + 3, localCoord);
-  size_t index = weave.globalCoordToLocalIndex(localCoord);
+  size_t spatIndex = weave.globalCoordToLocalIndex(localCoord);
 
   Core::TMatrix< L, T > result;
-  if (index != L * L * L * T)
-  {
-    
-  }
+  if (spatIndex == L * L * L * T)
+    return result;
 
+  for (size_t timeIdx = 0; timeIdx < weave.localSize(Base::idx_T); ++timeIdx)
+    for (size_t sinkIdx = 0; sinkIdx < 12; ++sinkIdx)
+      for (size_t sourceIdx = 0; sourceIdx < 12; ++sourceIdx)
+        result[timeIdx][12 * sinkIdx + sourceIdx] =
+            propagator[sinkIdx][timeIdx * weave.localSurface(Base::idx_T) + spatIndex][sourceIdx / 4][sourceIdx % 4];
   return result;
 }

@@ -30,7 +30,7 @@ namespace Core
   template< size_t L, size_t T >
   inline Core::Field< QCD::Spinor, L, T > const &Propagator< L, T >::operator[](size_t const idx) const
   {
-    return d_components[idx];
+    return *(d_components[idx]);
   }
   
   template< size_t L, size_t T >

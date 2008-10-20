@@ -21,6 +21,9 @@ namespace QCD
 
       std::complex< double > &operator()(size_t const dirSink, size_t const colSink, size_t const dirSource, size_t const colSource);
       std::complex< double > const &operator()(size_t const dirSink, size_t const colSink, size_t const dirSource, size_t const colSource) const;
+
+      Tensor &leftMultiply(Tensor const &other);
+      Tensor &rightMultiply(Tensor const &other);
   };
 }
 

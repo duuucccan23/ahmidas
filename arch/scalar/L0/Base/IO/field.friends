@@ -1,2 +1,3 @@
 friend void Base::IO::loadILDG< Element, L, T >(Field< Element, L, T > *, std::string const &);
+friend void Base::IO::loadScidac< Element, L, T >(Field< Element, L, T > *, std::string const &);
 friend void Base::IO::saveILDG< Element, L, T >(Field< Element, L, T > *, std::string const &);

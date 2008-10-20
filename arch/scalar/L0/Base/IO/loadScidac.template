@@ -1,0 +1,20 @@
+template< typename Element, size_t L, size_t T >
+void Base::IO::loadScidac(Core::Field< Element, L, T > *field, std::string const &filename)
+{
+  Base::Weave< L, T > weave = Base::Weave< L, T >::instance();
+  Lime::Reader reader(filename);
+  reader.retrieveRecord(reader.findRecord("scidac-binary-data"));
+
+  //Poor man's parser for reading the precision should be inserted here, beyond we now assume double as input
+
+  float buffer[24]; //Per lattice site we store 12 complex floats
+  for (size_t ctr = 0; ctr <= L * L * L * T; ++ctr)
+  {
+    reader.read(buffer, 24);
+    if (!weave.d_bigEndian)
+      swapEndian(buffer, buffer + 24, sizeof(float));
+    std::copy(buffer, buffer + 24, reinterpret_cast< double* >(field->d_field + ctr));
+  }
+
+  std::fill_n(field->d_offsets, 4, 0);
+}

@@ -36,6 +36,7 @@ namespace SU3
 
       std::complex< double > &operator()(short idx);
       std::complex< double > const &operator()(short idx) const;
+      friend std::ostream &operator<<(std::ostream &out, Vector const &vec);
 
       template< typename T >
       Vector &operator+=(T const &rhand);

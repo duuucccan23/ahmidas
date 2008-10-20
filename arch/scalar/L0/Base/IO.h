@@ -20,10 +20,14 @@ namespace Base
     void loadILDG(Core::Field< Element, L, T > *field, std::string const &filename);
 
     template <typename Element, size_t L, size_t T >
+    void loadScidac(Core::Field< Element, L, T > *field, std::string const &filename);
+
+    template <typename Element, size_t L, size_t T >
     void saveILDG(Core::Field< Element, L, T > *field, std::string const &filename);
   }
 }
 #include "IO/loadILDG.template"
+#include "IO/loadScidac.template"
 #include "IO/saveILDG.template"
 
 #endif

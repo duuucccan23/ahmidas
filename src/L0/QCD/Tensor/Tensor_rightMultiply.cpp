@@ -13,4 +13,3 @@ QCD::Tensor &QCD::Tensor::rightMultiply(QCD::Tensor const &other)
               reinterpret_cast< double* >(d_data) + 24 * rowIdx);
   }
 }
-

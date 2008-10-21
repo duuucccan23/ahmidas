@@ -1,0 +1,36 @@
+\documentclass[a4paper,12pt,twoside]{article}
+
+\usepackage[latin1]{inputenc}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{fontenc}
+\usepackage[pdftex]{graphicx}
+\usepackage{mathpazo}
+\usepackage{xcolor}
+
+\usepackage[pdftex]{hyperref}
+
+\author{Ahmidas Development Team}
+\title{The myriad (inter)faces of arrays}
+
+\begin{document}
+
+\maketitle
+
+By necessity, QCD oriented tools like Ahmidas will have to manage large blocks of structured memory. The efficiency of the code is determined to no small extent by the way the construction of, and access to, these blocks is arranged. Certain approaches, in particular those that are based on using coordinate systems directly, are particularly easy in scalar code with lots of low level access to the data. Unfortunately, these methods can quickly become unwieldy. They promote code with lots of non-contiguous memory access and can actually become fairly confusing when we move to parallel code. For that reason, it has been one of the design features of Ahmidas to implement most operations globally, such that special care can be given to implement things efficiently at the lowest levels and thereby unclutter the interface to be used in physically complicated parts of the code.
+
+However, a certain amount of low level interfacing has to be provided for. The absence of such an interface was, in fact, found to be one of the major drawbacks of QDP++, which otherwise is built around the same principles (in fact, the current setup has QDP++ as its spiritual ancestor). If nothing else, well designed access to the underlying data structures makes for much less bug prone implementations of the basic operations. Additionally, one has to allow for the creative expansion of the scope of Ahmidas, perhaps introducing new operations that force access to data in innovative ways.
+
+We have therefore tried to come up with a set of rules for data accessors. The idea being that in this way, we can implement uniform behaviour over different data structures, providing the user with as few surprises as possible. By providing a series of choices of well defined methods with their own pros and cons, we also try to empower the user. Certain breaches of data protection will be necessary for the most efficient ways of accessing data, but the user can choose to take full responsibility if he wishes to do so.
+
+\section{Index operators}
+
+\subsection{Physical indices}
+A natural approach to the indexing issue is using what we have dubbed the physical index, which is implemented (as a de facto default choice) with the overloaded \textbf{operator[]}. The term physical refers to the fact that this index automatically corrects for any internal offsets in the code. Though this of course means that memory access is not always contiguous and that some recalculation needs to be done in each step, it provides a way of using indices to run over two or more fields at the same time, where one is guaranteed that a particular index refers to a specific point on the `physical' lattice. Exactly which point this is, is implementation dependent. On a scalar build of Ahmidas, there will in general be $T$ points in a correlator, for example, but on an MPI implementation this number will be divided by the grid dimension in the time direction. To allow for an architecture independent way of running over all components of a data structure, all data structures provide the \textbf{size} member function.
+
+\subsection{Memory indices}
+Though physical indices are easy to use, the added overhead of removing offsets may be unnecessary. For example, when reunitarizing all SU(3) matrices in a gauge field, we don't care about the particular order. For these cases, it is advantageous to have access to contiguous memory blocks and it is provided through the \textbf{memoryIndex} function. Obviously, the number of elements is no different than for the case of physical indices, so again the \textbf{size} member function can be used.
+
+\end{document}

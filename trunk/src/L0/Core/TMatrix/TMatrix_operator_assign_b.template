@@ -1,0 +1,20 @@
+template< size_t L, size_t T >
+Core::TMatrix< L, T > &Core::TMatrix< L, T >::operator=(Core::hcTMatrix< L, T > const &other)
+{
+  if (d_transfer != other.d_parent.d_transfer)
+  {
+    destroy();
+    d_transfer = other.d_transfer;
+    d_references = other.d_references;
+    *d_references += d_references;
+    return *this;
+  }
+
+  QCD::Tensor *transfer = new QCD::Tensor[T];
+  for (size_t idx = 0; idx < T; ++idx)
+    transfer[idx] = d_transfer[idx].dagger();
+  destroy();
+  d_references = new size_t(1);
+  d_transfer = transfer;
+  return *this;
+}

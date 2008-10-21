@@ -6,7 +6,7 @@ void Core::Propagator< L, T >::isolate()
 
   *d_references -= 1;
   d_references = new size_t(1);
-  Field< QCD::Spinor, L, T > data = new Field< QCD::Spinor, L, T >*[12];
+  Field< QCD::Spinor, L, T > **data = new Field< QCD::Spinor, L, T >*[12];
   for (size_t idx = 0; idx < 12; ++idx)
     d_components[idx] = new Field< QCD::Spinor, L, T >(*(d_components[idx]));
 }

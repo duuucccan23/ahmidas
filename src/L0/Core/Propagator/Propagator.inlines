@@ -24,6 +24,7 @@ namespace Core
   template< size_t L, size_t T >
   inline Core::Field< QCD::Spinor, L, T > &Propagator< L, T >::operator[](size_t const idx)
   {
+    isolate();
     return *(d_components[idx]);
   }
 
@@ -36,78 +37,85 @@ namespace Core
   template< size_t L, size_t T >
   inline typename Propagator< L, T >::iterator_full Propagator< L, T >::begin()
   {
-    return iterator_full(d_components, 1);
+    isolate();
+    return iterator_full(d_components);
   }
 
   template< size_t L, size_t T >
   inline typename Propagator< L, T >::iterator_full Propagator< L, T >::end()
   {
-    return iterator_full(d_components + 12, 1);
+    isolate();
+    return iterator_full(d_components + 12);
   }
 
   template< size_t L, size_t T >
   inline typename Propagator< L, T >::const_iterator_full Propagator< L, T >::begin() const
   {
-    return const_iterator_full(d_components, 1);
+    return const_iterator_full(d_components);
   }
 
   template< size_t L, size_t T >
   inline typename Propagator< L, T >::const_iterator_full Propagator< L, T >::end() const
   {
-    return const_iterator_full(d_components + 12, 1);
+    return const_iterator_full(d_components + 12);
   }
 
   template< size_t L, size_t T >
   inline typename Propagator< L, T >::iterator_colour Propagator< L, T >::begin(Base::ColourIndex const index)
   {
-    return iterator_colour(d_components + index, 4);
+    isolate();
+    return iterator_colour(d_components + index);
   }
 
   template< size_t L, size_t T >
   inline typename Propagator< L, T >::iterator_colour Propagator< L, T >::end(Base::ColourIndex const index)
   {
-    return iterator_colour(d_components + index + 12, 4);
+    isolate();
+    return iterator_colour(d_components + index + 12);
   }
 
   template< size_t L, size_t T >
   inline typename Propagator< L, T >::const_iterator_colour Propagator< L, T >::begin(Base::ColourIndex const index) const
   {
-    return const_iterator_colour(d_components + index, 4);
+    return const_iterator_colour(d_components + index);
   }
 
   template< size_t L, size_t T >
   inline typename Propagator< L, T >::const_iterator_colour Propagator< L, T >::end(Base::ColourIndex const index) const
   {
-    return const_iterator_colour(d_components + index + 12, 4);
+    return const_iterator_colour(d_components + index + 12);
   }
 
   template< size_t L, size_t T >
   inline typename Propagator< L, T >::iterator_dirac Propagator< L, T >::begin(Base::DiracIndex const index)
   {
-    return iterator_dirac(d_components + 3 * index, 1);
+    isolate();
+    return iterator_dirac(d_components + 3 * index);
   }
 
   template< size_t L, size_t T >
   inline typename Propagator< L, T >::iterator_dirac Propagator< L, T >::end(Base::DiracIndex const index)
   {
-    return iterator_dirac(d_components + 3 * (index + 1), 1);
+    isolate();
+    return iterator_dirac(d_components + 3 * (index + 1));
   }
 
   template< size_t L, size_t T >
   inline typename Propagator< L, T >::const_iterator_dirac Propagator< L, T >::begin(Base::DiracIndex const index) const
   {
-    return const_iterator_dirac(d_components + 3 * index, 1);
+    return const_iterator_dirac(d_components + 3 * index);
   }
 
   template< size_t L, size_t T >
   inline typename Propagator< L, T >::const_iterator_dirac Propagator< L, T >::end(Base::DiracIndex const index) const
   {
-    return const_iterator_dirac(d_components + 3 * (index + 1), 1);
+    return const_iterator_dirac(d_components + 3 * (index + 1));
   }
 
   template< size_t L, size_t T >
   inline Core::Field< QCD::Spinor, L, T > &Propagator< L, T >::operator()(Base::ColourIndex const colIdx, Base::DiracIndex const dirIdx)
   {
+    isolate();
     return d_components[colIdx + 3 * dirIdx];
   }
 

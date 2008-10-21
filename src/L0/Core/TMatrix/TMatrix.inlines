@@ -13,6 +13,7 @@ inline Core::TMatrix< L, T >::TMatrix(QCD::Tensor *transfer)
 template< size_t L, size_t T >
 inline QCD::Tensor &Core::TMatrix< L, T >::operator[](size_t const idx)
 {
+  isolate();
   return d_transfer[idx];
 }
 
@@ -33,4 +34,10 @@ template< size_t L, size_t T >
 inline Core::TMatrix< L, T >::~TMatrix()
 {
   destroy();
+}
+
+template< size_t L, size_t T >
+inline Core::hcTMatrix< L, T > Core::TMatrix< L, T >::dagger() const
+{
+  return hcTMatrix< L, T >(*this);
 }

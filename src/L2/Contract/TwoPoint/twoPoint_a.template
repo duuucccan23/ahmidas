@@ -1,0 +1,12 @@
+template< size_t L, size_t T >
+Core::Correlator< L, T > Contract::twoPoint(Core::hcTMatrix< L, T > const &left, Core::TMatrix< L, T > const &right)
+{
+  Core::Correlator< L, T > result;
+  for (size_t idx = 0; idx < T; ++idx)
+  {
+    QCD::Tensor tensor(right[idx]);
+    tensor.leftMultiply(left[idx]);
+    result[idx] = tr(tensor);
+  }
+  return result;
+}

@@ -3,6 +3,7 @@
 
 #include <L0/Base/Weave.h>
 #include <L0/Core/Field.h>
+#include <L0/Core/Propagator.h>
 #include <L0/QCD/Gauge.h>
 #include <L0/SU3/Matrix.h>
 

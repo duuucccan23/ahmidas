@@ -1,8 +1,9 @@
 template< size_t L, size_t T >
 Core::Correlator< L, T > Contract::twoPoint(Core::hcTMatrix< L, T > const &left, Core::TMatrix< L, T > const &right)
 {
+  Base::Weave< L, T > &weave = Base::Weave< L, T >::instance();
   Core::Correlator< L, T > result;
-  for (size_t idx = 0; idx < T; ++idx)
+  for (size_t idx = 0; idx < weave.localSize(Base::idx_T); ++idx)
   {
     QCD::Tensor tensor(right[idx]);
     tensor.leftMultiply(left[idx]);

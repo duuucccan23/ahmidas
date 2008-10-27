@@ -1,7 +1,3 @@
-Element &operator[](size_t const idx);
-
-Element const &operator[](size_t const idx) const;
-
 template< typename Scalar >
 Field< Element, L, T > &leftMultiply(Scalar const &other);
 

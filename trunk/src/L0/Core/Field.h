@@ -88,8 +88,24 @@ namespace Core
 
       hcField< Element, L, T > dagger() const;
 
-      Element &getMemoryIndex(size_t const idx);
-      Element const &getMemoryIndex(size_t const idx) const;
+      // Indexing
+      Element &operator[](size_t const idx);
+      Element const &operator[](size_t const idx) const;
+
+      Element &physicalIndex(size_t const idx);
+      Element &fastPhysicalIndex(size_t const idx);
+      Element const &physicalIndex(size_t const idx) const;
+      Element const &constPhysicalIndex(size_t const idx) const;
+
+      Element &memoryIndex(size_t const idx);
+      Element &fastMemoryIndex(size_t const idx);
+      Element const &memoryIndex(size_t const idx) const;
+      Element const &constMemoryIndex(size_t const idx) const;
+
+      Element *at(size_t x, size_t y, size_t z, size_t t);
+      Element *fastAt(size_t x, size_t y, size_t z, size_t t);
+      Element const *at(size_t x, size_t y, size_t z, size_t t) const;
+      Element const *constAt(size_t x, size_t y, size_t z, size_t t) const;
 
       size_t size() const;
 

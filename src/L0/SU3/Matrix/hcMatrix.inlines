@@ -18,4 +18,9 @@ namespace SU3
   {
     return d_parent;
   }
+
+  inline size_t SU3::hcMatrix::size() const
+  {
+    return d_parent.size();
+  }
 }

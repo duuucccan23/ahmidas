@@ -61,6 +61,11 @@ namespace SU3
     reunitarize();
   }
 
+  inline size_t SU3::Matrix::size() const
+  {
+    return 9;
+  }
+
   inline Matrix::~Matrix()
   {}
 

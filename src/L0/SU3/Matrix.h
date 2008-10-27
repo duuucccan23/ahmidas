@@ -60,6 +60,8 @@ namespace SU3
       friend std::complex< double > tr(Matrix const &mat);
       friend std::ostream &operator<<(std::ostream &out, Matrix const &mat);
 
+      size_t size() const;
+
     private:
       void givens(std::complex< double > &c, std::complex< double > &s,
                   std::complex< double > const &f, std::complex< double > const &g) const;
@@ -82,6 +84,8 @@ namespace SU3
 
       friend std::complex< double > det(hcMatrix const &mat);
       friend std::complex< double > tr(hcMatrix const &mat);
+
+      size_t size() const;
   };
 }
 

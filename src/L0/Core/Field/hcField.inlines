@@ -22,4 +22,11 @@ namespace Core
   {
     return d_parent.end();
   }
+
+  template< typename Element, size_t L, size_t T >
+  inline size_t hcField< Element, L, T >::size() const
+  {
+    return d_parent.size();
+  }
+
 }

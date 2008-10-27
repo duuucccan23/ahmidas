@@ -125,4 +125,9 @@ namespace QCD
     for (SU3::Vector *iter = d_data; iter < d_data + 4; ++iter)
       iter->setToZero();
   }
+
+  inline size_t Spinor::size() const
+  {
+    return 12;
+  }
 }

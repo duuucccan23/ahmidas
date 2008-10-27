@@ -40,25 +40,100 @@ namespace Core
   template< typename Element, size_t L, size_t T >
   inline Element &Field< Element, L, T >::operator[](size_t const idx)
   {
-    return d_field[shiftIdxToOffset(idx)];
+    isolate();
+    return physicalIndex(idx);
   }
 
   template< typename Element, size_t L, size_t T >
   inline Element const &Field< Element, L, T >::operator[](size_t const idx) const
   {
+    return constPhysicalIndex(idx);
+  }
+
+  template< typename Element, size_t L, size_t T >
+  inline Element &Field< Element, L, T >::physicalIndex(size_t const idx)
+  {
+    isolate();
     return d_field[shiftIdxToOffset(idx)];
   }
 
   template< typename Element, size_t L, size_t T >
-  inline Element &Field< Element, L, T >::getMemoryIndex(size_t const idx)
+  inline Element &Field< Element, L, T >::fastPhysicalIndex(size_t const idx)
+  {
+    return d_field[shiftIdxToOffset(idx)];
+  }
+
+  template< typename Element, size_t L, size_t T >
+  inline Element const &Field< Element, L, T >::physicalIndex(size_t const idx) const
+  {
+    return constPhysicalIndex(idx);
+  }
+
+  template< typename Element, size_t L, size_t T >
+  inline Element const &Field< Element, L, T >::constPhysicalIndex(size_t const idx) const
+  {
+    return d_field[shiftIdxToOffset(idx)];
+  }
+
+  template< typename Element, size_t L, size_t T >
+  inline Element &Field< Element, L, T >::memoryIndex(size_t const idx)
+  {
+    isolate();
+    return d_field[idx];
+  }
+
+  template< typename Element, size_t L, size_t T >
+  inline Element &Field< Element, L, T >::fastMemoryIndex(size_t const idx)
   {
     return d_field[idx];
   }
 
   template< typename Element, size_t L, size_t T >
-  inline Element const &Field< Element, L, T >::getMemoryIndex(size_t const idx) const
+  inline Element const &Field< Element, L, T >::memoryIndex(size_t const idx) const
+  {
+    return constMemoryIndex(idx);
+  }
+
+  template< typename Element, size_t L, size_t T >
+  inline Element const &Field< Element, L, T >::constMemoryIndex(size_t const idx) const
   {
     return d_field[idx];
+  }
+
+  template< typename Element, size_t L, size_t T >
+  inline Element *Field< Element, L, T >::at(size_t x, size_t y, size_t z, size_t t)
+  {
+    if (d_weave.globalCoordToLocalIndex(x, y, z, t) != L * L * L * T)
+      return &physicalIndex(d_weave.globalCoordToLocalIndex(x, y, z, t));
+    else
+      return 0;
+  }
+
+  template< typename Element, size_t L, size_t T >
+  inline Element *Field< Element, L, T >::fastAt(size_t x, size_t y, size_t z, size_t t)
+  {
+    if (d_weave.globalCoordToLocalIndex(x, y, z, t) != L * L * L * T)
+      return &fastPhysicalIndex(d_weave.globalCoordToLocalIndex(x, y, z, t));
+    else
+      return 0;
+  }
+
+  template< typename Element, size_t L, size_t T >
+  inline Element const *Field< Element, L, T >::at(size_t x, size_t y, size_t z, size_t t) const
+  {
+    if (d_weave.globalCoordToLocalIndex(x, y, z, t) != L * L * L * T)
+      return &constPhysicalIndex(d_weave.globalCoordToLocalIndex(x, y, z, t));
+    else
+      return 0;
+  }
+
+  template< typename Element, size_t L, size_t T >
+  inline Element const *Field< Element, L, T >::constAt(size_t x, size_t y, size_t z, size_t t) const
+  {
+    if (d_weave.globalCoordToLocalIndex(x, y, z, t) != L * L * L * T)
+      return &constPhysicalIndex(d_weave.globalCoordToLocalIndex(x, y, z, t));
+    else
+      return 0;
   }
 
   template< typename Element, size_t L, size_t T >
@@ -72,13 +147,10 @@ namespace Core
   {
     return ((idx                                     % d_weave.localSize(Base::idx_X)) + d_weave.localSize(Base::idx_X)
              - d_offsets[Base::idx_X]) % d_weave.localSize(Base::idx_X) +
-        
            ((idx / d_weave.localSurface(Base::idx_Y) % d_weave.localSize(Base::idx_Y)) + d_weave.localSize(Base::idx_Y)
              - d_offsets[Base::idx_Y]) % d_weave.localSize(Base::idx_Y) * d_weave.localSurface(Base::idx_Y) +
-        
            ((idx / d_weave.localSurface(Base::idx_Z) % d_weave.localSize(Base::idx_Z)) + d_weave.localSize(Base::idx_Z)
              - d_offsets[Base::idx_Z]) % d_weave.localSize(Base::idx_Z) * d_weave.localSurface(Base::idx_Z) +
-        
            ((idx / d_weave.localSurface(Base::idx_T) % d_weave.localSize(Base::idx_T)) + d_weave.localSize(Base::idx_T)
              - d_offsets[Base::idx_T]) % d_weave.localSize(Base::idx_T) * d_weave.localSurface(Base::idx_T);
   }
@@ -88,13 +160,10 @@ namespace Core
   {
     return ((idx                                     % d_weave.localSize(Base::idx_X)) + d_offsets[Base::idx_X])
              % d_weave.localSize(Base::idx_X) +
-        
            ((idx / d_weave.localSurface(Base::idx_Y) % d_weave.localSize(Base::idx_Y)) + d_offsets[Base::idx_Y])
              % d_weave.localSize(Base::idx_Y) * d_weave.localSurface(Base::idx_Y) +
-        
            ((idx / d_weave.localSurface(Base::idx_Z) % d_weave.localSize(Base::idx_Z)) + d_offsets[Base::idx_Z])
              % d_weave.localSize(Base::idx_Z) * d_weave.localSurface(Base::idx_Z) +
-        
            ( idx / d_weave.localSurface(Base::idx_T)                                   + d_offsets[Base::idx_T])
              % d_weave.localSize(Base::idx_T) * d_weave.localSurface(Base::idx_T);
   }

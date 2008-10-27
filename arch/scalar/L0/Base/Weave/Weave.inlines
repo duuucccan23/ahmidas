@@ -30,13 +30,43 @@ namespace Base
   {}
 
   template< size_t L, size_t T >
-  inline size_t Weave< L, T >::globalCoordToLocalIndex(size_t * const global) const
+  inline size_t Weave< L, T >::globalCoordToLocalIndex(size_t x, size_t y, size_t z) const
   {
-    return (global[idx_X] * localSurface(idx_X) + global[idx_Y] * localSurface(idx_Y) + global[idx_Z] * localSurface(idx_Z));
+    if (!isLocallyAvailable(x, y, z))
+      return (L * L * L * T); // error condition
+    return (fromGlobal(x, Base::idx_X) * localSurface(Base::idx_X) + fromGlobal(y, Base::idx_Y) * localSurface(Base::idx_Y)
+            + fromGlobal(z, Base::idx_Z) * localSurface(Base::idx_Z));
+  }
+
+  template< size_t L, size_t T >
+  inline size_t Weave< L, T >::globalCoordToLocalIndex(size_t x, size_t y, size_t z, size_t t) const
+  {
+    if (!isLocallyAvailable(x, y, z))
+      return (L * L * L * T); // error condition
+    return (fromGlobal(x, Base::idx_X) * localSurface(Base::idx_X) + fromGlobal(y, Base::idx_Y) * localSurface(Base::idx_Y)
+            + fromGlobal(z, Base::idx_Z) * localSurface(Base::idx_Z) + fromGlobal(t, Base::idx_T) * localSurface(Base::idx_T));
   }
 
   template< size_t L, size_t T >
   template< typename Element >
   inline void Weave< L, T >::sumOverTimeSlices(Element *data) const
   {}
+
+  template< size_t L, size_t T >
+  bool Weave< L, T >::isLocallyAvailable(size_t, size_t, size_t) const
+  {
+    return true;
+  }
+
+  template< size_t L, size_t T >
+  bool Weave< L, T >::isLocallyAvailable(size_t, size_t, size_t, size_t) const
+  {
+    return true;
+  }
+
+  template< size_t L, size_t T >
+  size_t Weave< L, T >::fromGlobal(size_t idx, Base::SpaceTimeIndex) const
+  {
+    return idx;
+  }
 }

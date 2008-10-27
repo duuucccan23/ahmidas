@@ -3,8 +3,8 @@ Core::TMatrix< L, T >  Contract::wick(Source::Point< L, T > const &source, Core:
 {
   Base::Weave< L, T > &weave = Base::Weave< L, T >::instance();
   size_t localCoord[3];
-  std::copy(source.coord(), source.coord() + 3, localCoord);
-  size_t spatIndex = weave.globalCoordToLocalIndex(localCoord);
+  size_t const *sourceCoord = source.coord();
+  size_t spatIndex = weave.globalCoordToLocalIndex(sourceCoord[Base::idx_X], sourceCoord[Base::idx_Y], sourceCoord[Base::idx_Z]);
 
   Core::TMatrix< L, T > result;
   if (spatIndex == L * L * L * T)

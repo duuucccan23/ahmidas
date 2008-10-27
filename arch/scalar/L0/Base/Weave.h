@@ -23,13 +23,17 @@ namespace Base
       template< typename Element >
       void fieldShift(Base::SpaceTimeIndex idx, Base::Direction dir, Element *field, size_t const *offsets) const;
 
-      size_t globalCoordToLocalIndex(size_t * const global) const;
+      size_t globalCoordToLocalIndex(size_t x, size_t y, size_t z) const;
+      size_t globalCoordToLocalIndex(size_t x, size_t y, size_t z, size_t t) const;
 
       template< typename Element >
       void sumOverTimeSlices(Element *data) const;
 
     private:
       Weave< L, T>();
+      bool isLocallyAvailable(size_t x, size_t y, size_t z) const;
+      bool isLocallyAvailable(size_t x, size_t y, size_t z, size_t t) const;
+      size_t fromGlobal(size_t x, Base::SpaceTimeIndex idx) const;
   };
 }
 

@@ -3,9 +3,8 @@ Core::Correlator< L, T >  Contract::wick(Source::Point< L, T > const &source, Ba
                                          Base::ColourIndex const &col, Core::Field< QCD::Spinor, L, T > const &field)
 {
   Base::Weave< L, T > &weave = Base::Weave< L, T >::instance();
-  size_t localCoord[3];
-  std::copy(source.coord(), source.coord() + 3, localCoord);
-  size_t index = weave.globalCoordToLocalIndex(localCoord);
+  size_t const *sourceCoord = source.coord();
+  size_t index = weave.globalCoordToLocalIndex(sourceCoord[Base::idx_X], sourceCoord[Base::idx_Y], sourceCoord[Base::idx_Z]);
 
   Core::Correlator< L, T > result(std::complex< double >(0.0, 0.0));
   if (index != L * L * L * T) // Error condition - not on local volume

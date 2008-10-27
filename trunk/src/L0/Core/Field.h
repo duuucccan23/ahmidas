@@ -91,6 +91,8 @@ namespace Core
       Element &getMemoryIndex(size_t const idx);
       Element const &getMemoryIndex(size_t const idx) const;
 
+      size_t size() const;
+
     private:
       size_t shiftIdxToZero(size_t const idx) const;
       size_t shiftIdxToOffset(size_t const idx) const;
@@ -112,6 +114,8 @@ namespace Core
 
       typename Field< Element, L, T >::const_iterator begin() const;
       typename Field< Element, L, T >::const_iterator end() const;
+
+      size_t size() const;
   };
 }
 

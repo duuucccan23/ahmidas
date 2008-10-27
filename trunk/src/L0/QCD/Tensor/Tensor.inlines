@@ -55,4 +55,9 @@ namespace QCD
     return d_data[0] + d_data[13] + d_data[26] + d_data[39] + d_data[52] + d_data[65]
            + d_data[78] + d_data[91] + d_data[104] + d_data[117] + d_data[130] + d_data[143];
   }
+
+  inline size_t Tensor::size() const
+  {
+    return 144;
+  }
 }

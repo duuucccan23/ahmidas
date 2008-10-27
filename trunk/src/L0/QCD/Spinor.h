@@ -55,6 +55,8 @@ namespace QCD
 
       void setToRandom();
       void setToZero();
+
+      size_t size() const;
   };
 }
 

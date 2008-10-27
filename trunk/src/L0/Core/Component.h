@@ -37,6 +37,8 @@ namespace Core
 
       #include "Component/Component.operators"
 
+      size_t size() const;
+
     private:
       Atom &getPhysicalIndex(size_t const idx);
       Atom const &getPhysicalIndex(size_t const idx) const;
@@ -57,6 +59,8 @@ namespace Core
       typename Component< Element, L, T, Atom >::const_iterator &begin() const;
       typename Component< Element, L, T, Atom >::const_iterator &end() const;
       Atom const &parentIdx(size_t const idx) const;
+
+      size_t size() const;
 
   };
 }

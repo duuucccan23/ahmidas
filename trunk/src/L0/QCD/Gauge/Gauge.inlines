@@ -75,7 +75,7 @@ namespace QCD
     for (size_t ctr = 0; ctr < 4; ++ctr)
       d_data[ctr].rightMultiply(other.d_data[ctr]);
   }
-  
+
   template< typename T >
   inline Gauge &Gauge::operator+=(T const &rhand)
   {
@@ -116,5 +116,10 @@ namespace QCD
   inline SU3::Matrix const &Gauge::operator[](short component) const
   {
     return d_data[component];
-  }  
+  }
+
+  inline size_t Gauge::size() const
+  {
+    return 4;
+  }
 }

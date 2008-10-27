@@ -45,6 +45,8 @@ namespace QCD
 
       SU3::Matrix &operator[](short component);
       SU3::Matrix const &operator[](short component) const;
+
+      size_t size() const;
   };
 }
 

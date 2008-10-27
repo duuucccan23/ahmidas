@@ -7,12 +7,10 @@
 
 namespace SU3
 {
-//  std::ostream &operator<<(std::ostream &out, Vector const &vec);
-  
   class Vector
   {
     std::complex< double > d_data[3];
-    
+
     // Some useful constant matrices
     static const Vector s_zero;
     static const Vector s_basis[3];
@@ -27,11 +25,11 @@ namespace SU3
       void setToRandom();
       void setToBasis(size_t idx);
       void setToZero();
-      
+
       static Vector        random();
       static Vector const &basis(size_t idx);
       static Vector const &zero();
-      
+
       ~Vector();
 
       std::complex< double > &operator()(short idx);
@@ -55,6 +53,8 @@ namespace SU3
 
       std::complex< double > &operator[](short component);
       std::complex< double > const &operator[](short component) const;
+
+      size_t size() const;
   };
 
   std::complex< double > innerProduct(Vector const &left, Vector const &right);

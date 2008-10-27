@@ -1,24 +1,44 @@
 template< size_t L, size_t T >
+inline Core::Correlator< L, T >::Correlator()
+  : d_weave(Base::Weave< L, T >::instance()), d_references(new size_t(1)),
+    d_data(new std::complex< double >[d_weave.localSize(Base::idx_T)])
+{}
+
+template< size_t L, size_t T >
 inline Core::Correlator< L, T >::Correlator(Core::Correlator< L, T > const &other)
-  : d_references(other.d_references), d_data(other.d_data)
+  : d_weave(Base::Weave< L, T >::instance()), d_references(other.d_references), d_data(other.d_data)
 {
   *d_references += 1;
 }
 
 template< size_t L, size_t T >
+Core::Correlator< L, T >::Correlator(std::complex< double > const &value)
+  : d_weave(Base::Weave< L, T >::instance()), d_references(new size_t(1)),
+    d_data(new std::complex< double >[d_weave.localSize(Base::idx_T)])
+{
+  std::fill_n(d_data, d_weave.localSize(Base::idx_T));
+}
+
+template< size_t L, size_t T >
 inline Core::Correlator< L, T >::~Correlator()
 {
-  destroy(); 
+  destroy();
 }
 
 template< size_t L, size_t T >
-inline std::complex< double > &Core::Correlator< L, T >::Correlator::operator[](size_t const idx)
+inline std::complex< double > &Core::Correlator< L, T >::operator[](size_t const idx)
 {
   return d_data[idx];
 }
 
 template< size_t L, size_t T >
-inline std::complex< double > const &Core::Correlator< L, T >::Correlator::operator[](size_t const idx) const
+inline std::complex< double > const &Core::Correlator< L, T >::operator[](size_t const idx) const
 {
   return d_data[idx];
+}
+
+template< size_t L, size_t T >
+inline size_t Core::Correlator< L, T >::size() const
+{
+  return d_weave.localSize(Base::idx_T);
 }

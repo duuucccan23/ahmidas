@@ -28,4 +28,10 @@ namespace Core
   {
     return d_parent[idx];
   }
+
+  template< typename Element, size_t L, size_t T, typename Atom >
+  inline size_t hcComponent< Element, L, T, Atom >::size() const
+  {
+    return d_parent.size();
+  }
 }

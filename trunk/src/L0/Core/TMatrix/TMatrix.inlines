@@ -1,13 +1,20 @@
 template< size_t L, size_t T >
 inline Core::TMatrix< L, T >::TMatrix()
-  : d_references(new size_t(1)), d_transfer(new QCD::Tensor[T])
+  : d_weave(Base::Weave< L, T >::instance()), d_references(new size_t(1)), d_transfer(new QCD::Tensor[T])
 {}
 
 template< size_t L, size_t T >
 inline Core::TMatrix< L, T >::TMatrix(QCD::Tensor *transfer)
-  : d_references(new size_t(1)), d_transfer(new QCD::Tensor[T])
+  : d_weave(Base::Weave< L, T >::instance()), d_references(new size_t(1)), d_transfer(new QCD::Tensor[T])
 {
   std::copy(transfer, transfer + T, d_transfer);
+}
+
+template< size_t L, size_t T >
+inline Core::TMatrix< L, T >::TMatrix(Core::TMatrix< L, T > const &other)
+  : d_weave(Base::Weave< L, T >::instance()), d_references(other.d_references), d_transfer(other.d_transfer)
+{
+  *d_references += 1;
 }
 
 template< size_t L, size_t T >
@@ -24,13 +31,6 @@ inline QCD::Tensor const &Core::TMatrix< L, T >::operator[](size_t const idx) co
 }
 
 template< size_t L, size_t T >
-inline Core::TMatrix< L, T >::TMatrix(Core::TMatrix< L, T > const &other)
-  : d_references(other.d_references), d_transfer(other.d_transfer)
-{
-  *d_references += 1;
-}
-
-template< size_t L, size_t T >
 inline Core::TMatrix< L, T >::~TMatrix()
 {
   destroy();
@@ -40,4 +40,10 @@ template< size_t L, size_t T >
 inline Core::hcTMatrix< L, T > Core::TMatrix< L, T >::dagger() const
 {
   return hcTMatrix< L, T >(*this);
+}
+
+template< size_t L, size_t T >
+inline size_t Core::TMatrix< L, T >::size() const
+{
+  return d_weave.d_localSize(Base::idx_T);
 }

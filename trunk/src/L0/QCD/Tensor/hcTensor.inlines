@@ -18,4 +18,9 @@ namespace QCD
   {
     return std::conj(d_parent[(idx % 12) * 12 + (idx / 12)]);
   }
+
+  inline size_t hcTensor::size() const
+  {
+    return d_parent.size();
+  }
 }

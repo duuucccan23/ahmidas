@@ -42,4 +42,5 @@ Though physical indices are easy to use, the added overhead of removing offsets 
 \subsection{Coordinate indices}
 With coordinate indices, we arrive at the first indexing operator that takes more than a single numerical value. Internally, coordinate indexing will perform a translation to a physical index and its performance should be comparable, but slightly slower. There are, however certain use cases where using coordinates is a very convenient alternative to using physical indices. Two obvious cases would be the placement of a point source on a lattice and the (internally implemented) contraction of two QCD::Tensor objects (that are represented as 12-by-12 matrices in Ahmidas). Note that Ahmidas provides an abstract layer on top of parallelization and that as such the coordinates are all global in nature, meaning that they run over a lattice of size $L^3\times T$. To retrieve an element from the lattice given a specific set of coordinates, the accessor \textbf{at} is provided. As described in the introduction, this operator has a counterpart leaving the data structure constant, designated \textbf{constAt}.
 
+
 \end{document}

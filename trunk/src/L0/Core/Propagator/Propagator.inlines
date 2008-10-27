@@ -113,6 +113,12 @@ namespace Core
   }
 
   template< size_t L, size_t T >
+  inline size_t Propagator< L, T >::size() const
+  {
+    return 12;
+  }
+
+  template< size_t L, size_t T >
   inline Core::Field< QCD::Spinor, L, T > &Propagator< L, T >::operator()(Base::ColourIndex const colIdx, Base::DiracIndex const dirIdx)
   {
     isolate();

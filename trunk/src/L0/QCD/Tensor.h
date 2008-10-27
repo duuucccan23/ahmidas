@@ -38,9 +38,11 @@ namespace QCD
 
       Tensor &leftMultiply(hcTensor const &other);
       Tensor &rightMultiply(hcTensor const &other);
-      
+
       hcTensor dagger() const;
       std::complex< double > trace() const;
+
+      size_t size() const;
   };
 
   class hcTensor
@@ -53,10 +55,12 @@ namespace QCD
 
     public:
       hcTensor(hcTensor const &parent);
-      
+
       std::complex< double > operator[](size_t const idx) const;
 
       Tensor const &dagger() const;
+
+      size_t size() const;
   };
 }
 

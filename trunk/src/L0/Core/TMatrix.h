@@ -8,10 +8,12 @@ namespace Core
 {
   template< size_t L, size_t T >
   class hcTMatrix;
-  
+
   template< size_t L, size_t T >
   class TMatrix
   {
+    Base::Weave< L, T > d_weave;
+
     size_t      *d_references;
     QCD::Tensor *d_transfer;
 
@@ -27,9 +29,11 @@ namespace Core
 
       QCD::Tensor &operator[](size_t const idx);
       QCD::Tensor const &operator[](size_t const idx) const;
-      
+
       hcTMatrix< L, T > dagger() const;
-      
+
+      size_t size() const;
+
     private:
       void destroy();
       void isolate();
@@ -39,7 +43,7 @@ namespace Core
   class hcTMatrix
   {
     friend class TMatrix< L, T >;
-    
+
     TMatrix< L, T > const &d_parent;
 
     hcTMatrix(TMatrix< L, T > const &other);
@@ -50,6 +54,8 @@ namespace Core
       TMatrix< L, T > const &dagger() const;
 
       QCD::hcTensor operator[](size_t const idx) const;
+
+      size_t size() const;
   };
 }
 

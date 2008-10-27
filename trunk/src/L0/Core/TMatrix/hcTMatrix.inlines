@@ -19,4 +19,9 @@ inline QCD::hcTensor Core::hcTMatrix< L, T >::operator[](size_t const idx) const
 {
   return d_parent[idx].dagger();
 }
-        
+
+template< size_t L, size_t T >
+inline size_t Core::hcTMatrix< L, T >::size() const
+{
+  return d_parent.size();
+}

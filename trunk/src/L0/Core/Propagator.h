@@ -41,9 +41,11 @@ namespace Core
       const_iterator_dirac begin(Base::DiracIndex const idx) const;
       const_iterator_dirac end(Base::DiracIndex const idx) const;
 
+      size_t size() const;
+
     private:
       void destroy();
-      void isolate();      
+      void isolate();
   };
 }
 

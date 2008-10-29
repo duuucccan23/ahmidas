@@ -108,13 +108,13 @@ namespace Core
       Element const *constAt(size_t x, size_t y, size_t z, size_t t) const;
 
       size_t size() const;
+      void isolate();
 
     private:
       size_t shiftIdxToZero(size_t const idx) const;
       size_t shiftIdxToOffset(size_t const idx) const;
 
       void destroy();
-      void isolate();
   };
 
   template< typename Element, size_t L, size_t T >

@@ -17,11 +17,16 @@ namespace Tool
 
   template< size_t L, size_t T >
   void randomize(Core::Propagator< L, T > *propagator);
+  
+  template< typename Element, size_t L, size_t T >
+  void setToZero(Core::Field< Element, L, T > *field);
+
 }
 
 #include "Tool/Tool.inlines"
 
 #include "Tool/Tool_reunitarize.template"
 #include "Tool/Tool_randomize.template"
+#include "Tool/Tool_setToZero.template"
 
 #endif

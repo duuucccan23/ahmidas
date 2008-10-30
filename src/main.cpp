@@ -1,5 +1,6 @@
 #include <iomanip>
 #include <iostream>
+#include <sstream>
 
 #include <L0/Base/Base.h>
 #include <L0/Base/IO.h>
@@ -8,32 +9,25 @@
 #include <L0/Core/TMatrix.h>
 #include <L0/QCD/Spinor.h>
 #include <L0/QCD/Tensor.h>
-#include <L1/Source/Point.h>
+#include <L1/Source/Stochastic.h>
 #include <L1/Tool.h>
-#include <L2/Contract/Wick.h>
-#include <L2/Contract/TwoPoint.h>
+#include <L1/Tool/IO.h>
 
 int main(int argc, char **argv)
 {
-  Core::Field< QCD::Spinor, 24, 48 > source;
-//  std::cout << "Raw mem source:\n" << source[0][0] << source[0][1] << source[0][2] << source[0][3] << "\n" << source[1][0] << "\n";
-  Tool::randomize(&source);
-//  std::cout << "Zeroed source:\n" << source[0][0] << source[0][1] << source[0][2] << source[0][3] << "\n" << source[1][0] << "\n";
-  Base::IO::saveScidac(source, "../test/ahmsource0.2448");
-  Base::IO::saveScidac(source, "../test/ahmsource1.2448");
-  Base::IO::saveScidac(source, "../test/ahmsource2.2448");
-  Base::IO::saveScidac(source, "../test/ahmsource3.2448");
-  /*
-  Core::Field< QCD::Spinor, 24, 48 > source;
-  Base::IO::loadScidac(&source, "../test/smearsource0.2448");
+  Source::Stochastic< 24, 48 > mysource;
+  Tool::IO::saveScidacSource(mysource, "../test/AHMSource.");
+
+/*  Core::Field< QCD::Spinor, 24, 48 > source;
+  Base::IO::loadScidac(&source, "../test/AHMSource.00.00");
   std::cout << "First source:\n" << source[0][0] << source[0][1] << source[0][2] << source[0][3] << "\n" << source[1][0] << "\n";
-  Base::IO::loadScidac(&source, "../test/smearsource1.2448");
+  Base::IO::loadScidac(&source, "../test/AHMSource.00.01");
   std::cout << "Second source:\n" << source[0][0] << source[0][1] << source[0][2] << source[0][3] << "\n" << source[1][0] << "\n";
-  Base::IO::loadScidac(&source, "../test/smearsource2.2448");
+  Base::IO::loadScidac(&source, "../test/AHMSource.00.02");
   std::cout << "Third source:\n" << source[0][0] << source[0][1] << source[0][2] << source[0][3] << "\n" << source[1][0] << "\n";
-  Base::IO::loadScidac(&source, "../test/smearsource3.2448");
+  Base::IO::loadScidac(&source, "../test/AHMSource.00.03");
   std::cout << "Last source:\n" << source[0][0] << source[0][1] << source[0][2] << source[0][3] << "\n" << source[1][0] << "\n";
-  */
+
   /*Core::Propagator< 24, 48 > propagator;
   for (Core::Propagator< 24, 48 >::iterator_full iter = propagator.begin(); iter != propagator.end(); ++iter)
     Base::IO::loadScidac(&(*iter), "../test/inv.2448");

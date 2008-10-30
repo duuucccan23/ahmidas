@@ -1,6 +1,8 @@
 #ifndef GUARD_BASE_RANDOM_H
 #define GUARD_BASE_RANDOM_H
 
+#include <cstdlib>
+
 namespace Base
 {
   namespace Random

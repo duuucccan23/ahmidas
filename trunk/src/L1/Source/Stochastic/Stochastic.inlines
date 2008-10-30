@@ -1,0 +1,11 @@
+template< size_t L, size_t T >
+inline size_t Source::Stochastic< L, T >::timeSlice() const
+{
+  return d_timeSlice;
+}
+
+template< size_t L, size_t T >
+inline double const *Source::Stochastic< L, T >::source() const
+{
+  return reinterpret_cast< double const* >(&(d_source.constMemoryIndex(0)));
+}

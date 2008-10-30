@@ -1,0 +1,9 @@
+template< size_t L, size_t T >
+Source::Stochastic< L, T >::Stochastic()
+:d_timeSlice(0)
+//:d_timeSlice(Base::Random::range(T-1))
+{
+  Base::Random::setZ2Scale(1 / std::sqrt(2.0));
+  for(size_t iter = 0; iter < 6 * L * L * L; ++iter)
+    *(reinterpret_cast< double* >(&(d_source.fastMemoryIndex(0))) + iter) = Base::Random::Z2();
+}

@@ -12,6 +12,7 @@ namespace Source
     Field< QCD::Spinor, L, T > d_source;
 
     public:
+      Full();
       Full(Field< QCD::Spinor, L, T > const &source);
   };
 }

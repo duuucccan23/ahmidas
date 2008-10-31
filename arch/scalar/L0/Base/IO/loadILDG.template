@@ -1,13 +1,14 @@
 template< typename Element, size_t L, size_t T >
-void Base::IO::loadILDG(Core::Field< Element, L, T > *field, std::string const &filename)
+Core::Field< Element, L, T > Base::IO::loadILDG(std::string const &filename)
 {
   Lime::Reader reader(filename);
   reader.retrieveRecord(reader.findRecord("ildg-binary-data"));
 
   //Poor man's parser for reading the precision should be inserted here, beyond we now assume double as input
-
-  reader.read(field->d_field, L * L * L * T);
-  std::fill_n(field->d_offsets, 4, 0);
+  Core::Field< Element, L, T > result;
+  Element *dataPtr = &(result.fastMemoryIndex(0));
+  reader.read(dataPtr, L * L * L * T);
   if (!bigEndian())
-    swapEndian(field->d_field, field->d_field + L * L * L * T, sizeof(double));
+    swapEndian(dataPtr, dataPtr + L * L * L * T, sizeof(double));
+  return result;
 }

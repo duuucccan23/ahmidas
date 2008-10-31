@@ -15,7 +15,10 @@
 
 int main(int argc, char **argv)
 {
-  Source::Stochastic< 24, 48 > mysource;
+
+  Core::Field< QCD::Gauge, 8, 8 > testfield = Base::IO::loadILDG< QCD::Gauge, 8, 8 >("../test/conf.88");
+  std::cout << testfield[0][0];
+/*  Source::Stochastic< 24, 48 > mysource;
   Tool::IO::saveScidac(mysource, "../test/AHMSource", 0);
 
 /*  Core::Field< QCD::Spinor, 24, 48 > source;

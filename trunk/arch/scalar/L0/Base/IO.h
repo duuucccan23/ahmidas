@@ -18,7 +18,7 @@ namespace Base
   namespace IO
   {
     template< typename Element, size_t L, size_t T >
-    void loadILDG(Core::Field< Element, L, T > *field, std::string const &filename);
+    Core::Field< Element, L, T > loadILDG(std::string const &filename);
 
     template< typename Element, size_t L, size_t T >
     void loadScidac(Core::Field< Element, L, T > *field, std::string const &filename);

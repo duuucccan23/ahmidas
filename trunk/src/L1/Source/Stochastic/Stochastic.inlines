@@ -1,11 +1,11 @@
 template< size_t L, size_t T >
-inline size_t Source::Stochastic< L, T >::timeSlice() const
+inline SU3::Vector const *Source::Stochastic< L, T >::source() const
 {
-  return d_timeSlice;
+  return d_source;
 }
 
 template< size_t L, size_t T >
-inline double const *Source::Stochastic< L, T >::source() const
+inline Source::Stochastic< L, T >::~Stochastic()
 {
-  return reinterpret_cast< double const* >(&(d_source.constMemoryIndex(0)));
+  delete[] d_source;
 }

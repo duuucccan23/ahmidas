@@ -1,18 +1,28 @@
 template< size_t L, size_t T >
-void Tool::IO::saveScidacSource(Source::Stochastic < L, T > const &source, std::string const &basefilename)
+void Tool::IO::saveScidac(Source::Stochastic < L, T > const &source, std::string const &basefilename, size_t timeslice)
 {
-  std::ostringstream ostr(basefilename, std::ios::ate);
-  ostr << std::setw(2) << std::setfill('0') << source.timeSlice() << ".0";
-  size_t elements = L * L * L * 6; //I know these are SU3::Spinors, so 3 complex numbers per site
+  //Rough error checking
+  if (timeslice < 0 || timeslice >= T)
+    return;
 
-  //copy all values to a minimal local variable to perform endianness conversion
+  //Setup filename (with proper 0 padding in case of long T dimension)
+  std::ostringstream ostr(basefilename, std::ios::ate);
+  ostr << "." << std::setw(static_cast< int >(std::floor(std::log10(T) + 1))) << std::setfill('0') << timeslice << ".0";
+
+  //Source::Stochastic holds SU3::Vectors, so 3 complex numbers per site = 6 floats
+  size_t elements = L * L * L * 6;
+
+  //Copy all values to a minimal local variable to perform endianness conversion
   float *smallfield = new float[elements];
+  double const *srcPtr = reinterpret_cast< double const* >(source.source());
   for (size_t iter = 0; iter < elements; ++iter)
-    smallfield[iter] = *(source.source() + iter);
+    smallfield[iter] = *(srcPtr + iter);
+
+  //Perform endianness conversion if needed
   if (!Base::bigEndian())
     Base::swapEndian(smallfield, smallfield + elements, sizeof(float));
 
-  //setup an almost complete timeslicefield for writing out
+  //Setup an almost complete timeslicefield for writing out
   float *tempfield = new float[elements * 4 - 9];
   for (size_t iter = 0; iter < (L * L * L) - 1; ++iter) //NOTE THE MINUS 1 SHOULD BE THERE!
   {
@@ -25,18 +35,21 @@ void Tool::IO::saveScidacSource(Source::Stochastic < L, T > const &source, std::
   float *zerofield = new float[elements * 4];
   std::fill(zerofield, zerofield + elements * 4, 0.);
 
-  size_t timeSlice = source.timeSlice();
+  //Loop over the 4 sourcefiles to make
   for (size_t srcIdx = 0; srcIdx < 4; ++srcIdx)
   {
     ostr << srcIdx; //Create full filename
     Base::IO::Lime::Writer writer(ostr.str()); //Create Lime::Writer for this file
+    ostr.seekp(-1, std::ios::cur); //Rewind the stream in preparation of the next name
 
     writer.newRecord("scidac-binary-data");
 
+    //Loop over timeslices, writing either zeroes or the constructed timeslicefield
     for (size_t t_iter = 0; t_iter < T; ++t_iter)
     {
-      if (t_iter == timeSlice)
+      if (t_iter == timeslice)
       {
+        //Prepend a set of zeros if needed, write field and append if needed more zeros
         writer.write(zerofield, srcIdx * 6);
         writer.write(tempfield, L * L * L * 24 - 18);
         writer.write(zerofield, (3 - srcIdx) * 6);
@@ -44,7 +57,6 @@ void Tool::IO::saveScidacSource(Source::Stochastic < L, T > const &source, std::
       }
       writer.write(zerofield, elements * 4);
     }
-    ostr.seekp(-1, std::ios::cur); //prepare to remove the last number of the filename
   }
   delete[] tempfield;
   delete[] zerofield;

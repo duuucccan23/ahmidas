@@ -11,10 +11,10 @@ namespace Tool
   namespace IO
   {
     template< size_t L, size_t T >
-    void saveScidacSource(Source::Stochastic< L, T > const &source, std::string const &basefilename);
+    void saveScidac(Source::Stochastic< L, T > const &source, std::string const &basefilename, size_t timeslice);
   }
 }
 
-#include "IO/saveScidacSource.template"
+#include "IO/saveScidac.template"
 
 #endif

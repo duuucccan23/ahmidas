@@ -17,6 +17,7 @@ namespace Base
 
       size_t localVolume() const;
       size_t localSurface(Base::SpaceTimeIndex idx) const;
+      size_t localSpatialVolume() const;
       size_t dim(Base::SpaceTimeIndex idx) const;
       size_t localSize(Base::SpaceTimeIndex idx) const;
 

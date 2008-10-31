@@ -16,7 +16,7 @@
 int main(int argc, char **argv)
 {
   Source::Stochastic< 24, 48 > mysource;
-  Tool::IO::saveScidacSource(mysource, "../test/AHMSource.");
+  Tool::IO::saveScidac(mysource, "../test/AHMSource", 0);
 
 /*  Core::Field< QCD::Spinor, 24, 48 > source;
   Base::IO::loadScidac(&source, "../test/AHMSource.00.00");

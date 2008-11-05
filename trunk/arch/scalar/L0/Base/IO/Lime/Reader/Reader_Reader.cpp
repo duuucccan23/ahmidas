@@ -5,7 +5,6 @@ Base::IO::Lime::Reader::Reader(std::string const &filename)
     d_fail(false), d_messagesCorrect(true)
 {
   uHeader header;
-  bool bigEndian = Base::bigEndian();
   int32_t message = -1;
   bool messageOpened = true;
 
@@ -13,13 +12,13 @@ Base::IO::Lime::Reader::Reader(std::string const &filename)
   {
     d_in.read(header.as8, s_headerSize);
 
-    if (!bigEndian)
+    if (!Base::bigEndian)
       Base::swapEndian(header.as32[0]);
-    
+
     if (header.as32[0] != s_limeMagic)
       break; // We're done, apparently.
 
-    if (!bigEndian)
+    if (!Base::bigEndian)
       Base::swapEndian(header.as16[2]);
     d_versions.push_back(header.as16[2]);
 
@@ -44,7 +43,7 @@ Base::IO::Lime::Reader::Reader(std::string const &filename)
 
     d_messages.push_back(message);
 
-    if (!bigEndian)
+    if (!Base::bigEndian)
       Base::swapEndian(header.as64[1]);
     d_sizes.push_back(header.as64[1]);
 

@@ -46,8 +46,6 @@ namespace Core
   template< typename Element, size_t L, size_t T >
   class Field
   {
-#include <L0/Base/IO/field.friends>
-
     size_t                *d_references;
 
     Base::Weave< L, T >   &d_weave;
@@ -87,6 +85,9 @@ namespace Core
 #include "Field/Field.operators"
 
       hcField< Element, L, T > dagger() const;
+
+      // Unsafe memory access: ONLY when you really control all repercussions
+      Element * const raw();
 
       // Indexing
       Element &operator[](size_t const idx);

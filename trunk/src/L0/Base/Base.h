@@ -38,11 +38,7 @@ namespace Base
     gam_4 = 3
   };
 
-  enum MpiTags
-  {
-    TAG_GAUGEFIELD,
-    TAG_FILE_DISTRIBUTION
-  };
+  extern bool const bigEndian;
 }
 
 #include "Base/Base.inlines"

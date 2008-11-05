@@ -1,4 +1,5 @@
 ADD_EXECUTABLE(endian endian.cpp)
+TARGET_LINK_LIBRARIES(endian Base)
 ADD_TEST(endianness endian)
 
 ADD_EXECUTABLE(reunit reunit.cpp)
@@ -10,7 +11,7 @@ TARGET_LINK_LIBRARIES(weave Base)
 ADD_TEST(weave_initialization weave)
 
 ADD_EXECUTABLE(limereader limereader.cpp)
-TARGET_LINK_LIBRARIES(limereader Lime)
+TARGET_LINK_LIBRARIES(limereader Lime Base)
 ADD_TEST(limereader_read_in limereader ../../test/conf.88)
 
 ADD_EXECUTABLE(fieldcomponent fieldcomponent.cpp)

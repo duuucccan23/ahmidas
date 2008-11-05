@@ -12,7 +12,6 @@ namespace Base
     size_t d_surfaces[4];
 
     public:
-      bool const d_bigEndian;
       static Weave< L, T > &instance();
 
       size_t localVolume() const;

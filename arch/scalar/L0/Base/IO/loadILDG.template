@@ -2,13 +2,15 @@ template< typename Element, size_t L, size_t T >
 Core::Field< Element, L, T > Base::IO::loadILDG(std::string const &filename)
 {
   Lime::Reader reader(filename);
+  Core::Field< Element, L, T > result;
   reader.retrieveRecord(reader.findRecord("ildg-binary-data"));
+  if (reader.fail())
+    return result; //NOTE Record not found, returning empty field! Add error exit here.
 
   //Poor man's parser for reading the precision should be inserted here, beyond we now assume double as input
-  Core::Field< Element, L, T > result;
-  Element *dataPtr = &(result.fastMemoryIndex(0));
+  Element *dataPtr = result.raw();
   reader.read(dataPtr, L * L * L * T);
-  if (!bigEndian())
+  if (!Base::bigEndian)
     swapEndian(dataPtr, dataPtr + L * L * L * T, sizeof(double));
   return result;
 }

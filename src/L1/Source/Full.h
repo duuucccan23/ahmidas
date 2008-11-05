@@ -9,13 +9,17 @@ namespace Source
   template< size_t L, size_t T >
   class Full
   {
-    Field< QCD::Spinor, L, T > d_source;
+    Core::Field< QCD::Spinor, L, T > d_source;
 
     public:
       Full();
-      Full(Field< QCD::Spinor, L, T > const &source);
+      Full(Core::Field< QCD::Spinor, L, T > const &source);
+
+      Core::Field< QCD::Spinor, L, T > &source();
   };
 }
+
+#include "Full/Full.inlines"
 
 namespace Sink = Source;
 

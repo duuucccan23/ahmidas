@@ -19,7 +19,7 @@ void Tool::IO::saveScidac(Source::Stochastic < L, T > const &source, std::string
     smallfield[iter] = *(srcPtr + iter);
 
   //Perform endianness conversion if needed
-  if (!Base::bigEndian())
+  if (!Base::bigEndian)
     Base::swapEndian(smallfield, smallfield + elements, sizeof(float));
 
   //Setup an almost complete timeslicefield for writing out

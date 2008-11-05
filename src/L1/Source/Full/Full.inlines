@@ -1,0 +1,10 @@
+template< size_t L, size_t T >
+inline Source::Full< L, T >::Full()
+{
+}
+
+template< size_t L, size_t T >
+inline Core::Field< QCD::Spinor, L, T > &Source::Full< L, T >::source()
+{
+  return d_source;
+}

@@ -108,7 +108,7 @@ namespace Core
       Element const *at(size_t x, size_t y, size_t z, size_t t) const;
       Element const *constAt(size_t x, size_t y, size_t z, size_t t) const;
 
-      size_t size() const;
+      size_t volume() const;
       void isolate();
 
     private:

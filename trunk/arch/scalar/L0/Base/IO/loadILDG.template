@@ -9,8 +9,8 @@ Core::Field< Element, L, T > Base::IO::loadILDG(std::string const &filename)
 
   //Poor man's parser for reading the precision should be inserted here, beyond we now assume double as input
   Element *dataPtr = result.raw();
-  reader.read(dataPtr, L * L * L * T);
+  reader.read(dataPtr, result.size());
   if (!Base::bigEndian)
-    swapEndian(dataPtr, dataPtr + L * L * L * T, sizeof(double));
+    swapEndian(dataPtr, dataPtr + result.volume(), sizeof(double));
   return result;
 }

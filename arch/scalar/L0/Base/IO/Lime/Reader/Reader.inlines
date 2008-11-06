@@ -12,11 +12,11 @@ namespace Base
 
       inline void Reader::retrieveRecord(size_t const record)
       {
-        if (record == d_types.end() - d_types.begin())
+        if (record >= d_types.end() - d_types.begin())
         {
            d_fail = true; //Record does not exist
-	   return;
-	}
+           return;
+        }
         d_currentRecord = record;
         d_in.seekg(d_offsets[d_currentRecord], std::ios::beg);
       }

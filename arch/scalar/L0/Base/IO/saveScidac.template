@@ -7,7 +7,7 @@ void Base::IO::saveScidac(Core::Field< Element, L, T > const &field, std::string
   writer.newRecord("scidac-binary-data");
 
   float buffer[elements];
-  for (size_t siteIdx = 0; siteIdx < L * L * L * T; ++siteIdx)
+  for (size_t siteIdx = 0; siteIdx < field.volume(); ++siteIdx)
   {
     std::copy(reinterpret_cast< double const* >(&(field.constPhysicalIndex(siteIdx))), reinterpret_cast< double const* >(&(field.constPhysicalIndex(siteIdx))) + elements, buffer);
     if (!Base::bigEndian)

@@ -14,7 +14,7 @@ Core::Field< Element, L, T > Base::IO::loadScidac(std::string const &filename)
   Element *dataPtr = result.raw(); //Starting memory address of the field.
   float buffer[elements];
 
-  for (size_t siteIdx = 0; siteIdx < result.volume(); ++siteIdx)
+  for (size_t siteIdx = 0; siteIdx < result.size(); ++siteIdx)
   {
     reader.read(buffer, elements);
     if (!Base::bigEndian)

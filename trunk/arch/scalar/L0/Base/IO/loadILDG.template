@@ -11,6 +11,6 @@ Core::Field< Element, L, T > Base::IO::loadILDG(std::string const &filename)
   Element *dataPtr = result.raw();
   reader.read(dataPtr, result.size());
   if (!Base::bigEndian)
-    swapEndian(dataPtr, dataPtr + result.volume(), sizeof(double));
+    swapEndian(dataPtr, dataPtr + result.size(), sizeof(double));
   return result;
 }

@@ -108,7 +108,7 @@ namespace Core
       Element const *at(size_t x, size_t y, size_t z, size_t t) const;
       Element const *constAt(size_t x, size_t y, size_t z, size_t t) const;
 
-      size_t volume() const;
+      size_t size() const; //Enumerates the number of Elements in this field (for looping)
       void isolate();
 
     private:

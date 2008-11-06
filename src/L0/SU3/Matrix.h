@@ -1,6 +1,7 @@
 #ifndef GUARD_SU3_MATRIX_H
 #define GUARD_SU3_MATRIX_H
 
+#include <algorithm>
 #include <complex>
 #include <iostream>
 

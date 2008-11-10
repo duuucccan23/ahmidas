@@ -1,7 +1,7 @@
 #include "ScidacChecksum.ih"
 
 // Produces a lookup table for crc32 checksum calculations
-// Checked against known standard CRC32 table, found to be working correctly
+// Checked against known standard crc32 table, found to be working correctly
 
 void Base::ScidacChecksum::createTable()
 {

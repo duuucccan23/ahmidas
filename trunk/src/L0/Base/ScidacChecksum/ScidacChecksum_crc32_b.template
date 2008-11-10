@@ -1,11 +1,11 @@
 template< typename Element >
-uint32_t Base::ScidacChecksum::crc32(Element &buffer)
+uint32_t Base::ScidacChecksum::crc32(Element const &buffer)
 {
-  unsigned char *cBuffer = reinterpret_cast< unsigned char* >(&buffer);
+  unsigned char const *cBuffer = reinterpret_cast< unsigned char const* >(&buffer);
 
   uint32_t crc = ~uint32_t(0);
   for (size_t ctr = 0; ctr < sizeof(Element); ++ctr)
-    crc = crcTable[(crc ^ cBuffer[ctr]) & 0xff] ^ (crc >> 8);
+    crc = d_crcTable[(crc ^ cBuffer[ctr]) & 0xff] ^ (crc >> 8);
 
   return ~crc;
 }

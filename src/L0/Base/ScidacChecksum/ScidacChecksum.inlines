@@ -1,0 +1,10 @@
+inline Base::ScidacChecksum::ScidacChecksum()
+  : d_sum29(0), d_sum31(0)
+{
+  createTable();
+}
+
+inline void Base::ScidacChecksum::clear()
+{
+  d_sum29 = d_sum31 = 0;
+}

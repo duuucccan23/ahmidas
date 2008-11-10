@@ -1,10 +1,15 @@
 inline Base::ScidacChecksum::ScidacChecksum()
-  : d_sum29(0), d_sum31(0)
+  : d_sum.as64[0]
 {
   createTable();
 }
 
 inline void Base::ScidacChecksum::clear()
 {
-  d_sum29 = d_sum31 = 0;
+  d_sum.as64 = 0;
+}
+
+inline uint64_t Base::ScidacChecksum::checksum() const
+{
+  return d_sum.as64;
 }

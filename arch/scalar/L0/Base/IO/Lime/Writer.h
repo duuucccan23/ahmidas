@@ -55,10 +55,10 @@ namespace Base
           void write(DataType const *buffer, uint64_t elements);
 
           template< typename DataType >
-          void write(DataType const &buffer, uint64_t elements);
+          void write(DataType const *buffer, DataType const *finish);
 
           template< typename DataType >
-          void write(DataType const *buffer, DataType const *finish);
+          void fill(DataType const &buffer, uint64_t elements);
 
           bool fail() const;
           bool good() const;

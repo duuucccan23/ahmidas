@@ -70,8 +70,12 @@ void Tool::IO::saveScidac(Source::Stochastic < L, T > const &source, std::string
 
     std::copy(tempfield + 24 * (slice - 1) - srcIdx * 6, tempfield + 24 * (slice - 1) + 6, inserter);
     writer.write(inserter, 24 * slice);
-    scidac.blockAggregate(inserter, 24, 1, rank);
+    rank = scidac.blockAggregate(inserter, 24, 1, rank);
     std::fill_n(inserter, 6 * srcIdx + 6, zero.asUInt32);
+
+    // Write out a closing block with zeroes
+    writer.write(zero.asUInt32, 24 * (T - timeIdx - 1) * slice);
+    scidac.blockAggregate(zero.asUInt32, 24, 24 * (T - timeIdx - 1) * slice, rank);
 
     // Placeholder for serious storage of this quantity
     std::cout << "Scidac checksum for " << ostr.str()

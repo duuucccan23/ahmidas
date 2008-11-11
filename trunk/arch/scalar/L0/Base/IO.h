@@ -2,6 +2,7 @@
 #define GUARD_BASE_IO_H
 
 #include <string>
+#include <iostream>
 #include <L0/Base/IO/Lime/Reader.h>
 #include <L0/Base/IO/Lime/Writer.h>
 #include <L0/Base/Weave.h>

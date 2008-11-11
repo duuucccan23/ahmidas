@@ -12,10 +12,17 @@ void Tool::IO::saveScidac(Source::Stochastic < L, T > const &source, std::string
   //Source::Stochastic holds SU3::Vectors, so 3 complex numbers per site = 6 floats
   size_t const slice = L * L * L;
 
-  // Copy all values to a minimal local variable to perform endianness conversion
-  static_assert(sizeof(uint32_t) == sizeof(float), "float and uint32_t are of different size"); // Check if the following hacks are allowed
-  uint32_t *smallfield = new uint32_t[6 * slice];
+  // The following snippet is probably overly cautious, but should be there for completeness' sake
+  union {asFloat, asUInt32;} zero;
+  zero.asFloat = 0.0;
+  if (!Base::bigEndian)
+    Base::swapEndian(&zero.asUInt32, &zero.asUInt32 + 1);
 
+  // Check if the following hacks are allowed
+  static_assert(sizeof(uint32_t) == sizeof(float), "float and uint32_t are of different size");
+
+  // Copy all values to a minimal local variable to perform endianness conversion
+  uint32_t *smallfield = new uint32_t[6 * slice];
   double const *srcPtr = reinterpret_cast< double const* >(source.source());
   float *smallPtr = reinterpret_cast< float * >(smallfield);
 
@@ -25,24 +32,17 @@ void Tool::IO::saveScidac(Source::Stochastic < L, T > const &source, std::string
   if (!Base::bigEndian)
     Base::swapEndian(smallfield, smallfield + 6 * slice);
 
-  // Setup an almost complete timeslicefield for writing out
-  uint32_t *tempfield = new uint32_t[24 * slice - 18]; // NOTE Changed -9 to -18, think we forgot factor 2 from complex
-  for (size_t iter = 0; iter < slice - 1; ++iter) //NOTE THE MINUS 1 SHOULD BE THERE!
+  // Setup an overly complete timeslicefield for writing out
+  uint32_t *tempfield = new uint32_t[24 * slice + 18];
+  std::fill_n(tempfield, 18, zero.asUInt32);
+
+  uint32_t *base = tempfield + 18;
+  for (size_t iter = 0; iter < slice; ++iter)
   {
-    std::copy(smallfield + iter * 6, smallfield + (iter + 1) * 6, tempfield + iter * 24);
-    std::fill(tempfield + iter * 24 + 6, tempfield + (iter + 1) * 24, 0.);
+    std::copy(smallfield + iter * 6, smallfield + (iter + 1) * 6, base + iter * 24);
+    std::fill(base + iter * 24 + 6, base + (iter + 1) * 24, zero.asUInt32);
   }
   delete[] smallfield;
-
-  // The following snippet is probably overly cautious, but should be there for completeness' sake
-  union {asFloat, asUInt32;} zero;
-  zero.asFloat = 0.0;
-  if (!Base::bigEndian)
-    Base::swapEndian(&zero.asUInt32, &zero.asUInt32 + 1);
-
-  // Prepare field of zeros for writing in the unused timeslices.
-  uint32_t *inserter = new uint32_t[4 * slice];
-  std::fill_n(inserter, 4 * slice, zero.asUInt32);
 
   // Prepare for calculation of Scidac checksum
   Base::ScidacChecksum scidac;
@@ -56,33 +56,23 @@ void Tool::IO::saveScidac(Source::Stochastic < L, T > const &source, std::string
     writer.newRecord("scidac-binary-data");
 
     // Write out a leading block with zeroes
-    writer.write(zero.asUInt32, 24 * timeIdx * slice);
+    writer.fill(zero.asUInt32, 24 * timeIdx * slice);
     size_t rank = scidac.blockAggregate(zero.asUInt32, 24, 24 * timeIdx * slice);
 
     // Copy in the timeslice we want, with proper zero padding
-    std::copy(tempfield, tempfield + (4 - srcIdx) * 6, inserter + srcIdx * 6);
-    writer.write(inserter, 24 * slice);
-    rank = scidac.blockAggregate(inserter, 24, 1, rank);
-    std::fill_n(inserter + srcIdx * 6, (4 - srcIdx) * 6, zero.asUInt32);
-
-    //writer.write(tempfield + (4 - srcIdx) * 6, tempfield + 24 * (slice - 1) - 6 * srcIdx);
-    rank = scidac.blockAggregate(tempfield + (4 - srcIdx) * 6, tempfield + 24 * (slice - 1) - 6 * srcIdx, 24, rank);
-
-    std::copy(tempfield + 24 * (slice - 1) - srcIdx * 6, tempfield + 24 * (slice - 1) + 6, inserter);
-    writer.write(inserter, 24 * slice);
-    rank = scidac.blockAggregate(inserter, 24, 1, rank);
-    std::fill_n(inserter, 6 * srcIdx + 6, zero.asUInt32);
+    writer.write(tempfield + (3 - srcIdx) * 6, 24 * slice);
+    rank = scidac.blockAggregate(tempfield + (4 - srcIdx) * 6, 24 * slice, 24, rank);
 
     // Write out a closing block with zeroes
-    writer.write(zero.asUInt32, 24 * (T - timeIdx - 1) * slice);
+    writer.fill(zero.asUInt32, 24 * (T - timeIdx - 1) * slice);
     scidac.blockAggregate(zero.asUInt32, 24, 24 * (T - timeIdx - 1) * slice, rank);
 
     // Placeholder for serious storage of this quantity
-    std::cout << "Scidac checksum for " << ostr.str()
-              << ": " << std::hex << scidac.lower() << ' ' << scidac.upper() << std::endl;
+    std::cout << "Scidac checksum for " << ostr.str() << ": " << std::hex << std::setw(8) << std::setfill('0')
+              << scidac.lower() << ' ' << scidac.upper() << std::endl;
     scidac.clear(); // Reset checksum to zero
     ostr.seekp(-1, std::ios::cur); //Rewind the stream in preparation of the next name
   }
+
   delete[] tempfield;
-  delete[] inserter;
 }

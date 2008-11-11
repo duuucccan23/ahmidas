@@ -20,6 +20,26 @@ namespace Base
         finalize();
       }
 
+      template< typename DataType >
+      inline void Writer::write(DataType const *buffer, uint64_t elements)
+      {
+        d_stream.write(reinterpret_cast< const char* >(buffer), elements * sizeof(DataType));
+      }
+
+      template< typename DataType >
+      inline void Writer::write(DataType const &buffer, uint64_t elements)
+      {
+        for (uint64_t ctr = 0; ctr < elements; ++ctr)
+          d_stream.write(reinterpret_cast< const char* >(&buffer), sizeof(DataType));
+      }
+
+      template< typename DataType >
+      inline void Writer::write(DataType const *buffer, DataType const *finish)
+      {
+        for (DataType const *iter = buffer; buffer != finish; ++iter)
+          d_stream.write(reinterpret_cast< const char* >(iter), sizeof(DataType));
+      }
+
       inline bool Writer::fail() const
       {
         return d_stream.fail();

@@ -1,63 +1,84 @@
 template< size_t L, size_t T >
-void Tool::IO::saveScidac(Source::Stochastic < L, T > const &source, std::string const &basefilename, size_t timeslice)
+void Tool::IO::saveScidac(Source::Stochastic < L, T > const &source, std::string const &basefilename, size_t timeIdx)
 {
   //Rough error checking
-  if (timeslice < 0 || timeslice >= T)
+  if (timeIdx < 0 || timeIdx >= T)
     return;
 
   //Setup filename (with proper 0 padding in case of long T dimension)
   std::ostringstream ostr(basefilename, std::ios::ate);
-  ostr << "." << std::setw(static_cast< int >(std::floor(std::log10(T) + 1))) << std::setfill('0') << timeslice << ".0";
+  ostr << "." << std::setw(static_cast< int >(std::floor(std::log10(T) + 1))) << std::setfill('0') << timeIdx << ".0";
 
   //Source::Stochastic holds SU3::Vectors, so 3 complex numbers per site = 6 floats
-  size_t elements = L * L * L * 6;
+  size_t const slice = L * L * L;
 
-  //Copy all values to a minimal local variable to perform endianness conversion
-  float *smallfield = new float[elements];
+  // Copy all values to a minimal local variable to perform endianness conversion
+  static_assert(sizeof(uint32_t) == sizeof(float), "float and uint32_t are of different size"); // Check if the following hacks are allowed
+  uint32_t *smallfield = new uint32_t[6 * slice];
+
   double const *srcPtr = reinterpret_cast< double const* >(source.source());
-  for (size_t iter = 0; iter < elements; ++iter)
-    smallfield[iter] = *(srcPtr + iter);
+  float *smallPtr = reinterpret_cast< float * >(smallfield);
 
-  //Perform endianness conversion if needed
+  std::copy(srcPtr, srcPtr + 6 * slice, smallPtr);
+
+  // Perform endianness conversion if needed
   if (!Base::bigEndian)
-    Base::swapEndian(smallfield, smallfield + elements, sizeof(float));
+    Base::swapEndian(smallfield, smallfield + 6 * slice);
 
-  //Setup an almost complete timeslicefield for writing out
-  float *tempfield = new float[elements * 4 - 9];
-  for (size_t iter = 0; iter < (L * L * L) - 1; ++iter) //NOTE THE MINUS 1 SHOULD BE THERE!
+  // Setup an almost complete timeslicefield for writing out
+  uint32_t *tempfield = new uint32_t[24 * slice - 18]; // NOTE Changed -9 to -18, think we forgot factor 2 from complex
+  for (size_t iter = 0; iter < slice - 1; ++iter) //NOTE THE MINUS 1 SHOULD BE THERE!
   {
     std::copy(smallfield + iter * 6, smallfield + (iter + 1) * 6, tempfield + iter * 24);
     std::fill(tempfield + iter * 24 + 6, tempfield + (iter + 1) * 24, 0.);
   }
   delete[] smallfield;
 
-  //Prepare field of zeros for writing in the unused timeslices.
-  float *zerofield = new float[elements * 4];
-  std::fill(zerofield, zerofield + elements * 4, 0.);
+  // The following snippet is probably overly cautious, but should be there for completeness' sake
+  union {asFloat, asUInt32;} zero;
+  zero.asFloat = 0.0;
+  if (!Base::bigEndian)
+    Base::swapEndian(&zero.asUInt32, &zero.asUInt32 + 1);
 
-  //Loop over the 4 sourcefiles to make
+  // Prepare field of zeros for writing in the unused timeslices.
+  uint32_t *inserter = new uint32_t[4 * slice];
+  std::fill_n(inserter, 4 * slice, zero.asUInt32);
+
+  // Prepare for calculation of Scidac checksum
+  Base::ScidacChecksum scidac;
+
+  // Loop over the 4 sourcefiles to make
   for (size_t srcIdx = 0; srcIdx < 4; ++srcIdx)
   {
     ostr << srcIdx; //Create full filename
     Base::IO::Lime::Writer writer(ostr.str()); //Create Lime::Writer for this file
-    ostr.seekp(-1, std::ios::cur); //Rewind the stream in preparation of the next name
 
     writer.newRecord("scidac-binary-data");
 
-    //Loop over timeslices, writing either zeroes or the constructed timeslicefield
-    for (size_t t_iter = 0; t_iter < T; ++t_iter)
-    {
-      if (t_iter == timeslice)
-      {
-        //Prepend a set of zeros if needed, write field and append if needed more zeros
-        writer.write(zerofield, srcIdx * 6);
-        writer.write(tempfield, L * L * L * 24 - 18);
-        writer.write(zerofield, (3 - srcIdx) * 6);
-        continue;
-      }
-      writer.write(zerofield, elements * 4);
-    }
+    // Write out a leading block with zeroes
+    writer.write(zero.asUInt32, 24 * timeIdx * slice);
+    size_t rank = scidac.blockAggregate(zero.asUInt32, 24, 24 * timeIdx * slice);
+
+    // Copy in the timeslice we want, with proper zero padding
+    std::copy(tempfield, tempfield + (4 - srcIdx) * 6, inserter + srcIdx * 6);
+    writer.write(inserter, 24 * slice);
+    rank = scidac.blockAggregate(inserter, 24, 1, rank);
+    std::fill_n(inserter + srcIdx * 6, (4 - srcIdx) * 6, zero.asUInt32);
+
+    //writer.write(tempfield + (4 - srcIdx) * 6, tempfield + 24 * (slice - 1) - 6 * srcIdx);
+    rank = scidac.blockAggregate(tempfield + (4 - srcIdx) * 6, tempfield + 24 * (slice - 1) - 6 * srcIdx, 24, rank);
+
+    std::copy(tempfield + 24 * (slice - 1) - srcIdx * 6, tempfield + 24 * (slice - 1) + 6, inserter);
+    writer.write(inserter, 24 * slice);
+    scidac.blockAggregate(inserter, 24, 1, rank);
+    std::fill_n(inserter, 6 * srcIdx + 6, zero.asUInt32);
+
+    // Placeholder for serious storage of this quantity
+    std::cout << "Scidac checksum for " << ostr.str()
+              << ": " << std::hex << scidac.lower() << ' ' << scidac.upper() << std::endl;
+    scidac.clear(); // Reset checksum to zero
+    ostr.seekp(-1, std::ios::cur); //Rewind the stream in preparation of the next name
   }
   delete[] tempfield;
-  delete[] zerofield;
+  delete[] inserter;
 }

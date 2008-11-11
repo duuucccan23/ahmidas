@@ -52,7 +52,13 @@ namespace Base
           void newRecord(std::string const &type);
 
           template< typename DataType >
-          void write(DataType *buffer, uint64_t elements);
+          void write(DataType const *buffer, uint64_t elements);
+
+          template< typename DataType >
+          void write(DataType const &buffer, uint64_t elements);
+
+          template< typename DataType >
+          void write(DataType const *buffer, DataType const *finish);
 
           bool fail() const;
           bool good() const;
@@ -64,7 +70,7 @@ namespace Base
     }
   }
 }
+
 #include "Writer/Writer.inlines"
-#include "Writer/Writer_write.template"
 
 #endif

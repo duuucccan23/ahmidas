@@ -1,6 +1,6 @@
 #include "Writer.ih"
 
-void Base::IO::Lime::Writer::newRecord(std::string const &type)
+void Tool::IO::Lime::Writer::newRecord(std::string const &type)
 {
   if (d_hasWritten)
     finalize();

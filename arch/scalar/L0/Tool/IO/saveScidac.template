@@ -1,5 +1,5 @@
 template< typename Element, size_t L, size_t T >
-void Base::IO::saveScidac(Core::Field< Element, L, T > const &field, std::string const &filename)
+void Tool::IO::saveScidac(Core::Field< Element, L, T > const &field, std::string const &filename)
 {
   size_t const elements = sizeof(Element) / sizeof(double);
   Lime::Writer writer(filename);

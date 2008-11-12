@@ -1,5 +1,5 @@
 template< typename Element, size_t L, size_t T >
-Core::Field< Element, L, T > Base::IO::loadILDG(std::string const &filename)
+Core::Field< Element, L, T > Tool::IO::loadILDG(std::string const &filename)
 {
   static_assert(sizeof(uint32_t) == sizeof(float), "Sizes of uint32_t and float differ.");
   static_assert(sizeof(uint64_t) == sizeof(double), "Sizes of uint64_t and double differ.");
@@ -17,7 +17,7 @@ Core::Field< Element, L, T > Base::IO::loadILDG(std::string const &filename)
   {
     reader.read(dataPtr, result.size());
     if (!Base::bigEndian)
-      swapEndian(dataPtr, dataPtr + result.size(), sizeof(double));
+      Base::swapEndian(dataPtr, dataPtr + result.size(), sizeof(double));
     return result;
   }
 
@@ -28,7 +28,7 @@ Core::Field< Element, L, T > Base::IO::loadILDG(std::string const &filename)
   {
     reader.read(elem32, elSize);
     if (!Base::bigEndian)
-      swapEndian(elem32, elem32 + elSize);
+      Base::swapEndian(elem32, elem32 + elSize);
     std::copy(reinterpret_cast< float* >(elem32), reinterpret_cast< float* >(elem32) + elSize,
               reinterpret_cast< double* >(dataPtr));
   }

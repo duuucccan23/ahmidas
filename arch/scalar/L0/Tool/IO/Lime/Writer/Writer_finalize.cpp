@@ -1,6 +1,6 @@
 #include "Writer.ih"
 
-void Base::IO::Lime::Writer::finalize()
+void Tool::IO::Lime::Writer::finalize()
 {
   uint64_t written = d_stream.tellp() - d_record.offset - 144;
   d_stream.write(s_padding, (8 - (written % 8)) % 8);

@@ -1,4 +1,4 @@
-namespace Base
+namespace Tool
 {
   namespace IO
   {
@@ -106,7 +106,7 @@ namespace Base
       {
         d_in.seekg(d_offsets[record] + offset, std::ios::beg);
       }
-      
+
     }
   }
 }

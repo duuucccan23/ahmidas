@@ -1,3 +1,4 @@
+#include <iostream>
 namespace Core
 {
   template< typename Element, size_t L, size_t T >
@@ -8,6 +9,7 @@ namespace Core
     // Now all we need to do is shift the offset to reflect the new situation (see documentation)
     d_offsets[idx] += d_weave.localSize(idx) - dir;
     d_offsets[idx] %= d_weave.localSize(idx);
+    std::cerr << "[DEBUG] in shifting routine\n" << d_field[0] << std::endl;
     return *this;
   }
 }

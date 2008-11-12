@@ -15,11 +15,12 @@ void Path::step(Core::Field< SU3::Matrix, L, T > *path, Core::Field< QCD::Gauge,
 template< size_t L, size_t T >
 Core::Field< SU3::Matrix, L, T > Path::step(Core::Field< QCD::Gauge, L, T > &field, Base::SpaceTimeIndex idx, Base::Direction dir)
 {
-  if (dir == Base::dir_UP)
-  {
-    Core::Field< SU3::Matrix, L, T > result(field.template component< SU3::Matrix >(idx));
-    result.shift(idx, Base::dir_UP);
-    return result;
-  }
-  return Core::Field< SU3::Matrix, L, T > (field.template component< SU3::Matrix >(idx).dagger());
+  if (dir == Base::dir_DOWN)
+    return Core::Field< SU3::Matrix, L, T > (field.template component< SU3::Matrix >(idx).dagger());
+
+  Core::Field< SU3::Matrix, L, T > result(field.template component< SU3::Matrix >(idx));
+  std::cerr << "[DEBUG] at construction\n" << result[0] << std::endl;
+  result.shift(idx, Base::dir_UP);
+  std::cerr << "[DEBUG] after shift\n" << result[0] << std::endl;
+  return result;
 }

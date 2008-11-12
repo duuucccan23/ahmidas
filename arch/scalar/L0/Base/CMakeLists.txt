@@ -1,1 +1,3 @@
 ADD_SUBDIRECTORY(IO)
+SET(Sources_ILDG     IO/ILDGinfo_ILDGinfo.cpp)
+ADD_LIBRARY(ILDG ${Sources_ILDG})

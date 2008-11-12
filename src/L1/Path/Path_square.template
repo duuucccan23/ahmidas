@@ -4,6 +4,7 @@ Core::Field< SU3::Matrix, L, T > Path::square(Core::Field< QCD::Gauge, L, T > &f
   if (via == to)
     return Core::Field< SU3::Matrix, L, T > (SU3::Matrix::identity());
   Core::Field< SU3::Matrix, L, T > result(Path::step(field, via, dirVia)); //step1
+
   Path::step(&result, field, to, dirTo); //step2
   Path::step(&result, field, via, opposite(dirVia)); //step3
   Path::step(&result, field, to, opposite(dirTo)); //back to starting point

@@ -1,0 +1,11 @@
+Anatomy of a serial MILC file
+
+Stores data as floats, appears to not do anything with endianness...
+
+Includes a header of 96 bytes, which contains, sequentially:
+int32_t   magic_number;
+char[64]  time_stamp;
+int32_t   dims[4];
+int32_t   order;
+uint32_t  scidac_checksum_29;
+uint32_t  scidac_checksum_31;

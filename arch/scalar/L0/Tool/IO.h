@@ -3,10 +3,11 @@
 
 #include <fstream>
 #include <string>
-#include <L0/Tool/IO/Lime/Reader.h>
-#include <L0/Tool/IO/Lime/Writer.h>
+#include <L0/Base/ScidacChecksum.h>
 #include <L0/Base/Weave.h>
 #include <L0/Core/Field.h>
+#include <L0/Tool/IO/Lime/Reader.h>
+#include <L0/Tool/IO/Lime/Writer.h>
 
 // Below is necessary to prevent circular including when we make IO functions friends of field.
 
@@ -27,8 +28,8 @@ namespace Tool
     struct MILCinfo
     {
       int32_t     magicNumber;
-      char        timestamp[64];
       int32_t     dims[4];
+      char        timestamp[64];
       int32_t     order;
       uint64_t    checksum;
 

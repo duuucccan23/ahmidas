@@ -12,7 +12,7 @@ inline size_t realLen(char *string)
   return std::strcspn(realFront(string), " \t");
 }
 
-Base::IO::ILDGinfo::ILDGinfo(Base::IO::Lime::Reader &reader)
+Tool::IO::ILDGinfo::ILDGinfo(Tool::IO::Lime::Reader &reader)
 {
   reader.retrieveRecord(reader.findRecord("ildg-format"));
   assert(reader.good());
@@ -107,6 +107,7 @@ Base::IO::ILDGinfo::ILDGinfo(Base::IO::Lime::Reader &reader)
         continue;
       }
     }
+    break;
   }
   delete[] ildgCStr;
 }

@@ -13,11 +13,16 @@
 
 int main(int argc, char **argv)
 {
-  Core::Field<QCD::Gauge, 4, 4 > field = Base::IO::loadILDG<QCD::Gauge, 4, 4 >(std::string("../test/lat.sample.l4444.ildg"));
+  Core::Field<QCD::Gauge, 4, 4 > field = Tool::IO::loadILDG<QCD::Gauge, 4, 4 >(std::string("../test/lat.sample.l4444.ildg"));
   Tool::reunitarize(&field);
   std::cerr << field[0][0] << std::endl;
 
-  Core::Field< QCD::Gauge, 8, 8 > qField = Base::IO::loadILDG< QCD::Gauge, 8, 8 >(std::string("../test/conf.88"));
+  Core::Field<QCD::Gauge, 4, 4 > sfield = Tool::IO::loadMILC<QCD::Gauge, 4, 4 >(std::string("../test/lat.sample.l4444"));
+  Tool::reunitarize(&sfield);
+  std::cerr << sfield[0][0] << std::endl;
+  std::cerr << det(sfield[0][0]) << std::endl;
+
+  Core::Field< QCD::Gauge, 8, 8 > qField = Tool::IO::loadILDG< QCD::Gauge, 8, 8 >(std::string("../test/conf.88"));
   Tool::reunitarize(&field);
   std::cerr << qField[0][0] << std::endl;
 

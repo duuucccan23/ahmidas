@@ -1,5 +1,5 @@
 template< typename Element, size_t L, size_t T >
-Core::Field< Element, L, T > Base::IO::loadScidac(std::string const &filename)
+Core::Field< Element, L, T > Tool::IO::loadScidac(std::string const &filename)
 {
   size_t const elements = sizeof(Element) / sizeof(double);
   Lime::Reader reader(filename);

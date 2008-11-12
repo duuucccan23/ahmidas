@@ -11,7 +11,7 @@
 #include <L0/Base/Base.h>
 #include <L0/Base/Weave.h>
 
-namespace Base
+namespace Tool
 {
   namespace IO
   {

@@ -1,6 +1,6 @@
 #include "Reader.ih"
 
-Base::IO::Lime::Reader::Reader(std::string const &filename)
+Tool::IO::Lime::Reader::Reader(std::string const &filename)
   : d_filename(filename), d_in(filename.c_str()), d_currentRecord(0),
     d_fail(false), d_messagesCorrect(true)
 {

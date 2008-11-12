@@ -1,0 +1,18 @@
+template< typename Element, size_t L, size_t T >
+Core::Field< Element, L, T > Tool::IO::loadMILC(std::string const &filename)
+{
+  std::ifstream input(filename.c_str());
+  MILCinfo info(input);
+
+  Core::Field< Element, L, T > result;
+  size_t const elemSize = sizeof(Element) / sizeof(double);
+  float elem32[elemSize];
+
+  for (size_t ctr = 0; ctr < result.size(); ++ctr)
+  {
+    input.read(reinterpret_cast< char* >(elem32), elemSize * sizeof(float));
+    std::copy(elem32, elem32 + elemSize, reinterpret_cast< double* >(result.raw()));
+  }
+
+  return result;
+}

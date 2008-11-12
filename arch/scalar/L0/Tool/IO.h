@@ -2,16 +2,12 @@
 #define GUARD_BASE_IO_H
 
 #include <string>
-#include <L0/Base/IO/Lime/Reader.h>
-#include <L0/Base/IO/Lime/Writer.h>
+#include <L0/Tool/IO/Lime/Reader.h>
+#include <L0/Tool/IO/Lime/Writer.h>
 #include <L0/Base/Weave.h>
+#include <L0/Core/Field.h>
 
 // Below is necessary to prevent circular including when we make IO functions friends of field.
-namespace Core
-{
-  template <typename Element, size_t L, size_t T >
-  class Field;
-}
 
 namespace Base
 {

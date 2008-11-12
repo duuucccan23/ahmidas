@@ -6,6 +6,7 @@
 #include <sstream>
 #include <string>
 
+#include <L0/Base/Base.h>
 #include <L0/Base/IO/Lime/Writer.h>
 #include <L0/Base/ScidacChecksum.h>
 #include <L1/Source/Full.h>

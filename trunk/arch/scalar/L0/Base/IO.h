@@ -2,7 +2,6 @@
 #define GUARD_BASE_IO_H
 
 #include <string>
-#include <iostream>
 #include <L0/Base/IO/Lime/Reader.h>
 #include <L0/Base/IO/Lime/Writer.h>
 #include <L0/Base/Weave.h>
@@ -18,6 +17,16 @@ namespace Base
 {
   namespace IO
   {
+    struct ILDGinfo
+    {
+      std::string version;
+      std::string field;
+      std::string precision;
+      size_t      dims[4];
+
+      ILDGinfo(Lime::Reader &reader);
+    };
+
     template< typename Element, size_t L, size_t T >
     Core::Field< Element, L, T > loadILDG(std::string const &filename);
 

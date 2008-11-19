@@ -1,5 +1,4 @@
-#ifndef GUARD_BASE_H
-#define GUARD_BASE_H
+#pragma once
 
 #include <algorithm>
 #include <cassert>
@@ -42,5 +41,3 @@ namespace Base
 }
 
 #include "Base/Base.inlines"
-
-#endif

@@ -1,5 +1,4 @@
-#ifndef GUARD_BASE_IO_H
-#define GUARD_BASE_IO_H
+#pragma once
 
 #include <string>
 #include <L0/Base/IO/Lime/Reader.h>
@@ -25,5 +24,3 @@ namespace Base
 }
 #include "IO/loadILDG.template"
 #include "IO/saveILDG.template"
-
-#endif

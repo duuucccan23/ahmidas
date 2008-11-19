@@ -1,5 +1,4 @@
-#ifndef GUARD_BASE_IO_LIME_READER_H
-#define GUARD_BASE_IO_LIME_READER_H
+#pragma once
 
 #include <stdint.h>
 
@@ -81,5 +80,3 @@ namespace Tool
   }
 }
 #include "Reader/Reader.inlines"
-
-#endif

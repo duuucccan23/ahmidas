@@ -1,5 +1,4 @@
-#ifndef GUARD_QCD_TENSOR_H
-#define GUARD_QCD_TENSOR_H
+#pragma once
 
 #include <complex>
 
@@ -12,7 +11,7 @@ namespace QCD
 
   std::complex< double > tr(Tensor const &tensor);
   std::complex< double > tr(hcTensor const &tensor);
-  
+
   class Tensor
   {
     std::complex< double > d_data[144];
@@ -66,5 +65,3 @@ namespace QCD
 
 #include "Tensor/Tensor.inlines"
 #include "Tensor/hcTensor.inlines"
-
-#endif

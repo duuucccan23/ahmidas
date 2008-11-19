@@ -1,5 +1,4 @@
-#ifndef GUARD_SMEAR_APE_H
-#define GUARD_SMEAR_APE_H
+#pragma once
 
 #include <L0/Core/Field.h>
 #include <L0/QCD/Gauge.h>
@@ -28,5 +27,3 @@ namespace Smear
 #include "APE/APE.inlines"
 #include "APE/APE_smear_a.template"
 #include "APE/APE_smear_b.template"
-
-#endif

@@ -1,5 +1,4 @@
-#ifndef GUARD_CONTRACT_TWOPOINT_H
-#define GUARD_CONTRACT_TWOPOINT_H
+#pragma once
 
 #include <L0/Core/Correlator.h>
 #include <L0/Core/TMatrix.h>
@@ -11,5 +10,3 @@ namespace Contract
 }
 
 #include "TwoPoint/twoPoint_a.template"
-
-#endif

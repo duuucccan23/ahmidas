@@ -1,5 +1,4 @@
-#ifndef GUARD_SU3_VECTOR_H
-#define GUARD_SU3_VECTOR_H
+#pragma once
 
 #include <L0/SU3/Matrix.h>
 
@@ -61,5 +60,3 @@ namespace SU3
 }
 
 #include "Vector/Vector.inlines"
-
-#endif

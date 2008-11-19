@@ -1,5 +1,4 @@
-#ifndef GUARD_TOOL_H
-#define GUARD_TOOL_H
+#pragma once
 
 #include <L0/Base/Weave.h>
 #include <L0/Core/Field.h>
@@ -53,5 +52,3 @@ namespace Tool
 #include "Tool/Tool_spatialPlaquette.template"
 #include "Tool/Tool_temporalPlaquette.template"
 #include "Tool/Tool_fixCoulombGauge.template"
-
-#endif

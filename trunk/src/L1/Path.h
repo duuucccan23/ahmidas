@@ -1,5 +1,4 @@
-#ifndef GUARD_PATH_H
-#define GUARD_PATH_H
+#pragma once
 
 #include <L0/Base/Base.h>
 #include <L0/Core/Component.h>
@@ -25,6 +24,3 @@ namespace Path
 #include "Path/Path_step.template"
 #include "Path/Path_staple.template"
 #include "Path/Path_square.template"
-
-#endif
-

@@ -1,5 +1,4 @@
-#ifndef GUARD_TOOL_IO_H
-#define GUARD_TOOL_IO_H
+#pragma once
 
 #include <cassert>
 #include <iomanip>
@@ -26,5 +25,3 @@ namespace Tool
 
 #include "IO/saveScidac.template"
 #include "IO/saveScidac_b.template"
-
-#endif

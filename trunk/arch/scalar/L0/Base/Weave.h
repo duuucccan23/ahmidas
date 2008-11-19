@@ -1,5 +1,4 @@
-#ifndef GUARD_BASE_WEAVE_H
-#define GUARD_BASE_WEAVE_H
+#pragma once
 
 #include <L0/Base/Base.h>
 
@@ -41,5 +40,3 @@ namespace Base
 #include "Weave/Weave.template"
 #include "Weave/Weave_Weave.template"
 #include "Weave/Weave_instance.template"
-
-#endif

@@ -1,5 +1,4 @@
-#ifndef GUARD_QCD_SPINOR_H
-#define GUARD_QCD_SPINOR_H
+#pragma once
 
 #include <algorithm>
 #include <complex>
@@ -62,5 +61,3 @@ namespace QCD
 
 #include "Spinor/Spinor.inlines"
 #include "Spinor/Spinor.gamma.inlines"
-
-#endif

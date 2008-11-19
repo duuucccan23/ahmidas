@@ -1,5 +1,4 @@
-#ifndef GUARD_CORE_COMPONENT_H
-#define GUARD_CORE_COMPONENT_H
+#pragma once
 
 #include <L0/Base/Base.h>
 #include <L0/Base/Weave.h>
@@ -68,5 +67,3 @@ namespace Core
 #include "Component/Component.inlines"
 #include "Component/Component.iterator.inlines"
 #include "Component/hcComponent.inlines"
-
-#endif

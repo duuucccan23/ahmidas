@@ -12,7 +12,7 @@ void SU3::Matrix::reunitarize()
   // There are issues as we approach matrices close to unitarity. In that case, we want to avoid
   // doing some of the transformations below and bail out early. This constant sets a limit of
   // precision on this.
-  static double const precision = 4 * std::numeric_limits< double >::epsilon();
+  static double const precision = 10 * std::numeric_limits< double >::epsilon();
 
   // We calculate the distinct elements of H2, using hermiticity to avoid calculations left and right.
   static double const fac_1_3 = 1.0 / 3.0;
@@ -52,10 +52,10 @@ void SU3::Matrix::reunitarize()
   double b =     H2_diag[0] * (H2_diag[1] + H2_diag[2]) + H2_diag[1] * H2_diag[2]
                - H2_off_norm[0] - H2_off_norm[1] - H2_off_norm[2];
 
-  double Q  = a_3_2 - fac_1_3 * b; 
+  double Q  = a_3_2 - fac_1_3 * b;
 
   // Due to precision issues, unitary matrices will sometimes fail here.
-  // In that case, we find that R and Q are very close to 0, 
+  // In that case, we find that R and Q are very close to 0,
   // so we can explicitly check here.
 
   double R = a_3_2 * a_3 + 0.5 * (c - a_3 * b);

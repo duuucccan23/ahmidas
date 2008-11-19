@@ -72,6 +72,20 @@ namespace SU3
       std::complex< double > tr(std::complex< double > const *data) const;
   };
 
+  template< typename Element >
+  Matrix operator*(Matrix const &lhand, Element const &rhand);
+
+  template< typename Element >
+  Matrix operator*(Element const &lhand, Matrix const &rhand);
+
+  template< typename Element >
+  Matrix operator*(hcMatrix const &lhand, Element const &rhand);
+
+  template< typename Element >
+  Matrix operator*(Element const &lhand, hcMatrix const &rhand);
+
+
+
   class hcMatrix
   {
     friend class Matrix;

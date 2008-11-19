@@ -110,6 +110,7 @@ namespace Core
 
       size_t size() const; //Enumerates the number of Elements in this field (for looping)
       void isolate();
+      void fill(Element const &element); // Flush a field with a constant quantity
 
     private:
       size_t shiftIdxToZero(size_t const idx) const;

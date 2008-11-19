@@ -1,6 +1,33 @@
 template< size_t L, size_t T >
+void Tool::reunitarize(Core::Field< SU3::Matrix, L, T > *field)
+{
+  field->isolate();
+  for (size_t idx = 0; idx < field->size(); ++idx)
+    field->fastMemoryIndex(idx).reunitarize();
+}
+
+template< size_t L, size_t T >
 void Tool::randomize(Core::Propagator< L, T > *propagator)
 {
   for (size_t idx = 0; idx < 12; ++idx)
     Tool::randomize(&((*propagator)[idx]));
+}
+
+template< typename Element, size_t L, size_t T >
+void Tool::setToIdentity(Core::Field< Element, L, T > *field)
+{
+  field->isolate();
+  for (size_t idx = 0; idx < field.size(); ++idx)
+    field->fastMemoryIndex(idx).setToIdentity;
+}
+
+template< typename Element, size_t L, size_t T >
+std::complex< double > Tool::tr(Core::Field< Element, L, T > const &field)
+{
+  std::complex< double > result(0.0, 0.0);
+
+  for (size_t idx = 0; idx < field.size(); ++idx)
+    result += tr(field.constMemoryIndex(idx));
+
+  return result /= field.size(); // NOTE This should be made parallel with a gather call!
 }

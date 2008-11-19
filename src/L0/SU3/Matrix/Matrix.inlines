@@ -44,17 +44,17 @@ namespace SU3
   {
     return s_zero;
   }
-  
+
   inline void SU3::Matrix::setToZero()
   {
     std::fill_n(reinterpret_cast< double* >(d_data), 18, 0.0);
   }
-  
+
   inline void SU3::Matrix::setToIdentity()
   {
     std::copy(s_identity.d_data, s_identity.d_data + 9, d_data);
   }
-  
+
   inline void SU3::Matrix::setToRandom()
   {
     std::generate_n(reinterpret_cast< double* >(d_data), 18, Base::Random::fastSymmetric);
@@ -87,7 +87,6 @@ namespace SU3
     return *this;
   }
 
-  template< >
   inline Matrix &Matrix::operator+=(Matrix const &rhand)
   {
     for (size_t ctr = 0; ctr < 9; ++ctr)
@@ -103,7 +102,6 @@ namespace SU3
     return *this;
   }
 
-  template< >
   inline Matrix &Matrix::operator-=(Matrix const &rhand)
   {
     for (size_t ctr = 0; ctr < 9; ++ctr)
@@ -161,5 +159,33 @@ namespace SU3
   inline std::complex< double > Matrix::tr(std::complex< double > const *data) const
   {
     return d_data[0] + d_data[4] + d_data[8];
+  }
+
+  template< typename Scalar >
+  inline Matrix operator*(Matrix const &lhand, Scalar const &rhand)
+  {
+    Matrix result(lhand);
+    return result *= rhand;
+  }
+
+  template< typename Scalar >
+  inline Matrix operator*(Scalar const &lhand, Matrix const &rhand)
+  {
+    Matrix result(rhand);
+    return result *= lhand;
+  }
+
+  template< typename Scalar >
+  inline Matrix operator*(hcMatrix const &lhand, Scalar const &rhand)
+  {
+    Matrix result(lhand);
+    return result *= rhand;
+  }
+
+  template< typename Scalar >
+  inline Matrix operator*(Scalar const &lhand, hcMatrix const &rhand)
+  {
+    Matrix result(rhand);
+    return result *= lhand;
   }
 }

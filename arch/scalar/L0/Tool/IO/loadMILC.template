@@ -20,7 +20,7 @@ Core::Field< Element, L, T > Tool::IO::loadMILC(std::string const &filename)
     if (!Base::bigEndian)
       Base::swapEndian(elem32, elem32 + elemSize, sizeof(uint32_t));
     std::copy(reinterpret_cast< float* >(elem32), reinterpret_cast< float* >(elem32) + elemSize,
-              reinterpret_cast< double* >(result.raw()));
+              reinterpret_cast< double* >(result.raw() + ctr));
     check.blockAggregate(elem32, elemSize, 1, ctr);
   }
   return result;

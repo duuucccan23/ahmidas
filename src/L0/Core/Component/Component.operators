@@ -8,6 +8,9 @@ void leftMultiply(Scalar const &other);
 template< typename OtherElement >
 void leftMultiply(Field< OtherElement, L, T > const &other);
 
+template< typename OtherElement >
+void leftMultiply(hcField< OtherElement, L, T > const &other);
+
 template< typename OtherElement, typename OtherAtom  >
 void leftMultiply(Component< OtherElement, L, T, OtherAtom > const &other);
 
@@ -16,6 +19,9 @@ void rightMultiply(Scalar const &other);
 
 template< typename OtherElement >
 void rightMultiply(Field< OtherElement, L, T > const &other);
+
+template< typename OtherElement >
+void rightMultiply(hcField< OtherElement, L, T > const &other);
 
 template< typename OtherElement, typename OtherAtom  >
 void rightMultiply(Component< OtherElement, L, T, OtherAtom > const &other);

@@ -1,5 +1,4 @@
-#ifndef GUARD_SU3_MATRIX_H
-#define GUARD_SU3_MATRIX_H
+#pragma once
 
 #include <algorithm>
 #include <complex>
@@ -106,5 +105,3 @@ namespace SU3
 
 #include "Matrix/Matrix.inlines"
 #include "Matrix/hcMatrix.inlines"
-
-#endif

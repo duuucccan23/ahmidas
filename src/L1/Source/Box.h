@@ -1,5 +1,4 @@
-#ifndef GUARD_SOURCE_BOX_H
-#define GUARD_SOURCE_BOX_H
+#pragma once
 
 namespace Source
 {
@@ -12,5 +11,3 @@ namespace Source
 }
 
 namespace Sink = Source;
-
-#endif

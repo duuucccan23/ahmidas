@@ -1,5 +1,4 @@
-#ifndef GUARD_SMEAR_HYP_H
-#define GUARD_SMEAR_HYP_H
+#pragma once
 
 #include <L0/Core/Field.h>
 #include <L0/QCD/Gauge.h>
@@ -28,5 +27,3 @@ namespace Smear
 #include "HYP/HYP.inlines"
 #include "HYP/HYP_smear_a.template"
 #include "HYP/HYP_smear_b.template"
-
-#endif

@@ -1,5 +1,4 @@
-#ifndef GUARD_BASE_WEAVE_H
-#define GUARD_BASE_WEAVE_H
+#pragma once
 
 #include <L0/Base/Base.h>
 #include <L0/Base/Grid.h>
@@ -38,5 +37,3 @@ namespace Base
 #include "Weave/Weave_instance.template"
 #include "Weave/Weave_Weave.template"
 #include "Weave/Weave_fieldShift.template"
-
-#endif

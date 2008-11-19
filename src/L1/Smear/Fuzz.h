@@ -1,5 +1,4 @@
-#ifndef GUARD_SMEAR_FUZZ_H
-#define GUARD_SMEAR_FUZZ_H
+#pragma once
 
 #include <algorithm>
 
@@ -29,5 +28,3 @@ namespace Smear
 #include "Fuzz/Fuzz.inlines"
 #include "Fuzz/Fuzz_accumDirection.template"
 #include "Fuzz/Fuzz_smear.template"
-
-#endif

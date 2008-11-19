@@ -1,5 +1,4 @@
-#ifndef GUARD_BASE_GRID_H
-#define GUARD_BASE_GRID_H
+#pragma once
 
 #include <algorithm>
 #include <cerrno>
@@ -80,5 +79,3 @@ namespace Base
 #include "Grid/Grid_greatestCommonDivisor.template"
 #include "Grid/Grid_initContiguousBlock.template"
 #include "Grid/Grid_rank.template"
-
-#endif

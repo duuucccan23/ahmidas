@@ -1,5 +1,4 @@
-#ifndef GUARD_DIRAC_PAULI_H
-#define GUARD_DIRAC_PAULI_H
+#pragma once
 
 namespace Dirac
 {
@@ -7,5 +6,3 @@ namespace Dirac
   class Pauli
   {};
 }
-
-#endif

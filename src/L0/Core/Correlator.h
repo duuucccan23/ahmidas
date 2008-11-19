@@ -1,5 +1,4 @@
-#ifndef GUARD_CORE_CORRELATOR_H
-#define GUARD_CORE_CORRELATOR_H
+#pragma once
 
 #include <algorithm>
 #include <complex>
@@ -41,5 +40,3 @@ namespace Core
 #include "Correlator/Correlator_isolate.template"
 
 #include "Correlator/Correlator_sumOverTimeSlices.template"
-
-#endif

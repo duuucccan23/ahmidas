@@ -27,18 +27,18 @@ Tool::IO::ILDGinfo::ILDGinfo(Tool::IO::Lime::Reader &reader)
     return;
 
   // We've removed the XML header, now we can set up a state machine to parse the file
-  while (pch = std::strtok(0, "<>"))
+  while ((pch = std::strtok(0, "<>")))
   {
     if (std::strncmp(pch, "ildgFormat", 10))
       continue; // Unknown info string, just go on
 
-    while (pch = std::strtok(0, "<>"))
+    while ((pch = std::strtok(0, "<>")))
     {
       if (!std::strncmp(pch, "/ildgFormat", 11))
         break;
       if (!std::strncmp(pch, "version", 7))
       {
-        while (pch = std::strtok(0, "<>"))
+        while ((pch = std::strtok(0, "<>")))
         {
           if (!std::strncmp(pch, "/version", 8))
             break;
@@ -48,7 +48,7 @@ Tool::IO::ILDGinfo::ILDGinfo(Tool::IO::Lime::Reader &reader)
       }
       if (!std::strncmp(pch, "field", 5))
       {
-        while (pch = std::strtok(0, "<>"))
+        while ((pch = std::strtok(0, "<>")))
         {
           if (!std::strncmp(pch, "/field", 6))
             break;
@@ -58,7 +58,7 @@ Tool::IO::ILDGinfo::ILDGinfo(Tool::IO::Lime::Reader &reader)
       }
       if (!std::strncmp(pch, "precision", 9))
       {
-        while (pch = std::strtok(0, "<>"))
+        while ((pch = std::strtok(0, "<>")))
         {
           if (!std::strncmp(pch, "/precision", 10))
             break;
@@ -68,7 +68,7 @@ Tool::IO::ILDGinfo::ILDGinfo(Tool::IO::Lime::Reader &reader)
       }
       if (!std::strncmp(pch, "lx", 2))
       {
-        while (pch = std::strtok(0, "<>"))
+        while ((pch = std::strtok(0, "<>")))
         {
           if (!std::strncmp(pch, "/lx", 3))
             break;
@@ -78,7 +78,7 @@ Tool::IO::ILDGinfo::ILDGinfo(Tool::IO::Lime::Reader &reader)
       }
       if (!std::strncmp(pch, "ly", 2))
       {
-        while (pch = std::strtok(0, "<>"))
+        while ((pch = std::strtok(0, "<>")))
         {
           if (!std::strncmp(pch, "/ly", 3))
             break;
@@ -88,7 +88,7 @@ Tool::IO::ILDGinfo::ILDGinfo(Tool::IO::Lime::Reader &reader)
       }
       if (!std::strncmp(pch, "lz", 2))
       {
-        while (pch = std::strtok(0, "<>"))
+        while ((pch = std::strtok(0, "<>")))
         {
           if (!std::strncmp(pch, "/lz", 3))
             break;
@@ -98,7 +98,7 @@ Tool::IO::ILDGinfo::ILDGinfo(Tool::IO::Lime::Reader &reader)
       }
       if (!std::strncmp(pch, "lt", 2))
       {
-        while (pch = std::strtok(0, "<>"))
+        while ((pch = std::strtok(0, "<>")))
         {
           if (!std::strncmp(pch, "/lt", 3))
             break;

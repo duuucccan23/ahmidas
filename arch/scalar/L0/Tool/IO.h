@@ -1,5 +1,4 @@
-#ifndef GUARD_Tool_IO_H
-#define GUARD_Tool_IO_H
+#pragma once
 
 #include <fstream>
 #include <string>
@@ -58,5 +57,3 @@ namespace Tool
 #include "IO/loadMILC.template"
 #include "IO/saveILDG.template"
 #include "IO/saveScidac.template"
-
-#endif

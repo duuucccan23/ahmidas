@@ -1,5 +1,4 @@
-#ifndef GUARD_SMEAR_JACOBI_H
-#define GUARD_SMEAR_JACOBI_H
+#pragma once
 
 #include <L0/Core/Buffer.h>
 #include <L0/Core/Field.h>
@@ -14,10 +13,10 @@ namespace Smear
   {
     double d_kappa;
     double d_weight;
-    
+
     public:
       Jacobi(double kappa);
-      
+
       template< size_t L, size_t T >
       void smear(Core::Field< QCD::Spinor, L, T > *spinorField, Core::Field< QCD::Gauge, L, T > &gaugeField) const;
 
@@ -30,12 +29,10 @@ namespace Smear
       template< size_t L, size_t T >
       void smear(Source::Point< L, T > *source, Core::Field< QCD::Gauge, L, T > &gaugeField,
                  Base::ColourIndex, Base::DiracIndex, size_t iterations) const;
-      
+
   };
 }
 
 #include "Jacobi/Jacobi.inlines"
 #include "Jacobi/Jacobi_smear_a.template"
 #include "Jacobi/Jacobi_smear_b.template"
-
-#endif

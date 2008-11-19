@@ -1,5 +1,4 @@
-#ifndef GUARD_SOURCE_FULL_H
-#define GUARD_SOURCE_FULL_H
+#pragma once
 
 #include <L0/Core/Field.h>
 #include <L0/QCD/Spinor.h>
@@ -22,5 +21,3 @@ namespace Source
 #include "Full/Full.inlines"
 
 namespace Sink = Source;
-
-#endif

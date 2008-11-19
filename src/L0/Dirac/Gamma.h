@@ -1,5 +1,4 @@
-#ifndef GUARD_DIRAC_GAMMA_H
-#define GUARD_DIRAC_GAMMA_H
+#pragma once
 
 #include <complex>
 
@@ -18,5 +17,3 @@ namespace Dirac
 }
 
 #include "Gamma/Gamma.inlines"
-
-#endif

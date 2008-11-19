@@ -1,5 +1,4 @@
-#ifndef GUARD_QCD_GAUGE_H
-#define GUARD_QCD_GAUGE_H
+#pragma once
 
 #include <algorithm>
 #include <functional>
@@ -51,5 +50,3 @@ namespace QCD
 }
 
 #include "Gauge/Gauge.inlines"
-
-#endif

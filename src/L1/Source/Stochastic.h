@@ -1,5 +1,4 @@
-#ifndef GUARD_SOURCE_STOCHASTIC_H
-#define GUARD_SOURCE_STOCHASTIC_H
+#pragma once
 
 #include <L0/Base/Weave.h>
 #include <L0/SU3/Vector.h>
@@ -25,5 +24,3 @@ namespace Source
 #include "Stochastic/Stochastic_Stochastic.template"
 
 namespace Sink = Source;
-
-#endif

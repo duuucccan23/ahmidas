@@ -1,5 +1,4 @@
-#ifndef GUARD_CONTRACT_WICK_H
-#define GUARD_CONTRACT_WICK_H
+#pragma once
 
 #include <L0/Core/Correlator.h>
 #include <L0/Core/Propagator.h>
@@ -19,5 +18,3 @@ namespace Contract
 
 #include "Wick/wick_a.template"
 #include "Wick/wick_b.template"
-
-#endif

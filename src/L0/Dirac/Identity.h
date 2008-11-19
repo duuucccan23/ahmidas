@@ -1,10 +1,7 @@
-#ifndef GUARD_DIRAC_IDENTITY_H
-#define GUARD_DIRAC_IDENTITY_H
+#pragma once
 
 namespace Dirac
 {
   class Identity
   {};
 }
-
-#endif

@@ -19,8 +19,7 @@
  *    < add reference here >.                                                  *
  *******************************************************************************/
 
-#ifndef GUARD_CORE_FIELD_H
-#define GUARD_CORE_FIELD_H
+#pragma once
 
 #include <algorithm>
 #include <iostream>
@@ -153,5 +152,3 @@ namespace Core
 #include "Field/Field.operators.templates"
 
 #include "Field/hcField.inlines"
-
-#endif

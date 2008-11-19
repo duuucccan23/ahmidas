@@ -1,5 +1,4 @@
-#ifndef GUARD_BASE_IO_LIME_WRITER_H
-#define GUARD_BASE_IO_LIME_WRITER_H
+#pragma once
 
 #include <fstream>
 #include <string>
@@ -72,5 +71,3 @@ namespace Tool
 }
 
 #include "Writer/Writer.inlines"
-
-#endif

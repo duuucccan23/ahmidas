@@ -1,5 +1,4 @@
-#ifndef GUARD_SOURCE_POINT_H
-#define GUARD_SOURCE_POINT_H
+#pragma once
 
 #include <L0/Base/Base.h>
 
@@ -22,5 +21,3 @@ namespace Sink = Source;
 
 #include "Point/Point.inlines"
 #include "Point/Point_Point.template"
-
-#endif

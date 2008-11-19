@@ -1,5 +1,4 @@
-#ifndef GUARD_CORE_TMATRIX_H
-#define GUARD_CORE_TMATRIX_H
+#pragma once
 
 #include <algorithm>
 #include <L0/QCD/Tensor.h>
@@ -66,5 +65,3 @@ namespace Core
 #include "TMatrix/TMatrix_isolate.template"
 #include "TMatrix/TMatrix_operator_assign_a.template"
 #include "TMatrix/TMatrix_operator_assign_b.template"
-
-#endif

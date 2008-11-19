@@ -1,5 +1,4 @@
-#ifndef GUARD_CORE_PROPAGATOR_H
-#define GUARD_CORE_PROPAGATOR_H
+#pragma once
 
 #include <L0/Base/Base.h>
 #include <L0/Core/Field.h>
@@ -55,5 +54,3 @@ namespace Core
 
 #include "Propagator/Propagator_destroy.template"
 #include "Propagator/Propagator_isolate.template"
-
-#endif

@@ -19,19 +19,14 @@ void Tool::fixCoulombGauge(Core::Field< QCD::Gauge, L, T > *field)
 
     // Dir X
     temp1 = field->template component< SU3::Matrix >(Base::idx_X);
-    //std::cerr << "[DEBUG] temp1[0], just assigned\n" << temp1[0] << std::endl;
 
     field->shift(Base::idx_X, Base::dir_UP);
     temp1 -= field->template component< SU3::Matrix >(Base::idx_X).dagger();
-    //std::cerr << "[DEBUG] temp1[0], just multiplied\n" << temp1[0] << std::endl;
     field->shift(Base::idx_X, Base::dir_DOWN);
 
     temp2 = temp1;
-    //std::cerr << "[DEBUG] temp2[0], just assigned\n" << temp2[0] << std::endl;
     temp2.shift(Base::idx_X, Base::dir_DOWN);
-    //std::cerr << "[DEBUG] temp2[0], just shifted\n" << temp2[0] << std::endl;
     temp2 -= temp1;
-    //std::cerr << "[DEBUG] temp2[0], just subtracted\n" << temp2[0] << std::endl;
 
     transform += temp2;
     temp3 = localTrace(temp2);

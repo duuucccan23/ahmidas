@@ -1,5 +1,4 @@
-#ifndef GUARD_SOURCE_SLICE_H
-#define GUARD_SOURCE_SLICE_H
+#pragma once
 
 #include <L0/Core/Field.h>
 #include <L0/QCD/Spinor.h>
@@ -17,5 +16,3 @@ namespace Source
 }
 
 namespace Sink = Source;
-
-#endif

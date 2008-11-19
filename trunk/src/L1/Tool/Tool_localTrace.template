@@ -1,0 +1,8 @@
+template< size_t L, size_t T >
+Core::Field< SU3::Matrix, L, T > Tool::localTrace(Core::Field< SU3::Matrix, L, T > const &field)
+{
+  Core::Field< SU3::Matrix, L, T > result(SU3::Matrix::identity());
+  for (size_t idx = 0; idx < result.size(); ++idx)
+    result[idx] *= tr(field[idx]);
+  return result;
+}

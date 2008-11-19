@@ -1,7 +1,6 @@
 template< typename Element, size_t L, size_t T >
 void Core::Field< Element, L, T >::destroy()
 {
-  std::cerr << "DESTROYING" << std::endl;
   (*d_references) -= 1;
   if ((*d_references) == 0)
   {

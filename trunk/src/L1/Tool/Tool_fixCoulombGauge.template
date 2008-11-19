@@ -1,0 +1,131 @@
+template< size_t L, size_t T >
+void Tool::fixCoulombGauge(Core::Field< QCD::Gauge, L, T > *field)
+{
+  // We use the method described in Phys. Rev. D37, p. 1581. (Davies et al.)
+  // It exists of a steepest descend, followed by reunitarization.
+  // Currently, no Fourier acceleration is being used.
+
+  Core::Field< SU3::Matrix, L, T > transform;
+  Core::Field< SU3::Matrix, L, T > temp1;
+  Core::Field< SU3::Matrix, L, T > temp2;
+  Core::Field< SU3::Matrix, L, T > temp3;
+
+  std::complex< double > gaugeTerm(1.0, 0.0);
+  size_t iterations;
+
+  for (iterations = 0; iterations < 100; ++iterations)
+  {
+    transform.fill(20.0 * SU3::Matrix::identity()); // = 1.0 / (alpha/2) with alpha = 0.1
+
+    // Dir X
+    temp1 = field->template component< SU3::Matrix >(Base::idx_X);
+    //std::cerr << "[DEBUG] temp1[0], just assigned\n" << temp1[0] << std::endl;
+
+    field->shift(Base::idx_X, Base::dir_UP);
+    temp1 -= field->template component< SU3::Matrix >(Base::idx_X).dagger();
+    //std::cerr << "[DEBUG] temp1[0], just multiplied\n" << temp1[0] << std::endl;
+    field->shift(Base::idx_X, Base::dir_DOWN);
+
+    temp2 = temp1;
+    //std::cerr << "[DEBUG] temp2[0], just assigned\n" << temp2[0] << std::endl;
+    temp2.shift(Base::idx_X, Base::dir_DOWN);
+    //std::cerr << "[DEBUG] temp2[0], just shifted\n" << temp2[0] << std::endl;
+    temp2 -= temp1;
+    //std::cerr << "[DEBUG] temp2[0], just subtracted\n" << temp2[0] << std::endl;
+
+    transform += temp2;
+    temp3 = localTrace(temp2);
+
+    // Dir Y
+    temp1 = field->template component< SU3::Matrix >(Base::idx_Y);
+    field->shift(Base::idx_Y, Base::dir_UP);
+    temp1 -= field->template component< SU3::Matrix >(Base::idx_Y).dagger();
+    field->shift(Base::idx_Y, Base::dir_DOWN);
+
+    temp2 = temp1;
+    temp2.shift(Base::idx_Y, Base::dir_DOWN);
+    temp2 -= temp1;
+
+    transform += temp2;
+    temp3 += localTrace(temp2);
+
+    // Dir Z
+    temp1 = field->template component< SU3::Matrix >(Base::idx_Z);
+    field->shift(Base::idx_Z, Base::dir_UP);
+    temp1 -= field->template component< SU3::Matrix >(Base::idx_Z).dagger();
+    field->shift(Base::idx_Z, Base::dir_DOWN);
+
+    temp2 = temp1;
+    temp2.shift(Base::idx_Z, Base::dir_DOWN);
+    temp2 -= temp1;
+
+    transform += temp2;
+    temp3 += localTrace(temp2);
+
+    temp3 *= (1.0 / 3.0); // = 1 / N_c
+    transform -= temp3;
+
+    transform *= 0.05; // = alpha / 2
+    Tool::reunitarize(&transform);
+
+    // Now actually transform the field
+    field->template component< SU3::Matrix >(Base::idx_X).leftMultiply(transform);
+    transform.shift(Base::idx_X, Base::dir_DOWN);
+    field->template component< SU3::Matrix >(Base::idx_X).rightMultiply(transform.dagger());
+    transform.shift(Base::idx_X, Base::dir_UP);
+
+    field->template component< SU3::Matrix >(Base::idx_Y).leftMultiply(transform);
+    transform.shift(Base::idx_Y, Base::dir_DOWN);
+    field->template component< SU3::Matrix >(Base::idx_Y).rightMultiply(transform.dagger());
+    transform.shift(Base::idx_Y, Base::dir_UP);
+
+    field->template component< SU3::Matrix >(Base::idx_Z).leftMultiply(transform);
+    transform.shift(Base::idx_Z, Base::dir_DOWN);
+    field->template component< SU3::Matrix >(Base::idx_Z).rightMultiply(transform.dagger());
+    transform.shift(Base::idx_Z, Base::dir_UP);
+
+    field->template component< SU3::Matrix >(Base::idx_T).leftMultiply(transform);
+    transform.shift(Base::idx_T, Base::dir_DOWN);
+    field->template component< SU3::Matrix >(Base::idx_T).rightMultiply(transform.dagger());
+    transform.shift(Base::idx_T, Base::dir_UP);
+
+    // Calculate the current value of the gauge fixing term
+    temp1  = field->template component< SU3::Matrix >(Base::idx_X);
+    temp1 += field->template component< SU3::Matrix >(Base::idx_X).dagger();
+    temp1 += field->template component< SU3::Matrix >(Base::idx_Y);
+    temp1 += field->template component< SU3::Matrix >(Base::idx_Y).dagger();
+    temp1 += field->template component< SU3::Matrix >(Base::idx_Z);
+    temp1 += field->template component< SU3::Matrix >(Base::idx_Z).dagger();
+
+    std::complex< double > newGaugeTerm = tr(temp1);
+    std::cout << std::abs((std::abs(newGaugeTerm) / std::abs(gaugeTerm)) - 1) << std::endl;
+    if (std::abs((std::abs(newGaugeTerm) / std::abs(gaugeTerm)) - 1) < 1e-6)
+      break;
+    gaugeTerm = newGaugeTerm;
+
+    // Calculate the current value of the gauge fixing term derivative (actual condition)
+    // Using form from hep-lat/0104012v1
+    temp1  = field->template component< SU3::Matrix >(Base::idx_X);
+    temp1 -= field->template component< SU3::Matrix >(Base::idx_X).dagger();
+    temp2  = temp1;
+    temp1.shift(Base::idx_X, Base::dir_UP);
+    temp2 -= temp1;
+
+    temp1  = field->template component< SU3::Matrix >(Base::idx_Y);
+    temp1 -= field->template component< SU3::Matrix >(Base::idx_Y).dagger();
+    temp2 += temp1;
+    temp1.shift(Base::idx_Y, Base::dir_UP);
+    temp2 -= temp1;
+
+    temp1  = field->template component< SU3::Matrix >(Base::idx_Z);
+    temp1 -= field->template component< SU3::Matrix >(Base::idx_Z).dagger();
+    temp2 += temp1;
+    temp1.shift(Base::idx_Z, Base::dir_UP);
+    temp2 -= temp1;
+
+    temp3 = temp2;
+    temp2.rightMultiply(temp3.dagger());
+    std::cout << "[DEBUG] Proper theta: " << Tool::tr(temp2) << std::endl;
+  }
+  std::cerr << "Finished after " << iterations << " iterations." << std::endl;
+}

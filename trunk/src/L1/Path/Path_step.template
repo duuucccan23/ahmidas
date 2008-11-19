@@ -19,8 +19,6 @@ Core::Field< SU3::Matrix, L, T > Path::step(Core::Field< QCD::Gauge, L, T > &fie
     return Core::Field< SU3::Matrix, L, T > (field.template component< SU3::Matrix >(idx).dagger());
 
   Core::Field< SU3::Matrix, L, T > result(field.template component< SU3::Matrix >(idx));
-  std::cerr << "[DEBUG] at construction\n" << result[0] << std::endl;
   result.shift(idx, Base::dir_UP);
-  std::cerr << "[DEBUG] after shift\n" << result[0] << std::endl;
   return result;
 }

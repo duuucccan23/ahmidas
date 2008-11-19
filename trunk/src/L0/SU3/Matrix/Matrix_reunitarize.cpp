@@ -62,7 +62,7 @@ void SU3::Matrix::reunitarize()
 
   if (Q < precision || (R > -precision && R < precision)) // We should already be (almost) unitary
   {
-    operator/=(std::pow(det(d_data), fac_1_3));
+    operator/=(std::pow(det(), fac_1_3));
     return;
   }
 
@@ -132,5 +132,5 @@ void SU3::Matrix::reunitarize()
 
   // We're almost done! All that remains is finishing off the matrix...
   rightMultiply(H);
-  operator/=(std::pow(det(d_data), fac_1_3));
+  operator/=(std::pow(det(), fac_1_3));
 }

@@ -57,8 +57,10 @@ namespace SU3
 
       void reunitarize();
 
-      friend std::complex< double > det(Matrix const &mat);
-      friend std::complex< double > tr(Matrix const &mat);
+      double realtr() const;
+
+      std::complex< double > det() const;
+      std::complex< double > tr() const;
       friend std::ostream &operator<<(std::ostream &out, Matrix const &mat);
 
       size_t size() const;
@@ -68,8 +70,6 @@ namespace SU3
                   std::complex< double > const &f, std::complex< double > const &g) const;
       std::complex< double > sign(std::complex< double > const &x) const;
 
-      std::complex< double > det(std::complex< double > const *data) const;
-      std::complex< double > tr(std::complex< double > const *data) const;
   };
 
   template< typename Element >

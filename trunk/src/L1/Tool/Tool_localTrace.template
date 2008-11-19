@@ -3,6 +3,6 @@ Core::Field< SU3::Matrix, L, T > Tool::localTrace(Core::Field< SU3::Matrix, L, T
 {
   Core::Field< SU3::Matrix, L, T > result(SU3::Matrix::identity());
   for (size_t idx = 0; idx < result.size(); ++idx)
-    result[idx] *= tr(field[idx]);
+    result[idx] *= field[idx].tr();
   return result;
 }

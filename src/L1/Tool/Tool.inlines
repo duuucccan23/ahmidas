@@ -27,7 +27,7 @@ std::complex< double > Tool::tr(Core::Field< Element, L, T > const &field)
   std::complex< double > result(0.0, 0.0);
 
   for (size_t idx = 0; idx < field.size(); ++idx)
-    result += tr(field.constMemoryIndex(idx));
+    result += field.constMemoryIndex(idx).tr();
 
   return result /= field.size(); // NOTE This should be made parallel with a gather call!
 }

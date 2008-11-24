@@ -12,7 +12,6 @@ namespace SU3
 
     // Some useful constant matrices
     static const Vector s_zero;
-    static const Vector s_basis[3];
 
     public:
       Vector();
@@ -22,17 +21,13 @@ namespace SU3
       Vector &operator=(Vector const &other);
 
       void setToRandom();
-      void setToBasis(size_t idx);
       void setToZero();
 
       static Vector        random();
-      static Vector const &basis(size_t idx);
       static Vector const &zero();
 
       ~Vector();
 
-      std::complex< double > &operator()(short idx);
-      std::complex< double > const &operator()(short idx) const;
       friend std::ostream &operator<<(std::ostream &out, Vector const &vec);
 
       template< typename T >

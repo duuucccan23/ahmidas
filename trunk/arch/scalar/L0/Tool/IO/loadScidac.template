@@ -8,7 +8,7 @@ Core::Field< Element, L, T > Tool::IO::loadScidac(std::string const &filename)
   reader.retrieveRecord(reader.findRecord("scidac-binary-data"));
   if (reader.fail())
     return result; //NOTE Record not found, returning empty field! Add error exit here.
-
+ 
   //Poor man's parser for reading the precision should be inserted here, beyond we now assume double as input
 
   Element *dataPtr = result.raw(); //Starting memory address of the field.
@@ -18,7 +18,7 @@ Core::Field< Element, L, T > Tool::IO::loadScidac(std::string const &filename)
   {
     reader.read(buffer, elements);
     if (!Base::bigEndian)
-      swapEndian(buffer, buffer + elements, sizeof(float));
+      Base::swapEndian(buffer, buffer + elements, sizeof(float));
     std::copy(buffer, buffer + elements, reinterpret_cast< double* >(dataPtr + siteIdx));
   }
   return result;

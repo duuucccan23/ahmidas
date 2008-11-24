@@ -1,7 +1,7 @@
 template< typename Element, size_t L, size_t T >
 Core::Field< Element, L, T > Tool::IO::loadMILC(std::string const &filename)
 {
-  static_assert(sizeof(uint32_t) == sizeof(float), "Sizes of uint32_t and float are different.");
+//  static_assert(sizeof(uint32_t) == sizeof(float), "Sizes of uint32_t and float are different.");
 
   std::ifstream input(filename.c_str());
   assert(input.good());

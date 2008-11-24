@@ -19,7 +19,7 @@ void Tool::IO::saveScidac(Source::Stochastic < L, T > const &source, std::string
     Base::swapEndian(&zero.asUInt32, &zero.asUInt32 + 1);
 
   // Check if the following hacks are allowed
-  static_assert(sizeof(uint32_t) == sizeof(float), "float and uint32_t are of different size");
+//  static_assert(sizeof(uint32_t) == sizeof(float), "float and uint32_t are of different size");
 
   // Copy all values to a minimal local variable to perform endianness conversion
   uint32_t *smallfield = new uint32_t[6 * slice];
@@ -51,7 +51,7 @@ void Tool::IO::saveScidac(Source::Stochastic < L, T > const &source, std::string
   for (size_t srcIdx = 0; srcIdx < 4; ++srcIdx)
   {
     ostr << srcIdx; //Create full filename
-    Base::IO::Lime::Writer writer(ostr.str()); //Create Lime::Writer for this file
+    Tool::IO::Lime::Writer writer(ostr.str()); //Create Lime::Writer for this file
 
     writer.newRecord("scidac-binary-data");
 

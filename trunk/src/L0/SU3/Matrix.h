@@ -17,6 +17,9 @@ namespace SU3
   std::complex< double > tr(Matrix const &mat);
   std::complex< double > tr(hcMatrix const &mat);
 
+  double realtr(Matrix const &mat);
+  double realtr(hcMatrix const &mat);
+
   std::ostream &operator<<(std::ostream &out, Matrix const &mat);
 
   class Matrix

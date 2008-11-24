@@ -15,8 +15,8 @@ namespace SU3
 
     public:
       Vector();
-      Vector(double *data);
-      Vector(std::complex< double > *data);
+      Vector(double const *data);
+      Vector(std::complex< double > const *data);
       Vector(Vector const &other);
       Vector &operator=(Vector const &other);
 

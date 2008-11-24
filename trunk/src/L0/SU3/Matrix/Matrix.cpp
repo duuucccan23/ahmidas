@@ -2,7 +2,7 @@
 
 namespace
 {
-  double const ar_identity[] =
+  double const identity[] =
   {
     1.0, 0.0,
     0.0, 0.0,
@@ -15,7 +15,7 @@ namespace
     1.0, 0.0
   };
 
-  double const ar_zero[] =
+  double const zero[] =
   {
     0.0, 0.0,
     0.0, 0.0,
@@ -29,6 +29,6 @@ namespace
   };
 }
 
-SU3::Matrix const SU3::Matrix::s_identity(ar_identity);
-SU3::Matrix const SU3::Matrix::s_zero(ar_zero);
+SU3::Matrix const SU3::Matrix::s_identity(::identity);
+SU3::Matrix const SU3::Matrix::s_zero(::zero);
 

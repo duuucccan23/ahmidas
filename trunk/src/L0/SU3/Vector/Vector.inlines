@@ -3,12 +3,12 @@ namespace SU3
   inline Vector::Vector()
   {}
 
-  inline Vector::Vector(double *data)
+  inline Vector::Vector(double const *data)
   {
     std::copy(data, data + 6, reinterpret_cast< double* >(d_data));
   }
 
-  inline Vector::Vector(std::complex< double > *data)
+  inline Vector::Vector(std::complex< double > const *data)
   {
     std::copy(data, data + 3, d_data);
   }

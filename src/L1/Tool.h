@@ -24,8 +24,8 @@ namespace Tool
   template< typename Element, size_t L, size_t T >
   void setToZero(Core::Field< Element, L, T > *field);
 
-  template< size_t L, size_t T >
-  void setToIdentity(Core::Field< SU3::Matrix, L, T > *field);
+  template< typename Element, size_t L, size_t T >
+  void setToIdentity(Core::Field< Element, L, T > *field);
 
   template< typename Element, size_t L, size_t T >
   std::complex< double > tr(Core::Field< Element, L, T > const &field);
@@ -41,6 +41,8 @@ namespace Tool
 
   template< size_t L, size_t T >
   void fixCoulombGauge(Core::Field< QCD::Gauge, L, T > *field);
+
+  SU3::Matrix killTrace(SU3::Matrix const &target);
 }
 
 #include "Tool/Tool.inlines"

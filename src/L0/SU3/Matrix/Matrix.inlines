@@ -183,4 +183,15 @@ namespace SU3
     Matrix result(rhand);
     return result *= lhand;
   }
+
+  inline double realtr(Matrix const &mat)
+  {
+    return mat.realtr();
+  }
+
+  inline double realtr(hcMatrix const &mat)
+  {
+    return mat.dagger().realtr();
+  }
 }
+

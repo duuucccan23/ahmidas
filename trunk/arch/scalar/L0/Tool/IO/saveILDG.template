@@ -19,7 +19,7 @@ void Tool::IO::saveILDG(Core::Field< Element, L, T > const &field, std::string c
   for (size_t siteIdx = 0; siteIdx < field.size(); ++siteIdx)
   {
     std::copy(reinterpret_cast< double const* >(&(field.constPhysicalIndex(siteIdx))), reinterpret_cast< double const* >(&(field.constPhysicalIndex(siteIdx))) + elements, buffer);
-    swapEndian(buffer, buffer + elements, sizeof(double));
+    Base::swapEndian(buffer, buffer + elements, sizeof(double));
     writer.write(buffer, elements);
   }
 }

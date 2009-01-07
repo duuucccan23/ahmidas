@@ -11,8 +11,9 @@
 
 int main(int argc, char **argv)
 {
-  Core::Field< QCD::Gauge, 20, 48 > myfield = Tool::IO::loadILDG<QCD::Gauge, 20, 48 >("../test/conf.2448");
-  Tool::IO::saveILDG(myfield, "../test/conf.2048");
+  std::cout << "$Id$" << std::endl;
+//  Core::Field< QCD::Gauge, 20, 48 > myfield = Tool::IO::loadILDG<QCD::Gauge, 20, 48 >("../test/conf.2448");
+//  Tool::IO::saveILDG(myfield, "../test/conf.2048");
   
   return 0;
 }

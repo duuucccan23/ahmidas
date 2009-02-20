@@ -1,0 +1,18 @@
+template< size_t L, size_t T >
+Core::Field< QCD::Spinor, L, T > Transport::step(Core::Field< QCD::Spinor, L, T > const &spinor,
+                                                 Core::Field< QCD::Gauge, L, T > const &gauge,
+                                                 Base::SpaceTimeIndex idx, Base::Direction dir)
+{
+  Core::Field< QCD::Spinor, L, T > result(spinor);
+  if (dir == Base::dir_DOWN)
+  {
+    result.shift(idx, dir);
+    result.leftMultiply(gauge.component(idx));
+  }
+  else
+  {
+    result.leftMultiply(gauge.component(idx).dagger());
+    result.shift(idx, dir);
+  }
+  return result;
+}

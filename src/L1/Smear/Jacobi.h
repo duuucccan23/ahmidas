@@ -6,6 +6,7 @@
 #include <L0/QCD/Gauge.h>
 #include <L0/QCD/Spinor.h>
 #include <L1/Source/Point.h>
+#include <L1/Transport.h>
 
 namespace Smear
 {
@@ -35,4 +36,3 @@ namespace Smear
 
 #include "Jacobi/Jacobi.inlines"
 #include "Jacobi/Jacobi_smear_a.template"
-#include "Jacobi/Jacobi_smear_b.template"

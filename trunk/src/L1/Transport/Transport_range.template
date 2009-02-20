@@ -1,0 +1,24 @@
+template< size_t L, size_t T >
+Core::Field< QCD::Spinor, L, T > Transport::range(Core::Field< QCD::Spinor, L, T > const &spinor,
+                                                  Core::Field< QCD::Gauge, L, T > const &gauge,
+                                                  Base::SpaceTimeIndex idx, Base::Direction dir, size_t steps)
+{
+  Core::Field< QCD::Spinor, L, T > result(spinor);
+  if (dir == Base::dir_DOWN)
+  {
+    for (size_t ctr = 0; ctr < steps; ++ctr)
+    {
+      result.shift(idx, dir);
+      result.leftMultiply(gauge.component(idx));
+    }
+  }
+  else
+  {
+    for (size_t ctr = 0; ctr < steps; ++ctr)
+    {
+      result.leftMultiply(gauge.component(idx).dagger());
+      result.shift(idx, dir);
+    }
+  }
+  return result;
+}

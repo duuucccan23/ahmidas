@@ -1,7 +1,0 @@
-template< size_t L, size_t T >
-Source::Full Smear::Jacobi::smear(Source::Point< L, T > *source, Core::Field< QCD::Gauge, L, T > &gaugeField,
-                                  Base::ColourIndex, Base::DiracIndex) const
-{
-  Core::Field< QCD::Spinor, L, T > result(SU3::Matrix::ident());
-  result.field
-}

@@ -33,6 +33,3 @@ class iterator: public std::iterator< std::bidirectional_iterator_tag, Core::Fie
     iterator operator++(int);
 };
 
-typedef iterator< 1 > iterator_full;
-typedef iterator< 3 > iterator_colour;
-typedef iterator< 1 > iterator_dirac;

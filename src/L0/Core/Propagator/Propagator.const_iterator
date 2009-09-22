@@ -28,7 +28,5 @@
 //     const_iterator< Stride > &operator++();
 //     const_iterator< Stride > operator++(int);
 // };
-// 
-// typedef const_iterator< 1 > const_iterator_full;
-// typedef const_iterator< 3 > const_iterator_colour;
-// typedef const_iterator< 1 > const_iterator_dirac;
+
+

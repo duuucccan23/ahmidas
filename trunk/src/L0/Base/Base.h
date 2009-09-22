@@ -45,8 +45,7 @@ namespace Base
     sou_TRIPLET = 1,
     sou_UNPOLARIZED = 2,
     sou_PARTLY_POLARIZED = 4,
-    sou_FULLY_POLARIZED = 8,
-    sou_UNIFORM = 16
+    sou_FULLY_POLARIZED = 8
   };
 
   extern bool const bigEndian;

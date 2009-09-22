@@ -1,7 +1,7 @@
 template< size_t L, size_t T >
 inline Source::Point< L, T >::Point(size_t const *coord)
 {
-  std::copy(coord, coord + 4, d_coord);
+  std::copy(coord, coord + 3, d_coord);
 }
 
 template< size_t L, size_t T >
@@ -14,4 +14,22 @@ template< size_t L, size_t T >
 inline size_t const *Source::Point< L, T >::coord() const
 {
   return d_coord;
+}
+
+template< size_t L, size_t T >
+inline std::complex< double > const *Source::Point< L, T >::coord() const
+{
+  return d_coord;
+}
+
+template< size_t L, size_t T >
+inline std::complex< double > *Source::Point< L, T >::field()
+{
+  return d_field;
+}
+
+template< size_t L, size_t T >
+inline std::complex< double > const *Source::Point< L, T >::field() const
+{
+  return d_field;
 }

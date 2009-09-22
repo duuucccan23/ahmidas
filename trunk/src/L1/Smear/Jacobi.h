@@ -5,7 +5,6 @@
 #include <L0/Core/Component.h>
 #include <L0/QCD/Gauge.h>
 #include <L0/QCD/Spinor.h>
-#include <L1/Source/Point.h>
 #include <L1/Transport.h>
 
 namespace Smear

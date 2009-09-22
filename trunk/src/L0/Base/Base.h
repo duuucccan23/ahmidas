@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <cassert>
+#include <numeric>
 #include <stdint.h>
 
 namespace Base
@@ -24,9 +25,9 @@ namespace Base
 
   enum ColourIndex
   {
-    col_RED = 0,
+    col_RED   = 0,
     col_GREEN = 1,
-    col_BLUE = 2
+    col_BLUE  = 2
   };
 
   enum DiracIndex
@@ -35,6 +36,17 @@ namespace Base
     gam_2 = 1,
     gam_3 = 2,
     gam_4 = 3
+  };
+
+  // Definitions to be used in the characterization of sources
+  enum SourceType
+  {
+    sou_SINGLET = 0,
+    sou_TRIPLET = 1,
+    sou_UNPOLARIZED = 2,
+    sou_PARTLY_POLARIZED = 4,
+    sou_FULLY_POLARIZED = 8,
+    sou_UNIFORM = 16
   };
 
   extern bool const bigEndian;

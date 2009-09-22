@@ -14,5 +14,3 @@ namespace Source
       Slice(Stochastic const &source, Base::ColourIndex, Base::DiracIndex);
   };
 }
-
-namespace Sink = Source;

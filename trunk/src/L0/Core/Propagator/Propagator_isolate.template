@@ -2,8 +2,8 @@
   // do we need this any longer?
   // should be a problem of copy constructor
 
-template< size_t L, size_t T, size_t Dirac, size_t Colour >
-void Core::Propagator< L, T, Dirac, Colour >::isolate()
+template< size_t L, size_t T, size_t nDirac, size_t nColour >
+void Core::Propagator< L, T, nDirac, nColour >::isolate()
 {  
   if (*d_references == 1)
     return;
@@ -11,8 +11,8 @@ void Core::Propagator< L, T, Dirac, Colour >::isolate()
   *d_references -= 1;
   d_references = new size_t(1);
   
-  colour_strides_new = new size_t[Colour];
-  dirac_strides_new  = new size_t[Dirac];  
+  colour_strides_new = new size_t[nColour];
+  dirac_strides_new  = new size_t[nDirac];  
   std::copy(colour_strides, colour_strides + Colour, colour_strides_new);
   std::copy(dirac_strides, dirac_strides + Dirac, dirac_strides_new);
   colour_strides = colour_strides_new;

@@ -1,7 +1,7 @@
 template< size_t L, size_t T >
 inline Source::Point< L, T >::Point(size_t const *coord)
 {
-  std::copy(coord, coord + 3, d_coord);
+  std::copy(coord, coord + 4, d_coord);
 }
 
 template< size_t L, size_t T >

@@ -21,6 +21,7 @@ namespace Core
     public:
       Propagator();
       Propagator(Propagator const &other);
+      Propagator(view< L, T, nDirac, nColour > const &view);
       ~Propagator();
 
 #include "Propagator/Propagator.operators"

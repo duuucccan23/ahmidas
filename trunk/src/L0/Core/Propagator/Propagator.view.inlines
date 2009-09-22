@@ -1,0 +1,39 @@
+namespace Core
+{
+    
+  template< size_t L, size_t T, size_t nDirac, size_t nColour >  
+  inline Propagator< L, T, nDirac, nColour >::view< L, T, nDirac-1, nColour >::view(Propagator< L, T, nDirac, nColour > &target, 
+                                                                                    Base::DiracIndex const idx,
+                                                                                    const size_t DiracID) : d_target(&target)
+  {
+    if (nDirac == 0) d_components = 0;
+  }
+    
+  
+  template< size_t L, size_t T, size_t nDirac, size_t nColour >  
+  inline Propagator< L, T, nDirac, nColour >::view< L, T, nDirac-1, nColour >::view(Propagator< L, T, nDirac, nColour > &target, 
+                                                                                    Base::DiracIndex const idx,
+                                                                                    const size_t DiracID) : d_target(&target)
+  {
+    if (nDirac == 0) d_components = 0;
+  }
+  
+  template< size_t L, size_t T, size_t nDirac, size_t nColour >  
+  inline Propagator< L, T, nDirac, nColour >::view< L, T, nDirac-2, nColour >::view(view< L, T, nDirac-1, nColour > &parent, 
+                                                                                    Base::DiracIndex const idx,
+                                                                                    const size_t DiracID) : d_target(&parent.target)
+  {
+    if (nDirac < 2) d_components = 0;
+  }
+  
+  template< size_t L, size_t T, size_t nDirac, size_t nColour >  
+  inline Propagator< L, T, nDirac, nColour >::view< L, T, nDirac, nColour-2 >::view(view< L, T, nDirac, nColour-1 > &parent, 
+                                                                                    Base::ColourIndex const idx,
+                                                                                    const size_t ColourID) : d_target(&parent.target)
+  {
+    if (nColour < 2) d_components = 0;
+  }
+  
+  // same with nDirac-1, nColour-1 (2 constructors)
+  
+}

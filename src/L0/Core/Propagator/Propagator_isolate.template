@@ -1,12 +1,26 @@
-template< size_t L, size_t T >
-void Core::Propagator< L, T >::isolate()
-{
+
+  // do we need this any longer?
+  // should be a problem of copy constructor
+
+template< size_t L, size_t T, size_t Dirac, size_t Colour >
+void Core::Propagator< L, T, Dirac, Colour >::isolate()
+{  
   if (*d_references == 1)
     return;
 
   *d_references -= 1;
   d_references = new size_t(1);
-  Field< QCD::Spinor, L, T > **data = new Field< QCD::Spinor, L, T >*[12];
-  for (size_t idx = 0; idx < 12; ++idx)
-    d_components[idx] = new Field< QCD::Spinor, L, T >(*(d_components[idx]));
+  
+  colour_strides_new = new size_t[Colour];
+  dirac_strides_new  = new size_t[Dirac];  
+  std::copy(colour_strides, colour_strides + Colour, colour_strides_new);
+  std::copy(dirac_strides, dirac_strides + Dirac, dirac_strides_new);
+  colour_strides = colour_strides_new;
+  dirac_strides  = dirac_strides_new;
+
+  Field< std::complex< double >, L, T > *d_components_new = new Field< std::complex< double >, L, T > [this.size()];
+
+  for (size_t idx=0; idx<this.size(); idx++)
+    d_components_new[idx] = d_components[idx]
+  d_components = d_components_new;
 }

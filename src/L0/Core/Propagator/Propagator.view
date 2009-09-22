@@ -1,0 +1,16 @@
+
+class view
+{
+  friend class Propagator;
+  
+  Propagator < L, T, nDirac, nColour > *d_target;
+  
+  Core::Field< std::complex< double >, L, T > *const *d_components;
+
+  public:
+    view< L, T, nDirac-1, nColour >(Propagator< L, T, nDirac, nColour > &target, Base::DiracIndex const idx, const size_t DiracID);
+    view< L, T, nDirac, nColour-1 >(Propagator< L, T, nDirac, nColour > &target, Base::ColourIndex const idx, const size_t ColourID);
+    view< L, T, nDirac-1, nColour >(view< L, T, nDirac, nColour > &target, Base::DiracIndex const idx, const size_t DiracID);
+    view< L, T, nDirac, nColour-1 >(view< L, T, nDirac, nColour > &target, Base::ColourIndex const idx, const size_t ColourID);
+
+};

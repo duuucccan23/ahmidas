@@ -2,14 +2,14 @@ template< size_t Stride >
 class const_iterator;
 
 template< size_t Stride >
-class iterator: public std::iterator< std::bidirectional_iterator_tag, Core::Field< QCD::Spinor, L, T > >
+class iterator: public std::iterator< std::bidirectional_iterator_tag, Core::Field< std::complex< double >, L, T > >
 {
   friend class Propagator;
   friend class Propagator::const_iterator< Stride >;
 
-  Core::Field< QCD::Spinor, L, T >  **d_target;
+  Propagator< L, T, Dirac, Colour >  &d_target;
 
-  iterator(Core::Field< QCD::Spinor, L, T > **target);
+  iterator(Propagator< L, T, Dirac, Colour > &target);
 
   public:
     iterator(iterator< Stride > const &other);
@@ -20,11 +20,11 @@ class iterator: public std::iterator< std::bidirectional_iterator_tag, Core::Fie
     bool operator!=(iterator< Stride > const &other) const;
     bool operator!=(const_iterator< Stride > const &other) const;
 
-    Core::Field< QCD::Spinor, L, T > &operator*();
-    Core::Field< QCD::Spinor, L, T > const &operator*() const;
+    Core::Field< std::complex< double >, L, T > &operator*();
+    Core::Field< std::complex< double >, L, T > const &operator*() const;
 
-    Core::Field< QCD::Spinor, L, T > *operator->();
-    Core::Field< QCD::Spinor, L, T > const *operator->() const;
+    Core::Field< std::complex< double >, L, T > *operator->();
+    Core::Field< std::complex< double >, L, T > const *operator->() const;
 
     iterator &operator--();
     iterator operator--(int);

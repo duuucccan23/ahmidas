@@ -21,7 +21,7 @@ void Core::Propagator< L, T >::isolate()
   colour_strides = colour_strides_new;
   dirac_strides  = dirac_strides_new;
 
-  Field< std::complex< double >, L, T > *d_components_new = new Field< std::complex< double >, L, T > [this.size()];
+  Field< std::complex< double >, L, T > d_components_new = new Field< std::complex< double >, L, T > *[this.size()];
 
   for (size_t idx=0; idx<this.size(); idx++)
     d_components_new[idx] = new Field< std::complex< double >, L, T >(*(d_components[idx]));

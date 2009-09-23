@@ -1,137 +1,141 @@
 namespace Core
 {
-  template< size_t L, size_t T, size_t nDirac, size_t nColour >
-  inline Propagator< L, T, nDirac, nColour >::Propagator()
+
+  template< size_t L, size_t T >
+  inline Propagator< L, T >::Propagator(size_t nCol, size_t nDir)
     : d_references(new size_t(1)),
-      d_components(new Field< std::complex< double >, L, T > *[(size_t)std::pow(4,Dirac)*(size_t)std::pow(3,Colour)]),
-      color_strides(new size_t[nColour]),
-      dirac_strides(new size_t[nDirac])
+      nDirac(new size_t(nDir)),
+      nColour(new size_t(nCol)),
+      psize((size_t)std::pow(4,nDir)*(size_t)std::pow(3,nCol)),
+      d_components(new Field< std::complex< double >, L, T > *[(size_t)std::pow(4,nDir)*(size_t)std::pow(3,nCol)]),
+      colour_strides(new size_t[nCol]),
+      dirac_strides(new size_t[nDir])
   {
 
     for (size_t idx=0; idx<size(); idx++)
       d_components[idx] = new Field< std::complex< double >, L, T >;
     
-    for (size_t idx=0; idx<nColour; idx++)
-      delete color_strides[idx];
-    delete [] colour_strides;
-    for (size_t idx=0; idx<nDirac; idx++)
-      delete dirac_strides[idx];
-    delete [] dirac_strides;
+    colour_strides[0] = 1;
+    for (size_t idx=1; idx<numColour(); idx++)
+      colour_strides[idx] = new size_t(3*(*colour_strides[idx-1]));
+    
+    dirac_strides[0] = (size_t)std::pow(3,numColour());
+    for (size_t idx=1; idx<numDirac(); idx++)
+      dirac_strides[idx] = new size_t(4*(*dirac_strides[idx-1]));
   }
   
-  template< size_t L, size_t T, size_t nDirac, size_t nColour >
-  inline Propagator< L, T, nDirac, nColour >::Propagator(Propagator< L, T, nDirac, nColour > const &other)
-    : d_components(other.d_components)
+  template< size_t L, size_t T >
+  inline Propagator< L, T >::Propagator(Propagator< L, T > const &other)
+    : d_components(other.d_components), psize(other.psize)
   {
     *d_references += 1;
   }
   
-  template< size_t L, size_t T, size_t nDirac, size_t nColour >
-  inline Propagator< L, T, nDirac, nColour >::Propagator(view< L, T, nDirac, nColour > const &view);
+  template< size_t L, size_t T >
+  inline Propagator< L, T >::Propagator(view< L, T > const &view)
   {
-    
+    // under construction
   }
 
-  template< size_t L, size_t T, size_t nDirac, size_t nColour >
-  inline Propagator< L, T, nDirac, nColour >::~Propagator()
+  template< size_t L, size_t T >
+  inline Propagator< L, T >::~Propagator()
   {
     destroy();
   }
   
-  template< size_t L, size_t T, size_t nDirac, size_t nColour >
-  inline void Propagator< L, T, nDirac, nColour >::getStrides()
-  {
-    if (Colour > 0)
-    {
-      colour_strides = new size_t[Colour];
-      for (size_t idx = 0; idx<Colour; ++idx)
-        colour_strides[idx] = (size_t)pow(3, Colour-idx) * (size_t)pow(4, Dirac > idx ? Dirac-idx : 0);
-    }
-    else 
-      colour_strides = 0;
-    if (Dirac > 0)
-    {
-      dirac_strides = new size_t[Dirac];
-      for (size_t idx = 0; idx<Dirac; ++idx)
-        dirac_strides[idx] = (size_t)pow(3, Colour-idx < 0 ? 0 : Colour-idx+1) * (size_t)pow(4, Dirac-idx-1);
-    }
-    else 
-      dirac_strides = 0;
-  }
+//   template< size_t L, size_t T >
+//   inline void Propagator< L, T >::getStrides()
+//   {
+//     if (Colour > 0)
+//     {
+//       colour_strides = new size_t[Colour];
+//       for (size_t idx = 0; idx<Colour; ++idx)
+//         colour_strides[idx] = (size_t)pow(3, Colour-idx) * (size_t)pow(4, Dirac > idx ? Dirac-idx : 0);
+//     }
+//     else 
+//       colour_strides = 0;
+//     if (Dirac > 0)
+//     {
+//       dirac_strides = new size_t[Dirac];
+//       for (size_t idx = 0; idx<Dirac; ++idx)
+//         dirac_strides[idx] = (size_t)pow(3, Colour-idx < 0 ? 0 : Colour-idx+1) * (size_t)pow(4, Dirac-idx-1);
+//     }
+//     else 
+//       dirac_strides = 0;
+//   }
   
+ /*
  
-  template< size_t L, size_t T, size_t nDirac, size_t nColour >
-  inline typename Propagator< L, T, nDirac, nColour >::iterator Propagator< L, T, nDirac, nColour >::begin()
+  template< size_t L, size_t T >
+  inline typename Propagator< L, T >::iterator Propagator< L, T >::begin()
   {
     isolate();
     return iterator<1>();
   }
 
-  template< size_t L, size_t T, size_t nDirac, size_t nColour >
-  inline typename Propagator< L, T, nDirac, nColour >::iterator Propagator< L, T, nDirac, nColour >::end()
-  {
-    isolate();
-    return iterator<1>();
-  }
-  
-  template< size_t L, size_t T, size_t nDirac, size_t nColour >
-  inline typename Propagator< L, T, nDirac, nColour >:: iterator Propagator< L, T, nDirac, nColour >::
-                                                                 view< L, T, nDirac-1, nColour >::begin()
+  template< size_t L, size_t T >
+  inline typename Propagator< L, T >::iterator Propagator< L, T >::end()
   {
     isolate();
     return iterator<1>();
   }
   
-  template< size_t L, size_t T, size_t nDirac, size_t nColour >
-  inline typename Propagator< L, T, nDirac, nColour >:: iterator Propagator< L, T, nDirac, nColour >::
-                                                                 view< L, T, nDirac-1, nColour >::end()
+  template< size_t L, size_t T >
+  inline typename Propagator< L, T >:: iterator Propagator< L, T >::view< L, T, nDirac-1, nColour >::begin()
+  {
+    isolate();
+    return iterator<1>();
+  }
+  
+  template< size_t L, size_t T >
+  inline typename Propagator< L, T >:: iterator Propagator< L, T >::view< L, T, nDirac-1, nColour >::end()
   {
     isolate();
     return iterator<1>();
   }
 
-//   template< size_t L, size_t T, size_t nDirac, size_t nColour >
-//   inline typename Propagator< L, T, nDirac, nColour >::const_iterator_full Propagator< L, T, nDirac, nColour >::begin() const
-//   {
-//     return const_iterator_full(d_components);
-//   }
+*/
 
-//   template< size_t L, size_t T, size_t nDirac, size_t nColour >
-//   inline typename Propagator< L, T, nDirac, nColour >::const_iterator_full Propagator< L, T, nDirac, nColour >::end() const
-//   {
-//     return const_iterator_full(d_components + 12);
-//   }
 
-  template< size_t L, size_t T, size_t nDirac, size_t nColour >
-  inline size_t Propagator< L, T, nDirac, nColour >::size() const
+  template< size_t L, size_t T >
+  inline size_t const Propagator< L, T >::size() const
   {
-    return (size_t)std::pow(4,Dirac)*(size_t)std::pow(3,Colour);
-  }
-
-
-  template< size_t L, size_t T, size_t nDirac, size_t nColour >
-  inline view< L, T, nDirac-1, nColour > &Propagator< L, T, nDirac, nColour >::operator()(Base::DiracIndex const idx, 
-                                                                                          size_t const DiracID)
-  {
-    return view< L, T, nDirac-1, nColour >(this, idx, DiracID);
+    return psize;
   }
   
-  template< size_t L, size_t T, size_t nDirac, size_t nColour >
-  inline view< L, T, nDirac, nColour-1 > &Propagator< L, T, nDirac, nColour >::operator()(Base::ColourIndex const idx,
-                                                                                          size_t const ColourID)
+  template< size_t L, size_t T >
+  inline size_t const Propagator< L, T >::numDirac() const
   {
-    return view< L, T, nDirac, nColour-1 >(this, idx, ColourID);
+    return *nDirac;
+  }
+  
+  template< size_t L, size_t T >
+  inline size_t const Propagator< L, T >::numColour() const
+  {
+    return *nColour;
+  }
+  
+  template< size_t L, size_t T >
+  inline view< L, T > &Propagator< L, T >::operator()(Base::DiracIndex const idx, size_t const DiracID)
+  {
+    return view< L, T >(this, idx, DiracID);
+  }
+  
+  template< size_t L, size_t T >
+  inline view< L, T > &Propagator< L, T+1 >::operator()(Base::ColourIndex const idx, size_t const ColourID)
+  {
+    return view< L, T >(this, idx, ColourID);
   }
 
 
-//   template< size_t L, size_t T, size_t nDirac, size_t nColour >
-//   inline Propagator< L, T, Dirac-1, Color-1 > &Propagator< L, T, nDirac, nColour >::operator()(Base::ColourIndex const colIdx,
+//   template< size_t L, size_t T >
+//   inline Propagator< L, T, Dirac-1, Color-1 > &Propagator< L, T >::operator()(Base::ColourIndex const colIdx,
 //                                                                                              Base::DiracIndex const dirIdx,
 //                                                                                              const size_t ColorID,
 //                                                                                              const size_t DiracID)
 //   {
 //     isolate();
-//     return view< L, T, nDirac-1, nColour-1 >(view< L, T, nDirac, nColour-1 >(this, idx, ColourID));
+//     return view< L, T, nDirac-1, nColour-1 >(view< L, T-1 >(this, idx, ColourID));
 //   }
 
   

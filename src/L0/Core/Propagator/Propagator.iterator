@@ -7,7 +7,7 @@ class iterator: public std::iterator< std::bidirectional_iterator_tag, Core::Fie
   friend class Propagator;
   friend class Propagator::const_iterator< Stride >;
 
-  Propagator< L, T, Dirac, Colour >  &d_target;
+  Propagator< L, T >  &d_target;
 
   iterator(Propagator< L, T, Dirac, Colour > &target);
 

@@ -1,19 +1,13 @@
 
-// Propagator< L, T, Dirac-1, Color-1 > &operator[](size_t idx);
-// Propagator< L, T, Dirac-1, Color-1 > const &operator[](size_t idx) const;
+view< L, T > &operator()(Base::DiracIndex const idx, size_t const DiracID);  
+view< L, T > &operator()(Base::ColourIndex const idx, size_t const ColourID);
 
-// this does only make sense if Dirac > 1 and Colour > 1
-Propagator< L, T, Dirac-1, Colour-1 > &operator()(Base::ColourIndex const colIdx, Base::DiracIndex const dirIdx,
-                                                 const size_t ColorID, const size_t DiracID);
-Propagator< L, T, Dirac-1, Colour-1 > const &operator()(Base::ColourIndex const colIdx, Base::DiracIndex const dirIdx,
-                                                       const size_t ColorID, const size_t DiracID) const;
+//These functions should return a deep copy
+Propagator< L, T > &operator()(Base::ColourIndex const colIdx, Base::DiracIndex const dirIdx,
+                               size_t const ColorID, size_t const DiracID);
+Propagator< L, T > const &operator()(Base::ColourIndex const colIdx, Base::DiracIndex const dirIdx,
+                                     size_t const ColorID, size_t const DiracID) const;
 
-// // this does only make sense if Dirac > 1 and Colour = 1
-// Propagator< L, T, Dirac-1, 1 > &operator()(Base::ColourIndex const colIdx, Base::DiracIndex const dirIdx, const size_t DiracID);
-// Propagator< L, T, Dirac-1, 1 > const &operator()(Base::ColourIndex const colIdx, Base::DiracIndex const dirIdx,
-//                                                  const size_t ColorID, const size_t DiracID) const;
-// 
-// // this does only make sense if Dirac > 1 and Colour = 0
-// Propagator< L, T, Dirac-1, 0 > &operator()(Base::DiracIndex const dirIdx, const size_t DiracID);
-// Propagator< L, T, Dirac-1, 0 > const &operator()(Base::DiracIndex const dirIdx, const size_t DiracID) const;
-// 
+Propagator< L, T > const &operator()(Base::ColourIndex const colIdx, Base::DiracIndex const dirIdx,
+                                     size_t const ColorID, size_t const DiracID) const;
+

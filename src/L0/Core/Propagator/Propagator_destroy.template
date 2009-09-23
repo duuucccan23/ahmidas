@@ -1,17 +1,19 @@
-template< size_t L, size_t T, size_t nDirac, size_t nColour >
-void Core::Propagator< L, T, nDirac, nColour >::destroy()
+template< size_t L, size_t T >
+void Core::Propagator< L, T >::destroy()
 {  
   *d_references -= 1;
   if (*d_references == 0)
   {
     delete d_references;
+    delete nDirac;
+    delete nColour;
     for (size_t idx=0; idx<size(); idx++)
       delete [] d_components[idx];
     delete [] d_components;
-    for (size_t idx=0; idx<nColour; idx++)
-      delete color_strides[idx];
+    for (size_t idx=0; idx<numColour(); idx++)
+      delete colour_strides[idx];
     delete [] colour_strides;
-    for (size_t idx=0; idx<nDirac; idx++)
+    for (size_t idx=0; idx<*numDirac(); idx++)
       delete dirac_strides[idx];
     delete [] dirac_strides;
   }

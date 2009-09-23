@@ -2,12 +2,8 @@
 view< L, T > &operator()(Base::DiracIndex const idx, size_t const DiracID);  
 view< L, T > &operator()(Base::ColourIndex const idx, size_t const ColourID);
 
-//These functions should return a deep copy
-Propagator< L, T > &operator()(Base::ColourIndex const colIdx, Base::DiracIndex const dirIdx,
-                               size_t const ColorID, size_t const DiracID);
-Propagator< L, T > const &operator()(Base::ColourIndex const colIdx, Base::DiracIndex const dirIdx,
-                                     size_t const ColorID, size_t const DiracID) const;
-
-Propagator< L, T > const &operator()(Base::ColourIndex const colIdx, Base::DiracIndex const dirIdx,
-                                     size_t const ColorID, size_t const DiracID) const;
-
+// //These functions should return a deep copy
+// Propagator< L, T > &operator()(Base::ColourIndex const colIdx, Base::DiracIndex const dirIdx,
+//                                size_t const ColorID, size_t const DiracID);
+// Propagator< L, T > const &operator()(Base::ColourIndex const colIdx, Base::DiracIndex const dirIdx,
+//                                      size_t const ColorID, size_t const DiracID) const;

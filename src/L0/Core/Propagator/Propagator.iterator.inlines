@@ -2,7 +2,7 @@ namespace Core
 {
   template< size_t L, size_t T >
   template< size_t Stride >
-  inline Propagator< L, T >::iterator< Stride >::iterator(Core::Field< QCD::Spinor, L, T > **target)
+  inline Propagator< L, T >::iterator< Stride >::iterator(Core::Field< std::complex < double >, L, T > **target)
     : d_target(target)
   {}
 
@@ -42,14 +42,14 @@ namespace Core
 
   template< size_t L, size_t T >
   template< size_t Stride >
-  inline Core::Field< QCD::Spinor, L, T > &Propagator< L, T >::iterator< Stride >::operator*()
+  inline Core::Field< std::complex< double >, L, T > &Propagator< L, T >::iterator< Stride >::operator*()
   {
     return **d_target;
   }
 
   template< size_t L, size_t T >
   template< size_t Stride >
-  inline Core::Field< QCD::Spinor, L, T > *Propagator< L, T >::iterator< Stride >::operator->()
+  inline Core::Field< std::complex< double >, L, T > *Propagator< L, T >::iterator< Stride >::operator->()
   {
     return *d_target;
   }

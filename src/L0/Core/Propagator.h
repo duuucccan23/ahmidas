@@ -28,20 +28,20 @@ namespace Core
 #include "Propagator/Propagator.view"
 // #include "Propagator/Propagator.const_view"
 
-      Propagator(size_t nCol=2, size_t nDir=2);
+      Propagator(size_t nCol=2, size_t nDir=2, bool alloc=true);
       Propagator(Propagator const &other);
-      Propagator(view< L, T > const &view);
+      Propagator(view< L, T > const &view); // this constructor makes a deep copy
       ~Propagator();
 
 #include "Propagator/Propagator.operators"
 
-// #include "Propagator/Propagator.iterator"
-// #include "Propagator/Propagator.const_iterator"
+#include "Propagator/Propagator.iterator"
+#include "Propagator/Propagator.const_iterator"
 
-//       iterator begin(Base::ColourIndex const idx, const size_t ColourID);
-//       iterator end(Base::ColourIndex const idx, const size_t ColourID);
-//       iterator begin(Base::DiracIndex  const idx, const size_t DiracID);
-//       iterator end(Base::DiracIndex  const idx, const size_t DiracID);
+      iterator<1> begin(Base::ColourIndex const idx, const size_t ColourID);
+      iterator<1> end(Base::ColourIndex const idx, const size_t ColourID);
+      iterator<1> begin(Base::DiracIndex  const idx, const size_t DiracID);
+      iterator<1> end(Base::DiracIndex  const idx, const size_t DiracID);
 
 //       const_iterator begin(Base::ColourIndex const idx, const size_t ColourID) const;
 //       const_iterator end(Base::ColourIndex const idx, const size_t ColourID) const;// 
@@ -76,7 +76,7 @@ namespace Core
 
 #include "Propagator/Propagator.inlines"
 
-// #include "Propagator/Propagator.iterator.inlines"
+#include "Propagator/Propagator.iterator.inlines"
 // #include "Propagator/Propagator.const_iterator.inlines"
 
 #include "Propagator/Propagator_destroy.template"

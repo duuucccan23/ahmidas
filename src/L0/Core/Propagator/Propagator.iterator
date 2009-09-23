@@ -5,11 +5,11 @@ template< size_t Stride >
 class iterator: public std::iterator< std::bidirectional_iterator_tag, Core::Field< std::complex< double >, L, T > >
 {
   friend class Propagator;
-  friend class Propagator::const_iterator< Stride >;
+  //friend class Propagator::const_iterator< Stride >;
 
   Propagator< L, T >  &d_target;
 
-  iterator(Propagator< L, T, Dirac, Colour > &target);
+  iterator(Propagator< L, T > &target);
 
   public:
     iterator(iterator< Stride > const &other);

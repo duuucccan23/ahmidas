@@ -37,8 +37,5 @@ ADD_SUBDIRECTORY(test)
 ADD_EXECUTABLE(main src/main.cpp)
 TARGET_LINK_LIBRARIES(main SU3 Lime QCD ILDG MILC Base)
 
-ADD_EXECUTABLE(simon_test src/simon_test.cpp)
-TARGET_LINK_LIBRARIES(simon_test SU3 Lime QCD ILDG Base)
-
 
 

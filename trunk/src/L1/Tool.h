@@ -2,7 +2,7 @@
 
 #include <L0/Base/Weave.h>
 #include <L0/Core/Field.h>
-#include <L0/Core/Propagator.h>
+//#include <L0/Core/Propagator.h>
 #include <L0/QCD/Gauge.h>
 #include <L0/SU3/Matrix.h>
 #include <L1/Path.h>
@@ -18,8 +18,8 @@ namespace Tool
   template< typename Element, size_t L, size_t T >
   void randomize(Core::Field< Element, L, T > *field);
 
-  template< size_t L, size_t T >
-  void randomize(Core::Propagator< L, T > *propagator);
+//   template< size_t L, size_t T >
+//   void randomize(Core::Propagator< L, T > *propagator);
 
   template< typename Element, size_t L, size_t T >
   void setToZero(Core::Field< Element, L, T > *field);

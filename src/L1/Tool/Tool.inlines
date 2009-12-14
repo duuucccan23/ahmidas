@@ -6,12 +6,12 @@ void Tool::reunitarize(Core::Field< SU3::Matrix, L, T > *field)
     field->fastMemoryIndex(idx).reunitarize();
 }
 
-template< size_t L, size_t T >
-void Tool::randomize(Core::Propagator< L, T > *propagator)
-{
-  for (size_t idx = 0; idx < 12; ++idx)
-    Tool::randomize(&((*propagator)[idx]));
-}
+//template< size_t L, size_t T >
+//void Tool::randomize(Core::Propagator< L, T > *propagator)
+//{
+//  for (size_t idx = 0; idx < 12; ++idx)
+//    Tool::randomize(&((*propagator)[idx]));
+//}
 
 template< typename Element, size_t L, size_t T >
 void Tool::setToIdentity(Core::Field< Element, L, T > *field)

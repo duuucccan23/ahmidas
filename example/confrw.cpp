@@ -1,4 +1,4 @@
-// $Id: confrw.cpp 305 2009-12-14 12:56:19Z Albert.Deuzeman $
+// $Id$
 #include <string>
 #include <iomanip>
 #include <iostream>
@@ -11,7 +11,7 @@
 int main(int argc, char **argv)
 {
   //This needs some cleaning up, but it is automatically updated by SVN
-  std::string Id = "$Id: confrw.cpp 305 2009-12-14 12:56:19Z Albert.Deuzeman $";
+  std::string Id = "$Id$";
   std::cout << "Executable tag: " << Id.substr(1,Id.length()-2) << std::endl;
 
   std::cout << "Reading gauge file conf.88 from test directory.\n";

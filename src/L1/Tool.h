@@ -34,10 +34,10 @@ namespace Tool
   Core::Field< SU3::Matrix, L, T > localTrace(Core::Field< SU3::Matrix, L, T > const &field);
 
   template< size_t L, size_t T >
-  std::complex< double > spatialPlaquette(Core::Field< QCD::Gauge, L, T > &field);
+  double spatialPlaquette(Core::Field< QCD::Gauge, L, T > &field);
 
   template< size_t L, size_t T >
-  std::complex< double > temporalPlaquette(Core::Field< QCD::Gauge, L, T > &field);
+  double temporalPlaquette(Core::Field< QCD::Gauge, L, T > &field);
 
   template< size_t L, size_t T >
   void fixCoulombGauge(Core::Field< QCD::Gauge, L, T > *field);

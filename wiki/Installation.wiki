@@ -11,4 +11,4 @@ During development, all the small incremental steps needed to get Ahmidas runnin
   # Compilation goes via and MPI compiler such as mpic++. If not available, install the packages openmpi-dev, openmpi-common and openmpi-bin.
   # Then {{{export CXX=mpic++}}} and then run {{{cmake $PATH_TO_SOURCE_DIRECTORY}}} from the directory where you want to install everything (presumably a {{{bin}}} directory somewhere in the main directory).
   # Then {{{make all}}} to compile all the tests and all executables.
-  # Preferably run {{{make test}}} or the more verbose {{ctest -V}}}.
+  # Preferably run {{{make test}}} or the more verbose {{{ctest -V}}}.

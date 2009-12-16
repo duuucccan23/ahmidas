@@ -1,0 +1,13 @@
+#summary This is a testing page to see where our wikipages went
+
+= Introduction =
+
+Introduction text.
+
+
+= Details =
+
+More content with tests:
+  * Text in *bold* or _italic_
+  * Headings, paragraphs, and lists
+  * Automatic links to other wiki pages

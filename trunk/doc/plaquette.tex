@@ -1,0 +1,31 @@
+\documentclass[a4paper,12pt,twoside]{article}
+
+\usepackage[latin1]{inputenc}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{fontenc}
+\usepackage[pdftex]{graphicx}
+\usepackage{mathpazo}
+\usepackage{xcolor}
+
+\usepackage[pdftex]{hyperref}
+
+\author{Ahmidas Development Team}
+\title{Plaquette}
+
+\begin{document}
+
+\maketitle
+
+We define the value of the plaquette for a configuration as follows:
+\begin{equation}
+  p=\frac{\sum_{x}\sum_{\mu,\nu}W_{\mu\nu}^{1\times 1}(x)}{\binom{N_{D}}{2}N_{C}V} 
+\end{equation}
+With $N_{D}$ the number of dimensions (${x,y,z,t}=4$), $N_{C}=3$ the number of colors, $V$ the number of lattice sites, and $W_{\mu\nu}^{1\times 1}(x)$ the elementary \mbox{plaquette}:
+\begin{equation}
+W_{\mu\nu}^{1\times 1}(x) = \mathrm{Re}\left(\mathrm{Tr}\left(U_{\mu}(x)U_{\nu}(x +\hat{\mu})U^{\dagger}_{\mu}(x + \hat{\nu})U^{\dagger}_{\nu}(x)\right)\right)
+\end{equation}
+With $U$ the $SU(3)$ gauge link matrices. The devision by the number of lattice sites is a point where parallelization comes in, so it should be handled at a low level in \verb|Tool| or \verb|Field|, possibly interacting with \verb|Weave|. The number of colors is always $3$, so this value is hardcoded in inside the code (in \verb|Tool::spatialPlaquette| and \verb|Tool::temporalPlaquette|). Since we separate the spatial and temporal plaquette values, the effective number of dimensions is 3 in either case, so the factor that can be found inside the spatial and temporal code is $\binom{3}{2}\cdot 3 = 9$.
+\end{document}

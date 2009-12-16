@@ -30,8 +30,14 @@ namespace Tool
   template< typename Element, size_t L, size_t T >
   std::complex< double > tr(Core::Field< Element, L, T > const &field);
 
+  template< typename Element, size_t L, size_t T >
+  double realtr(Core::Field< Element, L, T > const &field);
+
   template< size_t L, size_t T >
-  Core::Field< SU3::Matrix, L, T > localTrace(Core::Field< SU3::Matrix, L, T > const &field);
+  Core::Field< std::complex< double >, L, T > localTrace(Core::Field< SU3::Matrix, L, T > const &field);
+
+  template< size_t L, size_t T >
+  Core::Field< double, L, T > localRealTrace(Core::Field< SU3::Matrix, L, T > const &field);
 
   template< size_t L, size_t T >
   double spatialPlaquette(Core::Field< QCD::Gauge, L, T > &field);
@@ -51,6 +57,7 @@ namespace Tool
 #include "Tool/Tool_randomize.template"
 #include "Tool/Tool_setToZero.template"
 #include "Tool/Tool_localTrace.template"
+#include "Tool/Tool_localRealTrace.template"
 #include "Tool/Tool_spatialPlaquette.template"
 #include "Tool/Tool_temporalPlaquette.template"
 #include "Tool/Tool_fixCoulombGauge.template"

@@ -1,10 +1,10 @@
 template< size_t L, size_t T >
 double Tool::temporalPlaquette(Core::Field< QCD::Gauge, L, T > &field)
 {
-  std::complex< double > res = tr(Path::square(field, Base::idx_X, Base::dir_UP, Base::idx_T, Base::dir_UP));
-  res += tr(Path::square(field, Base::idx_Y, Base::dir_UP, Base::idx_T, Base::dir_UP));
-  res += tr(Path::square(field, Base::idx_Z, Base::dir_UP, Base::idx_T, Base::dir_UP));
+  double res = realtr(Path::square(field, Base::idx_X, Base::dir_UP, Base::idx_T, Base::dir_UP));
+  res += realtr(Path::square(field, Base::idx_Y, Base::dir_UP, Base::idx_T, Base::dir_UP));
+  res += realtr(Path::square(field, Base::idx_Z, Base::dir_UP, Base::idx_T, Base::dir_UP));
   // We define the plaquette as the real part, averaged over the number of distinct orientations and colors
   // So divide by 3 (colors) * 3 (TX, TY, TZ) = 9
-  return (real(res) / 9.0);
+  return (res / 9.0);
 }

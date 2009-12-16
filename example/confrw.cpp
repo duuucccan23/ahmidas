@@ -18,12 +18,8 @@ int main(int argc, char **argv)
   Core::Field< QCD::Gauge, 8, 8 > myfield = Tool::IO::loadILDG<QCD::Gauge, 8, 8 >("../../test/conf.88");
 
   double plaqs = Tool::spatialPlaquette(myfield);
-  std::cout << "Spatial plaquette value: " << plaqs << std::endl;
-
   double plaqt = Tool::temporalPlaquette(myfield);
-  std::cout << "Temporal plaquette value: " << plaqt << std::endl;
-  std::cout << "Summmed plaquette value: " << 0.5 * (plaqt + plaqs) << std::endl;
-
+  std::cout << "Summmed plaquette value: " << std::scientific << 0.5 * (plaqt + plaqs) << std::endl;
   std::cout << "\nThe summed plaquette value should match the one reported by viewing lime_contents on this configuration file.\n\n";
   
   std::cout << "Writing to conf.copy.88 in test directory.\n";

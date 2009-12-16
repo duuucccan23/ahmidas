@@ -22,6 +22,10 @@ ADD_EXECUTABLE(random random.cpp)
 TARGET_LINK_LIBRARIES(random Base)
 ADD_TEST(random_performance random)
 
+ADD_EXECUTABLE(config config.cpp)
+TARGET_LINK_LIBRARIES(config Base ILDG Lime SU3)
+ADD_TEST(basic_config_stuff config)
+
 IF(USE_MPI)
 ADD_EXECUTABLE(MPIstartstop MPIstartstop.cpp)
 ADD_TEST(MPIstarting_stopping MPIstartstop)

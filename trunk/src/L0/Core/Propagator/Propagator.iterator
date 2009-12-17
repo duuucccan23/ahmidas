@@ -10,6 +10,7 @@ class iterator: public std::iterator< std::bidirectional_iterator_tag, Core::Fie
   Propagator< L, T >  &d_target;
 
   iterator(Propagator< L, T > &target);
+  iterator(Core::Field< std::complex < double >, L, T > **target);
 
   public:
     iterator(iterator< Stride > const &other);

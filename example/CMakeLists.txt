@@ -1,2 +1,5 @@
 ADD_EXECUTABLE(confrw confrw.cpp)
 TARGET_LINK_LIBRARIES(confrw Base ILDG Lime SU3)
+
+ADD_EXECUTABLE(smearAPE smearAPE.cpp)
+TARGET_LINK_LIBRARIES(smearAPE Base ILDG Lime SU3)

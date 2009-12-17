@@ -5,16 +5,10 @@ void Core::Propagator< L, T >::destroy()
   if (*d_references == 0)
   {
     delete d_references;
-    delete nDirac;
-    delete nColour;
     for (size_t idx=0; idx<size(); idx++)
       delete [] d_components[idx];
     delete [] d_components;
-    for (size_t idx=0; idx<numColour(); idx++)
-      delete colour_strides[idx];
     delete [] colour_strides;
-    for (size_t idx=0; idx<*numDirac(); idx++)
-      delete dirac_strides[idx];
     delete [] dirac_strides;
   }
 }

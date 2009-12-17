@@ -2,13 +2,11 @@ namespace Core
 {
 
   template< size_t L, size_t T >
-  inline Propagator< L, T >::Propagator(size_t nCol, size_t nDir, bool alloc)
+  inline Propagator< L, T >::Propagator(bool alloc)
     : d_references(new size_t(1)),
-      nDirac(new size_t(nDir)),
-      nColour(new size_t(nCol)),
-      psize((size_t)std::pow(4,nDir)*(size_t)std::pow(3,nCol)),
-      colour_strides(new size_t[nCol]),
-      dirac_strides(new size_t[nDir])
+      psize((size_t)std::pow(4,nDirac)*(size_t)std::pow(3,nColour)),
+      colour_strides(new size_t[nColour]),
+      dirac_strides(new size_t[nDirac])
   {
     if(alloc)
     {
@@ -18,11 +16,11 @@ namespace Core
     }
     colour_strides[0] = 1;
     for (size_t idx=1; idx<numColour(); idx++)
-      colour_strides[idx] = new size_t(3*(*colour_strides[idx-1]));
-    
+      colour_strides[idx] = size_t(3*(colour_strides[idx-1]));
+
     dirac_strides[0] = (size_t)std::pow(3,numColour());
     for (size_t idx=1; idx<numDirac(); idx++)
-      dirac_strides[idx] = new size_t(4*(*dirac_strides[idx-1]));
+      dirac_strides[idx] = size_t(4*(dirac_strides[idx-1]));
   }
   
   template< size_t L, size_t T >
@@ -32,14 +30,14 @@ namespace Core
     *d_references += 1;
   }
 
-  template< size_t L, size_t T >
-  inline Propagator< L, T >::Propagator(view< L, T > const &view)
-  {
-    Propagator tmp(*(view.nColour), *(view.nDirac));
-    d_components = new Field< std::complex< double >, L, T > *[tmp.size()];
-    for (size_t idx=0; idx<this.size(); idx++)
-      d_components[idx] = new Field< std::complex< double >, L, T >(*(view.d_components[idx]));
-  }
+//   template< size_t L, size_t T >
+//   inline Propagator< L, T >::Propagator(view< L, T > const &view)
+//   {
+//     Propagator tmp(*(view.nColour), *(view.nDirac));
+//     d_components = new Field< std::complex< double >, L, T > *[tmp.size()];
+//     for (size_t idx=0; idx<this.size(); idx++)
+//       d_components[idx] = new Field< std::complex< double >, L, T >(*(view.d_components[idx]));
+//   }
 
   template< size_t L, size_t T >
   inline Propagator< L, T >::~Propagator()
@@ -105,25 +103,25 @@ namespace Core
   template< size_t L, size_t T >
   inline size_t const Propagator< L, T >::numDirac() const
   {
-    return *nDirac;
+    return nDirac;
   }
   
   template< size_t L, size_t T >
   inline size_t const Propagator< L, T >::numColour() const
   {
-    return *nColour;
+    return nColour;
   }
   
-  template< size_t L, size_t T >
-  inline template view< L, T > &Propagator< L, T >::operator()(Base::DiracIndex const idx, size_t const DiracID)
-  {
-    return view< L, T >(this, idx, DiracID);
-  }
-  
-  template< size_t L, size_t T >
-  inline template view< L, T > &Propagator< L, T+1 >::operator()(Base::ColourIndex const idx, size_t const ColourID)
-  {
-    return view< L, T >(this, idx, ColourID);
-  }
+//   template< size_t L, size_t T >
+//   inline template view< L, T > &Propagator< L, T >::operator()(Base::DiracIndex const idx, size_t const DiracID)
+//   {
+//     return view< L, T >(this, idx, DiracID);
+//   }
+//   
+//   template< size_t L, size_t T >
+//   inline template view< L, T > &Propagator< L, T+1 >::operator()(Base::ColourIndex const idx, size_t const ColourID)
+//   {
+//     return view< L, T >(this, idx, ColourID);
+//   }
   
 }

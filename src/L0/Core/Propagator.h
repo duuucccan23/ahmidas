@@ -1,8 +1,12 @@
 #pragma once
 
+#include <vector>
+#include <string>
 #include <L0/Base/Base.h>
 #include <L0/Core/Field.h>
-// #include <L0/QCD/Spinor.h>
+#include <L0/QCD/Spinor.h>
+#include <L0/Tool/IO.h>
+
 
 namespace Core
 {
@@ -36,6 +40,8 @@ namespace Core
       Propagator(Propagator const &other);
 //       Propagator(view< L, T > const &view); // this constructor makes a deep copy
       ~Propagator();
+
+      bool loadILDG(std::vector< std::string > const filenames);
 
 #include "Propagator/Propagator.operators"
 

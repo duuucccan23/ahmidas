@@ -4,23 +4,27 @@ namespace Core
   template< size_t L, size_t T >
   inline Propagator< L, T >::Propagator(bool alloc)
     : d_references(new size_t(1)),
-      psize((size_t)std::pow(4,nDirac)*(size_t)std::pow(3,nColour)),
+      psize((size_t)(std::pow(4,nDirac)*std::pow(3,nColour))),
       colour_strides(new size_t[nColour]),
       dirac_strides(new size_t[nDirac])
   {
     if(alloc)
     {
-      d_components = new Field< std::complex< double >, L, T > *[size()];
-      for (size_t idx=0; idx<size(); idx++)
-        d_components[idx] = new Field< std::complex< double >, L, T >;
+      Field< std::complex< double >, L, T > *components = new Field< std::complex< double >, L, T > [size()];
+      d_components = &components;
     }
     colour_strides[0] = 1;
-    for (size_t idx=1; idx<numColour(); idx++)
-      colour_strides[idx] = size_t(3*(colour_strides[idx-1]));
+    dirac_strides[0]  = 3;
+    colour_strides[1] = 12;
+    dirac_strides[1]  = 36;
+    
+//     colour_strides[0] = 1;
+//     for (size_t idx=1; idx<numColour(); idx++)
+//       colour_strides[idx] = size_t(3*(colour_strides[idx-1]));
 
-    dirac_strides[0] = (size_t)std::pow(3,numColour());
-    for (size_t idx=1; idx<numDirac(); idx++)
-      dirac_strides[idx] = size_t(4*(dirac_strides[idx-1]));
+//     dirac_strides[0] = (size_t)std::pow(3,numColour());
+//     for (size_t idx=1; idx<numDirac(); idx++)
+//       dirac_strides[idx] = size_t(4*(dirac_strides[idx-1]));
   }
   
   template< size_t L, size_t T >
@@ -30,19 +34,40 @@ namespace Core
     *d_references += 1;
   }
 
-//   template< size_t L, size_t T >
-//   inline Propagator< L, T >::Propagator(view< L, T > const &view)
-//   {
-//     Propagator tmp(*(view.nColour), *(view.nDirac));
-//     d_components = new Field< std::complex< double >, L, T > *[tmp.size()];
-//     for (size_t idx=0; idx<this.size(); idx++)
-//       d_components[idx] = new Field< std::complex< double >, L, T >(*(view.d_components[idx]));
-//   }
-
   template< size_t L, size_t T >
   inline Propagator< L, T >::~Propagator()
   {
     destroy();
+  }
+  
+  
+  
+//     template< typename Element, size_t L, size_t T >
+//     Core::Field< Element, L, T > loadILDG(std::string const &filename);
+  template< size_t L, size_t T >
+  inline bool Propagator< L, T >::loadILDG(std::vector< std::string > const filenames)
+  {
+//     if (nFiles == 1)
+//     {
+//       return true;
+//     }
+//     else 
+    if (filenames.size() == 12)
+    {
+      for (size_t i=0; i<filenames.size(); i++)
+      {
+        // maybe reinterpret_cast< Core::Field< std::complex< double > > * > is needed here
+        // better: explicit conversion routine
+//         (*d_components)[i*12] = Tool::IO::loadILDG< QCD::Spinor, L, T >(filenames[i]);
+      }
+      return true;
+    }
+    else
+    {
+      std::cerr << "Error in void Propagator< L, T >::loadILDG(std::string const * const filenames, const size_t nFiles)" << std::endl;
+      std::cerr << "filenames.size() should be 12" << std::endl;
+      return false;
+    }
   }
   
 //   template< size_t L, size_t T >
@@ -111,17 +136,5 @@ namespace Core
   {
     return nColour;
   }
-  
-//   template< size_t L, size_t T >
-//   inline template view< L, T > &Propagator< L, T >::operator()(Base::DiracIndex const idx, size_t const DiracID)
-//   {
-//     return view< L, T >(this, idx, DiracID);
-//   }
-//   
-//   template< size_t L, size_t T >
-//   inline template view< L, T > &Propagator< L, T+1 >::operator()(Base::ColourIndex const idx, size_t const ColourID)
-//   {
-//     return view< L, T >(this, idx, ColourID);
-//   }
   
 }

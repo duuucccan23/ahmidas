@@ -15,5 +15,6 @@ int main(int argc, char **argv)
   Core::Field< QCD::Spinor, 4, 4 > myfield = Tool::IO::loadScidac<QCD::Spinor, 4, 4 >("../test/test.00");
 
   std::cout << myfield[0];
+
   return 0;
 }

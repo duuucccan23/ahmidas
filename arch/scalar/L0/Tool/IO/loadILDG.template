@@ -6,11 +6,16 @@ Core::Field< Element, L, T > Tool::IO::loadILDG(std::string const &filename)
 
   Lime::Reader reader(filename);
   ILDGinfo info(reader);
+  Core::Field< Element, L, T > result;
 
   reader.retrieveRecord(reader.findRecord("ildg-binary-data"));
+  if (reader.fail())
+  {
+    std::cerr << "Lime reader could not find the record, check path and file, and check lime contents of file.\nField remains empty!.\n";
+    return result;
+  }
   assert(reader.good());
 
-  Core::Field< Element, L, T > result;
   Element *dataPtr = result.raw();
 
   if (info.precision.compare("64") == 0)

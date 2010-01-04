@@ -11,7 +11,7 @@ void Tool::IO::saveScidac(Core::Field< Element, L, T > const &field, std::string
   {
     std::copy(reinterpret_cast< double const* >(&(field.constPhysicalIndex(siteIdx))), reinterpret_cast< double const* >(&(field.constPhysicalIndex(siteIdx))) + elements, buffer);
     if (!Base::bigEndian)
-      swapEndian(buffer, buffer + elements, sizeof(float));
+      Base::swapEndian(buffer, buffer + elements, sizeof(float));
     writer.write(buffer, elements);
   }
 }

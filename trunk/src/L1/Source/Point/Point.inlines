@@ -1,5 +1,5 @@
 template< size_t L, size_t T >
-inline Source::Point< L, T >::Point(size_t const *coord)
+inline Source::Point< L, T, (Base::sou_SINGLET | Base::sou_UNPOLARIZED) >::Point(size_t const *coord)
 {
   std::copy(coord, coord + 3, d_coord);
 }

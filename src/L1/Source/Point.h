@@ -4,12 +4,12 @@
 
 namespace Source
 {
-  template< size_t L, size_t T, Base::SourceType Type >
+  template< size_t L, size_t T, int Type >
   class Point
   {};
 
   template< size_t L, size_t T >
-  class Point< L, T, (sou_SINGLET | sou_UNPOLARIZED) >
+  class Point< L, T, (Base::sou_SINGLET | Base::sou_UNPOLARIZED) >
   {
     size_t d_coord[3];
 
@@ -22,7 +22,7 @@ namespace Source
   };
 
   template< size_t L, size_t T >
-  class Point< L, T, (sou_SINGLET | sou_PARTLY_POLARIZED) >
+  class Point< L, T, (Base::sou_SINGLET | Base::sou_PARTLY_POLARIZED) >
   {
     size_t                 d_coord[3];
     std::complex< double > d_field[4];
@@ -39,7 +39,7 @@ namespace Source
   };
 
   template< size_t L, size_t T >
-  class Point< L, T, (sou_SINGLET | sou_FULLY_POLARIZED) >
+  class Point< L, T, (Base::sou_SINGLET | Base::sou_FULLY_POLARIZED) >
   {
     size_t           d_coord[4];
     Base::DiracIndex d_index;
@@ -55,7 +55,7 @@ namespace Source
   };
   
   template< size_t L, size_t T >
-  class Point< L, T, (sou_TRIPLET | sou_UNPOLARIZED) >
+  class Point< L, T, (Base::sou_TRIPLET | Base::sou_UNPOLARIZED) >
   {
     size_t                 d_coord[4];
     std::complex< double > d_field[3];
@@ -72,7 +72,7 @@ namespace Source
   };
 
   template< size_t L, size_t T >
-  class Point< L, T, (sou_TRIPLET | sou_PARTLY_POLARIZED) >
+  class Point< L, T, (Base::sou_TRIPLET | Base::sou_PARTLY_POLARIZED) >
   {
     size_t                 d_coord[4];
     std::complex< double > d_field[12];
@@ -89,7 +89,7 @@ namespace Source
   };
 
   template< size_t L, size_t T >
-  class Point< L, T, (sou_TRIPLET | sou_FULLY_POLARIZED) >
+  class Point< L, T, (Base::sou_TRIPLET | Base::sou_FULLY_POLARIZED) >
   {
     size_t           d_coord[4];
     Base::DiracIndex d_index;

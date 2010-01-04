@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <complex>
+#include <iostream>
 
 #include <L0/Dirac/Gamma.h>
 #include <L0/Dirac/Sigma.h>
@@ -56,7 +57,9 @@ namespace QCD
       void setToZero();
 
       size_t size() const;
+      friend std::ostream &operator<<(std::ostream &out, Spinor const &spinor);
   };
+  std::ostream &operator<<(std::ostream &out, Spinor const &spinor);
 }
 
 #include "Spinor/Spinor.inlines"

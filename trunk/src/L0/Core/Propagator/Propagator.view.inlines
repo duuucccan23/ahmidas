@@ -1,7 +1,7 @@
 namespace Core
 {
     
-  template< size_t L, size_t T > 
+  template< size_t L, size_t T >
   inline Propagator< L, T >::view< L, T >::view(Propagator< L, T > &target,
                                                 Base::DiracIndex const idx, size_t const DiracID) : d_target(&target)
   {
@@ -11,7 +11,7 @@ namespace Core
   }
     
   
-  template< size_t L, size_t T > 
+  template< size_t L, size_t T >
   inline Propagator< L, T >::view< L, T >::view(Propagator< L, T > &target,
                                                 Base::ColourIndex const idx, size_t const ColourID) : d_target(&target)
   {

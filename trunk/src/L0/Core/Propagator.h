@@ -19,26 +19,31 @@ namespace Core
   template< size_t L, size_t T >
   class Propagator
   {
-    static const size_t nDirac  = 2;
-    static const size_t nColour = 2;
-
-    size_t psize;
 
     size_t *d_references;
 
     Core::Field< std::complex< double >, L, T > **d_components;
 
+    enum PropagatorStride
+    {
+      ColourStrideSink   =  1,
+      ColourStrideSource = 12,
+      DiracStrideSink    =  3,
+      DiracStrideSource  = 36
+    };
+
+    static const size_t nDirac  = 2;
+    static const size_t nColour = 2;
     size_t *colour_strides;
     size_t *dirac_strides;
 
-    public:
+    size_t psize;
 
-// #include "Propagator/Propagator.view"
-// #include "Propagator/Propagator.const_view"
+
+    public:
 
       Propagator(bool alloc=true);
       Propagator(Propagator const &other);
-//       Propagator(view< L, T > const &view); // this constructor makes a deep copy
       ~Propagator();
 
       bool loadILDG(std::vector< std::string > const filenames);
@@ -57,7 +62,7 @@ namespace Core
 //       const_iterator end(Base::ColourIndex const idx, const size_t ColourID) const;// 
 //       const_iterator begin(Base::DiracIndex const idx, const size_t DiracID) const;
 //       const_iterator end(Base::DiracIndex const idx, const size_t DiracID) const;
-      
+
 
       size_t const size() const;
       size_t const numDirac() const;
@@ -67,7 +72,7 @@ namespace Core
    and maybe some herm. conj. derived class
    type cast of a propagator with one dirac and one colour index to a Core::Field< SU3::Spinor >
    would simplify I/O for standard ILDG format
-*/ 
+*/
 
     private:
       void destroy();
@@ -77,7 +82,7 @@ namespace Core
 
 }
 
-
+// friend QCD::Spinor Field< std::complex< double >, L, T > *operator=(Field< QCD::Spinor, L, T > const &);
 
 // #include "Propagator/Propagator.view.inlines"
 // #include "Propagator/Propagator.const_view.inlines"

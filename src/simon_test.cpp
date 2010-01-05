@@ -18,12 +18,12 @@ int main(int argc, char **argv)
 
   const size_t L = 4;
   const size_t T = 8;
-  
+
   std::cout << "this is a test ..." << std::endl;
 
   std::vector<std::string> propfiles;
-  
-  const std::string filename_base("source");
+
+  const std::string filename_base("../data/source");
   for (int f=0; f<12; f++)
   {
     std::ostringstream oss;
@@ -35,10 +35,11 @@ int main(int argc, char **argv)
     std::cout << oss.str() << std::endl;
     propfiles.push_back(oss.str());
   }
-  
+
   Core::Propagator<L, T> *prop = new Core::Propagator<L, T>();
   prop->loadILDG(propfiles);
-  
+
+  Core::Propagator<L, T>::iterator<1> my_iterator = prop->begin(Base::col_GREEN, Base::gam_3);
 
 //   const std::string gf_in = "/afs/ifh.de/group/etmc/scratch/poola/dinter/gauge_fields/16x16x16x32/conf.1500";
 //   const std::string gf_out =  "/afs/ifh.de/group/nic/scratch/poolb/dinter/tmp/conf.1500";

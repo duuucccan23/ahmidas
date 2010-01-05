@@ -1,26 +1,20 @@
 
-  // do we need this any longer?
-  // should be a problem of copy constructor
-
 template< size_t L, size_t T >
 void Core::Propagator< L, T >::isolate()
-{  
+{
   if (*d_references == 1)
     return;
 
   *d_references -= 1;
   d_references = new size_t(1);
-  
-  nDirac  = size_t(numDirac()); 
-  nColour = size_t(numColour());
-    
+
   size_t *colour_strides_new = new size_t [numColour()];
-  size_t *dirac_strides_new  = new size_t [numDirac()];  
+  size_t *dirac_strides_new  = new size_t [numDirac()];
   std::copy(colour_strides, colour_strides + numColour(), colour_strides_new);
   std::copy(dirac_strides,  dirac_strides  + numDirac(),  dirac_strides_new);
   colour_strides = colour_strides_new;
   dirac_strides  = dirac_strides_new;
 
-  Field< std::complex< double >, L, T > components_new = new Field< std::complex< double >, L, T > [this.size()];
+  Field< std::complex< double >, L, T > *components_new = new Field< std::complex< double >, L, T > [this->size()];
   d_components = &components_new;
 }

@@ -1,12 +1,11 @@
 template< size_t L, size_t T >
 void Core::Propagator< L, T >::destroy()
-{  
+{
   *d_references -= 1;
   if (*d_references == 0)
   {
     delete d_references;
     delete [] *d_components;
-    delete d_components;
     delete [] colour_strides;
     delete [] dirac_strides;
   }

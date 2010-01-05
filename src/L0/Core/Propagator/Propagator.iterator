@@ -1,5 +1,5 @@
-template< size_t Stride >
-class const_iterator;
+// template< size_t Stride >
+// class const_iterator;
 
 template< size_t Stride >
 class iterator: public std::iterator< std::bidirectional_iterator_tag, Core::Field< std::complex< double >, L, T > >
@@ -9,17 +9,18 @@ class iterator: public std::iterator< std::bidirectional_iterator_tag, Core::Fie
 
   Propagator< L, T >  &d_target;
 
-  iterator(Propagator< L, T > &target);
-  iterator(Core::Field< std::complex < double >, L, T > **target);
+  size_t d_idx;
+
+  iterator(Propagator< L, T > &target, size_t idx);
 
   public:
     iterator(iterator< Stride > const &other);
 
     bool operator==(iterator< Stride > const &other) const;
-    bool operator==(const_iterator< Stride > const &other) const;
+//     bool operator==(const_iterator< Stride > const &other) const;
 
     bool operator!=(iterator< Stride > const &other) const;
-    bool operator!=(const_iterator< Stride > const &other) const;
+//     bool operator!=(const_iterator< Stride > const &other) const;
 
     Core::Field< std::complex< double >, L, T > &operator*();
     Core::Field< std::complex< double >, L, T > const &operator*() const;
@@ -28,9 +29,8 @@ class iterator: public std::iterator< std::bidirectional_iterator_tag, Core::Fie
     Core::Field< std::complex< double >, L, T > const *operator->() const;
 
     iterator &operator--();
-    iterator operator--(int);
+//     iterator operator--(int);
 
     iterator &operator++();
-    iterator operator++(int);
+//     iterator operator++(int);
 };
-

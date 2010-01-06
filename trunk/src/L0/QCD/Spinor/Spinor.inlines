@@ -137,4 +137,12 @@ namespace QCD
     return out;
   }
 
+  std::complex< double > innerProduct(Spinor const &left, Spinor const &right)
+  {
+    std::complex < double > result = 0;
+    for (size_t idx = 0; idx < 4; ++idx)
+      result += innerProduct(left[idx], right[idx]);
+    return result;
+
+  }
 }

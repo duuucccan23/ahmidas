@@ -4,6 +4,7 @@
 #include <L0/Core/Field.h>
 //#include <L0/Core/Propagator.h>
 #include <L0/QCD/Gauge.h>
+#include <L0/QCD/Spinor.h>
 #include <L0/SU3/Matrix.h>
 #include <L1/Path.h>
 
@@ -49,6 +50,9 @@ namespace Tool
   void fixCoulombGauge(Core::Field< QCD::Gauge, L, T > *field);
 
   SU3::Matrix killTrace(SU3::Matrix const &target);
+
+  template< size_t L, size_t T >
+  std::complex < double > innerProduct(Core::Field< QCD::Spinor, L, T > const &left, Core::Field< QCD::Spinor, L, T > const &right);
 }
 
 #include "Tool/Tool.inlines"

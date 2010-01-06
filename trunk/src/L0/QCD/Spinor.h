@@ -60,6 +60,8 @@ namespace QCD
       friend std::ostream &operator<<(std::ostream &out, Spinor const &spinor);
   };
   std::ostream &operator<<(std::ostream &out, Spinor const &spinor);
+
+  std::complex< double > innerProduct(Spinor const &left, Spinor const &right);
 }
 
 #include "Spinor/Spinor.inlines"

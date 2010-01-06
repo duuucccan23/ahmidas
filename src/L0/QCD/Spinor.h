@@ -61,6 +61,7 @@ namespace QCD
   };
   std::ostream &operator<<(std::ostream &out, Spinor const &spinor);
 
+  //Please not that in the following, the left spinor is complex conjugated automatically in this inner product!
   std::complex< double > innerProduct(Spinor const &left, Spinor const &right);
 }
 

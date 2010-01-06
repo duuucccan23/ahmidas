@@ -51,6 +51,7 @@ namespace Tool
 
   SU3::Matrix killTrace(SU3::Matrix const &target);
 
+  //Please not that in the following, the left spinor field is complex conjugated automatically in this inner product!
   template< size_t L, size_t T >
   std::complex < double > innerProduct(Core::Field< QCD::Spinor, L, T > const &left, Core::Field< QCD::Spinor, L, T > const &right);
 }

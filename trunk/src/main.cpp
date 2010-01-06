@@ -17,7 +17,8 @@ int main(int argc, char **argv)
   Core::Field< QCD::Spinor, 4, 4 > src1 = Tool::IO::loadScidac<QCD::Spinor, 4, 4 >("../test/source.00.00");
   Core::Field< QCD::Spinor, 4, 4 > src2 = Tool::IO::loadScidac<QCD::Spinor, 4, 4 >("../test/source.00.00");
 
-  std::complex < double> res = Tool::innerProduct(src1, src2);
-  std::cout << std::endl << res << std::endl;
+  std::complex < double> res0 = Tool::innerProduct(src1, src2, 0);
+  std::complex < double> res1 = Tool::innerProduct(src1, src2, 1);
+  std::cout << std::endl << res0 << std::endl << res1 << std::endl;
   return 0;
 }

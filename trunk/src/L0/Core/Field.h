@@ -108,6 +108,7 @@ namespace Core
       Element const *constAt(size_t x, size_t y, size_t z, size_t t) const;
 
       size_t size() const; //Enumerates the number of Elements in this field (for looping)
+      size_t spatialSize() const; // (for looping over a single timeslice)
       void isolate();
       void fill(Element const &element); // Flush a field with a constant quantity
 

@@ -44,10 +44,13 @@ double Tool::realtr(Core::Field< Element, L, T > const &field)
 }
 
 template< size_t L, size_t T >
-std::complex < double > Tool::innerProduct(Core::Field< QCD::Spinor, L, T > const &left, Core::Field< QCD::Spinor, L, T > const &right)
+std::complex < double > Tool::innerProduct(Core::Field< QCD::Spinor, L, T > const &left,
+                                           Core::Field< QCD::Spinor, L, T > const &right,
+                                           size_t tslice)
 {
+  size_t offset = tslice*left.spatialSize();
   std::complex < double > result(0.0, 0.0);
-  for (size_t idx = 0; idx < left.size(); ++idx)
+  for (size_t idx = offset; idx < left.spatialSize()+offset; ++idx)
     result += QCD::innerProduct(left.constMemoryIndex(idx), right.constMemoryIndex(idx));
 
   return result; // NOTE This should be made parallel with a gather call!

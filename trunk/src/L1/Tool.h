@@ -53,7 +53,9 @@ namespace Tool
 
   //Please not that in the following, the left spinor field is complex conjugated automatically in this inner product!
   template< size_t L, size_t T >
-  std::complex < double > innerProduct(Core::Field< QCD::Spinor, L, T > const &left, Core::Field< QCD::Spinor, L, T > const &right);
+  std::complex < double > innerProduct(Core::Field< QCD::Spinor, L, T > const &left,
+                                       Core::Field< QCD::Spinor, L, T > const &right,
+                                       const size_t tslice);
 }
 
 #include "Tool/Tool.inlines"

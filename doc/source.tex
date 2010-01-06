@@ -1,0 +1,99 @@
+\documentclass[a4paper,12pt,twoside]{article}
+
+\usepackage[latin1]{inputenc}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{fontenc}
+\usepackage[pdftex]{graphicx}
+\usepackage{mathpazo}
+\usepackage{xcolor}
+
+\usepackage[pdftex]{hyperref}
+
+\author{Ahmidas Development Team}
+\title{Sources}
+
+\begin{document}
+
+\maketitle
+
+Sources should be visualized as fields of QCD spinors. In essence, at every lattice site, a $3 \times 4$ matrix rests with complex entries for each of these color and Dirac indices. The specific makeup of these entries, both within a lattice site, and all throughout the lattice defines the type of source in use. The most general form of such a matrix is given below:
+\begin{equation}
+ \left(
+\begin{array}{ccc}
+ c_1 & c_2 & c_3 \\
+ c_4 & c_5 & c_6 \\
+ c_7 & c_8 & c_9 \\
+ c_{10} & c_{11} & c_{12}
+\end{array}
+\right)
+\end{equation}
+with $c_{1\dots 12} \in \mathcal{C}$.
+\section{Polarization}
+Polarization describes the structure of a source in the Dirac indices, we define three different types: unpolarized, partially polarized and fully polarized. They are identified as follows:
+\begin{equation}
+ \mathrm{Unpol.: }\left(
+\begin{array}{c}
+ c_1 \\
+ c_1 \\
+ c_1 \\
+ c_1 
+\end{array}
+\right)\quad
+ \mathrm{Partially-pol: }\left(
+\begin{array}{c}
+ c_1 \\
+ c_2 \\
+ c_3 \\
+ c_4 
+\end{array}
+\right)\quad
+ \mathrm{Fully-pol.: }\left(
+\begin{array}{c}
+ c_1 \\
+ 0 \\
+ 0 \\
+ 0 
+\end{array}
+\right)
+\end{equation}
+Where in the fully polarized case, the value $c_1$ can be in any one of the Dirac indices, so long as the other ones are $0$.
+\section{Color state}
+We identify three different color states: white, pure and generic. For white, the same value exists in all color indices, for pure, only one color index has values, with the other ones identically zero. And for generic, all color indices can have values:
+\begin{equation}
+ \mathrm{white: }\left(
+\begin{array}{ccc}
+ c_1 & c_1 & c_1 \\
+\end{array}
+\right)\quad
+ \mathrm{pure: }
+ \left(
+\begin{array}{ccc}
+ 0 & c_1 & 0 \\
+\end{array}
+\right)\quad
+ \mathrm{generic: }
+\left(
+\begin{array}{ccc}
+ c_1 & c_2 & c_3 \\
+\end{array}
+\right)
+\end{equation}
+The color and polarization states are combined to make up the spinor representation on a single lattice site.
+\section{Spatial layout}
+A source does not in general need to have values stored at all lattice sites. There are many different spatial layouts for sources possible. The most basic ones are: point, full, box and wall source, with fairly obvious definitions:
+\begin{itemize}
+\item A point source has values at only one lattice site
+\item A full source has values at all lattice sites
+\item A wall source has values at only one time slice
+\item A box source has values only inside a space time box
+\end{itemize}
+Whenever we define a source to have a certain color and polarization, it is given that this state exists on all spatial sites where the source has values, and is zero in all other locations.
+\section{Generation and normalization}
+Z2, stochastic, 1/12th.
+\section{Smearing of sources}
+Sources can be smeared, since this procedure can affect the spatial layout and the color and polarization state of a source, these do not necessarily remain constant under such an operation. The precise consequence of smearing will be implemented depending on the procedure applied. But in general we do not try to optimize to extensively here. While the structure of a smeared point source is well determined, the logistics of managing such a spatial layout can become quickly very complex, and we usually opt for moving a source to the full type quite easily.
+\section{In the code}
+\end{document}

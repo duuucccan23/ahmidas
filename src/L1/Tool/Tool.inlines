@@ -42,3 +42,13 @@ double Tool::realtr(Core::Field< Element, L, T > const &field)
 
   return result /= field.size(); // NOTE This should be made parallel with a gather call!
 }
+
+template< size_t L, size_t T >
+std::complex < double > Tool::innerProduct(Core::Field< QCD::Spinor, L, T > const &left, Core::Field< QCD::Spinor, L, T > const &right)
+{
+  std::complex < double > result(0.0, 0.0);
+  for (size_t idx = 0; idx < left.size(); ++idx)
+    result += QCD::innerProduct(left.constMemoryIndex(idx), right.constMemoryIndex(idx));
+
+  return result; // NOTE This should be made parallel with a gather call!
+}

@@ -1,7 +1,7 @@
 ADD_SUBDIRECTORY(Source)
 ADD_SUBDIRECTORY(Smear)
 
-SET(Sources_Tool Tool/Tool_localTrace.cpp Tool/Tool_reunitarize.cpp #Tool/Tool_fixCoulombGauge.cpp
+SET(Sources_Tool Tool/Tool_localTrace.cpp Tool/Tool_reunitarize.cpp Tool/Tool_fixCoulombGauge.cpp
                  Tool/Tool_temporalPlaquette.cpp Tool/Tool_localRealTrace.cpp Tool/Tool_realtr.cpp
                  Tool/Tool_spatialPlaquette.cpp Tool/Tool_tr.cpp)
 ADD_LIBRARY(Tool ${Sources_Tool})

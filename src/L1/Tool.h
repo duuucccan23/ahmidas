@@ -24,16 +24,13 @@ namespace Tool
   void setToIdentity(Core::Field< Element > *field);
 
   std::complex< double > tr(Core::Field< SU3::Matrix > const &field);
-
   double realtr(Core::Field< SU3::Matrix > const &field);
-
   Core::Field< std::complex< double > > localTrace(Core::Field< SU3::Matrix > const &field);
-
   Core::Field< double > localRealTrace(Core::Field< SU3::Matrix > const &field);
 
   double spatialPlaquette(Core::Field< QCD::Gauge > &field);
   double temporalPlaquette(Core::Field< QCD::Gauge > &field);
-//  void fixCoulombGauge(Core::Field< QCD::Gauge > *field);
+  void fixCoulombGauge(Core::Field< QCD::Gauge > *field);
 
   SU3::Matrix killTrace(SU3::Matrix const &target);
 

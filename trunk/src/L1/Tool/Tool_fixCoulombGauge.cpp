@@ -10,6 +10,7 @@ void Tool::fixCoulombGauge(Core::Field< QCD::Gauge > *field)
   Core::Field< SU3::Matrix > transform(field->L(), field->T());
   Core::Field< SU3::Matrix > scratch(field->L(), field->T());
   Core::Field< SU3::Matrix > scratch2(field->L(), field->T());
+  Core::Field< std::complex< double > > tracefield(field->L(), field->T());
 
   std::complex< double > gaugeTerm(1.0, 0.0);
   size_t iterations;
@@ -29,9 +30,9 @@ void Tool::fixCoulombGauge(Core::Field< QCD::Gauge > *field)
 
     scratch *= alpha;
     transform += scratch;
-    scratch2 = localTrace(scratch);
-    scratch2 *= (1.0 / 3.0);
-    transform -= scratch2;
+    tracefield = localTrace(scratch);
+    tracefield *= (1.0 / 3.0);
+    transform -= tracefield;
 
     // Dir Y
     scratch  = field->component< SU3::Matrix >(Base::idx_Y).dagger();
@@ -44,9 +45,9 @@ void Tool::fixCoulombGauge(Core::Field< QCD::Gauge > *field)
 
     scratch *= alpha;
     transform += scratch;
-    scratch2 = localTrace(scratch);
-    scratch2 *= (1.0 / 3.0);
-    transform -= scratch2;
+    tracefield = localTrace(scratch);
+    tracefield *= (1.0 / 3.0);
+    transform -= tracefield;
 
     // Dir Z
     scratch  = field->component< SU3::Matrix >(Base::idx_Z).dagger();
@@ -59,9 +60,9 @@ void Tool::fixCoulombGauge(Core::Field< QCD::Gauge > *field)
 
     scratch *= alpha;
     transform += scratch;
-    scratch2 = localTrace(scratch);
-    scratch2 *= (1.0 / 3.0);
-    transform -= scratch2;
+    tracefield = localTrace(scratch);
+    tracefield *= (1.0 / 3.0);
+    transform -= tracefield;
 
     Tool::reunitarize(&transform); // Possibly needs replacement!
 
@@ -95,7 +96,7 @@ void Tool::fixCoulombGauge(Core::Field< QCD::Gauge > *field)
     scratch += field->component< SU3::Matrix >(Base::idx_Z).dagger();
 
     std::complex< double > newGaugeTerm = tr(scratch);
-    newGaugeTerm /= 24 * scratch.size(); // (2 * N_c * 4 * V)^-1
+    newGaugeTerm /= 24 * scratch.volume(); // (2 * N_c * 4 * V)^-1
     if (std::abs((std::abs(newGaugeTerm) / std::abs(gaugeTerm)) - 1) < 1e-7)
       break;
     gaugeTerm = newGaugeTerm;

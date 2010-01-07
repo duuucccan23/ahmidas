@@ -60,4 +60,28 @@ namespace QCD
   {
     return 144;
   }
+
+  inline Tensor::iterator Tensor::begin(Base::ColourIndex const idx, TensorColourStride const stride)
+  {
+    return iterator(*this, stride, 0);
+  }
+
+
+  inline Tensor::iterator Tensor::end(Base::ColourIndex const idx, TensorColourStride const stride)
+  {
+    return iterator(*this, stride, size());
+  }
+
+
+  inline Tensor::iterator Tensor::begin(Base::DiracIndex const idx, TensorDiracStride const stride)
+  {
+    return iterator(*this, stride, 0);
+  }
+
+
+  inline Tensor::iterator Tensor::end(Base::DiracIndex const idx, TensorDiracStride const stride)
+  {
+    return iterator(*this, stride ,size());
+  }
+
 }

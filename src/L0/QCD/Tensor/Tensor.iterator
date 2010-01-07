@@ -1,0 +1,35 @@
+
+
+class iterator : std::iterator< std::bidirectional_iterator_tag, Spinor >
+{
+  friend class Tensor;
+  //friend class Tensor::const_iterator;
+
+  Tensor &d_target;
+
+  size_t d_idx;
+  size_t d_stride;
+
+  iterator(Tensor &target, const size_t d_stride, size_t idx);
+
+  public:
+    iterator(iterator const &other);
+
+    bool operator==(iterator const &other) const;
+//     bool operator==(const_iterator< Stride > const &other) const;
+
+    bool operator!=(iterator const &other) const;
+//     bool operator!=(const_iterator< Stride > const &other) const;
+
+    Spinor &operator*();
+    Spinor const &operator*() const;
+
+    Spinor *operator->();
+    Spinor const *operator->() const;
+
+    iterator &operator--();
+//     iterator operator--(int);
+
+    iterator &operator++();
+//     iterator operator++(int);
+};

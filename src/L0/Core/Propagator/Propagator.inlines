@@ -1,12 +1,11 @@
 namespace Core
 {
 
-  template< size_t L, size_t T >
-  inline Propagator< L, T >::Propagator(bool alloc)
+
+  inline Propagator::Propagator(size_t L, size_t T, bool alloc)
     : d_references(new size_t(1)),
       colour_strides(new size_t[nColour]),
-      dirac_strides(new size_t[nDirac]),
-      psize((size_t)(std::pow(4.0, double(nDirac))*std::pow(3.0, double(nColour))))
+      dirac_strides(new size_t[nDirac])
   {
 
     colour_strides[0] = ColourStrideSink;
@@ -16,37 +15,32 @@ namespace Core
 
     if(alloc)
     {
-      Field< std::complex< double >, L, T > *components = new Field< std::complex< double >, L, T > [size()];
-      d_components = &components;
+      d_components = new Field< QCD::Tensor >(L, T);
     }
   }
 
 
-  template< size_t L, size_t T >
-  inline Propagator< L, T >::Propagator(Propagator< L, T > const &other)
-    : d_components(other.d_components), psize(other.psize)
+
+  inline Propagator::Propagator(Propagator const &other)
+    : d_components(other.d_components)
   {
     *d_references += 1;
   }
 
-  template< size_t L, size_t T >
-  inline Propagator< L, T >::~Propagator()
+
+  inline Propagator::~Propagator()
   {
     destroy();
   }
 
 
-
-//     template< typename Element, size_t L, size_t T >
-//     Core::Field< Element, L, T > loadILDG(std::string const &filename);
-  template< size_t L, size_t T >
-  inline bool Propagator< L, T >::loadILDG(std::vector< std::string > const filenames)
+  inline bool Propagator::loadILDG(std::vector< std::string > const filenames)
   {
 //     if (nFiles == 1)
 //     {
 //       return true;
 //     }
-//     else 
+//     else
     if (filenames.size() == 12)
     {
       for (size_t i=0; i<filenames.size(); i++)
@@ -59,70 +53,31 @@ namespace Core
     }
     else
     {
-      std::cerr << "Error in void Propagator< L, T >::loadILDG(std::string const * const filenames, const size_t nFiles)" << std::endl;
+      std::cerr << "Error in void Propagator::loadILDG(std::string const * const filenames, const size_t nFiles)" << std::endl;
       std::cerr << "filenames.size() should be 12" << std::endl;
       return false;
     }
   }
 
-  template< size_t L, size_t T >
-  inline typename Propagator< L, T >::template iterator<1> Propagator< L, T >::begin(Base::ColourIndex const idx, size_t const Id)
+
+//   inline Propagator::iterator Propagator::begin()
+//   {
+//     isolate();
+//     return iterator(*this, 0);
+//   }
+// 
+// 
+//   inline Propagator::iterator Propagator::end()
+//   {
+//     isolate();
+//     return iterator(*this, d_components->spatialSize());
+//   }
+
+
+  inline size_t const Propagator::size() const
   {
-    isolate();
-    assert(Id == 0 || Id == 1);
-    return iterator<1>(*this, 0);
+    return d_size;
   }
-
-  template< size_t L, size_t T >
-  inline typename Propagator< L, T >::template iterator<1> Propagator< L, T >::end(Base::ColourIndex const idx, size_t const Id)
-  {
-    isolate();
-    assert(Id == 0 || Id == 1);
-    return iterator<1>(*this, 3);
-  }
-
-  template< size_t L, size_t T >
-  inline typename Propagator< L, T >::template iterator<1> Propagator< L, T >::begin(Base::DiracIndex const idx, size_t const Id)
-  {
-    isolate();
-    assert(Id == 0 || Id == 1);
-    return iterator<1>(*this, 0);
-  }
-
-  template< size_t L, size_t T >
-  inline typename Propagator< L, T >::template iterator<1> Propagator< L, T >::end(Base::DiracIndex const idx, size_t const Id)
-  {
-    isolate();
-    assert(Id == 0 || Id == 1);
-    return iterator<1>(*this, 4);
-  }
-
-  template< size_t L, size_t T >
-  inline size_t const Propagator< L, T >::size() const
-  {
-    return psize;
-  }
-
-  template< size_t L, size_t T >
-  inline size_t const Propagator< L, T >::numDirac() const
-  {
-    return nDirac;
-  }
-
-  template< size_t L, size_t T >
-  inline size_t const Propagator< L, T >::numColour() const
-  {
-    return nColour;
-  }
-
-
-
-
-
-
-
-
-
 
 
 }

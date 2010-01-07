@@ -2,82 +2,82 @@ namespace Core
 {
 
   /* private constructor */
-  template< size_t L, size_t T >
-  template< size_t Stride >
-  inline Propagator< L, T >::iterator< Stride >::iterator(Core::Propagator< L, T > &target, size_t idx)
-    : d_target(target), d_idx(idx)
+
+
+  inline Propagator::iterator::iterator(Core::Propagator &target,  size_t idx)
+    : Core::Field< QCD::Tensor >::iterator(*(target.d_components), idx), d_target(target)
   {}
 
   /* copy constructor */
-  template< size_t L, size_t T >
-  template< size_t Stride >
-  inline Propagator< L, T >::iterator< Stride >::iterator(Propagator< L, T >::iterator< Stride > const &other)
-    : d_target(other.d_target), d_idx(other.d_idx)
+
+
+  inline Propagator::iterator::iterator(Propagator::iterator const &other)
+    : d_target(other.d_target)
   {}
 
-  template< size_t L, size_t T >
-  template< size_t Stride >
-  inline bool Propagator< L, T >::iterator< Stride >::operator==(Propagator< L, T >::iterator< Stride > const &other) const
-  {
-    return ((*(d_target.d_components))[d_idx] == (*(other.d_target.d_components))[other.d_idx]);
-  }
 
-  template< size_t L, size_t T >
-  template< size_t Stride >
-  inline bool Propagator< L, T >::iterator< Stride >::operator!=(Propagator< L, T >::iterator< Stride > const &other) const
-  {
-    return ((*(d_target.d_components))[d_idx] != (*(other.d_target.d_components))[other.d_idx]);
-  }
+
+//   inline bool Propagator::iterator::operator==(Propagator::iterator const &other) const
+//   {
+//     return (d_target.d_components)[d_idx] == (other.d_target.d_components)[other.d_idx];
+//   }
+// 
+// 
+// 
+//   inline bool Propagator::iterator::operator!=(Propagator::iterator const &other) const
+//   {
+//     return (d_target.d_components)[d_idx] != (other.d_target.d_components)[other.d_idx];
+//   }
 
 
   /* access field components */
 
-  template< size_t L, size_t T >
-  template< size_t Stride >
-  inline Core::Field< std::complex< double >, L, T > &Propagator< L, T >::iterator< Stride >::operator*()
+
+
+  inline Core::Field< QCD::Spinor > &Propagator::iterator::operator*()
   {
-    return (*(d_target.d_components))[d_idx];
+    return (d_target.d_components)[d_idx];
   }
 
-  template< size_t L, size_t T >
-  template< size_t Stride >
-  inline Core::Field< std::complex< double >, L, T > *Propagator< L, T >::iterator< Stride >::operator->()
+
+
+  inline Core::Field< QCD::Spinor > *Propagator::iterator::operator->()
   {
-    return &((*(d_target.d_components))[d_idx]);
+    return &((d_target.d_components)[d_idx]);
   }
 
   /* access field components  - "const" version */
 
-  template< size_t L, size_t T >
-  template< size_t Stride >
-  inline Core::Field< std::complex< double >, L, T > const &Propagator< L, T >::iterator< Stride >::operator*() const
+
+
+  inline Core::Field< QCD::Spinor > const &Propagator::iterator::operator*() const
   {
-    return (*(d_target.d_components))[d_idx];
+    return (d_target.d_components)[d_idx];
   }
 
-  template< size_t L, size_t T >
-  template< size_t Stride >
-  inline Core::Field< std::complex< double >, L, T > const *Propagator< L, T >::iterator< Stride >::operator->() const
+
+
+  inline Core::Field< QCD::Spinor > const *Propagator::iterator::operator->() const
   {
-    return &((*(d_target.d_components))[d_idx]);
+    return &((d_target.d_components)[d_idx]);
   }
 
 
   /* increment & decrement */
 
-  template< size_t L, size_t T >
-  template< size_t Stride >
-  inline Propagator< L, T >::iterator< Stride > &Propagator< L, T >::iterator< Stride >::operator++()
+
+
+  inline Propagator::iterator &Propagator::iterator::operator++()
   {
-    d_idx += Stride;
+    d_idx += d_stride;
     return *this;
   }
 
-  template< size_t L, size_t T >
-  template< size_t Stride >
-  inline Propagator< L, T >::iterator< Stride > &Propagator< L, T >::iterator< Stride >::operator--()
+
+
+  inline Propagator::iterator &Propagator::iterator::operator--()
   {
-    d_idx -= Stride;
+    d_idx -= d_stride;
     return this;
   }
 

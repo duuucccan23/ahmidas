@@ -23,6 +23,7 @@
 
 #include <algorithm>
 #include <iostream>
+#include <complex>
 
 #include <L0/Base/Base.h>
 #include <L0/Base/Weave.h>
@@ -33,42 +34,49 @@
 
 namespace Core
 {
-  template< typename Element, size_t L, size_t T, typename Atom >
+  template< typename Element, typename Atom >
   class Component;
 
-  template< typename Element, size_t L, size_t T, typename Atom >
+  template< typename Element, typename Atom >
   class hcComponent;
 
-  template< typename Element, size_t L, size_t T >
+  template< typename Element >
   class hcField;
 
-  template< typename Element, size_t L, size_t T >
+  template< typename Element >
   class Field
   {
     size_t                *d_references;
 
-    Base::Weave< L, T >   &d_weave;
+    Base::Weave            d_weave;
     Element               *d_field;
     size_t                *d_offsets;
 
     public:
-      Field();
-      Field(Element const &value);
-      Field(Field< Element, L, T> const &other);
+      Field(size_t L, size_t T);
+      Field(Element const &value, size_t L, size_t T);
+      Field(Field< Element > const &other);
 
       template< typename Super >
-      Field(Component< Super, L, T, Element> const &component); //Creation of a field through a Component of another field.
+      Field(Component< Super, Element> const &component); //Creation of a field through a Component of another field.
 
       template< typename Super >
-      Field(hcComponent< Super, L, T, Element> const &component); //Creation of a field through a hcComponent of another field.
+      Field(hcComponent< Super, Element> const &component); //Creation of a field through a hcComponent of another field.
 
-      explicit Field(hcField< Element, L, T > const &other);
-      Field< Element, L, T > &operator=(Field< Element, L, T > const &other);
+      explicit Field(hcField< Element  > const &other);
+      Field< Element > &operator=(Field< Element > const &other);
 
       ~Field();
 
 #include "Field/Field.iterator"
 #include "Field/Field.const_iterator"
+
+      size_t L() const;
+      size_t T() const;
+      size_t volume() const;
+
+      double weave(Base::weaveOperator wea_OP, double nodeval) const;
+      std::complex < double > weave(Base::weaveOperator wea_OP, std::complex < double > nodeval) const;
 
       iterator begin();
       iterator end();
@@ -77,13 +85,13 @@ namespace Core
       const_iterator end() const;
 
       template< typename Atom >
-      Component< Element, L, T, Atom > component(size_t const component);
+      Component< Element, Atom > component(size_t const component);
 
-      Field< Element, L, T > &shift(Base::SpaceTimeIndex idx, Base::Direction shift);
+      Field< Element > &shift(Base::SpaceTimeIndex idx, Base::Direction shift);
 
 #include "Field/Field.operators"
 
-      hcField< Element, L, T > dagger() const;
+      hcField< Element > dagger() const;
 
       // Unsafe memory access: ONLY when you really control all repercussions
       Element * const raw();
@@ -107,7 +115,6 @@ namespace Core
       Element const *at(size_t x, size_t y, size_t z, size_t t) const;
       Element const *constAt(size_t x, size_t y, size_t z, size_t t) const;
 
-      size_t size() const; //Enumerates the number of Elements in this field (for looping)
       size_t spatialSize() const; // (for looping over a single timeslice)
       void isolate();
       void fill(Element const &element); // Flush a field with a constant quantity
@@ -119,21 +126,20 @@ namespace Core
       void destroy();
   };
 
-  template< typename Element, size_t L, size_t T >
+  template< typename Element >
   class hcField
   {
-    friend class Field< Element, L, T >;
-    Field< Element, L, T > const &d_parent;
+    friend class Field< Element >;
+    Field< Element > const &d_parent;
 
-    hcField(Field< Element, L, T > const &parent);
+    hcField(Field< Element > const &parent);
 
     public:
-      Field< Element, L, T > const &dagger() const;
+      Field< Element > const &dagger() const;
 
-      typename Field< Element, L, T >::const_iterator begin() const;
-      typename Field< Element, L, T >::const_iterator end() const;
+      typename Field< Element >::const_iterator begin() const;
+      typename Field< Element >::const_iterator end() const;
 
-      size_t size() const;
   };
 }
 

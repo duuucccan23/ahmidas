@@ -1,5 +1,6 @@
-template< size_t L, size_t T >
-double Tool::spatialPlaquette(Core::Field< QCD::Gauge, L, T > &field)
+#include "Tool.ih"
+
+double Tool::spatialPlaquette(Core::Field< QCD::Gauge > &field)
 {
   double res = realtr(Path::square(field, Base::idx_X, Base::dir_UP, Base::idx_Y, Base::dir_UP));
   res += realtr(Path::square(field, Base::idx_X, Base::dir_UP, Base::idx_Z, Base::dir_UP));

@@ -1,11 +1,11 @@
 class iterator: public std::iterator< std::bidirectional_iterator_tag, Atom >
 {
-  friend class Component< Element, L, T, Atom >;
+  friend class Component< Element, Atom >;
 
-  mutable typename Field< Element, L, T >::iterator d_iterator;
+  mutable typename Field< Element >::iterator d_iterator;
   size_t const d_component;
 
-  iterator(typename Field< Element, L, T >::iterator iterator, size_t const component);
+  iterator(typename Field< Element >::iterator iterator, size_t const component);
 
   public:
     iterator(iterator const &other);

@@ -1,12 +1,12 @@
-template< typename Element, size_t L, size_t T >
+template< typename Element >
 template< typename Super>
-Core::Field< Element, L, T >::Field(Core::hcComponent< Super, L, T, Element> const &component) // Creation of a field through a component of another field.
+Core::Field< Element >::Field(Core::hcComponent< Super, Element> const &hcComponent) // Creation of a field through a component of another field.
 : d_references(new size_t(1)),
-  d_weave(Base::Weave< L, T >::instance()),
+  d_weave(hcComponent.L(), hcComponent.T()),
   d_field(new Element[d_weave.localVolume()]),
   d_offsets(new size_t[4])
 {
   for (size_t ctr = 0; ctr < d_weave.localVolume(); ++ctr)
-    d_field[ctr] = component.parentIdx(ctr).dagger();
+    d_field[ctr] = hcComponent.parentIdx(ctr).dagger();
   std::fill(d_offsets, d_offsets + 4, 0);
 }

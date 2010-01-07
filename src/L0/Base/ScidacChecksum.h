@@ -41,8 +41,8 @@ namespace Base
       template< typename Element >
       size_t blockAggregate(Element const &data, size_t blockSize, size_t blocks = 1, size_t rank = 0);
 
-      template< typename Element, size_t L, size_t T >
-      void calculate(Core::Field< Element, L, T > const &field);
+      template< typename Element >
+      void calculate(Core::Field< Element > const &field);
 
     public:
       void createTable();

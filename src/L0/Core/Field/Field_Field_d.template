@@ -1,7 +1,7 @@
-template< typename Element, size_t L, size_t T >
-Core::Field< Element, L, T >::Field(Element const &value)
+template< typename Element >
+Core::Field< Element >::Field(Element const &value, size_t L, size_t T)
 : d_references(new size_t(1)),
-  d_weave(Base::Weave< L, T >::instance()),
+  d_weave(L, T),
   d_field(new Element[d_weave.localVolume()]),
   d_offsets(new size_t[4])
 {

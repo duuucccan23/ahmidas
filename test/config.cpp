@@ -9,7 +9,7 @@
 
 int main(int argc, char **argv)
 {
-  Core::Field< QCD::Gauge, 8, 8 > myfield = Tool::IO::loadILDG<QCD::Gauge, 8, 8 >("../../test/conf.88");
+  Core::Field< QCD::Gauge > myfield = Tool::IO::loadILDG< QCD::Gauge >("../../test/conf.88", 8, 8);
   std::cout << "Read conf.88 from test directory.\n";
   double stored = 0.5998194411656625;
   double prec = 1e-14;

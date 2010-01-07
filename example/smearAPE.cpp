@@ -15,7 +15,7 @@ int main(int argc, char **argv)
   std::cout << "Executable tag: " << Id.substr(1,Id.length()-2) << std::endl;
 
   std::cout << "Reading gauge file conf.88 from test directory.\n";
-  Core::Field< QCD::Gauge, 8, 8 > myfield = Tool::IO::loadILDG<QCD::Gauge, 8, 8 >("../../test/conf.88");
+  Core::Field< QCD::Gauge > myfield = Tool::IO::loadILDG<QCD::Gauge >("../../test/conf.88", 8, 8);
 
   std::cout << "Showing the gauge link in the x-up direction from point (0,0,0,0).\n";
   std::cout << myfield[0][Base::idx_X];

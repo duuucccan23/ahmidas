@@ -1,65 +1,65 @@
 namespace Core
 {
-  template< typename Element, size_t L, size_t T >
-  inline Field< Element, L, T >::const_iterator::const_iterator(Field< Element, L, T > const &parent, size_t idx)
+  template< typename Element >
+  inline Field< Element >::const_iterator::const_iterator(Field< Element > const &parent, size_t idx)
     : d_parent(parent), d_idx(idx)
   {}
 
-  template< typename Element, size_t L, size_t T >
-  inline Field< Element, L, T >::const_iterator::const_iterator(typename Field< Element, L, T >::iterator const &other)
+  template< typename Element >
+  inline Field< Element >::const_iterator::const_iterator(typename Field< Element >::iterator const &other)
     : d_parent(other.d_parent), d_idx(other.d_idx)
   {}
 
-  template< typename Element, size_t L, size_t T >
-  inline Field< Element, L, T >::const_iterator::const_iterator(typename Field< Element, L, T >::const_iterator const &other)
+  template< typename Element >
+  inline Field< Element >::const_iterator::const_iterator(typename Field< Element >::const_iterator const &other)
     : d_parent(other.d_parent), d_idx(other.d_idx)
   {}
 
-  template< typename Element, size_t L, size_t T >
-  inline bool Field< Element, L, T >::const_iterator::operator==(iterator const &other) const
+  template< typename Element >
+  inline bool Field< Element >::const_iterator::operator==(iterator const &other) const
   {
     return ((&d_parent == &(other.d_parent)) && (d_idx == other.d_idx));
   }
 
-  template< typename Element, size_t L, size_t T >
-  inline bool Field< Element, L, T >::const_iterator::operator==(const_iterator const &other) const
+  template< typename Element >
+  inline bool Field< Element >::const_iterator::operator==(const_iterator const &other) const
   {
     return ((&d_parent == &(other.d_parent)) && (d_idx == other.d_idx));
   }
 
-  template< typename Element, size_t L, size_t T >
-  inline bool Field< Element, L, T >::const_iterator::operator!=(iterator const &other) const
+  template< typename Element >
+  inline bool Field< Element >::const_iterator::operator!=(iterator const &other) const
   {
     return ((&d_parent != &(other.d_parent)) || (d_idx != other.d_idx));
   }
 
-  template< typename Element, size_t L, size_t T >
-  inline bool Field< Element, L, T >::const_iterator::operator!=(const_iterator const &other) const
+  template< typename Element >
+  inline bool Field< Element >::const_iterator::operator!=(const_iterator const &other) const
   {
     return ((&d_parent != &(other.d_parent)) ||  (d_idx != other.d_idx));
   }
 
-  template< typename Element, size_t L, size_t T >
-  inline Element const &Field< Element, L, T >::const_iterator::operator*() const
+  template< typename Element >
+  inline Element const &Field< Element >::const_iterator::operator*() const
   {
-    return d_parent.element(d_idx);
+    return d_parent.constPhysicalIndex(d_idx);
   }
 
-  template< typename Element, size_t L, size_t T >
-  inline Element const *Field< Element, L, T >::const_iterator::operator->() const
+  template< typename Element >
+  inline Element const *Field< Element >::const_iterator::operator->() const
   {
-    return &d_parent.element(d_idx);
+    return &d_parent.constPhysicalIndex(d_idx);
   }
 
-  template< typename Element, size_t L, size_t T >
-  inline typename Field< Element, L, T >::const_iterator &Field< Element, L, T >::const_iterator::operator++()
+  template< typename Element >
+  inline typename Field< Element >::const_iterator &Field< Element >::const_iterator::operator++()
   {
     ++d_idx;
     return *this;
   }
 
-  template< typename Element, size_t L, size_t T >
-  inline typename Field< Element, L, T >::const_iterator &Field< Element, L, T >::const_iterator::operator--()
+  template< typename Element >
+  inline typename Field< Element >::const_iterator &Field< Element >::const_iterator::operator--()
   {
     --d_idx;
     return *this;

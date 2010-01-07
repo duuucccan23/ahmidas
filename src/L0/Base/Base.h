@@ -53,6 +53,12 @@ namespace Base
     sou_GENERIC = 2
   };
 
+  enum weaveOperator
+  {
+    wea_SUM = 0,
+    wea_XOR = 1
+  };
+
   extern bool const bigEndian;
 }
 

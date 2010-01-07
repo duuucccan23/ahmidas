@@ -5,6 +5,7 @@
 #include <L0/Base/Base.h>
 #include <L0/Core/Field.h>
 #include <L0/QCD/Spinor.h>
+#include <L0/QCD/Tensor.h>
 #include <L0/Tool/IO.h>
 
 
@@ -21,7 +22,7 @@ namespace Core
 
     size_t *d_references;
 
-    Core::Field< std::complex< double > > **d_components;
+    Core::Field< QCD::Tensor > *d_components;
 
     enum PropagatorStride
     {
@@ -36,26 +37,24 @@ namespace Core
     size_t *colour_strides;
     size_t *dirac_strides;
 
-    size_t psize;
+    static const size_t d_size = 144;
 
 
     public:
 
-      Propagator(bool alloc=true);
+      Propagator(size_t L, size_t T, bool alloc=true);
       Propagator(Propagator const &other);
       ~Propagator();
 
       bool loadILDG(std::vector< std::string > const filenames);
 
-#include "Propagator/Propagator.operators"
+// #include "Propagator/Propagator.operators"
 
-#include "Propagator/Propagator.iterator"
-// #include "Propagator/Propagator.const_iterator"
-
-      iterator<1> begin(Base::ColourIndex const idx, const size_t ColourID);
-      iterator<1> end(Base::ColourIndex const idx, const size_t ColourID);
-      iterator<1> begin(Base::DiracIndex  const idx, const size_t DiracID);
-      iterator<1> end(Base::DiracIndex  const idx, const size_t DiracID);
+// #include "Propagator/Propagator.iterator"
+// // #include "Propagator/Propagator.const_iterator"
+// 
+//       iterator begin();
+//       iterator end();
 
 //       const_iterator begin(Base::ColourIndex const idx, const size_t ColourID) const;
 //       const_iterator end(Base::ColourIndex const idx, const size_t ColourID) const;// 
@@ -64,8 +63,6 @@ namespace Core
 
 
       size_t const size() const;
-      size_t const numDirac() const;
-      size_t const numColour() const;
 
 /* NOTE we should include something like Propagator*Gamma*Propagator
    and maybe some herm. conj. derived class
@@ -81,14 +78,10 @@ namespace Core
 
 }
 
-// friend QCD::Spinor Field< std::complex< double >, L, T > *operator=(Field< QCD::Spinor, L, T > const &);
-
-// #include "Propagator/Propagator.view.inlines"
-// #include "Propagator/Propagator.const_view.inlines"
 
 #include "Propagator/Propagator.inlines"
 
-#include "Propagator/Propagator.iterator.inlines"
+// #include "Propagator/Propagator.iterator.inlines"
 // #include "Propagator/Propagator.const_iterator.inlines"
 
 #include "Propagator/Propagator_destroy.template"

@@ -3,6 +3,7 @@
 #include <complex>
 
 #include <L0/Base/Base.h>
+#include "Spinor.h"
 
 namespace QCD
 {
@@ -14,11 +15,25 @@ namespace QCD
 
   class Tensor
   {
+    friend class Spinor;
     std::complex< double > d_data[144];
+
+    enum TensorColourStride
+    {
+      ColourStrideSink   =  1,
+      ColourStrideSource = 12
+    };
+
+    enum TensorDiracStride
+    {
+      DiracStrideSink    =  3,
+      DiracStrideSource  = 36
+    };
 
     public:
       Tensor();
       Tensor(Tensor const &other);
+      Tensor(Spinor *data);
       Tensor(std::complex< double > *data);
       explicit Tensor(hcTensor const &other);
       Tensor &operator=(Tensor const &other);
@@ -42,6 +57,17 @@ namespace QCD
       std::complex< double > trace() const;
 
       size_t size() const;
+
+  #include "Tensor/Tensor.iterator"
+
+      iterator begin(Base::ColourIndex const idx, TensorColourStride const stride);
+
+      iterator end(Base::ColourIndex const idx, TensorColourStride const stride);
+
+      iterator begin(Base::DiracIndex const idx, TensorDiracStride const stride);
+
+      iterator end(Base::DiracIndex const idx, TensorDiracStride const stride);
+
   };
 
   class hcTensor
@@ -65,3 +91,5 @@ namespace QCD
 
 #include "Tensor/Tensor.inlines"
 #include "Tensor/hcTensor.inlines"
+
+#include "Tensor/Tensor.iterator.inlines"

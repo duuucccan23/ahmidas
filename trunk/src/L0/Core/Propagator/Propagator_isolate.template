@@ -1,6 +1,5 @@
 
-template< size_t L, size_t T >
-void Core::Propagator< L, T >::isolate()
+void Core::Propagator::isolate()
 {
   if (*d_references == 1)
     return;
@@ -8,13 +7,17 @@ void Core::Propagator< L, T >::isolate()
   *d_references -= 1;
   d_references = new size_t(1);
 
-  size_t *colour_strides_new = new size_t [numColour()];
-  size_t *dirac_strides_new  = new size_t [numDirac()];
-  std::copy(colour_strides, colour_strides + numColour(), colour_strides_new);
-  std::copy(dirac_strides,  dirac_strides  + numDirac(),  dirac_strides_new);
+  size_t *colour_strides_new = new size_t [nColour];
+  size_t *dirac_strides_new  = new size_t [nDirac];
+
+  colour_strides_new[0] = ColourStrideSink;
+  colour_strides_new[1] = ColourStrideSource;
+  dirac_strides_new[0]  = DiracStrideSink;
+  dirac_strides_new[1]  = DiracStrideSource;
+
   colour_strides = colour_strides_new;
   dirac_strides  = dirac_strides_new;
 
-  Field< std::complex< double >, L, T > *components_new = new Field< std::complex< double >, L, T > [this->size()];
-  d_components = &components_new;
+  Field< QCD::Tensor > *components_new = new Field< QCD::Tensor > (this->d_components->L(), this->d_components->T());
+  d_components = components_new;
 }

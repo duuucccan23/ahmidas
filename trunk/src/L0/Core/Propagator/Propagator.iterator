@@ -1,32 +1,34 @@
-// template< size_t Stride >
+
 // class const_iterator;
 
-template< size_t Stride >
-class iterator: public std::iterator< std::bidirectional_iterator_tag, Core::Field< std::complex< double >, L, T > >
+/* this iterator only iterates over space-time,
+  for iteration over colour and Dirac indices at a particular lattice site,
+  the QCD::Tensor::iterator is responsible  */
+
+class iterator : Core::Field< QCD::Tensor >::iterator
 {
   friend class Propagator;
-  //friend class Propagator::const_iterator< Stride >;
+  friend class Core::Field< QCD::Tensor >;
+  //friend class Propagator::const_iterator;
 
-  Propagator< L, T >  &d_target;
+  Propagator  &d_target;
 
-  size_t d_idx;
-
-  iterator(Propagator< L, T > &target, size_t idx);
+  iterator(Propagator &target, size_t idx);
 
   public:
-    iterator(iterator< Stride > const &other);
+    iterator(iterator const &other);
 
-    bool operator==(iterator< Stride > const &other) const;
+    bool operator==(iterator const &other) const;
 //     bool operator==(const_iterator< Stride > const &other) const;
 
-    bool operator!=(iterator< Stride > const &other) const;
+    bool operator!=(iterator const &other) const;
 //     bool operator!=(const_iterator< Stride > const &other) const;
 
-    Core::Field< std::complex< double >, L, T > &operator*();
-    Core::Field< std::complex< double >, L, T > const &operator*() const;
+    QCD::Tensor &operator*();
+    QCD::Tensor const &operator*() const;
 
-    Core::Field< std::complex< double >, L, T > *operator->();
-    Core::Field< std::complex< double >, L, T > const *operator->() const;
+    QCD::Tensor *operator->();
+    QCD::Tensor const *operator->() const;
 
     iterator &operator--();
 //     iterator operator--(int);

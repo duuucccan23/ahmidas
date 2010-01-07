@@ -1,31 +1,30 @@
 template< typename Element >
 Core::Field< Element > Tool::IO::loadMILC(std::string const &filename, size_t L, size_t T)
 {
-//  static_assert(sizeof(uint32_t) == sizeof(float), "Sizes of uint32_t and float are different.");
-
   std::ifstream input(filename.c_str());
   assert(input.good());
 
   MILCinfo info(input);
+  Base::ScidacChecksum read(info.checksum);
 
   Core::Field< Element > result(L, T);
   size_t const elemSize = sizeof(Element) / sizeof(double);
-  uint32_t elem32[elemSize];
+  uint32_t *raw = new uint32_t[result.volume() * elemSize];
+
+  input.read(reinterpret_cast< char* >(raw), result.volume() * elemSize * sizeof(uint32_t));
 
   Base::ScidacChecksum calc;
-  for (size_t ctr = 0; ctr < result.volume(); ++ctr)
-  {
-    input.read(reinterpret_cast< char* >(elem32), elemSize * sizeof(uint32_t));
-    if (!Base::bigEndian)
-      Base::swapEndian(elem32, elem32 + elemSize, sizeof(uint32_t));
-    std::copy(reinterpret_cast< float* >(elem32), reinterpret_cast< float* >(elem32) + elemSize,
-              reinterpret_cast< double* >(result.raw() + ctr));
-    calc.blockAggregate(elem32, elemSize, 1, ctr);
-  }
-  Base::ScidacChecksum read(info.checksum);
-
+  calc.blockAggregate(raw, elemSize, result.volume());
   std::cerr << "Checksums for file " << filename << '.' << std::endl;
   std::cerr << "Calculated: " << std::hex << calc.upper() << ' ' << calc.lower() << '.' << std::endl;
   std::cerr << "Read:       " << std::hex << read.upper() << ' ' << read.lower() << '.' << std::endl;
+
+  if (!Base::bigEndian)
+    Base::swapEndian(raw, raw + result.volume() * elemSize, sizeof(uint32_t));
+  std::copy(reinterpret_cast< float* >(raw), reinterpret_cast< float* >(raw) + result.volume() * elemSize,
+            reinterpret_cast< double* >(result.raw()));
+
+  delete[] raw;
+
   return result;
 }

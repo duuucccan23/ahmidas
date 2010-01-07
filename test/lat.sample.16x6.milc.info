@@ -1,0 +1,22 @@
+magic_number = 20103
+time_stamp = "Mon Nov 30 21:13:26 2009"
+checksums = "f63ab716 2936047c"
+nx = 16
+ny = 16
+nz = 16
+nt = 6
+action.description = "Gauge plus fermion (improved)"
+gauge.description = "Symanzik 1x1 + 1x2 + 1x1x1 action"
+gauge.nloops = 3
+gauge.nreps = 1
+gauge.beta11 = 3.100000
+gauge.tadpole.u0 = 1.000000
+gauge.ssplaq = 1.189233
+gauge.stplaq = 1.197897
+gauge.nersc_linktr = -1.038930e-03
+gauge.nersc_checksum = 863484277004697600
+quark.description = "O(a^2): couplings(pi)=0, Naik term, No O(a^2) errors"
+quark.flavors1 = 12
+quark.flavors2 = 0
+quark.mass1 = 0.025000
+quark.mass2 = 0.500000

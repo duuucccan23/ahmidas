@@ -20,6 +20,7 @@ namespace Base
 
     public:
       ScidacChecksum();
+      ScidacChecksum(uint64_t const &init);
       void clear();
 
       uint64_t checksum() const;

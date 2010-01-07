@@ -31,4 +31,3 @@ namespace
 
 SU3::Matrix const SU3::Matrix::s_identity(::identity);
 SU3::Matrix const SU3::Matrix::s_zero(::zero);
-

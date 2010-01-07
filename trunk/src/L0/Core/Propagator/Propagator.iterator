@@ -5,15 +5,17 @@
   for iteration over colour and Dirac indices at a particular lattice site,
   the QCD::Tensor::iterator is responsible  */
 
-class iterator : Core::Field< QCD::Tensor >::iterator
+class iterator : public Core::Field< QCD::Tensor >::iterator
 {
   friend class Propagator;
-  friend class Core::Field< QCD::Tensor >;
   //friend class Propagator::const_iterator;
 
   Propagator  &d_target;
+  
+  Core::Field< QCD::Tensor >::iterator &d_iter; 
 
-  iterator(Propagator &target, size_t idx);
+// use private constructer of base class accessible via begin() or end()
+//   iterator(Propagator &target, size_t idx);
 
   public:
     iterator(iterator const &other);

@@ -50,11 +50,11 @@ namespace Core
 
 // #include "Propagator/Propagator.operators"
 
-// #include "Propagator/Propagator.iterator"
-// // #include "Propagator/Propagator.const_iterator"
-// 
-//       iterator begin();
-//       iterator end();
+#include "Propagator/Propagator.iterator"
+// #include "Propagator/Propagator.const_iterator"
+
+      iterator begin();
+      iterator end();
 
 //       const_iterator begin(Base::ColourIndex const idx, const size_t ColourID) const;
 //       const_iterator end(Base::ColourIndex const idx, const size_t ColourID) const;// 
@@ -81,7 +81,7 @@ namespace Core
 
 #include "Propagator/Propagator.inlines"
 
-// #include "Propagator/Propagator.iterator.inlines"
+#include "Propagator/Propagator.iterator.inlines"
 // #include "Propagator/Propagator.const_iterator.inlines"
 
 #include "Propagator/Propagator_destroy.template"

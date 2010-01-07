@@ -18,6 +18,10 @@ ADD_EXECUTABLE(fieldcomponent fieldcomponent.cpp)
 TARGET_LINK_LIBRARIES(fieldcomponent Weave)
 ADD_TEST(fieldcomponent_setup fieldcomponent)
 
+ADD_EXECUTABLE(loadMILC loadMILC.cpp)
+TARGET_LINK_LIBRARIES(loadMILC Base Tool MILC SU3)
+ADD_TEST(load_MILC_lattice loadMILC)
+
 ADD_EXECUTABLE(random random.cpp)
 TARGET_LINK_LIBRARIES(random Base)
 ADD_TEST(random_performance random)

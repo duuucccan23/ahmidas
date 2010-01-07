@@ -193,5 +193,14 @@ namespace SU3
   {
     return mat.dagger().realtr();
   }
-}
 
+  inline std::complex< double > det(Matrix const &mat)
+  {
+    return mat.det();
+  }
+
+  inline std::complex< double > tr(Matrix const &mat)
+  {
+    return mat.tr();
+  }
+}

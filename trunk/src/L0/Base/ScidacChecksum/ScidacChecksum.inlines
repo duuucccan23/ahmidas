@@ -4,6 +4,12 @@ inline Base::ScidacChecksum::ScidacChecksum()
   createTable();
 }
 
+inline Base::ScidacChecksum::ScidacChecksum(uint64_t const &init)
+{
+  d_sum.as64 = init;
+  createTable();
+}
+
 inline void Base::ScidacChecksum::clear()
 {
   d_sum.as64 = 0;

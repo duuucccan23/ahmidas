@@ -1,12 +1,12 @@
-template< typename Element, size_t L, size_t T >
-Core::Field< Element, L, T > Tool::IO::loadILDG(std::string const &filename)
+template< typename Element >
+Core::Field< Element > Tool::IO::loadILDG(std::string const &filename, size_t L, size_t T)
 {
 //  static_assert(sizeof(uint32_t) == sizeof(float), "Sizes of uint32_t and float differ.");
 //  static_assert(sizeof(uint64_t) == sizeof(double), "Sizes of uint64_t and double differ.");
 
   Lime::Reader reader(filename);
   ILDGinfo info(reader);
-  Core::Field< Element, L, T > result;
+  Core::Field< Element > result(L, T);
 
   reader.retrieveRecord(reader.findRecord("ildg-binary-data"));
   if (reader.fail())
@@ -20,16 +20,16 @@ Core::Field< Element, L, T > Tool::IO::loadILDG(std::string const &filename)
 
   if (info.precision.compare("64") == 0)
   {
-    reader.read(dataPtr, result.size());
+    reader.read(dataPtr, result.volume());
     if (!Base::bigEndian)
-      Base::swapEndian(dataPtr, dataPtr + result.size(), sizeof(double));
+      Base::swapEndian(dataPtr, dataPtr + result.volume(), sizeof(double));
     return result;
   }
 
   size_t const elSize = sizeof(Element) / sizeof(double);
   uint32_t elem32[elSize];
 
-  for (size_t ctr = 0; ctr < result.size(); ++ctr, ++dataPtr)
+  for (size_t ctr = 0; ctr < result.volume(); ++ctr, ++dataPtr)
   {
     reader.read(elem32, elSize);
     if (!Base::bigEndian)

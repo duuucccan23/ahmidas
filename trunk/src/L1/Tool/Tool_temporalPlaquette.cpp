@@ -1,5 +1,6 @@
-template< size_t L, size_t T >
-double Tool::temporalPlaquette(Core::Field< QCD::Gauge, L, T > &field)
+#include "Tool.ih"
+
+double Tool::temporalPlaquette(Core::Field< QCD::Gauge > &field)
 {
   double res = realtr(Path::square(field, Base::idx_X, Base::dir_UP, Base::idx_T, Base::dir_UP));
   res += realtr(Path::square(field, Base::idx_Y, Base::dir_UP, Base::idx_T, Base::dir_UP));

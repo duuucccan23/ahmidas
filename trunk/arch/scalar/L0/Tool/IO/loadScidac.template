@@ -1,9 +1,9 @@
-template< typename Element, size_t L, size_t T >
-Core::Field< Element, L, T > Tool::IO::loadScidac(std::string const &filename)
+template< typename Element >
+Core::Field< Element > Tool::IO::loadScidac(std::string const &filename, size_t L, size_t T)
 {
   size_t const elements = sizeof(Element) / sizeof(double);
   Lime::Reader reader(filename);
-  Core::Field< Element, L, T > result;
+  Core::Field< Element > result(L, T);
 
   reader.retrieveRecord(reader.findRecord("scidac-binary-data"));
   if (reader.fail())
@@ -16,7 +16,7 @@ Core::Field< Element, L, T > Tool::IO::loadScidac(std::string const &filename)
   Element *dataPtr = result.raw(); //Starting memory address of the field.
   float buffer[elements];
 
-  for (size_t siteIdx = 0; siteIdx < result.size(); ++siteIdx)
+  for (size_t siteIdx = 0; siteIdx < result.volume(); ++siteIdx)
   {
     reader.read(buffer, elements);
     if (!Base::bigEndian)

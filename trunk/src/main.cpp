@@ -14,11 +14,10 @@ int main(int argc, char **argv)
   //This needs some cleaning up, but it is automatically updated by SVN
   std::string Id = "$Id$";
   std::cout << "Executable tag: " << Id.substr(1,Id.length()-2) << std::endl;
-  Core::Field< QCD::Spinor, 4, 4 > src1 = Tool::IO::loadScidac<QCD::Spinor, 4, 4 >("../test/source.00.00");
-  Core::Field< QCD::Spinor, 4, 4 > src2 = Tool::IO::loadScidac<QCD::Spinor, 4, 4 >("../test/source.00.00");
+  Core::Field< QCD::Spinor > src1 = Tool::IO::loadScidac<QCD::Spinor >("../test/source.00.00", 4, 4);
+  Core::Field< QCD::Spinor > src2 = Tool::IO::loadScidac<QCD::Spinor >("../test/source.00.00", 4, 4);
+  Core::Field< QCD::Spinor > src3 = src2;
 
-  std::complex < double> res0 = Tool::innerProduct(src1, src2, 0);
-  std::complex < double> res1 = Tool::innerProduct(src1, src2, 1);
-  std::cout << std::endl << res0 << std::endl << res1 << std::endl;
+  std::cout << src1[0] << std::endl;
   return 0;
 }

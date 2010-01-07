@@ -1,5 +1,0 @@
-template< size_t L, size_t T >
-inline void Tool::IO::saveScidac(Source::Full< L, T > &source, std::string const &filename)
-{
-  return Tool::IO::saveScidac(source.source(), filename);
-}

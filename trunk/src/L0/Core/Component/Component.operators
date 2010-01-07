@@ -6,58 +6,58 @@ template< typename Scalar >
 void leftMultiply(Scalar const &other);
 
 template< typename OtherElement >
-void leftMultiply(Field< OtherElement, L, T > const &other);
+void leftMultiply(Field< OtherElement > const &other);
 
 template< typename OtherElement >
-void leftMultiply(hcField< OtherElement, L, T > const &other);
+void leftMultiply(hcField< OtherElement > const &other);
 
 template< typename OtherElement, typename OtherAtom  >
-void leftMultiply(Component< OtherElement, L, T, OtherAtom > const &other);
+void leftMultiply(Component< OtherElement, OtherAtom > const &other);
 
 template< typename Scalar >
 void rightMultiply(Scalar const &other);
 
 template< typename OtherElement >
-void rightMultiply(Field< OtherElement, L, T > const &other);
+void rightMultiply(Field< OtherElement > const &other);
 
 template< typename OtherElement >
-void rightMultiply(hcField< OtherElement, L, T > const &other);
+void rightMultiply(hcField< OtherElement > const &other);
 
 template< typename OtherElement, typename OtherAtom  >
-void rightMultiply(Component< OtherElement, L, T, OtherAtom > const &other);
+void rightMultiply(Component< OtherElement, OtherAtom > const &other);
 
 template< typename Scalar >
-Component< Element, L, T, Atom > &operator+=(Scalar const &other);
+Component< Element, Atom > &operator+=(Scalar const &other);
 
 template< typename OtherAtom >
-Component< Element, L, T, Atom > &operator+=(Field< OtherAtom, L, T > const &other);
+Component< Element, Atom > &operator+=(Field< OtherAtom > const &other);
 
 template< typename OtherElement, typename OtherAtom  >
-Component< Element, L, T, Atom > &operator+=(Component< OtherElement, L, T, OtherAtom > const &other);
+Component< Element, Atom > &operator+=(Component< OtherElement, OtherAtom > const &other);
 
 template< typename Scalar >
-Component< Element, L, T, Atom > &operator-=(Scalar const &other);
+Component< Element, Atom > &operator-=(Scalar const &other);
 
 template< typename OtherElement >
-Component< Element, L, T, Atom > &operator-=(Field< OtherElement, L, T > const &other);
+Component< Element, Atom > &operator-=(Field< OtherElement > const &other);
 
 template< typename OtherElement, typename OtherAtom  >
-Component< Element, L, T, Atom > &operator-=(Component< OtherElement, L, T, OtherAtom > const &other);
+Component< Element, Atom > &operator-=(Component< OtherElement, OtherAtom > const &other);
 
 template< typename Scalar >
-Component< Element, L, T, Atom > &operator*=(Scalar const &rhand);
+Component< Element, Atom > &operator*=(Scalar const &rhand);
 
 template< typename OtherElement >
-Component< Element, L, T, Atom > &operator*=(Field< OtherElement, L, T > const &field);
+Component< Element, Atom > &operator*=(Field< OtherElement > const &field);
 
 template< typename OtherElement, typename OtherAtom >
-Component< Element, L, T, Atom > &operator*=(Component< OtherElement, L, T, OtherAtom > const &field);
+Component< Element, Atom > &operator*=(Component< OtherElement, OtherAtom > const &field);
 
 template< typename Scalar >
-Component< Element, L, T, Atom > &operator/=(Scalar const &rhand);
+Component< Element, Atom > &operator/=(Scalar const &rhand);
 
 template< typename OtherElement >
-Component< Element, L, T, Atom > &operator/=(Field< OtherElement, L, T > const &field);
+Component< Element, Atom > &operator/=(Field< OtherElement > const &field);
 
 template< typename OtherElement, typename OtherAtom >
-Component< Element, L, T, Atom > &operator/=(Component< OtherElement, L, T, OtherAtom > const &field);
+Component< Element, Atom > &operator/=(Component< OtherElement, OtherAtom > const &field);

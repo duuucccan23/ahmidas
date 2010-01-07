@@ -15,7 +15,7 @@ int main(int argc, char **argv)
   std::cout << "Executable tag: " << Id.substr(1,Id.length()-2) << std::endl;
 
   std::cout << "Reading gauge file conf.88 from test directory.\n";
-  Core::Field< QCD::Gauge, 8, 8 > myfield = Tool::IO::loadILDG<QCD::Gauge, 8, 8 >("../../test/conf.88");
+  Core::Field< QCD::Gauge > myfield = Tool::IO::loadILDG<QCD::Gauge>("../../test/conf.88", 8, 8);
 
   double plaqs = Tool::spatialPlaquette(myfield);
   double plaqt = Tool::temporalPlaquette(myfield);

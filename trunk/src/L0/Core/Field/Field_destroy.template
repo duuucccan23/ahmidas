@@ -1,5 +1,5 @@
-template< typename Element, size_t L, size_t T >
-void Core::Field< Element, L, T >::destroy()
+template< typename Element >
+void Core::Field< Element >::destroy()
 {
   (*d_references) -= 1;
   if ((*d_references) == 0)

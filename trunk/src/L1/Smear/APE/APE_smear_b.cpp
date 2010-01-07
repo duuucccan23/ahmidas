@@ -1,29 +1,30 @@
+#include <L1/Smear/APE/APE.ih>
+
 namespace Smear
 {
-  template< size_t L, size_t T >
-  void APE::smear(Core::Field< QCD::Gauge, L, T > &field) const
+  void APE::smear(Core::Field< QCD::Gauge > &field) const
   {
-    Core::Field< SU3::Matrix, L, T > xAPE = Path::staple(field, Base::idx_Y, Base::dir_UP, Base::idx_X, Base::dir_UP);
+    Core::Field< SU3::Matrix > xAPE = Path::staple(field, Base::idx_Y, Base::dir_UP, Base::idx_X, Base::dir_UP);
     xAPE += Path::staple(field, Base::idx_Y, Base::dir_DOWN, Base::idx_X, Base::dir_UP);
     xAPE += Path::staple(field, Base::idx_Z, Base::dir_UP, Base::idx_X, Base::dir_UP);
     xAPE += Path::staple(field, Base::idx_Z, Base::dir_DOWN, Base::idx_X, Base::dir_UP);
     xAPE *= d_alpha;
 
-    Core::Field< SU3::Matrix, L, T > yAPE = Path::staple(field, Base::idx_X, Base::dir_UP, Base::idx_Y, Base::dir_UP);
+    Core::Field< SU3::Matrix > yAPE = Path::staple(field, Base::idx_X, Base::dir_UP, Base::idx_Y, Base::dir_UP);
     yAPE += Path::staple(field, Base::idx_X, Base::dir_DOWN, Base::idx_Y, Base::dir_UP);
     yAPE += Path::staple(field, Base::idx_Z, Base::dir_UP, Base::idx_Y, Base::dir_UP);
     yAPE += Path::staple(field, Base::idx_Z, Base::dir_DOWN, Base::idx_Y, Base::dir_UP);
     yAPE *= d_alpha;
 
-    Core::Field< SU3::Matrix, L, T > zAPE = Path::staple(field, Base::idx_X, Base::dir_UP, Base::idx_Z, Base::dir_UP);
+    Core::Field< SU3::Matrix > zAPE = Path::staple(field, Base::idx_X, Base::dir_UP, Base::idx_Z, Base::dir_UP);
     zAPE += Path::staple(field, Base::idx_X, Base::dir_DOWN, Base::idx_Z, Base::dir_UP);
     zAPE += Path::staple(field, Base::idx_Y, Base::dir_UP, Base::idx_Z, Base::dir_UP);
     zAPE += Path::staple(field, Base::idx_Y, Base::dir_DOWN, Base::idx_Z, Base::dir_UP);
     zAPE *= d_alpha;
 
-    field.template component< SU3::Matrix >(Base::idx_X) += xAPE;
-    field.template component< SU3::Matrix >(Base::idx_Y) += yAPE;
-    field.template component< SU3::Matrix >(Base::idx_Z) += zAPE;
+    field.component< SU3::Matrix >(Base::idx_X) += xAPE;
+    field.component< SU3::Matrix >(Base::idx_Y) += yAPE;
+    field.component< SU3::Matrix >(Base::idx_Z) += zAPE;
 
     Tool::reunitarize(&field);
   }

@@ -1,5 +1,5 @@
-template< typename Element, size_t L, size_t T >
-void Base::ScidacChecksum::calculate(Core::Field< Element, L, T > const &field)
+template< typename Element >
+void Base::ScidacChecksum::calculate(Core::Field< Element > const &field)
 {
   clear();
   for (size_t rank = 0; rank <= field.size(); ++rank)

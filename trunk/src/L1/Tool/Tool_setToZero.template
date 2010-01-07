@@ -1,8 +1,7 @@
-template< typename Element, size_t L, size_t T >
-void Tool::setToZero(Core::Field< Element, L, T > *field)
+template< typename Element >
+void Tool::setToZero(Core::Field< Element > *field)
 {
-  Base::Weave< L, T > myWeave(Base::Weave< L, T >::instance());
   field->isolate();
-  for (size_t ctr = 0; ctr < myWeave.localVolume(); ++ctr)
-    field->fastMemoryIndex(ctr).setToZero();
+  for (typename Core::Field< Element >::iterator iter = field->begin(); iter != field->end(); ++iter)
+    iter->setToZero();
 }

@@ -2,13 +2,13 @@ class iterator;
 
 class const_iterator: public std::iterator< std::bidirectional_iterator_tag, Element >
 {
-  friend class Field< Element, L, T >;
+  friend class Field< Element >;
 
-  Field< Element, L, T > const &d_parent;
+  Field< Element > const &d_parent;
 
   size_t d_idx;
 
-  const_iterator(Field< Element, L, T > const &parent, size_t idx);
+  const_iterator(Field< Element > const &parent, size_t idx);
 
   public:
     const_iterator(iterator const &other);

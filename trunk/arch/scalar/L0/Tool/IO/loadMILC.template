@@ -1,5 +1,5 @@
-template< typename Element, size_t L, size_t T >
-Core::Field< Element, L, T > Tool::IO::loadMILC(std::string const &filename)
+template< typename Element >
+Core::Field< Element > Tool::IO::loadMILC(std::string const &filename, size_t L, size_t T)
 {
 //  static_assert(sizeof(uint32_t) == sizeof(float), "Sizes of uint32_t and float are different.");
 
@@ -8,13 +8,13 @@ Core::Field< Element, L, T > Tool::IO::loadMILC(std::string const &filename)
 
   MILCinfo info(input);
 
-  Core::Field< Element, L, T > result;
+  Core::Field< Element > result(L, T);
   size_t const elemSize = sizeof(Element) / sizeof(double);
   uint32_t elem32[elemSize];
 
   // Scidac checksum is calculated, but ignored for the time being.
   Base::ScidacChecksum check;
-  for (size_t ctr = 0; ctr < result.size(); ++ctr)
+  for (size_t ctr = 0; ctr < result.volume(); ++ctr)
   {
     input.read(reinterpret_cast< char* >(elem32), elemSize * sizeof(uint32_t));
     if (!Base::bigEndian)

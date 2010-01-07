@@ -1,77 +1,85 @@
 namespace Base
 {
-  template< size_t L, size_t T >
-  inline size_t Weave< L, T >::dim(Base::SpaceTimeIndex idx) const
+  inline size_t Weave::L() const
+  {
+    return d_L;
+  }
+
+  inline size_t Weave::T() const
+  {
+    return d_T;
+  }
+
+  inline size_t Weave::dim(Base::SpaceTimeIndex idx) const
   {
     return 1;
   }
-  
-  template< size_t L, size_t T >
-  inline size_t Weave< L, T >::localSize(Base::SpaceTimeIndex idx) const
+
+  inline size_t Weave::localSize(Base::SpaceTimeIndex idx) const
   {
-    return (idx == Base::idx_T ? T : L);
+    return (idx == Base::idx_T ? d_T : d_L);
   }
 
-  template< size_t L, size_t T >
-  inline size_t Weave< L, T >::localSurface(Base::SpaceTimeIndex idx) const
+  inline size_t Weave::localSurface(Base::SpaceTimeIndex idx) const
   {
     return d_surfaces[idx];
   }
-  
-  template< size_t L, size_t T >
-  inline size_t Weave< L, T >::localSpatialVolume() const
+
+  inline size_t Weave::localSpatialVolume() const
   {
     return d_surfaces[Base::idx_T];
   }
 
-  template< size_t L, size_t T >
-  inline size_t Weave< L, T >::localVolume() const
+  inline size_t Weave::localVolume() const
   {
-    return (L * L * L * T);
+    return d_localVolume;
   }
 
-  template< size_t L, size_t T >
+  inline size_t Weave::globalVolume() const
+  {
+    return d_globalVolume;
+  }
+
+  inline double Weave::sum(double result) const
+  {
+    return result;
+  }
+
   template< typename Element >
-  inline void Weave< L, T>::fieldShift(Base::SpaceTimeIndex, Base::Direction, Element *, size_t const *) const
+  inline void Weave::fieldShift(Base::SpaceTimeIndex, Base::Direction, Element *, size_t const *) const
   {}
 
-  template< size_t L, size_t T >
-  inline size_t Weave< L, T >::globalCoordToLocalIndex(size_t x, size_t y, size_t z) const
+  inline size_t Weave::globalCoordToLocalIndex(size_t x, size_t y, size_t z) const
   {
     if (!isLocallyAvailable(x, y, z))
-      return (L * L * L * T); // error condition
+      return d_localVolume; // this is our error condition
     return (fromGlobal(x, Base::idx_X) * localSurface(Base::idx_X) + fromGlobal(y, Base::idx_Y) * localSurface(Base::idx_Y)
             + fromGlobal(z, Base::idx_Z) * localSurface(Base::idx_Z));
   }
 
-  template< size_t L, size_t T >
-  inline size_t Weave< L, T >::globalCoordToLocalIndex(size_t x, size_t y, size_t z, size_t t) const
+  inline size_t Weave::globalCoordToLocalIndex(size_t x, size_t y, size_t z, size_t t) const
   {
-    if (!isLocallyAvailable(x, y, z))
-      return (L * L * L * T); // error condition
+    if (!isLocallyAvailable(x, y, z, t))
+      return d_localVolume; // error condition
     return (fromGlobal(x, Base::idx_X) * localSurface(Base::idx_X) + fromGlobal(y, Base::idx_Y) * localSurface(Base::idx_Y)
             + fromGlobal(z, Base::idx_Z) * localSurface(Base::idx_Z) + fromGlobal(t, Base::idx_T) * localSurface(Base::idx_T));
   }
 
-  template< size_t L, size_t T >
   template< typename Element >
-  inline void Weave< L, T >::sumOverTimeSlices(Element *data) const
+  inline void Weave::sumOverTimeSlices(Element *data) const
   {}
 
-  template< size_t L, size_t T >
-  bool Weave< L, T >::isLocallyAvailable(size_t, size_t, size_t) const
+  inline bool Weave::isLocallyAvailable(size_t, size_t, size_t) const
   {
     return true;
   }
 
-  template< size_t L, size_t T >
-  bool Weave< L, T >::isLocallyAvailable(size_t, size_t, size_t, size_t) const
+  inline bool Weave::isLocallyAvailable(size_t, size_t, size_t, size_t) const
   {
     return true;
   }
 
-  template< size_t L, size_t T >
-  size_t Weave< L, T >::fromGlobal(size_t idx, Base::SpaceTimeIndex) const
+  inline size_t Weave::fromGlobal(size_t idx, Base::SpaceTimeIndex) const
   {
     return idx;
   }

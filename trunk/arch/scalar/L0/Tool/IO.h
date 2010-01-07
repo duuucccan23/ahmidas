@@ -36,20 +36,20 @@ namespace Tool
     };
 
 
-    template< typename Element, size_t L, size_t T >
-    Core::Field< Element, L, T > loadILDG(std::string const &filename);
+    template< typename Element >
+    Core::Field< Element > loadILDG(std::string const &filename, size_t L, size_t T);
 
-    template< typename Element, size_t L, size_t T >
-    Core::Field< Element, L, T > loadScidac(std::string const &filename);
+    template< typename Element >
+    Core::Field< Element > loadScidac(std::string const &filename, size_t L, size_t T);
 
-    template< typename Element, size_t L, size_t T >
-    Core::Field< Element, L, T > loadMILC(std::string const &filename);
+    template< typename Element >
+    Core::Field< Element > loadMILC(std::string const &filename, size_t L, size_t T);
 
-    template< typename Element, size_t L, size_t T >
-    void saveILDG(Core::Field< Element, L, T > const &field, std::string const &filename);
+    template< typename Element >
+    void saveILDG(Core::Field< Element > const &field, std::string const &filename);
 
-    template< typename Element, size_t L, size_t T >
-    void saveScidac(Core::Field< Element, L, T > const &field, std::string const &filename);
+    template< typename Element >
+    void saveScidac(Core::Field< Element > const &field, std::string const &filename);
   }
 }
 #include "IO/loadILDG.template"

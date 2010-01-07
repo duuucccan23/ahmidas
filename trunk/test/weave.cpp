@@ -5,7 +5,7 @@
 int main(int argc, char **argv)
 {
   std::cout << "Weaving\n";
-  Base::Weave< 4, 8> myWeave = Base::Weave< 4, 8 >::instance();
+  Base::Weave myWeave = Base::Weave(4, 8);
   std::cout << myWeave.localVolume() << std::endl;
   std::cout << myWeave.dim(Base::idx_X) << '\t';
   std::cout << myWeave.dim(Base::idx_Y) << '\t';

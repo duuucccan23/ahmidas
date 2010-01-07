@@ -1,10 +1,11 @@
-template< typename Element, size_t L, size_t T >
-Core::Field< Element, L, T > &Core::Field< Element, L, T >::operator=(Core::Field< Element, L, T > const &other)
+template< typename Element >
+Core::Field< Element > &Core::Field< Element >::operator=(Core::Field< Element > const &other)
 {
   if (d_references == other.d_references)
     return *this;
 
   destroy();
+  d_weave = other.d_weave;
   d_references = other.d_references;
   *d_references += 1;
   d_field = other.d_field;

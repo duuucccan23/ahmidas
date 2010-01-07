@@ -1,8 +1,0 @@
-template< size_t L, size_t T >
-Core::Field< double, L, T > Tool::localRealTrace(Core::Field< SU3::Matrix, L, T > const &field)
-{
-  Core::Field< SU3::Matrix, L, T > result(SU3::Matrix::identity());
-  for (size_t idx = 0; idx < result.size(); ++idx)
-    result[idx] *= field[idx].realtr();
-  return result;
-}

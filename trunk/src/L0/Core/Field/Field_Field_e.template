@@ -1,8 +1,8 @@
-template< typename Element, size_t L, size_t T >
+template< typename Element >
 template< typename Super>
-Core::Field< Element, L, T >::Field(Core::Component< Super, L, T, Element> const &component) //Creation of a field through a component of another field.
+Core::Field< Element >::Field(Core::Component< Super, Element> const &component) //Creation of a field through a component of another field.
 : d_references(new size_t(1)),
-  d_weave(Base::Weave< L, T >::instance()),
+  d_weave(component.L(), component.T()),
   d_field(new Element[d_weave.localVolume()]),
   d_offsets(new size_t[4])
 {

@@ -1,5 +1,5 @@
-template< typename Element, size_t L, size_t T >
-void Core::Field< Element, L, T >::isolate()
+template< typename Element >
+void Core::Field< Element >::isolate()
 {
   if ((*d_references) == 1)
     return;

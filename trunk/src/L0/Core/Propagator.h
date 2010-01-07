@@ -16,13 +16,12 @@ namespace Core
      maybe at some point we should include the source properties, in whatever format,
      as a member variable
   */
-  template< size_t L, size_t T >
   class Propagator
   {
 
     size_t *d_references;
 
-    Core::Field< std::complex< double >, L, T > **d_components;
+    Core::Field< std::complex< double > > **d_components;
 
     enum PropagatorStride
     {

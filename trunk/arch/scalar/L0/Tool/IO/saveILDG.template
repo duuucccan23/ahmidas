@@ -1,5 +1,5 @@
-template< typename Element, size_t L, size_t T >
-void Tool::IO::saveILDG(Core::Field< Element, L, T > const &field, std::string const &filename)
+template< typename Element >
+void Tool::IO::saveILDG(Core::Field< Element > const &field, std::string const &filename)
 {
   size_t const elements = sizeof(Element) / sizeof(double);
   Lime::Writer writer(filename);
@@ -11,12 +11,12 @@ void Tool::IO::saveILDG(Core::Field< Element, L, T > const &field, std::string c
   //Poor man's parser for reading the precision should be inserted here, beyond we now assume double as input
   if (Base::bigEndian)
   {
-    for (size_t siteIdx = 0; siteIdx < field.size(); ++siteIdx)
+    for (size_t siteIdx = 0; siteIdx < field.volume(); ++siteIdx)
       writer.write(reinterpret_cast< double const * >(&(field.constPhysicalIndex(siteIdx))), elements);
     return;
   }
   double buffer[elements];
-  for (size_t siteIdx = 0; siteIdx < field.size(); ++siteIdx)
+  for (size_t siteIdx = 0; siteIdx < field.volume(); ++siteIdx)
   {
     std::copy(reinterpret_cast< double const* >(&(field.constPhysicalIndex(siteIdx))), reinterpret_cast< double const* >(&(field.constPhysicalIndex(siteIdx))) + elements, buffer);
     Base::swapEndian(buffer, buffer + elements, sizeof(double));

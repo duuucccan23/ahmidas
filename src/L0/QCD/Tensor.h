@@ -12,33 +12,36 @@ namespace QCD
 
   std::complex< double > tr(Tensor const &tensor);
   std::complex< double > tr(hcTensor const &tensor);
+  
+  enum TensorColourStride
+  {
+    ColourStrideSink   =  1,
+    ColourStrideSource = 12
+  };
+
+  enum TensorDiracStride
+  {
+    DiracStrideSink    =  3,
+    DiracStrideSource  = 36
+  };
 
   class Tensor
   {
     friend class Spinor;
     std::complex< double > d_data[144];
 
-    enum TensorColourStride
-    {
-      ColourStrideSink   =  1,
-      ColourStrideSource = 12
-    };
-
-    enum TensorDiracStride
-    {
-      DiracStrideSink    =  3,
-      DiracStrideSource  = 36
-    };
-
     public:
       Tensor();
       Tensor(Tensor const &other);
-      Tensor(Spinor *data);
+      Tensor(Spinor *data[12]);
       Tensor(std::complex< double > *data);
       explicit Tensor(hcTensor const &other);
       Tensor &operator=(Tensor const &other);
       Tensor &operator=(hcTensor const &other);
 
+      Spinor &operator()(size_t const idx);
+      Spinor const &operator()(size_t const idx) const;
+      
       std::complex< double > &operator[](size_t const idx);
       std::complex< double > const &operator[](size_t const idx) const;
 
@@ -57,6 +60,7 @@ namespace QCD
       std::complex< double > trace() const;
 
       size_t size() const;
+          
 
   #include "Tensor/Tensor.iterator"
 
@@ -81,6 +85,8 @@ namespace QCD
     public:
       hcTensor(hcTensor const &parent);
 
+      Spinor operator()(size_t const idx) const;
+      
       std::complex< double > operator[](size_t const idx) const;
 
       Tensor const &dagger() const;

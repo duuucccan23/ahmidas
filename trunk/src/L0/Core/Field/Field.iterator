@@ -4,13 +4,13 @@ class iterator: public std::iterator< std::bidirectional_iterator_tag, Element >
 {
   friend class Field< Element >;
 
+  private:
+   Field< Element >  &d_parent;
+  
   protected:
    size_t d_idx;
 
-  private:
-  Field< Element >  &d_parent;
-
-  iterator(Field< Element > &parent, size_t idx);
+   iterator(Field< Element > &parent, size_t idx);
 
   public:
     iterator(iterator const &other);

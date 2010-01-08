@@ -36,42 +36,80 @@ namespace Core
 
   inline bool Propagator::loadILDG(std::vector< std::string > const filenames)
   {
-//     if (nFiles == 1)
-//     {
-//       return true;
-//     }
-//     else
+    if (d_components == NULL)
+    {
+      std::cerr << "Error in void Propagator::loadILDG(std::vector< std::string > const filenames):" << std::endl;
+      std::cerr << "memory for member Core::Field< QCD::Tensor > Propagator::d_components not allocated" << std::endl;
+      return false;
+    }
+
     if (filenames.size() == 12)
     {
-      for (size_t i=0; i<filenames.size(); i++)
-      {
-        // maybe reinterpret_cast< Core::Field< std::complex< double > > * > is needed here
-        // better: explicit conversion routine
-//         (*d_components)[i*12] = Tool::IO::loadILDG< QCD::Spinor, L, T >(filenames[i]);
-      }
+//       Core::Field< QCD::Spinor > * tmp = 
+//       {
+//         Core::Field< QCD::Spinor > (d_components->L(), d_components->T()),
+//         Core::Field< QCD::Spinor > (d_components->L(), d_components->T()),
+//         Core::Field< QCD::Spinor > (d_components->L(), d_components->T()),
+//         Core::Field< QCD::Spinor > (d_components->L(), d_components->T()),
+//         Core::Field< QCD::Spinor > (d_components->L(), d_components->T()),
+//         Core::Field< QCD::Spinor > (d_components->L(), d_components->T()),
+//         Core::Field< QCD::Spinor > (d_components->L(), d_components->T()),
+//         Core::Field< QCD::Spinor > (d_components->L(), d_components->T()),
+//         Core::Field< QCD::Spinor > (d_components->L(), d_components->T()),
+//         Core::Field< QCD::Spinor > (d_components->L(), d_components->T()),
+//         Core::Field< QCD::Spinor > (d_components->L(), d_components->T()),
+//         Core::Field< QCD::Spinor > (d_components->L(), d_components->T())
+//       };
+//       for (size_t i=0; i<filenames.size(); i++)
+//       {
+//         tmp[i] = Tool::IO::loadILDG< QCD::Spinor >(filenames[i]);
+//       }
+//       
+//       Core::Field< QCD::Tensor >::iterator itTensor = d_components->begin();
+//       Core::Field< QCD::Spinor >::iterator itsSpinor = 
+//       {
+//           tmp[ 0].begin(),tmp[ 1].begin(),tmp[ 2].begin(),
+//           tmp[ 3].begin(),tmp[ 4].begin(),tmp[ 5].begin(),
+//           tmp[ 6].begin(),tmp[ 7].begin(),tmp[ 8].begin(),
+//           tmp[ 9].begin(),tmp[10].begin(),tmp[11].begin()
+//       };
+//             
+//       QCD::Spinor spinors [12];
+//       while (itTensor != d_components->end())
+//       {
+//         spinors =       
+//         {
+//           tmp[ 0].++,tmp[ 1].++,tmp[ 2].++,
+//           tmp[ 3].++,tmp[ 4].++,tmp[ 5].++,
+//           tmp[ 6].++,tmp[ 7].++,tmp[ 8].++,
+//           tmp[ 9].++,tmp[10].++,tmp[11].++
+//         };
+//         *(itTensor++) = QCD::Tensor(spinors);
+//       }
+      
       return true;
     }
     else
     {
-      std::cerr << "Error in void Propagator::loadILDG(std::string const * const filenames, const size_t nFiles)" << std::endl;
+      std::cerr << "Error in void Propagator::loadILDG(std::vector< std::string > const filenames):" << std::endl;
       std::cerr << "filenames.size() should be 12" << std::endl;
       return false;
     }
   }
 
 
-//   inline Propagator::iterator Propagator::begin()
-//   {
-//     isolate();
-//     return iterator(*this, 0);
-//   }
-// 
-// 
-//   inline Propagator::iterator Propagator::end()
-//   {
-//     isolate();
-//     return iterator(*this, d_components->spatialSize());
-//   }
+  inline Propagator::iterator Propagator::begin()
+  {
+    isolate();
+    return iterator(*this, 0);
+  }
+
+
+  inline Propagator::iterator Propagator::end()
+  {
+    isolate();
+    return iterator(*this, d_components->spatialSize());
+  }
 
 
   inline size_t const Propagator::size() const

@@ -12,19 +12,16 @@ class iterator : public Core::Field< QCD::Tensor >::iterator
 
   Propagator  &d_target;
   
-  Core::Field< QCD::Tensor >::iterator &d_iter; 
-
-// use private constructer of base class accessible via begin() or end()
-//   iterator(Propagator &target, size_t idx);
+  iterator(Propagator &target, size_t idx);
 
   public:
     iterator(iterator const &other);
 
     bool operator==(iterator const &other) const;
-//     bool operator==(const_iterator< Stride > const &other) const;
+//     bool operator==(const_iterator const &other) const;
 
     bool operator!=(iterator const &other) const;
-//     bool operator!=(const_iterator< Stride > const &other) const;
+//     bool operator!=(const_iterator const &other) const;
 
     QCD::Tensor &operator*();
     QCD::Tensor const &operator*() const;
@@ -32,9 +29,9 @@ class iterator : public Core::Field< QCD::Tensor >::iterator
     QCD::Tensor *operator->();
     QCD::Tensor const *operator->() const;
 
-    iterator &operator--();
-//     iterator operator--(int);
+    iterator &operator--();   // prefix version
+    iterator operator--(int); // postfix version
 
-    iterator &operator++();
-//     iterator operator++(int);
+    iterator &operator++();   // prefix version
+    iterator operator++(int); // postfix version
 };

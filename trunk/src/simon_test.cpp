@@ -8,7 +8,7 @@
 #include <sstream>
 
 #include <L0/Tool/IO.h>
-// #include <L0/Core/Field.h>
+#include <L0/Core/Field.h>
 #include <L0/Core/Propagator.h>
 #include <L0/QCD/Gauge.h>
 
@@ -38,8 +38,8 @@ int main(int argc, char **argv)
   Core::Propagator *prop = new Core::Propagator(L, T);
   prop->loadILDG(propfiles);
 
-  //Core::Propagator::iterator my_iterator = prop->begin();
-  //my_iterator->begin(Base::col_GREEN, Base::gam_3);
+  Core::Propagator::iterator my_iterator = prop->begin();
+  QCD::Tensor::iterator tmp_iterator = my_iterator->begin(Base::col_GREEN,  QCD::ColourStrideSource);
 
 //   const std::string gf_in = "/afs/ifh.de/group/etmc/scratch/poola/dinter/gauge_fields/16x16x16x32/conf.1500";
 //   const std::string gf_out =  "/afs/ifh.de/group/nic/scratch/poolb/dinter/tmp/conf.1500";

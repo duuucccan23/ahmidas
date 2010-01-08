@@ -1,19 +1,17 @@
 namespace Core
 {
 
-  /* private constructor - not really necessary 
-     because the one of the base class Core::Field< QCD::Tensor >::iterator 
-     can be used   */
+  /* private constructor */
 
-//   inline Propagator::iterator::iterator(Core::Propagator &target,  size_t idx)
-//     : Core::Field< QCD::Tensor >::iterator(*(target.d_components), idx), d_target(target)
-//   {}
+  inline Propagator::iterator::iterator(Core::Propagator &target,  size_t idx)
+    : Core::Field< QCD::Tensor >::iterator(*(target.d_components), idx), d_target(target)
+  {}
 
 
   /* copy constructor */
 
   inline Propagator::iterator::iterator(Propagator::iterator const &other)
-    : d_iter(other.d_iter, other.d_iter.d_idx), d_target(other.d_target)
+    : Core::Field< QCD::Tensor >::iterator(*(other.d_target.d_components), other.d_idx), d_target(other.d_target)
   {}
 
 
@@ -35,51 +33,55 @@ namespace Core
 
 
 
-//   inline QCD::Tensor &Propagator::iterator::operator*()
-//   {
-//     return (d_target.d_components)[0];
-//   }
-// 
-// 
-// 
-//   inline QCD::Tensor *Propagator::iterator::operator->()
-//   {
-//     return &((d_target.d_components)[0]);
-//   }
-// 
-//   /* access field components  - "const" version */
-// 
-// 
-// 
-//   inline QCD::Tensor const &Propagator::iterator::operator*() const
-//   {
-//     return (d_target.d_components)[0];
-//   }
-// 
-// 
-// 
-//   inline QCD::Tensor const *Propagator::iterator::operator->() const
-//   {
-//     return &((d_target.d_components)[0]);
-//   }
-
-
-  /* increment & decrement */
-
-
-
-  inline Propagator::iterator &Propagator::iterator::operator++()
+  inline QCD::Tensor &Propagator::iterator::operator*()
   {
-    //d_idx += d_stride;
-    return *this;
+    return *(*this);
   }
 
 
 
+  inline QCD::Tensor *Propagator::iterator::operator->()
+  {
+    return &(*(*this));
+  }
+
+  
+  /* access field components  - "const" version */
+
+  inline QCD::Tensor const &Propagator::iterator::operator*() const
+  {
+    return *(*this);
+  }
+
+
+
+  inline QCD::Tensor const *Propagator::iterator::operator->() const
+  {
+    return &(*(*this));
+  }
+
+
+  /* increment & decrement (prefix and postfix versions)*/
+
+  inline Propagator::iterator &Propagator::iterator::operator++()
+  {
+    return ++(*this);
+  }
+
+  inline Propagator::iterator Propagator::iterator::operator++(int)
+  {
+    return (*this)++;
+  }
+
+
   inline Propagator::iterator &Propagator::iterator::operator--()
   {
-    //d_idx -= d_stride;
-    return *this;
+    return --(*this);
+  }
+  
+  inline Propagator::iterator Propagator::iterator::operator--(int)
+  {
+    return (*this)--;
   }
 
 }

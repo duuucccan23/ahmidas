@@ -45,48 +45,67 @@ namespace Core
 
     if (filenames.size() == 12)
     {
-//       Core::Field< QCD::Spinor > * tmp = 
-//       {
-//         Core::Field< QCD::Spinor > (d_components->L(), d_components->T()),
-//         Core::Field< QCD::Spinor > (d_components->L(), d_components->T()),
-//         Core::Field< QCD::Spinor > (d_components->L(), d_components->T()),
-//         Core::Field< QCD::Spinor > (d_components->L(), d_components->T()),
-//         Core::Field< QCD::Spinor > (d_components->L(), d_components->T()),
-//         Core::Field< QCD::Spinor > (d_components->L(), d_components->T()),
-//         Core::Field< QCD::Spinor > (d_components->L(), d_components->T()),
-//         Core::Field< QCD::Spinor > (d_components->L(), d_components->T()),
-//         Core::Field< QCD::Spinor > (d_components->L(), d_components->T()),
-//         Core::Field< QCD::Spinor > (d_components->L(), d_components->T()),
-//         Core::Field< QCD::Spinor > (d_components->L(), d_components->T()),
-//         Core::Field< QCD::Spinor > (d_components->L(), d_components->T())
-//       };
-//       for (size_t i=0; i<filenames.size(); i++)
-//       {
-//         tmp[i] = Tool::IO::loadILDG< QCD::Spinor >(filenames[i]);
-//       }
-//       
-//       Core::Field< QCD::Tensor >::iterator itTensor = d_components->begin();
-//       Core::Field< QCD::Spinor >::iterator itsSpinor = 
-//       {
-//           tmp[ 0].begin(),tmp[ 1].begin(),tmp[ 2].begin(),
-//           tmp[ 3].begin(),tmp[ 4].begin(),tmp[ 5].begin(),
-//           tmp[ 6].begin(),tmp[ 7].begin(),tmp[ 8].begin(),
-//           tmp[ 9].begin(),tmp[10].begin(),tmp[11].begin()
-//       };
-//             
-//       QCD::Spinor spinors [12];
-//       while (itTensor != d_components->end())
-//       {
-//         spinors =       
-//         {
-//           tmp[ 0].++,tmp[ 1].++,tmp[ 2].++,
-//           tmp[ 3].++,tmp[ 4].++,tmp[ 5].++,
-//           tmp[ 6].++,tmp[ 7].++,tmp[ 8].++,
-//           tmp[ 9].++,tmp[10].++,tmp[11].++
-//         };
-//         *(itTensor++) = QCD::Tensor(spinors);
-//       }
-      
+      Core::Field< QCD::Spinor > tmp [12]=
+      {
+        Core::Field< QCD::Spinor > (d_components->L(), d_components->T()),
+        Core::Field< QCD::Spinor > (d_components->L(), d_components->T()),
+        Core::Field< QCD::Spinor > (d_components->L(), d_components->T()),
+        Core::Field< QCD::Spinor > (d_components->L(), d_components->T()),
+        Core::Field< QCD::Spinor > (d_components->L(), d_components->T()),
+        Core::Field< QCD::Spinor > (d_components->L(), d_components->T()),
+        Core::Field< QCD::Spinor > (d_components->L(), d_components->T()),
+        Core::Field< QCD::Spinor > (d_components->L(), d_components->T()),
+        Core::Field< QCD::Spinor > (d_components->L(), d_components->T()),
+        Core::Field< QCD::Spinor > (d_components->L(), d_components->T()),
+        Core::Field< QCD::Spinor > (d_components->L(), d_components->T()),
+        Core::Field< QCD::Spinor > (d_components->L(), d_components->T())
+      };
+      for (size_t i=0; i<12; i++)
+      {
+        tmp[i] = Tool::IO::loadILDG< QCD::Spinor >(filenames[i], d_components->L(), d_components->T());
+      }
+
+      Core::Field< QCD::Tensor >::iterator itTensor = d_components->begin();
+      Core::Field< QCD::Spinor >::iterator itsSpinor [12] =
+      {
+        tmp[ 0].begin(),tmp[ 1].begin(),tmp[ 2].begin(),
+        tmp[ 3].begin(),tmp[ 4].begin(),tmp[ 5].begin(),
+        tmp[ 6].begin(),tmp[ 7].begin(),tmp[ 8].begin(),
+        tmp[ 9].begin(),tmp[10].begin(),tmp[11].begin()
+      };
+
+      QCD::Spinor *spinors[12];
+
+      *spinors[ 0] = (*(++itsSpinor[ 0]));
+      *spinors[ 1] = (*(++itsSpinor[ 1]));
+      *spinors[ 2] = (*(++itsSpinor[ 2]));
+      *spinors[ 3] = (*(++itsSpinor[ 3]));
+      *spinors[ 4] = (*(++itsSpinor[ 4]));
+      *spinors[ 5] = (*(++itsSpinor[ 5]));
+      *spinors[ 6] = (*(++itsSpinor[ 6]));
+      *spinors[ 7] = (*(++itsSpinor[ 7]));
+      *spinors[ 8] = (*(++itsSpinor[ 8]));
+      *spinors[ 9] = (*(++itsSpinor[ 9]));
+      *spinors[10] = (*(++itsSpinor[10]));
+      *spinors[11] = (*(++itsSpinor[11]));
+      *(++itTensor) = QCD::Tensor(spinors);
+
+      while (++itTensor != d_components->end())
+      {
+        *spinors[ 0] = (*(++itsSpinor[ 0]));
+        *spinors[ 1] = (*(++itsSpinor[ 1]));
+        *spinors[ 2] = (*(++itsSpinor[ 2]));
+        *spinors[ 3] = (*(++itsSpinor[ 3]));
+        *spinors[ 4] = (*(++itsSpinor[ 4]));
+        *spinors[ 5] = (*(++itsSpinor[ 5]));
+        *spinors[ 6] = (*(++itsSpinor[ 6]));
+        *spinors[ 7] = (*(++itsSpinor[ 7]));
+        *spinors[ 8] = (*(++itsSpinor[ 8]));
+        *spinors[ 9] = (*(++itsSpinor[ 9]));
+        *spinors[10] = (*(++itsSpinor[10]));
+        *spinors[11] = (*(++itsSpinor[11]));
+        *(itTensor) = QCD::Tensor(spinors);
+      }
       return true;
     }
     else

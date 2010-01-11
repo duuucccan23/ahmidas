@@ -6,7 +6,7 @@ class iterator: public std::iterator< std::bidirectional_iterator_tag, Element >
 
   private:
    Field< Element >  &d_parent;
-  
+
   protected:
    size_t d_idx;
 

@@ -20,6 +20,14 @@ namespace QCD
     std::copy(other.d_data, other.d_data + 144, d_data);
   }
 
+  inline Tensor::Tensor(Spinor *data[12])
+  {
+    for (size_t ic=0; ic < 12; ic++)
+      std::copy(reinterpret_cast< std::complex< double >* >(data[ic]),
+                reinterpret_cast< std::complex< double >* >(data[ic]) + 12,
+                &d_data[ic*12]);
+  }
+
   inline Tensor::Tensor(std::complex< double > *data)
   {
     std::copy(data, data + 144, d_data);

@@ -37,13 +37,13 @@ namespace Core
   template< typename Element >
   inline Element &Field< Element >::iterator::operator*()
   {
-    return &d_parent[d_idx];
+    return d_parent[d_idx];
   }
 
   template< typename Element >
   inline Element const &Field< Element >::iterator::operator*() const
   {
-    return &d_parent[d_idx];
+    return d_parent[d_idx];
   }
 
   template< typename Element >

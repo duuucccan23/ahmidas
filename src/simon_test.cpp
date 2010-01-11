@@ -22,15 +22,18 @@ int main(int argc, char **argv)
 
   std::vector<std::string> propfiles;
 
-  const std::string filename_base("../data/source");
+  const std::string filename_base("../test/source");
   for (int f=0; f<12; f++)
   {
     std::ostringstream oss;
     oss << filename_base;
     oss.fill('0');
     oss.width(2);
-    oss << f;
-    oss << ".inverted";
+//     oss << f;
+    oss << 0;
+    oss.fill('0');
+    oss << 0;
+//     oss << ".inverted";
     std::cout << oss.str() << std::endl;
     propfiles.push_back(oss.str());
   }
@@ -40,6 +43,11 @@ int main(int argc, char **argv)
 
   Core::Propagator::iterator my_iterator = prop->begin();
   QCD::Tensor::iterator tmp_iterator = my_iterator->begin(Base::col_GREEN,  QCD::ColourStrideSource);
+
+  std::cout << *(tmp_iterator) << std::endl;
+
+  while(++tmp_iterator != my_iterator->end(Base::col_GREEN,  QCD::ColourStrideSource))
+    std::cout << *(tmp_iterator) << std::endl;
 
 //   const std::string gf_in = "/afs/ifh.de/group/etmc/scratch/poola/dinter/gauge_fields/16x16x16x32/conf.1500";
 //   const std::string gf_out =  "/afs/ifh.de/group/nic/scratch/poolb/dinter/tmp/conf.1500";

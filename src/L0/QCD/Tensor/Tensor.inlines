@@ -92,4 +92,12 @@ namespace QCD
     return iterator(*this, stride ,size());
   }
 
+  inline std::ostream &operator<<(std::ostream &out, Tensor const &tensor)
+  {
+    out <<  Spinor(tensor.d_data)       << Spinor(tensor.d_data +  12) << Spinor(tensor.d_data +  24);
+    out <<  Spinor(tensor.d_data +  36) << Spinor(tensor.d_data +  48) << Spinor(tensor.d_data +  60);
+    out <<  Spinor(tensor.d_data +  72) << Spinor(tensor.d_data +  84) << Spinor(tensor.d_data +  96);
+    out <<  Spinor(tensor.d_data + 108) << Spinor(tensor.d_data + 120) << Spinor(tensor.d_data + 132) << std::endl;
+    return out;
+  }
 }

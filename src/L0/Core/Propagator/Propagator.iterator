@@ -11,7 +11,7 @@ class iterator : public Core::Field< QCD::Tensor >::iterator
   //friend class Propagator::const_iterator;
 
   Propagator  &d_target;
-  
+
   iterator(Propagator &target, size_t idx);
 
   public:

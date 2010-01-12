@@ -72,7 +72,10 @@ namespace QCD
 
       iterator end(Base::DiracIndex const idx, TensorDiracStride const stride);
 
+      friend std::ostream &operator<<(std::ostream &out, Tensor const &tensor);
   };
+  std::ostream &operator<<(std::ostream &out, Tensor const &tensor);
+
 
   class hcTensor
   {

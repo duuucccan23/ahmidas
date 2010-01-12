@@ -22,6 +22,7 @@ namespace QCD
       Spinor(Spinor const &other);
       Spinor(double const *data);
       Spinor(std::complex< double > const *data);
+      Spinor &operator=(Spinor const &other);
 
       template< typename T >
       Spinor &operator+=(T const &rhand);

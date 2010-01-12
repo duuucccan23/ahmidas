@@ -46,7 +46,7 @@ namespace Core
       Propagator(Propagator const &other);
       ~Propagator();
 
-      bool loadILDG(std::vector< std::string > const filenames);
+      bool load(std::vector< std::string > const filenames, std::string const format);
 
 // #include "Propagator/Propagator.operators"
 

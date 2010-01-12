@@ -22,7 +22,14 @@ namespace QCD
   {
     std::copy(data, data + 12, reinterpret_cast< std::complex< double >* >(d_data));
   }
-      
+
+  inline Spinor &Spinor::operator=(Spinor const &other)
+  {
+    if (&other != this)
+      std::copy(other.d_data, other.d_data + 3, d_data);
+    return *this;
+  }
+
   template< typename T >
   inline Spinor &Spinor::operator+=(T const &rhand)
   {

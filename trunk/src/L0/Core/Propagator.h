@@ -53,14 +53,8 @@ namespace Core
 #include "Propagator/Propagator.iterator"
 // #include "Propagator/Propagator.const_iterator"
 
-      iterator begin();
-      iterator end();
-
-//       const_iterator begin(Base::ColourIndex const idx, const size_t ColourID) const;
-//       const_iterator end(Base::ColourIndex const idx, const size_t ColourID) const;// 
-//       const_iterator begin(Base::DiracIndex const idx, const size_t DiracID) const;
-//       const_iterator end(Base::DiracIndex const idx, const size_t DiracID) const;
-
+      iterator begin(size_t const timeslice);
+      iterator end(size_t  const timeslice);
 
       size_t const size() const;
 

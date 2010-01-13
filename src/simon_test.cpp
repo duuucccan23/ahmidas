@@ -44,15 +44,22 @@ int main(int argc, char **argv)
   if (prop->load(propfiles, "Scidac"))
     std::cout << "Propagator structure successfully loaded\n" << std::endl;
 
-  Core::Propagator::iterator my_iterator = prop->begin();
-
-  int count(0);
-  do
+  for (size_t t=0; t<T; t++)
   {
-    std::cout << "Element no. " << count++ << std::endl;
-    std::cout << *(my_iterator) << std::endl;
+    std::cout << "timeslice no. " << t << std::endl;
+    std::cout << std::endl;
+
+    Core::Propagator::iterator my_iterator = prop->begin(t);
+
+    int count(0);
+    do
+    {
+      std::cout << "Element no. " << count++ << std::endl;
+      std::cout << std::endl;
+      std::cout << *(my_iterator);
+    }
+    while(++my_iterator != prop->end(t));
   }
-  while(++my_iterator != prop->end());
 
  // QCD::Tensor::iterator tmp_iterator = my_iterator->begin(Base::col_GREEN,  QCD::ColourStrideSource);
 

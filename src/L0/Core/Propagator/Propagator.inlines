@@ -120,17 +120,18 @@ namespace Core
   }
 
 
-  inline Propagator::iterator Propagator::begin()
+  inline Propagator::iterator Propagator::begin(size_t const timeslice)
   {
     isolate();
-    return iterator(*this, 0);
+    // NOTE this function is supposed to return end() if part of the timeslice is not available
+    return iterator(*this, timeslice*d_components->spatialSize(), timeslice);
   }
 
 
-  inline Propagator::iterator Propagator::end()
+  inline Propagator::iterator Propagator::end(size_t const timeslice)
   {
     isolate();
-    return iterator(*this, d_components->spatialSize());
+    return iterator(*this, (timeslice+1)*d_components->spatialSize(), timeslice);
   }
 
 

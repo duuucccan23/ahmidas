@@ -3,8 +3,8 @@ namespace Core
 
   /* private constructor */
 
-  inline Propagator::iterator::iterator(Core::Propagator &target,  size_t idx)
-    : Core::Field< QCD::Tensor >::iterator(*(target.d_components), idx), d_target(target)
+  inline Propagator::iterator::iterator(Core::Propagator &target,  size_t const idx, size_t const timeslice)
+    : Core::Field< QCD::Tensor >::iterator(*(target.d_components), idx), d_target(target), d_timeslice(timeslice)
   {}
 
 
@@ -21,7 +21,7 @@ namespace Core
   {
     return    (dynamic_cast< Core::Field< QCD::Tensor >::iterator const & >(*this) ==
                dynamic_cast< Core::Field< QCD::Tensor >::iterator const & >(other))
-           && (&d_target == &other.d_target);
+           && (&d_target == &other.d_target) && (d_timeslice == other.d_timeslice);
   }
 
 
@@ -29,7 +29,7 @@ namespace Core
   {
     return    (dynamic_cast< Core::Field< QCD::Tensor >::iterator const & >(*this) !=
                dynamic_cast< Core::Field< QCD::Tensor >::iterator const & >(other))
-           || (&d_target != &other.d_target);
+           || (&d_target != &other.d_target) || (d_timeslice != other.d_timeslice);
   }
 
 

@@ -1,0 +1,18 @@
+namespace Core
+{
+
+  template< size_t Index >
+  inline void Propagator::operator*=(Dirac::Gamma< Index > const &)
+  {
+    for(size_t ts=0; ts<d_components->T(); ts++)
+    {
+      Propagator::iterator I(begin(ts));
+      while(I!=end(ts))
+      {
+        (*I) *= gamma;
+        ++I;
+      }
+    }
+  }
+
+}

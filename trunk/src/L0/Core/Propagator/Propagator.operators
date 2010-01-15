@@ -1,9 +1,0 @@
-
-
-Field< QCD::Spinor > const &operator()(Base::DiracIndex const idx, Base::ColourIndex const idx) const;
-
-// //These functions should return a deep copy
-// Propagator< L, T > &operator()(Base::ColourIndex const colIdx, Base::DiracIndex const dirIdx,
-//                                size_t const ColorID, size_t const DiracID);
-// Propagator< L, T > const &operator()(Base::ColourIndex const colIdx, Base::DiracIndex const dirIdx,
-//                                      size_t const ColorID, size_t const DiracID) const;

@@ -28,6 +28,16 @@ namespace QCD
                 &d_data[ic*12]);
   }
 
+  inline Spinor &Tensor::operator()(size_t const idx)
+  {
+    return *(reinterpret_cast< Spinor * > (d_data + idx*12));
+  }
+
+  inline Spinor const &Tensor::operator()(size_t const idx) const
+  {
+    return *(reinterpret_cast< Spinor const * > (d_data + idx*12));
+  }
+
   inline Tensor::Tensor(std::complex< double > *data)
   {
     std::copy(data, data + 144, d_data);
@@ -42,15 +52,35 @@ namespace QCD
   {
     return d_data[idx];
   }
-  
+
   inline std::complex< double > &Tensor::operator()(size_t dirSink, size_t colSink, size_t dirSource, size_t colSource)
   {
     return d_data[dirSink * 36 + colSink * 12 + dirSource * 4 + colSource];
   }
-  
+
   inline std::complex< double > const &Tensor::operator()(size_t dirSink, size_t colSink, size_t dirSource, size_t colSource) const
   {
     return d_data[dirSink * 36 + colSink * 12 + dirSource * 4 + colSource];
+  }
+
+  template< size_t Index >
+  inline Tensor &Tensor::operator*(Dirac::Gamma< Index > const &gamma) const
+  {
+    Tensor newTensor(*this);
+    for(size_t Idx=0; Idx<12; Idx++)
+    {
+      (newTensor(Idx)).leftMultiply(gamma);
+    }
+    return newTensor;
+  }
+
+  template< size_t Index >
+  inline void Tensor::operator*=(Dirac::Gamma< Index > const &gamma)
+  {
+    for(size_t Idx=0; Idx<12; Idx++)
+    {
+      ((*this)(Idx)).leftMultiply(gamma);
+    }
   }
 
   inline hcTensor Tensor::dagger() const

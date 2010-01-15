@@ -39,6 +39,6 @@ ADD_EXECUTABLE(main src/main.cpp)
 TARGET_LINK_LIBRARIES(main Weave SU3 Lime QCD ILDG MILC Base)
 
 ADD_EXECUTABLE(simon_test src/simon_test.cpp)
-TARGET_LINK_LIBRARIES(simon_test SU3 Lime QCD ILDG Base Core Weave)
+TARGET_LINK_LIBRARIES(simon_test SU3 Lime QCD ILDG Base Core Dirac Weave)
 
 

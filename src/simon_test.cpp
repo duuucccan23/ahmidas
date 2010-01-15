@@ -8,9 +8,10 @@
 #include <sstream>
 
 #include <L0/Tool/IO.h>
+#include <L0/Dirac/Gamma.h>
 #include <L0/Core/Field.h>
-#include <L0/Core/Propagator.h>
 #include <L0/QCD/Gauge.h>
+#include <L0/Core/Propagator.h>
 
 int main(int argc, char **argv)
 {
@@ -43,6 +44,9 @@ int main(int argc, char **argv)
   //prop->load(propfiles, "ILDG");
   if (prop->load(propfiles, "Scidac"))
     std::cout << "Propagator structure successfully loaded\n" << std::endl;
+
+//   Dirac::Gamma<0> gamma0;
+//   (*prop)*=gamma0;
 
   for (size_t t=0; t<T; t++)
   {

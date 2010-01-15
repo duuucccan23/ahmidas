@@ -4,6 +4,7 @@
 
 #include <L0/Base/Base.h>
 #include "Spinor.h"
+#include <L0/Dirac/Gamma.h>
 
 namespace QCD
 {
@@ -41,7 +42,7 @@ namespace QCD
 
       Spinor &operator()(size_t const idx);
       Spinor const &operator()(size_t const idx) const;
-      
+
       std::complex< double > &operator[](size_t const idx);
       std::complex< double > const &operator[](size_t const idx) const;
 
@@ -49,6 +50,13 @@ namespace QCD
                                          size_t const dirSource, size_t const colSource);
       std::complex< double > const &operator()(size_t const dirSink, size_t const colSink,
                                                size_t const dirSource, size_t const colSource) const;
+
+      template< size_t Index >
+      Tensor &operator*(Dirac::Gamma< Index > const &gamma) const;
+
+      template< size_t Index >
+      void operator*=(Dirac::Gamma< Index > const &gamma);
+
 
       Tensor &leftMultiply(Tensor const &other);
       Tensor &rightMultiply(Tensor const &other);
@@ -60,7 +68,7 @@ namespace QCD
       std::complex< double > trace() const;
 
       size_t size() const;
-          
+
 
   #include "Tensor/Tensor.iterator"
 
@@ -73,8 +81,15 @@ namespace QCD
       iterator end(Base::DiracIndex const idx, TensorDiracStride const stride);
 
       friend std::ostream &operator<<(std::ostream &out, Tensor const &tensor);
+
+      template< size_t Index >
+      friend QCD::Tensor &operator*(Dirac::Gamma< Index > const &gamma, Tensor const &tensor);
   };
+
   std::ostream &operator<<(std::ostream &out, Tensor const &tensor);
+
+  template< size_t Index >
+  QCD::Tensor &operator*(Dirac::Gamma< Index > const &gamma, Tensor const &tensor);
 
 
   class hcTensor

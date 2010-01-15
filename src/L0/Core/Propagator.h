@@ -48,7 +48,10 @@ namespace Core
 
       bool load(std::vector< std::string > const filenames, std::string const format);
 
-// #include "Propagator/Propagator.operators"
+
+      template< size_t Index >
+      void operator*=(Dirac::Gamma< Index > const &);
+
 
 #include "Propagator/Propagator.iterator"
 // #include "Propagator/Propagator.const_iterator"
@@ -74,6 +77,7 @@ namespace Core
 
 
 #include "Propagator/Propagator.inlines"
+#include "Propagator/Propagator.operators.inlines"
 
 #include "Propagator/Propagator.iterator.inlines"
 // #include "Propagator/Propagator.const_iterator.inlines"

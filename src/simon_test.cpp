@@ -11,7 +11,9 @@
 #include <L0/Dirac/Gamma.h>
 #include <L0/Core/Field.h>
 #include <L0/QCD/Gauge.h>
+#include <L0/QCD/Spinor.h>
 #include <L0/Core/Propagator.h>
+#include <L2/Contract/Meson.h>
 
 int main(int argc, char **argv)
 {
@@ -23,30 +25,44 @@ int main(int argc, char **argv)
 
   std::vector<std::string> propfiles;
 
-  const std::string filename_base("../test/source");
+  const std::string filename_base("../test/my_source");
   for (int f=0; f<12; f++)
   {
     std::ostringstream oss;
     oss << filename_base << ".";
     oss.fill('0');
     oss.width(2);
-//     oss << f;
-    oss << 0 << ".";
-    oss.fill('0');
-    oss.width(2);
-    oss << 0;
-//     oss << ".inverted";
+    oss << f;
     std::cout << oss.str() << std::endl;
     propfiles.push_back(oss.str());
   }
 
-  Core::Propagator *prop = new Core::Propagator(L, T);
-  //prop->load(propfiles, "ILDG");
-  if (prop->load(propfiles, "Scidac"))
-    std::cout << "Propagator structure successfully loaded\n" << std::endl;
+  Core::Field< QCD::Spinor> *my_field = new Core::Field< QCD::Spinor>(L, T);
 
-//   Dirac::Gamma<0> gamma0;
-//   (*prop)*=gamma0;
+  for (int f=0; f<12; f++)
+  {
+    size_t lattice_site = 11+L*L*L;
+    size_t index = f;
+    ((*my_field)[lattice_site])(Base::DiracIndex(index/3), Base::ColourIndex(index%3)) = 1.0;
+    Tool::IO::saveScidac(*my_field, propfiles[f]);
+    ((*my_field)[lattice_site])(Base::DiracIndex(index/3), Base::ColourIndex(index%3)) = 0.0;
+  }
+
+  delete my_field;
+
+  Core::Propagator *prop = new Core::Propagator(L, T);
+  if (prop->load(propfiles, "Scidac"))
+  {
+    std::cout << "Propagator structure successfully loaded\n" << std::endl;
+  }
+  else
+  {
+    std::cout << "error reading Propagator structure\n" << std::endl;
+    exit(EXIT_FAILURE);
+  }
+
+  Dirac::Gamma<5> gamma5;
+  (*prop) *= gamma5;
 
   for (size_t t=0; t<T; t++)
   {
@@ -64,12 +80,6 @@ int main(int argc, char **argv)
     }
     while(++my_iterator != prop->end(t));
   }
-
- // QCD::Tensor::iterator tmp_iterator = my_iterator->begin(Base::col_GREEN,  QCD::ColourStrideSource);
-
-//   std::cout << *(tmp_iterator) << std::endl;
-//   while(++tmp_iterator != my_iterator->end(Base::col_GREEN,  QCD::ColourStrideSource))
-//     std::cout << *(tmp_iterator) << std::endl;
 
 
   delete prop;

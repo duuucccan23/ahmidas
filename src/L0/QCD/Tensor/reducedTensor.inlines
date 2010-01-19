@@ -1,0 +1,103 @@
+#include <iostream>
+#include <iomanip>
+
+namespace QCD
+{
+
+  inline std::complex< double > tr(reducedTensor const &rTensor)
+  {
+    return rTensor.trace();
+  }
+
+  // private constructor
+  inline reducedTensor::reducedTensor(Tensor const &fullTensor, Base::ColourIndex const colour_src, Base::ColourIndex const colour_snk)
+  {
+    d_data[ 0] = fullTensor(Base::gam_1, colour_snk, Base::gam_1, colour_src);
+    d_data[ 1] = fullTensor(Base::gam_1, colour_snk, Base::gam_2, colour_src);
+    d_data[ 2] = fullTensor(Base::gam_1, colour_snk, Base::gam_3, colour_src);
+    d_data[ 3] = fullTensor(Base::gam_1, colour_snk, Base::gam_4, colour_src);
+    d_data[ 4] = fullTensor(Base::gam_2, colour_snk, Base::gam_1, colour_src);
+    d_data[ 5] = fullTensor(Base::gam_2, colour_snk, Base::gam_2, colour_src);
+    d_data[ 6] = fullTensor(Base::gam_2, colour_snk, Base::gam_3, colour_src);
+    d_data[ 7] = fullTensor(Base::gam_2, colour_snk, Base::gam_4, colour_src);
+    d_data[ 8] = fullTensor(Base::gam_3, colour_snk, Base::gam_1, colour_src);
+    d_data[ 9] = fullTensor(Base::gam_3, colour_snk, Base::gam_2, colour_src);
+    d_data[10] = fullTensor(Base::gam_3, colour_snk, Base::gam_3, colour_src);
+    d_data[11] = fullTensor(Base::gam_3, colour_snk, Base::gam_4, colour_src);
+    d_data[12] = fullTensor(Base::gam_4, colour_snk, Base::gam_1, colour_src);
+    d_data[13] = fullTensor(Base::gam_4, colour_snk, Base::gam_2, colour_src);
+    d_data[14] = fullTensor(Base::gam_4, colour_snk, Base::gam_3, colour_src);
+    d_data[15] = fullTensor(Base::gam_4, colour_snk, Base::gam_4, colour_src);
+  }
+
+
+  inline std::complex< double > reducedTensor::trace() const
+  {
+    return d_data[0] + d_data[5] + d_data[10] + d_data[15];
+  }
+
+//   inline reducedTensor::reducedTensor(Tensor const &a, Tensor const &b)
+//   {
+//     
+//     std::transform(reinterpret_cast< std::complex< double >* >(&temp), 
+//                    reinterpret_cast< std::complex< double >* >(&temp) + 6,
+//                    reinterpret_cast< std::complex< double >* >(other.d_data),
+//                  std::bind1st(std::multiplies< std::complex< double > >(), myFac));
+//     reducedTensor(a, Base::ColourIndex const colour_src, Base::ColourIndex const colour_snk)
+// 
+//   }
+//   reducedTensor(Tensor &a, ColourIndex col_RED Tensor&b, Tensor&c);
+// 
+//   reducedTensor &operator+(reducedTensor const &other) const;
+//   reducedTensor &operator-(reducedTensor const &other) const;
+// 
+//   void &operator+=(reducedTensor const &other);
+//   void &operator-=(reducedTensor const &other);
+// 
+//   reducedTensor &operator=(reducedTensor const &other);
+// 
+//   template< size_t Index >
+//   Tensor &operator*(Dirac::Gamma< Index > const &gamma) const;
+// 
+//   template< size_t Index >
+//   void operator*=(Dirac::Gamma< Index > const &gamma);
+
+
+  inline std::complex< double > const &reducedTensor::operator()(Base::DiracIndex const Dirac_src,
+                                                                 Base::DiracIndex const Dirac_snk) const
+  {
+    return d_data[Dirac_src + 4*Dirac_snk];
+  }
+
+  inline size_t reducedTensor::size() const
+  {
+    return 16;
+  }
+
+  inline std::ostream &operator<<(std::ostream &out, reducedTensor const &rTensor)
+  {
+    out << std::scientific << std::setprecision(3) << std::showpos
+        << "[ " << rTensor.d_data[ 0].real() << "  " << rTensor.d_data[ 0].imag() << " * i   "
+                << rTensor.d_data[ 1].real() << "  " << rTensor.d_data[ 2].imag() << " * i   "
+                << rTensor.d_data[ 2].real() << "  " << rTensor.d_data[ 2].imag() << " * i   "
+                << rTensor.d_data[ 3].real() << "  " << rTensor.d_data[ 3].imag() << " * i  ]"
+                << std::endl
+        << "[ " << rTensor.d_data[ 4].real() << "  " << rTensor.d_data[ 4].imag() << " * i   "
+                << rTensor.d_data[ 5].real() << "  " << rTensor.d_data[ 5].imag() << " * i   "
+                << rTensor.d_data[ 6].real() << "  " << rTensor.d_data[ 6].imag() << " * i   "
+                << rTensor.d_data[ 7].real() << "  " << rTensor.d_data[ 7].imag() << " * i  ]"
+                << std::endl
+        << "[ " << rTensor.d_data[ 8].real() << "  " << rTensor.d_data[ 8].imag() << " * i   "
+                << rTensor.d_data[ 9].real() << "  " << rTensor.d_data[ 9].imag() << " * i   "
+                << rTensor.d_data[10].real() << "  " << rTensor.d_data[10].imag() << " * i   "
+                << rTensor.d_data[11].real() << "  " << rTensor.d_data[11].imag() << " * i  ]"
+                << std::endl
+        << "[ " << rTensor.d_data[12].real() << "  " << rTensor.d_data[12].imag() << " * i   "
+                << rTensor.d_data[13].real() << "  " << rTensor.d_data[13].imag() << " * i   "
+                << rTensor.d_data[14].real() << "  " << rTensor.d_data[14].imag() << " * i   "
+                << rTensor.d_data[15].real() << "  " << rTensor.d_data[15].imag() << " * i  ]"
+                << std::endl;
+    return out;
+  }
+
+}

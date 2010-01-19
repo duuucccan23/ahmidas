@@ -119,6 +119,30 @@ namespace Core
     }
   }
 
+  inline Propagator *Propagator::revert() const
+  {
+    Dirac::Gamma<5> gamma5;
+    Propagator *p = new Propagator(*this);
+    p->isolate();
+    for (size_t t=0; t<d_components->T(); t++)
+    {
+      Propagator::const_iterator before = begin(t);
+
+      // if not even part of the timeslice is locally available...
+      if (before==end(t)) continue;
+
+      Propagator::iterator after  = p->end(t);
+      do
+      {
+        (*after) = ((*before) * gamma5).dagger();
+        ++after;
+      }
+      while(++before != end(t));
+      assert(before==end(t) && after==p->begin(t));
+    }
+    return p;
+  }
+
 
   inline Propagator::iterator Propagator::begin(size_t const timeslice)
   {
@@ -139,6 +163,17 @@ namespace Core
   {
     return d_size;
   }
+
+  inline size_t const Propagator::L() const
+  {
+    return d_components->L();
+  }
+
+  inline size_t const Propagator::T() const
+  {
+    return d_components->T();
+  }
+
 
 
 }

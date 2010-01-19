@@ -1,44 +1,44 @@
-template< size_t L, size_t T >
-inline Core::Correlator< L, T >::Correlator()
-  : d_weave(Base::Weave< L, T >::instance()), d_references(new size_t(1)),
-    d_data(new std::complex< double >[d_weave.localSize(Base::idx_T)])
+
+inline Core::Correlator::Correlator(size_t const L_, size_t const T_)
+  : L(L_), T(T_),d_weave(*(new Base::Weave(L_, T_))), d_references(new size_t(1)),
+  d_data(new std::complex< double >[d_weave.localSize(Base::idx_T)])
 {}
 
-template< size_t L, size_t T >
-inline Core::Correlator< L, T >::Correlator(Core::Correlator< L, T > const &other)
-  : d_weave(Base::Weave< L, T >::instance()), d_references(other.d_references), d_data(other.d_data)
+
+inline Core::Correlator::Correlator(Core::Correlator const &other)
+  : L(other.L), T(other.T), d_weave(other.d_weave), d_references(other.d_references), d_data(other.d_data)
 {
   *d_references += 1;
 }
 
-template< size_t L, size_t T >
-Core::Correlator< L, T >::Correlator(std::complex< double > const &value)
-  : d_weave(Base::Weave< L, T >::instance()), d_references(new size_t(1)),
+
+Core::Correlator::Correlator(size_t const L_, size_t const T_, std::complex< double > const &value)
+  : L(L_), T(T_), d_weave(*(new Base::Weave(L_, T_))), d_references(new size_t(1)),
     d_data(new std::complex< double >[d_weave.localSize(Base::idx_T)])
 {
-  std::fill_n(d_data, d_weave.localSize(Base::idx_T));
+  std::fill_n(d_data, d_weave.localSize(Base::idx_T), value);
 }
 
-template< size_t L, size_t T >
-inline Core::Correlator< L, T >::~Correlator()
+
+inline Core::Correlator::~Correlator()
 {
   destroy();
 }
 
-template< size_t L, size_t T >
-inline std::complex< double > &Core::Correlator< L, T >::operator[](size_t const idx)
+
+inline std::complex< double > &Core::Correlator::operator[](size_t const idx)
 {
   return d_data[idx];
 }
 
-template< size_t L, size_t T >
-inline std::complex< double > const &Core::Correlator< L, T >::operator[](size_t const idx) const
+
+inline std::complex< double > const &Core::Correlator::operator[](size_t const idx) const
 {
   return d_data[idx];
 }
 
-template< size_t L, size_t T >
-inline size_t Core::Correlator< L, T >::size() const
+
+inline size_t Core::Correlator::size() const
 {
   return d_weave.localSize(Base::idx_T);
 }

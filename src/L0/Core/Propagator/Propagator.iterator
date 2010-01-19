@@ -1,5 +1,5 @@
 
-// class const_iterator;
+class const_iterator;
 
 /* this iterator only iterates over space-time,
   for iteration over colour and Dirac indices at a particular lattice site,
@@ -8,7 +8,7 @@
 class iterator : public Core::Field< QCD::Tensor >::iterator
 {
   friend class Propagator;
-  //friend class Propagator::const_iterator;
+  friend class Propagator::const_iterator;
 
   Propagator  &d_target;
 

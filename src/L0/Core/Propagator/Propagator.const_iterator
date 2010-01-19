@@ -1,32 +1,40 @@
-// template< size_t Stride >
-// class iterator;
-// 
-// template< size_t Stride >
-// class const_iterator: public std::iterator< std::bidirectional_iterator_tag, Core::Field< QCD::Spinor, L, T > >
-// {
-//   friend class Propagator< L, T >;
-//   friend class Propagator< L, T >::iterator< Stride >;
-// 
-//   Core::Field< QCD::Spinor, L, T > const **d_target;
-// 
-//   const_iterator(Core::Field< QCD::Spinor, L, T > const **target);
-// 
-//   public:
-//     const_iterator< Stride >(iterator< Stride > const &other);
-//     const_iterator< Stride >(const_iterator< Stride > const &other);
-// 
-//     bool operator==(iterator< Stride > const &other) const;
-//     bool operator==(const_iterator< Stride > const &other) const;
-//     bool operator!=(iterator< Stride > const &other) const;
-//     bool operator!=(const_iterator< Stride > const &other) const;
-// 
-//     Core::Field< QCD::Spinor, L, T > const &operator*() const;
-//     Core::Field< QCD::Spinor, L, T > const *operator->() const;
-// 
-//     const_iterator< Stride > &operator--();
-//     const_iterator< Stride > operator--(int);
-//     const_iterator< Stride > &operator++();
-//     const_iterator< Stride > operator++(int);
-// };
 
+// class const_const_iterator;
 
+/* this const_iterator only iterates over space-time,
+  for iteration over colour and Dirac indices at a particular lattice site,
+  the QCD::Tensor::const_iterator is responsible  */
+
+class const_iterator : public Core::Field< QCD::Tensor >::const_iterator
+{
+  friend class Propagator;
+
+  Propagator  &d_target;
+
+  // const_iterator only makes sense for timeslice
+  size_t d_timeslice;
+
+  const_iterator(Propagator &target, size_t const idx, size_t const timeslice);
+
+  public:
+    const_iterator(const_iterator const &other);
+    const_iterator(iterator const &other);
+
+    bool operator==(const_iterator const &other) const;
+    bool operator==(iterator const &other) const;
+
+    bool operator!=(const_iterator const &other) const;
+    bool operator!=(iterator const &other) const;
+
+    QCD::Tensor &operator*();
+    QCD::Tensor const &operator*() const;
+
+    QCD::Tensor *operator->();
+    QCD::Tensor const *operator->() const;
+
+    const_iterator &operator--();   // prefix version
+    const_iterator operator--(int); // postfix version
+
+    const_iterator &operator++();   // prefix version
+    const_iterator operator++(int); // postfix version
+};

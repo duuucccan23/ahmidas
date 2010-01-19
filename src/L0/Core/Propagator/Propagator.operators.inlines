@@ -2,7 +2,7 @@ namespace Core
 {
 
   template< size_t Index >
-  inline void Propagator::operator*=(Dirac::Gamma< Index > const &)
+  inline void Propagator::operator*=(Dirac::Gamma< Index > const &gamma)
   {
     for(size_t ts=0; ts<d_components->T(); ts++)
     {

@@ -1,5 +1,4 @@
-template< size_t L, size_t T >
-void Core::Correlator< L, T >::isolate()
+void Core::Correlator::isolate()
 {
   if (*d_references == 1)
     return;

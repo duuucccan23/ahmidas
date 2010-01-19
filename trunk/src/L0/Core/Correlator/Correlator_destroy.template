@@ -1,5 +1,4 @@
-template< size_t L, size_t T >
-void Core::Correlator< L, T >::destroy()
+void Core::Correlator::destroy()
 {
   *d_references -= 1;
   if (*d_references == 0)

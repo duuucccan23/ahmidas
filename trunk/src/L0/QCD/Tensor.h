@@ -1,19 +1,23 @@
 #pragma once
 
 #include <complex>
+#include <algorithm>
 
 #include <L0/Base/Base.h>
-#include "Spinor.h"
 #include <L0/Dirac/Gamma.h>
+#include <L0/QCD/Spinor.h>
+
 
 namespace QCD
 {
   class Tensor;
   class hcTensor;
+  class reducedTensor;
 
   std::complex< double > tr(Tensor const &tensor);
   std::complex< double > tr(hcTensor const &tensor);
-  
+  std::complex< double > tr(reducedTensor const &rTensor);
+
   enum TensorColourStride
   {
     ColourStrideSink   =  1,
@@ -29,6 +33,10 @@ namespace QCD
   class Tensor
   {
     friend class Spinor;
+
+    // Tensor without colour structure
+    friend class reducedTensor;
+
     std::complex< double > d_data[144];
 
     public:
@@ -83,7 +91,7 @@ namespace QCD
       friend std::ostream &operator<<(std::ostream &out, Tensor const &tensor);
 
       template< size_t Index >
-      friend QCD::Tensor &operator*(Dirac::Gamma< Index > const &gamma, Tensor const &tensor);
+      friend Tensor &operator*(Dirac::Gamma< Index > const &gamma, Tensor const &tensor);
   };
 
   std::ostream &operator<<(std::ostream &out, Tensor const &tensor);
@@ -104,16 +112,68 @@ namespace QCD
       hcTensor(hcTensor const &parent);
 
       Spinor operator()(size_t const idx) const;
-      
+
       std::complex< double > operator[](size_t const idx) const;
 
       Tensor const &dagger() const;
 
       size_t size() const;
   };
+
+  /* reduced tensor a.k.a. "Dirac matrix" */
+  class reducedTensor
+  {
+    friend class Tensor;
+
+    std::complex< double > d_data[16];
+
+    reducedTensor(Tensor const &fullTensor, Base::ColourIndex const colour_src, Base::ColourIndex const colour_snk);
+
+    public:
+
+// old idea:
+//       // for mesons: colours are summed over with delta_ab
+//       template< size_t Index >
+//       reducedTensor(Tensor const &a, Tensor const &b, Dirac::Gamma< Index > const &Dirac_structure);
+//       // for baryons: colours are summed over with epsilon_abc (Dirac structure is assumed to involve b and c)
+//       template< size_t Index >
+//       reducedTensor(Tensor const &a, Tensor const &b, Tensor const &c, Dirac::Gamma< Index > const &Dirac_structure);
+
+      std::complex< double > trace() const;
+
+      reducedTensor &operator+(reducedTensor const &other) const;
+      reducedTensor &operator-(reducedTensor const &other) const;
+
+      void operator+=(reducedTensor const &other);
+      void operator-=(reducedTensor const &other);
+
+      reducedTensor &operator=(reducedTensor const &other);
+
+      template< size_t Index >
+      Tensor &operator*(Dirac::Gamma< Index > const &gamma) const;
+
+      template< size_t Index >
+      void operator*=(Dirac::Gamma< Index > const &gamma);
+
+      std::complex< double > const &operator()(Base::DiracIndex const Dirac_src, Base::DiracIndex const Dirac_snk) const;
+
+      size_t size() const;
+
+      template< size_t Index >
+      friend reducedTensor &operator*(Dirac::Gamma< Index > const &gamma, Tensor const &tensor);
+
+      friend std::ostream &operator<<(std::ostream &out, reducedTensor const &rTensor);
+  };
+
+  template< size_t Index >
+  QCD::reducedTensor &operator*(Dirac::Gamma< Index > const &gamma, Tensor const &tensor);
+
+  std::ostream &operator<<(std::ostream &out, reducedTensor const &rTensor);
+
 }
 
 #include "Tensor/Tensor.inlines"
 #include "Tensor/hcTensor.inlines"
+#include "Tensor/reducedTensor.inlines"
 
 #include "Tensor/Tensor.iterator.inlines"

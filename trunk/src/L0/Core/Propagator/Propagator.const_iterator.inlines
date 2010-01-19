@@ -1,94 +1,93 @@
-// namespace Core
-// {
-//   template< size_t L, size_t T >
-//   template< size_t Stride >
-//   inline Propagator< L, T >::const_iterator< Stride >::const_iterator(Core::Field< QCD::Spinor, L, T > const **target)
-//     : d_target(target)
-//   {}
-// 
-//   template< size_t L, size_t T >
-//   template< size_t Stride >
-//   inline Propagator< L, T >::const_iterator< Stride >::const_iterator(Propagator< L, T >::const_iterator< Stride > const &other)
-//     : d_target(other.d_target)
-//   {}
-// 
-//   template< size_t L, size_t T >
-//   template< size_t Stride >
-//   inline Propagator< L, T >::const_iterator< Stride >::const_iterator(Propagator< L, T >::iterator< Stride > const &other)
-//     : d_target(other.d_target)
-//   {}
-// 
-//   template< size_t L, size_t T >
-//   template< size_t Stride >
-//   inline bool Propagator< L, T >::const_iterator< Stride >::operator==(Propagator< L, T >::iterator< Stride > const &other) const
-//   {
-//     return (d_target == other.d_target);
-//   }
-// 
-//   template< size_t L, size_t T >
-//   template< size_t Stride >
-//   inline bool Propagator< L, T >::const_iterator< Stride >::operator==(Propagator< L, T >::const_iterator< Stride > const &other) const
-//   {
-//     return (d_target == other.d_target);
-//   }
-// 
-//   template< size_t L, size_t T >
-//   template< size_t Stride >
-//   inline bool Propagator< L, T >::const_iterator< Stride >::operator!=(Propagator< L, T >::iterator< Stride > const &other) const
-//   {
-//     return (d_target != other.d_target);
-//   }
-// 
-//   template< size_t L, size_t T >
-//   template< size_t Stride >
-//   inline bool Propagator< L, T >::const_iterator< Stride >::operator!=(Propagator< L, T >::const_iterator< Stride > const &other) const
-//   {
-//     return (d_target != other.d_target);
-//   }
-// 
-//   template< size_t L, size_t T >
-//   template< size_t Stride >
-//   inline Core::Field< QCD::Spinor, L, T > const &Propagator< L, T >::const_iterator< Stride >::operator*() const
-//   {
-//     return **d_target;
-//   }
-// 
-//   template< size_t L, size_t T >
-//   template< size_t Stride >
-//   inline Core::Field< QCD::Spinor, L, T > const *Propagator< L, T >::const_iterator< Stride >::operator->() const
-//   {
-//     return *d_target;
-//   }
-// 
-//   template< size_t L, size_t T >
-//   template< size_t Stride >
-//   inline Propagator< L, T >::const_iterator< Stride > &Propagator< L, T >::const_iterator< Stride >::operator--()
-//   {
-//     d_target -= Stride;
-//     return *this;
-//   }
-// 
-//   template< size_t L, size_t T >
-//   template< size_t Stride >
-//   inline Propagator< L, T >::const_iterator< Stride > Propagator< L, T >::const_iterator< Stride >::operator--(int)
-//   {
-//     d_target -= Stride;
-//     return const_iterator(d_target + Stride);
-//   }
-// 
-//   template< size_t L, size_t T >
-//   template< size_t Stride >
-//   inline Propagator< L, T >::const_iterator< Stride > &Propagator< L, T >::const_iterator< Stride >::operator++()
-//   {
-//     d_target += Stride;
-//     return *this;
-//   }
-// 
-//   template< size_t L, size_t T >
-//   template< size_t Stride >
-//   inline Propagator< L, T >::const_iterator< Stride > Propagator< L, T >::const_iterator< Stride >::operator++(int)
-//   {
-//     d_target += Stride;
-//     return const_iterator(d_target - Stride);
-//   }
-// }
+namespace Core
+{
+
+  /* private constructor */
+
+  inline Propagator::const_iterator::const_iterator(Core::Propagator &target,  size_t const idx, size_t const timeslice)
+    : Core::Field< QCD::Tensor >::const_iterator(*(target.d_components), idx), d_target(target), d_timeslice(timeslice)
+  {}
+
+
+  /* copy constructors */
+
+  inline Propagator::const_iterator::const_iterator(Propagator::const_iterator const &other)
+    : Core::Field< QCD::Tensor >::const_iterator(*(other.d_target.d_components), other.d_idx), d_target(other.d_target)
+  {}
+
+  inline Propagator::const_iterator::const_iterator(Propagator::iterator const &other)
+    : Core::Field< QCD::Tensor >::const_iterator(*(other.d_target.d_components), other.d_idx), d_target(other.d_target)
+  {}
+
+
+  /* comparison operators */
+
+  inline bool Propagator::const_iterator::operator==(Propagator::const_iterator const &other) const
+  {
+    return    (dynamic_cast< Core::Field< QCD::Tensor >::const_iterator const & >(*this) ==
+               dynamic_cast< Core::Field< QCD::Tensor >::const_iterator const & >(other))
+           && (&d_target == &other.d_target) && (d_timeslice == other.d_timeslice);
+  }
+
+  inline bool Propagator::const_iterator::operator==(Propagator::iterator const &other) const
+  {
+    return    (dynamic_cast< Core::Field< QCD::Tensor >::const_iterator const & >(*this) ==
+               dynamic_cast< Core::Field< QCD::Tensor >::iterator const & >(other))
+           && (&d_target == &other.d_target) && (d_timeslice == other.d_timeslice);
+  }
+
+  inline bool Propagator::const_iterator::operator!=(Propagator::const_iterator const &other) const
+  {
+    return    (dynamic_cast< Core::Field< QCD::Tensor >::const_iterator const & >(*this) !=
+               dynamic_cast< Core::Field< QCD::Tensor >::const_iterator const & >(other))
+           || (&d_target != &other.d_target) || (d_timeslice != other.d_timeslice);
+  }
+
+  inline bool Propagator::const_iterator::operator!=(Propagator::iterator const &other) const
+  {
+    return    (dynamic_cast< Core::Field< QCD::Tensor >::const_iterator const & >(*this) !=
+               dynamic_cast< Core::Field< QCD::Tensor >::iterator const & >(other))
+           || (&d_target != &other.d_target) || (d_timeslice != other.d_timeslice);
+  }
+
+
+
+  /* access field components  - "const" version */
+
+  inline QCD::Tensor const &Propagator::const_iterator::operator*() const
+  {
+    return *(dynamic_cast< Core::Field< QCD::Tensor >::const_iterator const & >(*this));
+  }
+
+  inline QCD::Tensor const *Propagator::const_iterator::operator->() const
+  {
+    return &(*(dynamic_cast< Core::Field< QCD::Tensor >::const_iterator const & >(*this)));
+  }
+
+
+  /* increment & decrement (prefix and postfix versions)*/
+
+  inline Propagator::const_iterator &Propagator::const_iterator::operator++()
+  {
+    ++(dynamic_cast< Core::Field< QCD::Tensor >::const_iterator & >(*this));
+    return *this;
+  }
+
+  inline Propagator::const_iterator Propagator::const_iterator::operator++(int)
+  {
+    (dynamic_cast< Core::Field< QCD::Tensor >::const_iterator & >(*this))++;
+    return *this;
+  }
+
+
+  inline Propagator::const_iterator &Propagator::const_iterator::operator--()
+  {
+    --(dynamic_cast< Core::Field< QCD::Tensor >::const_iterator & >(*this));
+    return *this;
+  }
+
+  inline Propagator::const_iterator Propagator::const_iterator::operator--(int)
+  {
+    (dynamic_cast< Core::Field< QCD::Tensor >::const_iterator & >(*this))--;
+    return *this;
+  }
+}

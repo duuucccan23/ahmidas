@@ -3,7 +3,9 @@
 #include <vector>
 #include <string>
 #include <L0/Base/Base.h>
+#include <L0/Dirac/Gamma.h>
 #include <L0/Core/Field.h>
+#include <L0/Core/Correlator.h>
 #include <L0/QCD/Spinor.h>
 #include <L0/QCD/Tensor.h>
 #include <L0/Tool/IO.h>
@@ -50,16 +52,35 @@ namespace Core
 
 
       template< size_t Index >
-      void operator*=(Dirac::Gamma< Index > const &);
+      void operator*=(Dirac::Gamma< Index > const &gamma);
+
+      // needed for meson contractions
+      template< size_t Index >
+      Core::Field< QCD::reducedTensor > const &operator*(Propagator const &other);
+
+
+      /*
+          Revert Propagator using gamma5 hermeticity trick:
+          S (x,y) = gamma5 * S^dagger (y,x) * gamma5,
+          where the dagger is meant in Dirac and colour space only.
+          Note:
+           - for point or similar source x is generally fixed
+           - for twisted mass this also changes the flavour
+      */
+      Propagator * revert() const;
 
 
 #include "Propagator/Propagator.iterator"
-// #include "Propagator/Propagator.const_iterator"
+#include "Propagator/Propagator.const_iterator"
 
       iterator begin(size_t const timeslice);
-      iterator end(size_t  const timeslice);
+      iterator end(size_t const timeslice);
+      const_iterator begin(size_t const timeslice) const;
+      const_iterator end(size_t const timeslice) const;
 
       size_t const size() const;
+      size_t const L() const;
+      size_t const T() const;
 
 /* NOTE we should include something like Propagator*Gamma*Propagator
    and maybe some herm. conj. derived class
@@ -77,10 +98,11 @@ namespace Core
 
 
 #include "Propagator/Propagator.inlines"
-#include "Propagator/Propagator.operators.inlines"
 
 #include "Propagator/Propagator.iterator.inlines"
-// #include "Propagator/Propagator.const_iterator.inlines"
+#include "Propagator/Propagator.const_iterator.inlines"
+
+#include "Propagator/Propagator.operators.inlines"
 
 #include "Propagator/Propagator_destroy.template"
 #include "Propagator/Propagator_isolate.template"

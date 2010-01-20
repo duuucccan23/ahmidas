@@ -5,17 +5,19 @@
 #include <string>
 
 #include <L0/Base/Weave.h>
-
+#include <L0/Core/Field.h>
+#include <L0/QCD/Tensor.h>
 
 namespace Core
 {
+
   class Correlator
   {
     size_t T;
     size_t L;
-    Base::Weave            &d_weave;
-    size_t                 *d_references;
-    std::complex< double > *d_data;
+    Base::Weave  &d_weave;
+    size_t *d_references;
+    QCD::reducedTensor *d_data;
 
     public:
       Correlator(size_t const L_, size_t const T_);
@@ -24,14 +26,23 @@ namespace Core
 
       ~Correlator();
 
-      std::complex< double > &operator[](size_t const idx);
-      std::complex< double > const &operator[](size_t const idx) const;
+      QCD::reducedTensor &operator[](size_t const idx);
+      QCD::reducedTensor const &operator[](size_t const idx) const;
 
-      //void sumOverTimeSlices();
+      void sumOverTimeSlices();
+
+      void sumOverTimeSlices(Core::Field< QCD::reducedTensor > **timeslices);
+      void sumOverTimeSlices(Core::Field< QCD::reducedTensor > **timeslices, double const *momentum);
 
       void save(std::string const&file);
 
+      QCD::reducedTensor sum(Core::Field< QCD::reducedTensor > const *field);
+      QCD::reducedTensor sum(Core::Field< QCD::reducedTensor > const *field, double * const momentum);
+
+
+      size_t getT() const;
       size_t size() const;
+
 
       friend std::ostream &operator<<(std::ostream &out, Correlator const &c);
 

@@ -66,7 +66,10 @@ namespace Core
         if (format == std::string("ILDG"))
          tmp[i] = Tool::IO::loadILDG< QCD::Spinor >(filenames[i], d_components->L(), d_components->T());
         else if (format == std::string("Scidac"))
-         tmp[i] = Tool::IO::loadScidac< QCD::Spinor >(filenames[i], d_components->L(), d_components->T());
+        {
+          tmp[i] = Tool::IO::loadScidac< QCD::Spinor >(filenames[i], d_components->L(), d_components->T());
+          //std::cout << (tmp[i])[0]; //exit(1);
+        }
         else
         {
           std::cerr << "File format " << format << " not known or not implemented yet, choose one of the following:\n";
@@ -124,7 +127,7 @@ namespace Core
     Dirac::Gamma<5> gamma5;
     Propagator *p = new Propagator(*this);
     p->isolate();
-    for (size_t t=0; t<d_components->T(); t++)
+    for (size_t t=0; t<T(); t++)
     {
       Propagator::const_iterator before = begin(t);
 
@@ -143,12 +146,45 @@ namespace Core
     return p;
   }
 
+  inline double Propagator::diff(Propagator const& other) const
+  {
+    if (d_components == other.d_components)
+      return 0.0;
+    if (L() != other.L() || T() != other.T())
+      return -1.0;
+
+    double diff(0.0);
+
+    for (size_t t=0; t<T(); t++)
+    {
+      Propagator::const_iterator it1 = begin(t);
+      Propagator::const_iterator it2 = other.begin(t);
+
+      if (it1==end(t)) continue;
+
+      do
+      {
+        diff += abs((*it1).diff(*it2));
+        ++it2;
+      }
+      while(++it1 != end(t));
+    }
+    diff /= (double(d_components->volume())*double(size()));
+    return diff;
+  }
+
 
   inline Propagator::iterator Propagator::begin(size_t const timeslice)
   {
     isolate();
     // NOTE this function is supposed to return end() if part of the timeslice is not available
     return iterator(*this, timeslice*d_components->spatialSize(), timeslice);
+  }
+
+  inline Propagator::const_iterator Propagator::begin(size_t const timeslice) const
+  {
+    // NOTE this function is supposed to return end() if part of the timeslice is not available
+    return const_iterator(*this, timeslice*d_components->spatialSize(), timeslice);
   }
 
 
@@ -158,6 +194,10 @@ namespace Core
     return iterator(*this, (timeslice+1)*d_components->spatialSize(), timeslice);
   }
 
+  inline Propagator::const_iterator Propagator::end(size_t const timeslice) const
+  {
+    return const_iterator(*this, (timeslice+1)*d_components->spatialSize(), timeslice);
+  }
 
   inline size_t const Propagator::size() const
   {

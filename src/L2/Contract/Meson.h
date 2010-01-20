@@ -13,15 +13,15 @@ namespace Contract
 {
 
   template< size_t IndexSrc, size_t IndexSnk >
-  static Core::Correlator const &light_meson_twopoint(Core::Propagator const &u, Core::Propagator const &d,
-                                                Dirac::Gamma< IndexSrc > const &interpolSrc,
-                                                Dirac::Gamma< IndexSnk > const &interpolSnk);
+  Core::Correlator light_meson_twopoint(Core::Propagator const &u, Core::Propagator const &d,
+                                        Dirac::Gamma< IndexSrc > const &interpolSrc,
+                                        Dirac::Gamma< IndexSnk > const &interpolSnk);
 
   template< size_t IndexSrc, size_t IndexSnk >
-  static Core::Correlator const &light_meson_twopoint(Core::Propagator const &u, Core::Propagator const &d,
-                                                Dirac::Gamma< IndexSrc > const &interpolSrc,
-                                                Dirac::Gamma< IndexSnk > const &interpolSnk,
-                                                double const *momentum);
+  Core::Correlator light_meson_twopoint(Core::Propagator const &u, Core::Propagator const &d,
+                                        Dirac::Gamma< IndexSrc > const &interpolSrc,
+                                        Dirac::Gamma< IndexSnk > const &interpolSnk,
+                                        double const *momentum);
 }
 
 #include "Meson/Meson.inlines"

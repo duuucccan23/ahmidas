@@ -30,37 +30,69 @@ namespace QCD
     d_data[15] = fullTensor(Base::gam_4, colour_snk, Base::gam_4, colour_src);
   }
 
+  inline reducedTensor::reducedTensor()
+  {
+    // std::fill(d_data, d_data + 16, std::complex< double >(0.0, 0.0));
+  }
+
+  inline reducedTensor::reducedTensor(std::complex< double > const& value)
+  {
+    std::fill_n(d_data, 16, value);
+  }
+
+
+  inline reducedTensor::reducedTensor(reducedTensor const &other)
+  {
+    std::copy(other.d_data, other.d_data + 16, d_data);
+  }
+
 
   inline std::complex< double > reducedTensor::trace() const
   {
     return d_data[0] + d_data[5] + d_data[10] + d_data[15];
   }
 
-//   inline reducedTensor::reducedTensor(Tensor const &a, Tensor const &b)
-//   {
-//     
-//     std::transform(reinterpret_cast< std::complex< double >* >(&temp), 
-//                    reinterpret_cast< std::complex< double >* >(&temp) + 6,
-//                    reinterpret_cast< std::complex< double >* >(other.d_data),
-//                  std::bind1st(std::multiplies< std::complex< double > >(), myFac));
-//     reducedTensor(a, Base::ColourIndex const colour_src, Base::ColourIndex const colour_snk)
-// 
-//   }
-//   reducedTensor(Tensor &a, ColourIndex col_RED Tensor&b, Tensor&c);
-// 
-//   reducedTensor &operator+(reducedTensor const &other) const;
-//   reducedTensor &operator-(reducedTensor const &other) const;
-// 
-//   void &operator+=(reducedTensor const &other);
-//   void &operator-=(reducedTensor const &other);
-// 
-//   reducedTensor &operator=(reducedTensor const &other);
-// 
-//   template< size_t Index >
-//   Tensor &operator*(Dirac::Gamma< Index > const &gamma) const;
-// 
-//   template< size_t Index >
-//   void operator*=(Dirac::Gamma< Index > const &gamma);
+  inline reducedTensor reducedTensor::operator+(reducedTensor const &other) const
+  {
+    reducedTensor tmp;
+    std::transform(d_data, d_data+16, other.d_data, tmp.d_data,
+                   std::plus< std::complex< double > >());
+    return tmp;
+  }
+
+  inline reducedTensor reducedTensor::operator-(reducedTensor const &other) const
+  {
+    reducedTensor tmp;
+    std::transform(d_data, d_data+16, other.d_data, tmp.d_data,
+                   std::minus< std::complex< double > >());
+    return tmp;
+  }
+
+  inline void reducedTensor::operator+=(reducedTensor const &other)
+  {
+    std::transform(d_data, d_data+16, other.d_data, d_data,
+                   std::plus< std::complex< double > >());
+  }
+
+  inline void reducedTensor::operator-=(reducedTensor const &other)
+  {
+    std::transform(d_data, d_data+16, other.d_data, d_data,
+                   std::minus< std::complex< double > >());
+  }
+
+  inline reducedTensor &reducedTensor::operator=(reducedTensor const &rhs)
+  {
+    if (this ==  &rhs);
+      return *this;
+
+    std::copy(rhs.d_data, rhs.d_data + 16, d_data);
+  }
+
+  inline void reducedTensor::operator*=(reducedTensor const &rhs)
+  {
+    std::transform(d_data, d_data+16, rhs.d_data, d_data,
+                   std::multiplies< std::complex< double > >());
+  }
 
 
   inline std::complex< double > const &reducedTensor::operator()(Base::DiracIndex const Dirac_src,

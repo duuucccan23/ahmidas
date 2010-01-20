@@ -21,10 +21,8 @@ class iterator : public Core::Field< QCD::Tensor >::iterator
     iterator(iterator const &other);
 
     bool operator==(iterator const &other) const;
-//     bool operator==(const_iterator const &other) const;
 
     bool operator!=(iterator const &other) const;
-//     bool operator!=(const_iterator const &other) const;
 
     QCD::Tensor &operator*();
     QCD::Tensor const &operator*() const;

@@ -9,12 +9,12 @@ class const_iterator : public Core::Field< QCD::Tensor >::const_iterator
 {
   friend class Propagator;
 
-  Propagator  &d_target;
+  Propagator  const &d_target;
 
   // const_iterator only makes sense for timeslice
   size_t d_timeslice;
 
-  const_iterator(Propagator &target, size_t const idx, size_t const timeslice);
+  const_iterator(Propagator const &target, size_t const idx, size_t const timeslice);
 
   public:
     const_iterator(const_iterator const &other);
@@ -26,10 +26,10 @@ class const_iterator : public Core::Field< QCD::Tensor >::const_iterator
     bool operator!=(const_iterator const &other) const;
     bool operator!=(iterator const &other) const;
 
-    QCD::Tensor &operator*();
+    //QCD::Tensor &operator*();
     QCD::Tensor const &operator*() const;
 
-    QCD::Tensor *operator->();
+    //QCD::Tensor *operator->();
     QCD::Tensor const *operator->() const;
 
     const_iterator &operator--();   // prefix version

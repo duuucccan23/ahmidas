@@ -1,44 +1,75 @@
-
-inline Core::Correlator::Correlator(size_t const L_, size_t const T_)
-  : L(L_), T(T_),d_weave(*(new Base::Weave(L_, T_))), d_references(new size_t(1)),
-  d_data(new std::complex< double >[d_weave.localSize(Base::idx_T)])
-{}
-
-
-inline Core::Correlator::Correlator(Core::Correlator const &other)
-  : L(other.L), T(other.T), d_weave(other.d_weave), d_references(other.d_references), d_data(other.d_data)
+namespace Core
 {
-  *d_references += 1;
-}
+
+  inline Correlator::Correlator(size_t const L_, size_t const T_)
+    : L(L_), T(T_),d_weave(*(new Base::Weave(L_, T_))), d_references(new size_t(1)),
+    d_data(new QCD::reducedTensor[T_])
+  {}
 
 
-Core::Correlator::Correlator(size_t const L_, size_t const T_, std::complex< double > const &value)
-  : L(L_), T(T_), d_weave(*(new Base::Weave(L_, T_))), d_references(new size_t(1)),
-    d_data(new std::complex< double >[d_weave.localSize(Base::idx_T)])
-{
-  std::fill_n(d_data, d_weave.localSize(Base::idx_T), value);
-}
+  inline Correlator::Correlator(Correlator const &other)
+    : L(other.L), T(other.T), d_weave(other.d_weave), d_references(other.d_references), d_data(other.d_data)
+  {
+    *d_references += 1;
+  }
 
 
-inline Core::Correlator::~Correlator()
-{
-  destroy();
-}
+  inline Correlator::Correlator(size_t const L_, size_t const T_, std::complex< double > const &value)
+    : L(L_), T(T_), d_weave(*(new Base::Weave(L_, T_))), d_references(new size_t(1)),
+      d_data(new QCD::reducedTensor[T_])
+  {
+    std::fill_n(d_data, d_weave.localSize(Base::idx_T), value);
+  }
 
 
-inline std::complex< double > &Core::Correlator::operator[](size_t const idx)
-{
-  return d_data[idx];
-}
+  inline Correlator::~Correlator()
+  {
+    destroy();
+  }
 
 
-inline std::complex< double > const &Core::Correlator::operator[](size_t const idx) const
-{
-  return d_data[idx];
-}
+  inline QCD::reducedTensor &Correlator::operator[](size_t const idx)
+  {
+    return d_data[idx];
+  }
 
 
-inline size_t Core::Correlator::size() const
-{
-  return d_weave.localSize(Base::idx_T);
+  inline QCD::reducedTensor const &Correlator::operator[](size_t const idx) const
+  {
+    return d_data[idx];
+  }
+
+
+  inline QCD::reducedTensor Correlator::sum(Core::Field< QCD::reducedTensor > const *field)
+  {
+    assert(field->T() == 1);
+    isolate();
+    Core::Field< QCD::reducedTensor >::const_iterator it = field->begin();
+    QCD::reducedTensor result(std::complex< double >(0.0, 0.0));
+    while(it != field->end())
+    {
+      result += *it;
+      ++it;
+    }
+    return result;
+  }
+
+  inline void Correlator::sumOverTimeSlices(Core::Field< QCD::reducedTensor > **timeslices)
+  {
+    for (size_t t=0; t<T; t++)
+    {
+      d_data[t] = sum(timeslices[t]);
+    }
+  }
+
+  inline size_t Correlator::getT() const
+  {
+    return T;
+  }
+
+  inline size_t Correlator::size() const
+  {
+    return d_weave.localSize(Base::idx_T);
+  }
+
 }

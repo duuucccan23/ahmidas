@@ -1,0 +1,33 @@
+namespace QCD
+{
+  inline reducedTensor::reducedTensor(Tensor const& A, Tensor const& B)
+  {
+    reducedTensor rr(A, Base::col_RED,   Base::col_RED);
+    reducedTensor rg(A, Base::col_RED,   Base::col_GREEN);
+    reducedTensor rb(A, Base::col_RED,   Base::col_BLUE);
+    reducedTensor gr(A, Base::col_GREEN, Base::col_RED);
+    reducedTensor gb(A, Base::col_GREEN, Base::col_BLUE);
+    reducedTensor gg(A, Base::col_GREEN, Base::col_GREEN);
+    reducedTensor br(A, Base::col_BLUE,  Base::col_RED);
+    reducedTensor bb(A, Base::col_BLUE,  Base::col_BLUE);
+    reducedTensor bg(A, Base::col_BLUE,  Base::col_GREEN);
+
+    rr *= reducedTensor(B, Base::col_RED,   Base::col_RED);
+    rg *= reducedTensor(B, Base::col_GREEN, Base::col_RED);
+    rb *= reducedTensor(B, Base::col_BLUE,  Base::col_RED);
+    gr *= reducedTensor(B, Base::col_RED,   Base::col_GREEN);
+    gb *= reducedTensor(B, Base::col_BLUE,  Base::col_GREEN);
+    gg *= reducedTensor(B, Base::col_GREEN, Base::col_GREEN);
+    br *= reducedTensor(B, Base::col_RED,   Base::col_BLUE);
+    bb *= reducedTensor(B, Base::col_BLUE,  Base::col_BLUE);
+    bg *= reducedTensor(B, Base::col_GREEN, Base::col_BLUE);
+    rr += rg;
+    rr += rb;
+    rr += gr;
+    rr += gb;
+    rr += gg;
+    rr += br;
+    rr += bb;
+    rr += bg;
+  }
+}

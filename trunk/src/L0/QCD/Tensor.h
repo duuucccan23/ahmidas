@@ -2,6 +2,7 @@
 
 #include <complex>
 #include <algorithm>
+#include <functional>
 
 #include <L0/Base/Base.h>
 #include <L0/Dirac/Gamma.h>
@@ -76,6 +77,7 @@ namespace QCD
       std::complex< double > trace() const;
 
       size_t size() const;
+      std::complex< double > diff(Tensor const &other) const;
 
 
   #include "Tensor/Tensor.iterator"
@@ -139,21 +141,30 @@ namespace QCD
 //       template< size_t Index >
 //       reducedTensor(Tensor const &a, Tensor const &b, Tensor const &c, Dirac::Gamma< Index > const &Dirac_structure);
 
+      reducedTensor();
+      reducedTensor(reducedTensor const &other);
+      reducedTensor(std::complex< double > const& value);
+
+      // important for contractions
+      reducedTensor(Tensor const& a, Tensor const& b);
+
       std::complex< double > trace() const;
 
-      reducedTensor &operator+(reducedTensor const &other) const;
-      reducedTensor &operator-(reducedTensor const &other) const;
+      reducedTensor operator+(reducedTensor const &other) const;
+      reducedTensor operator-(reducedTensor const &other) const;
 
       void operator+=(reducedTensor const &other);
       void operator-=(reducedTensor const &other);
 
-      reducedTensor &operator=(reducedTensor const &other);
+      reducedTensor &operator=(reducedTensor const &rhs);
 
       template< size_t Index >
-      Tensor &operator*(Dirac::Gamma< Index > const &gamma) const;
+      reducedTensor operator*(Dirac::Gamma< Index > const &gamma) const;
 
       template< size_t Index >
       void operator*=(Dirac::Gamma< Index > const &gamma);
+
+      void operator*=(reducedTensor const &rhs);
 
       std::complex< double > const &operator()(Base::DiracIndex const Dirac_src, Base::DiracIndex const Dirac_snk) const;
 
@@ -166,7 +177,7 @@ namespace QCD
   };
 
   template< size_t Index >
-  QCD::reducedTensor &operator*(Dirac::Gamma< Index > const &gamma, Tensor const &tensor);
+  QCD::reducedTensor operator*(Dirac::Gamma< Index > const &gamma, Tensor const &tensor);
 
   std::ostream &operator<<(std::ostream &out, reducedTensor const &rTensor);
 
@@ -174,6 +185,9 @@ namespace QCD
 
 #include "Tensor/Tensor.inlines"
 #include "Tensor/hcTensor.inlines"
+
 #include "Tensor/reducedTensor.inlines"
+#include "Tensor/reducedTensor.constructors.inlines"
+#include "Tensor/reducedTensor.gamma.inlines"
 
 #include "Tensor/Tensor.iterator.inlines"

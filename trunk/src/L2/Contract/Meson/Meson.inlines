@@ -1,6 +1,29 @@
 namespace Contract
 {
 
-  // momentum projection?
+  template< size_t IndexSrc, size_t IndexSnk >
+  inline Core::Correlator light_meson_twopoint(Core::Propagator const &u, Core::Propagator const &d,
+                                               Dirac::Gamma< IndexSrc > const &interpolSrc,
+                                               Dirac::Gamma< IndexSnk > const &interpolSnk)
+
+  {
+    assert(u.T() == d.T());
+    assert(u.L() == d.L());
+
+    Core::Propagator tmpU = u*interpolSnk;
+    Core::Propagator tmpD = d*interpolSrc;
+    Core::Field< QCD::reducedTensor > **result = tmpD*tmpU;
+
+
+    Core::Correlator twopoint(u.L(), u.T());
+    twopoint.sumOverTimeSlices(result);
+
+    for (size_t t=0; t<twopoint.getT(); t++)
+      std::cerr << t << "  " << tr(twopoint[t]) << std::endl;
+
+
+    return twopoint;
+  }
+
 
 }

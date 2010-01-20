@@ -99,6 +99,15 @@ namespace QCD
     return 144;
   }
 
+  inline std::complex< double > Tensor::diff(Tensor const &other) const
+  {
+    std::complex< double > initial(0.0, 0.0);
+    std::complex< double > final;
+    final =  std::accumulate(d_data,       d_data+144,       initial, std::plus< std::complex < double > >());
+           - std::accumulate(other.d_data, other.d_data+144, initial, std::plus< std::complex < double > >());
+    return final;
+  }
+
   inline Tensor::iterator Tensor::begin(Base::ColourIndex const idx, TensorColourStride const stride)
   {
     return iterator(*this, stride, 0);

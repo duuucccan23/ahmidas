@@ -6,7 +6,7 @@ void Core::Correlator::isolate()
   *d_references -= 1;
   d_references = new size_t(1);
 
-  std::complex< double > *data = new std::complex< double >[T];
+  QCD::reducedTensor *data = new QCD::reducedTensor[T];
   std::copy(d_data, d_data + T, data);
   d_data = data;
 }

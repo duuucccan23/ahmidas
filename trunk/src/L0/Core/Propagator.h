@@ -54,10 +54,11 @@ namespace Core
       template< size_t Index >
       void operator*=(Dirac::Gamma< Index > const &gamma);
 
-      // needed for meson contractions
       template< size_t Index >
-      Core::Field< QCD::reducedTensor > const &operator*(Propagator const &other);
+      Propagator operator*(Dirac::Gamma< Index > const &gamma) const;
 
+      // needed for meson contractions
+      Core::Field< QCD::reducedTensor > **operator*(Propagator const &other) const;
 
       /*
           Revert Propagator using gamma5 hermeticity trick:
@@ -68,6 +69,9 @@ namespace Core
            - for twisted mass this also changes the flavour
       */
       Propagator * revert() const;
+
+      // average difference of two different propagators
+      double diff(Propagator const& other) const;
 
 
 #include "Propagator/Propagator.iterator"

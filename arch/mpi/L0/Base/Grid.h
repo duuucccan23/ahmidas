@@ -76,6 +76,3 @@ namespace Base
 
 #include "Grid/Grid.inlines"
 #include "Grid/Grid_Grid.template"
-#include "Grid/Grid_greatestCommonDivisor.template"
-#include "Grid/Grid_initContiguousBlock.template"
-#include "Grid/Grid_rank.template"

@@ -1,8 +1,14 @@
 template< typename Element >
 Core::Field< Element > Tool::IO::loadScidac(std::string const &filename, size_t L, size_t T)
 {
-  size_t const elements = sizeof(Element) / sizeof(double);
   Lime::Reader reader(filename);
+  Scidacinfo info(reader);
+
+  std::cout << "[[DEBUG]]" << info.field << std::endl;
+  std::cout << "[[DEBUG]]" << info.precision << std::endl;
+  std::cout << "[[DEBUG]]" << info.flavours << std::endl;
+
+  size_t const elements = sizeof(Element) / sizeof(double);
   Core::Field< Element > result(L, T);
 
   reader.retrieveRecord(reader.findRecord("scidac-binary-data"));

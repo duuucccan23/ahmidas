@@ -8,6 +8,7 @@
 #include <L0/Core/Field.h>
 #include <L0/Tool/IO/Lime/Reader.h>
 #include <L0/Tool/IO/Lime/Writer.h>
+#include <L1/Tool.h>
 
 namespace Tool
 {
@@ -34,6 +35,15 @@ namespace Tool
       MILCinfo(std::ifstream &reader);
     };
 
+    struct Scidacinfo
+    {
+      std::string field;
+      std::string precision;
+      std::string flavours;
+      size_t      dims[4];
+
+      Scidacinfo(Lime::Reader &reader);
+    };
 
     template< typename Element >
     Core::Field< Element > loadILDG(std::string const &filename, size_t L, size_t T);

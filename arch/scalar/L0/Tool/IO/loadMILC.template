@@ -12,7 +12,7 @@ Core::Field< Element > Tool::IO::loadMILC(std::string const &filename, size_t L,
   uint32_t *raw = new uint32_t[result.volume() * elemSize];
 
   input.read(reinterpret_cast< char* >(raw), result.volume() * elemSize * sizeof(uint32_t));
-
+  Tool::reunitarize(&result);
   Base::ScidacChecksum calc;
   calc.blockAggregate(raw, elemSize, result.volume());
   std::cerr << "Checksums for file " << filename << '.' << std::endl;

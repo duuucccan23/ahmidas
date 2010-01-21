@@ -1,5 +1,7 @@
 ADD_SUBDIRECTORY(IO)
 SET(Sources_ILDG     IO/ILDGinfo_ILDGinfo.cpp)
 SET(Sources_MILC     IO/MILCinfo_MILCinfo.cpp)
+SET(Sources_Scidac   IO/Scidacinfo_Scidacinfo.cpp)
 ADD_LIBRARY(ILDG ${Sources_ILDG})
 ADD_LIBRARY(MILC ${Sources_MILC})
+ADD_LIBRARY(Scidac ${Sources_Scidac})

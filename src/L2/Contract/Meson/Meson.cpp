@@ -3,14 +3,6 @@
 namespace Contract
 {
 
-//   MesonContraction::MesonContraction()
-//   {}
-// 
-//   MesonContraction::~MesonContraction()
-//   {}
-
-
-
 
   template< size_t IndexSrc, size_t IndexSnk >
   Core::Correlator light_meson_twopoint(Core::Propagator const &u, Core::Propagator const &d,

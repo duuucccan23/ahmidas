@@ -5,6 +5,7 @@
 #include <functional>
 
 #include <L0/Base/Base.h>
+#include <L0/Base/Random.h>
 #include <L0/Dirac/Gamma.h>
 #include <L0/QCD/Spinor.h>
 
@@ -78,7 +79,7 @@ namespace QCD
 
       size_t size() const;
       std::complex< double > diff(Tensor const &other) const;
-
+      void setToRandom();
 
   #include "Tensor/Tensor.iterator"
 

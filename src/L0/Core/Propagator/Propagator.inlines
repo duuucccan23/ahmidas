@@ -22,7 +22,10 @@ namespace Core
 
 
   inline Propagator::Propagator(Propagator const &other)
-    : d_components(other.d_components)
+    : d_references(other.d_references), 
+      d_components(other.d_components),
+      colour_strides(other.colour_strides),
+      dirac_strides(other.dirac_strides)
   {
     *d_references += 1;
   }
@@ -138,6 +141,7 @@ namespace Core
       do
       {
         (*after) = ((*before) * gamma5).dagger();
+        (*after) *= gamma5;
         ++after;
       }
       while(++before != end(t));
@@ -173,6 +177,18 @@ namespace Core
     return diff;
   }
 
+  inline void Propagator::setToRandom()
+  {
+    for (size_t t=0; t<T(); t++)
+    {
+      Propagator::iterator it = begin(t);
+      while(it != end(t))
+      {
+        (*it).setToRandom();
+        ++it;
+      }      
+    }
+  }
 
   inline Propagator::iterator Propagator::begin(size_t const timeslice)
   {

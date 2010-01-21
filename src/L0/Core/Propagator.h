@@ -72,6 +72,9 @@ namespace Core
 
       // average difference of two different propagators
       double diff(Propagator const& other) const;
+      
+      // just for testing
+      void setToRandom();
 
 
 #include "Propagator/Propagator.iterator"

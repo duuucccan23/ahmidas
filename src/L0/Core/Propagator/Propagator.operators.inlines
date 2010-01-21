@@ -27,6 +27,8 @@ namespace Core
 
   inline Field< QCD::reducedTensor > **Propagator::operator*(Propagator const &other) const
   {
+    static size_t count(0);
+  
     assert (T()==other.T() && L()==other.L());
 
     Field< QCD::reducedTensor > **field = new Field< QCD::reducedTensor > *[T()];
@@ -43,6 +45,11 @@ namespace Core
       while(Ia!=end(ts))
       {
         (*Ic) = QCD::reducedTensor((*Ia),(*Ib));
+//         std::cout << "call no. ";
+//         std::cout.width(7);
+//         std::cout << count++ << " of assignment operator of class reducedTensor" <<std::endl;
+//         std::cout << " lhs = \n" << (*Ic) << std::endl;
+//         std::cout << " rhs = \n" << QCD::reducedTensor(*Ia,*Ib) << std::endl; 
         ++Ia;
         ++Ib;
         ++Ic;
@@ -51,6 +58,5 @@ namespace Core
     }
     return field;
   }
-
 
 }

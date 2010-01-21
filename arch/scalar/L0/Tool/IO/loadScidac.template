@@ -15,6 +15,7 @@ Core::Field< Element > Tool::IO::loadScidac(std::string const &filename, size_t 
   if (reader.fail())
   {
     std::cerr << "Lime reader could not find the record, check path and file, and check lime contents of file.\nField remains empty!.\n";
+    exit(EXIT_FAILURE);
     return result; //NOTE Record not found, returning empty field! Add error exit here.
   }
   //Poor man's parser for reading the precision should be inserted here, beyond we now assume double as input

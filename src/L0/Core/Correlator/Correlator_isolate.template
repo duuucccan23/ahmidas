@@ -5,6 +5,7 @@ void Core::Correlator::isolate()
 
   *d_references -= 1;
   d_references = new size_t(1);
+  d_weave = *(new Base::Weave(L, T));
 
   QCD::reducedTensor *data = new QCD::reducedTensor[T];
   std::copy(d_data, d_data + T, data);

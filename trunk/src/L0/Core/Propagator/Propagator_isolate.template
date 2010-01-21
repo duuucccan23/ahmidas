@@ -3,21 +3,28 @@ void Core::Propagator::isolate()
 {
   if (*d_references == 1)
     return;
+    
+  assert(*d_references > 1);
 
   *d_references -= 1;
   d_references = new size_t(1);
 
-  size_t *colour_strides_new = new size_t [nColour];
-  size_t *dirac_strides_new  = new size_t [nDirac];
-
-  colour_strides_new[0] = ColourStrideSink;
-  colour_strides_new[1] = ColourStrideSource;
-  dirac_strides_new[0]  = DiracStrideSink;
-  dirac_strides_new[1]  = DiracStrideSource;
-
-  colour_strides = colour_strides_new;
-  dirac_strides  = dirac_strides_new;
-
-  Field< QCD::Tensor > *components_new = new Field< QCD::Tensor > (this->d_components->L(), this->d_components->T());
-  d_components = components_new;
+  colour_strides = new size_t [nColour];
+  dirac_strides  = new size_t [nDirac];
+  colour_strides[0] = ColourStrideSink;
+  colour_strides[1] = ColourStrideSource;
+  dirac_strides[0]  = DiracStrideSink;
+  dirac_strides[1]  = DiracStrideSource;
+   
+  Core::Field< QCD::Tensor > *d_components_new = new Core::Field< QCD::Tensor > (L(), T());
+  Core::Field< QCD::Tensor >::const_iterator itOld = d_components->begin();
+  Core::Field< QCD::Tensor >::iterator itNew = d_components_new->begin();
+  while(itOld != d_components->end())
+  {
+    *itNew = *itOld;
+    ++itOld;
+    ++itNew;
+  }
+  d_components = d_components_new;
+  
 }

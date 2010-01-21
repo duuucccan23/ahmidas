@@ -12,22 +12,38 @@ namespace QCD
   // private constructor
   inline reducedTensor::reducedTensor(Tensor const &fullTensor, Base::ColourIndex const colour_src, Base::ColourIndex const colour_snk)
   {
-    d_data[ 0] = fullTensor(Base::gam_1, colour_snk, Base::gam_1, colour_src);
-    d_data[ 1] = fullTensor(Base::gam_1, colour_snk, Base::gam_2, colour_src);
-    d_data[ 2] = fullTensor(Base::gam_1, colour_snk, Base::gam_3, colour_src);
-    d_data[ 3] = fullTensor(Base::gam_1, colour_snk, Base::gam_4, colour_src);
-    d_data[ 4] = fullTensor(Base::gam_2, colour_snk, Base::gam_1, colour_src);
-    d_data[ 5] = fullTensor(Base::gam_2, colour_snk, Base::gam_2, colour_src);
-    d_data[ 6] = fullTensor(Base::gam_2, colour_snk, Base::gam_3, colour_src);
-    d_data[ 7] = fullTensor(Base::gam_2, colour_snk, Base::gam_4, colour_src);
-    d_data[ 8] = fullTensor(Base::gam_3, colour_snk, Base::gam_1, colour_src);
-    d_data[ 9] = fullTensor(Base::gam_3, colour_snk, Base::gam_2, colour_src);
-    d_data[10] = fullTensor(Base::gam_3, colour_snk, Base::gam_3, colour_src);
-    d_data[11] = fullTensor(Base::gam_3, colour_snk, Base::gam_4, colour_src);
-    d_data[12] = fullTensor(Base::gam_4, colour_snk, Base::gam_1, colour_src);
-    d_data[13] = fullTensor(Base::gam_4, colour_snk, Base::gam_2, colour_src);
-    d_data[14] = fullTensor(Base::gam_4, colour_snk, Base::gam_3, colour_src);
-    d_data[15] = fullTensor(Base::gam_4, colour_snk, Base::gam_4, colour_src);
+    d_data[ 0] = fullTensor.d_data[12*colour_snk + colour_src      ];
+    d_data[ 1] = fullTensor.d_data[12*colour_snk + colour_src +   3];
+    d_data[ 2] = fullTensor.d_data[12*colour_snk + colour_src +   6];    
+    d_data[ 3] = fullTensor.d_data[12*colour_snk + colour_src +   9];
+    d_data[ 4] = fullTensor.d_data[12*colour_snk + colour_src +  36];
+    d_data[ 5] = fullTensor.d_data[12*colour_snk + colour_src +  39];
+    d_data[ 6] = fullTensor.d_data[12*colour_snk + colour_src +  42];
+    d_data[ 7] = fullTensor.d_data[12*colour_snk + colour_src +  45];
+    d_data[ 8] = fullTensor.d_data[12*colour_snk + colour_src +  72];
+    d_data[ 9] = fullTensor.d_data[12*colour_snk + colour_src +  75];
+    d_data[10] = fullTensor.d_data[12*colour_snk + colour_src +  78];
+    d_data[11] = fullTensor.d_data[12*colour_snk + colour_src +  81];
+    d_data[12] = fullTensor.d_data[12*colour_snk + colour_src + 108];
+    d_data[13] = fullTensor.d_data[12*colour_snk + colour_src + 111];
+    d_data[14] = fullTensor.d_data[12*colour_snk + colour_src + 114];
+    d_data[15] = fullTensor.d_data[12*colour_snk + colour_src + 117];
+//     d_data[ 0] = fullTensorBase::gam_1, colour_snk, Base::gam_1, colour_src);
+//     d_data[ 1] = fullTensor(Base::gam_1, colour_snk, Base::gam_2, colour_src);
+//     d_data[ 2] = fullTensor(Base::gam_1, colour_snk, Base::gam_3, colour_src);
+//     d_data[ 3] = fullTensor(Base::gam_1, colour_snk, Base::gam_4, colour_src);
+//     d_data[ 4] = fullTensor(Base::gam_2, colour_snk, Base::gam_1, colour_src);
+//     d_data[ 5] = fullTensor(Base::gam_2, colour_snk, Base::gam_2, colour_src);
+//     d_data[ 6] = fullTensor(Base::gam_2, colour_snk, Base::gam_3, colour_src);
+//     d_data[ 7] = fullTensor(Base::gam_2, colour_snk, Base::gam_4, colour_src);
+//     d_data[ 8] = fullTensor(Base::gam_3, colour_snk, Base::gam_1, colour_src);
+//     d_data[ 9] = fullTensor(Base::gam_3, colour_snk, Base::gam_2, colour_src);
+//     d_data[10] = fullTensor(Base::gam_3, colour_snk, Base::gam_3, colour_src);
+//     d_data[11] = fullTensor(Base::gam_3, colour_snk, Base::gam_4, colour_src);
+//     d_data[12] = fullTensor(Base::gam_4, colour_snk, Base::gam_1, colour_src);
+//     d_data[13] = fullTensor(Base::gam_4, colour_snk, Base::gam_2, colour_src);
+//     d_data[14] = fullTensor(Base::gam_4, colour_snk, Base::gam_3, colour_src);
+//     d_data[15] = fullTensor(Base::gam_4, colour_snk, Base::gam_4, colour_src);
   }
 
   inline reducedTensor::reducedTensor()
@@ -82,10 +98,9 @@ namespace QCD
 
   inline reducedTensor &reducedTensor::operator=(reducedTensor const &rhs)
   {
-    if (this ==  &rhs);
-      return *this;
-
-    std::copy(rhs.d_data, rhs.d_data + 16, d_data);
+    if (this != &rhs);
+      std::copy(rhs.d_data, rhs.d_data + 16, d_data);
+    return *this;
   }
 
   inline void reducedTensor::operator*=(reducedTensor const &rhs)

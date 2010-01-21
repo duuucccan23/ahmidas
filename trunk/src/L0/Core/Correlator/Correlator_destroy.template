@@ -3,6 +3,7 @@ void Core::Correlator::destroy()
   *d_references -= 1;
   if (*d_references == 0)
   {
+    delete  &d_weave;
     delete   d_references;
     delete[] d_data;
   }

@@ -1,7 +1,13 @@
 namespace QCD
 {
-  inline reducedTensor::reducedTensor(Tensor const& A, Tensor const& B)
+  inline reducedTensor::reducedTensor(Tensor const &A, Tensor const &B)
   {
+//     static size_t count(0);
+//     std::cout << "call no. ";
+//     std::cout.width(7);
+//     std::cout << count++ << " of reducedTensor(Tensor const &A, Tensor const &B)" <<std::endl;
+//     std::cout << " A = \n" << A << std::endl;
+//     std::cout << " B = \n" << A << std::endl;
     reducedTensor rr(A, Base::col_RED,   Base::col_RED);
     reducedTensor rg(A, Base::col_RED,   Base::col_GREEN);
     reducedTensor rb(A, Base::col_RED,   Base::col_BLUE);
@@ -29,5 +35,7 @@ namespace QCD
     rr += br;
     rr += bb;
     rr += bg;
+    std::copy(rr.d_data, rr.d_data + 16, d_data);
+//     std::cout << " *this = \n" << *this << std::endl;    
   }
 }

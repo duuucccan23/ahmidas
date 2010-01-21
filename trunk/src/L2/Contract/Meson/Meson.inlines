@@ -10,8 +10,10 @@ namespace Contract
     assert(u.T() == d.T());
     assert(u.L() == d.L());
 
-    Core::Propagator tmpU = u*interpolSnk;
-    Core::Propagator tmpD = d*interpolSrc;
+    Core::Propagator tmpU(u*interpolSnk);
+    Core::Propagator tmpD(d*interpolSrc);
+    
+    // one could think of making this Field a member of Correlator
     Core::Field< QCD::reducedTensor > **result = tmpD*tmpU;
 
 
@@ -19,8 +21,15 @@ namespace Contract
     twopoint.sumOverTimeSlices(result);
 
     for (size_t t=0; t<twopoint.getT(); t++)
-      std::cerr << t << "  " << tr(twopoint[t]) << std::endl;
+    {
+      std::cout << t << "  "     << tr(twopoint[t]) << std::endl;
+      std::cout << " = trace of" << std::endl;
+      std::cout << twopoint[t]   << std::endl;
+      delete result[t];  
+    }
 
+    delete [] result;
+    
 
     return twopoint;
   }

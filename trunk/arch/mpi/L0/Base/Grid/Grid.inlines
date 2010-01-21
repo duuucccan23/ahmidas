@@ -1,127 +1,106 @@
 namespace Base
 {
-  template< size_t L, size_t T >
-  inline Grid< L, T >::~Grid()
+  inline Grid::~Grid()
   {}
 
-  template< size_t L, size_t T >
-  inline MPI::Cartcomm &Grid< L, T >::grid()
+  inline MPI::Cartcomm &Grid::grid()
   {
     return d_grid;
   }
 
-  template< size_t L, size_t T >
-  inline MPI::Cartcomm &Grid< L, T >::timeSlice()
+  inline MPI::Cartcomm &Grid::timeSlice()
   {
     return d_timeSlice;
   }
 
-  template< size_t L, size_t T >
-  inline size_t Grid< L, T >::rank() const
+  inline size_t Grid::rank() const
   {
     return d_grid.Get_rank();
   }
 
-  template< size_t L, size_t T >
-  inline size_t Grid< L, T >::rank(int const *coord) const
+  inline size_t Grid::rank(int const *coord) const
   {
     return d_grid.Get_cart_rank(coord);
   }
 
-  template< size_t L, size_t T >
-  inline size_t const* Grid< L, T >::coords() const
+  inline size_t const* Grid::coords() const
   {
     return d_coords;
   }
 
-  template< size_t L, size_t T >
-  inline size_t Grid< L, T >::coord(size_t idx) const
+  inline size_t Grid::coord(size_t idx) const
   {
     return d_coords[idx];
   }
 
-  template< size_t L, size_t T >
-  inline size_t const *Grid< L, T >::dims() const
+  inline size_t const *Grid::dims() const
   {
     return d_dims;
   }
 
-  template< size_t L, size_t T >
-  inline size_t Grid< L, T >::dim(size_t idx) const
+  inline size_t Grid::dim(size_t idx) const
   {
     return d_dims[idx];
   }
 
-  template< size_t L, size_t T >
-  inline size_t const *Grid< L, T >::sizes() const
+  inline size_t const *Grid::sizes() const
   {
     return d_sizes;
   }
 
-  template< size_t L, size_t T >
-  inline size_t Grid< L, T >::size(size_t idx) const
+  inline size_t Grid::size(size_t idx) const
   {
     return d_sizes[idx];
   }
 
-  template< size_t L, size_t T >
-  inline size_t const *Grid< L, T >::surfaces() const
+  inline size_t const *Grid::surfaces() const
   {
     return d_surfaces;
   }
 
-  template< size_t L, size_t T >
-  inline size_t Grid< L, T >::surface(size_t idx) const
+  inline size_t Grid::surface(size_t idx) const
   {
     return d_surfaces[idx];
   }
 
-  template< size_t L, size_t T >
-  inline size_t Grid< L, T >::localVolume() const
+  inline size_t Grid::localVolume() const
   {
     return d_localVolume;
   }
 
-  template< size_t L, size_t T >
-  inline size_t Grid< L, T >::totalVolume() const
+  inline size_t Grid::totalVolume() const
   {
-    return (L * L * L * T);
+    return (d_L * d_L * d_L * d_T);
   }
 
-  template< size_t L, size_t T >
-  inline size_t const *Grid< L, T >::dimSizes() const
+  inline size_t const *Grid::dimSizes() const
   {
     return d_dimSizes;
   }
 
-  template< size_t L, size_t T >
-  inline size_t Grid< L, T >::dimSize(size_t idx) const
+  inline size_t Grid::dimSize(size_t idx) const
   {
     return (idx == 4 ? d_localVolume : d_dimSizes[idx]);
   }
 
-  template< size_t L, size_t T >
-  inline size_t Grid< L, T >::neighbour(SpaceTimeIndex idx, Direction dir) const
+  inline size_t Grid::neighbour(SpaceTimeIndex idx, Direction dir) const
   {
     int result, rank = d_grid.Get_rank();
     d_grid.Shift(idx, dir, rank, result);
     return result;
   }
 
-  template< size_t L, size_t T >
-  inline size_t Grid< L, T >::bufferVolume() const
+  inline size_t Grid::bufferVolume() const
   {
     return d_bufferVolume;
   }
 
-  template< size_t L, size_t T >
-  inline size_t Grid< L, T >::contiguousBlock() const
+  inline size_t Grid::contiguousBlock() const
   {
     return d_contiguousBlock;
   }
 
-  template< size_t L, size_t T >
-  inline bool Grid< L, T >::bigEndian() const
+  inline bool Grid::bigEndian() const
   {
     return d_bigEndian;
   }

@@ -18,9 +18,13 @@ Core::Field< Element > Tool::IO::loadILDG(std::string const &filename, size_t L,
 
   Element *dataPtr = result.raw();
 
+  Base::ScidacChecksum calc;
   if (info.precision.compare("64") == 0)
   {
     reader.read(dataPtr, result.volume());
+    calc.aggregate(dataPtr, result.volume());
+	std::cerr << "Checksums for file " << filename << '.' << std::endl;
+	std::cerr << "Calculated: " << std::hex << calc.upper() << ' ' << calc.lower() << '.' << std::endl;
     if (!Base::bigEndian)
       Base::swapEndian(dataPtr, dataPtr + result.volume(), sizeof(double));
     return result;
@@ -37,5 +41,6 @@ Core::Field< Element > Tool::IO::loadILDG(std::string const &filename, size_t L,
     std::copy(reinterpret_cast< float* >(elem32), reinterpret_cast< float* >(elem32) + elSize,
               reinterpret_cast< double* >(dataPtr));
   }
+  
   return result;
 }

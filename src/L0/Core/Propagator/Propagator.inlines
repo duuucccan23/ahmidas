@@ -128,24 +128,21 @@ namespace Core
   inline Propagator *Propagator::revert() const
   {
     Dirac::Gamma<5> gamma5;
-    Propagator *p = new Propagator(*this);
+    Propagator *p = new Propagator(L(), T());
     p->isolate();
     for (size_t t=0; t<T(); t++)
     {
       Propagator::const_iterator before = begin(t);
 
-      // if not even part of the timeslice is locally available...
-      if (before==end(t)) continue;
-
-      Propagator::iterator after  = p->end(t);
-      do
+      Propagator::iterator after  = p->begin(t);
+      while(before != end(t))
       {
         (*after) = ((*before) * gamma5).dagger();
         (*after) *= gamma5;
         ++after;
+	++before;
       }
-      while(++before != end(t));
-      assert(before==end(t) && after==p->begin(t));
+      assert(before==end(t) && after==p->end(t));
     }
     return p;
   }

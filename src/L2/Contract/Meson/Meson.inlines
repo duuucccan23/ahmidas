@@ -10,8 +10,10 @@ namespace Contract
     assert(u.T() == d.T());
     assert(u.L() == d.L());
 
+    Core::Propagator *d_bw = u.revert();
+
     Core::Propagator tmpU(u*interpolSnk);
-    Core::Propagator tmpD(d*interpolSrc);
+    Core::Propagator tmpD((*d_bw)*interpolSrc);
     
     // one could think of making this Field a member of Correlator
     Core::Field< QCD::reducedTensor > **result = tmpD*tmpU;

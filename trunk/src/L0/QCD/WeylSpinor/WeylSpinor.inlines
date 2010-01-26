@@ -4,13 +4,22 @@ namespace QCD
   inline WeylSpinor::WeylSpinor(SU3::Vector *data)
     : d_data(data)
   {}
-  
+
   inline WeylSpinor &WeylSpinor::operator*=(std::complex< double > const &rhand)
   {
-    std::transform(reinterpret_cast< std::complex< double >* >(d_data), 
-                   reinterpret_cast< std::complex< double >* >(d_data) + 6, 
+    std::transform(reinterpret_cast< std::complex< double >* >(d_data),
+                   reinterpret_cast< std::complex< double >* >(d_data) + 6,
                    reinterpret_cast< std::complex< double >* >(d_data),
                    bind2nd(std::multiplies< std::complex< double > >(), rhand));
+    return *this;
+  }
+
+  inline WeylSpinor &WeylSpinor::operator*=(double const &rhand)
+  {
+    std::transform(reinterpret_cast< double * >(d_data),
+                   reinterpret_cast< double * >(d_data) + 12,
+                   reinterpret_cast< double * >(d_data),
+                   bind2nd(std::multiplies< double >(), rhand));
     return *this;
   }
 

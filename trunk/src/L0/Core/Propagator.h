@@ -68,7 +68,8 @@ namespace Core
            - for point or similar source x is generally fixed
            - for twisted mass this also changes the flavour
       */
-      Propagator * revert() const;
+      // Propagator * revert() const;
+      void revert();
 
       // average difference of two different propagators
       double diff(Propagator const& other) const;

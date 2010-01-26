@@ -5,16 +5,16 @@ namespace Contract
   inline Core::Correlator light_meson_twopoint(Core::Propagator const &u, Core::Propagator const &d,
                                                Dirac::Gamma< IndexSrc > const &interpolSrc,
                                                Dirac::Gamma< IndexSnk > const &interpolSnk)
-
   {
     assert(u.T() == d.T());
     assert(u.L() == d.L());
 
-    Core::Propagator *d_bw = u.revert();
+    Core::Propagator d_bw = u;
+    d_bw.revert();
 
     Core::Propagator tmpU(u*interpolSnk);
-    Core::Propagator tmpD((*d_bw)*interpolSrc);
-    
+    Core::Propagator tmpD(d_bw*interpolSrc);
+
     // one could think of making this Field a member of Correlator
     Core::Field< QCD::reducedTensor > **result = tmpD*tmpU;
 
@@ -24,14 +24,15 @@ namespace Contract
 
     for (size_t t=0; t<twopoint.getT(); t++)
     {
-      std::cout << t << "  "     << tr(twopoint[t]) << std::endl;
+      std::cout << t << "  " << std::scientific << std::setprecision(10) << std::showpos
+                << tr(twopoint[t]).real() << "  " << tr(twopoint[t]).imag() << std::endl;
       std::cout << " = trace of" << std::endl;
       std::cout << twopoint[t]   << std::endl;
-      delete result[t];  
+      delete result[t];
     }
 
     delete [] result;
-    
+
 
     return twopoint;
   }

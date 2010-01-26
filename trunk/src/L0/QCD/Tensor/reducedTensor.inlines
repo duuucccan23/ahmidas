@@ -48,7 +48,7 @@ namespace QCD
 
   inline reducedTensor::reducedTensor()
   {
-    // std::fill(d_data, d_data + 16, std::complex< double >(0.0, 0.0));
+    //std::fill(d_data, d_data + 16, std::complex< double >(0.0, 0.0));
   }
 
   inline reducedTensor::reducedTensor(std::complex< double > const& value)
@@ -98,7 +98,7 @@ namespace QCD
 
   inline reducedTensor &reducedTensor::operator=(reducedTensor const &rhs)
   {
-    if (this != &rhs);
+    if (this != &rhs)
       std::copy(rhs.d_data, rhs.d_data + 16, d_data);
     return *this;
   }

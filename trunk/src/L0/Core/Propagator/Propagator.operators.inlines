@@ -27,8 +27,8 @@ namespace Core
 
   inline Field< QCD::reducedTensor > **Propagator::operator*(Propagator const &other) const
   {
-    static size_t count(0);
-  
+//     static size_t count(0);
+
     assert (T()==other.T() && L()==other.L());
 
     Field< QCD::reducedTensor > **field = new Field< QCD::reducedTensor > *[T()];

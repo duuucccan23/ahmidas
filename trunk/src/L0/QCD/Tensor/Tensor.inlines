@@ -4,12 +4,12 @@ namespace QCD
   {
     return tensor.trace();
   }
-  
+
   inline std::complex< double > tr(hcTensor const &tensor)
   {
     return std::conj(tensor.dagger().trace());
   }
-  
+
   inline Tensor::Tensor()
   {
     std::fill_n(d_data, 144, std::complex< double >(0.0, 0.0));
@@ -102,12 +102,11 @@ namespace QCD
   inline std::complex< double > Tensor::diff(Tensor const &other) const
   {
     std::complex< double > initial(0.0, 0.0);
-    std::complex< double > final;
-    final =  std::accumulate(d_data,       d_data+144,       initial, std::plus< std::complex < double > >());
-           - std::accumulate(other.d_data, other.d_data+144, initial, std::plus< std::complex < double > >());
+    std::complex< double > final = std::accumulate(d_data, d_data+144, initial);
+    final -= std::accumulate(other.d_data, other.d_data+144, initial);
     return final;
   }
-  
+
   inline void Tensor::setToRandom()
   {
     std::generate_n(reinterpret_cast< double* >(d_data), 288, Base::Random::fastSymmetric);

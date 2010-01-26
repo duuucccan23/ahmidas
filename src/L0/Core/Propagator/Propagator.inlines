@@ -125,26 +125,44 @@ namespace Core
     }
   }
 
-  inline Propagator *Propagator::revert() const
+//   inline Propagator *Propagator::revert() const
+//   {
+//     Dirac::Gamma<5> gamma5 =  Dirac::Gamma<5>();
+//     Propagator *p = new Propagator(L(), T());
+//     p->isolate();
+//     for (size_t t=0; t<T(); t++)
+//     {
+//       Propagator::const_iterator before = begin(t);
+// 
+//       Propagator::iterator after  = p->begin(t);
+//       while(before != end(t))
+//       {
+//         (*after) = ((*before) * gamma5).dagger();
+//         (*after) *= gamma5;
+//         ++after;
+//         ++before;
+//       }
+//       assert(before==end(t) && after==p->end(t));
+//     }
+//     return p;
+//   }
+
+  inline void Propagator::revert()
   {
-    Dirac::Gamma<5> gamma5;
-    Propagator *p = new Propagator(L(), T());
-    p->isolate();
+    Dirac::Gamma<5> gamma5 = Dirac::Gamma<5>();
+    isolate();
     for (size_t t=0; t<T(); t++)
     {
-      Propagator::const_iterator before = begin(t);
-
-      Propagator::iterator after  = p->begin(t);
-      while(before != end(t))
+      Propagator::iterator it = begin(t);
+      while(it != end(t))
       {
-        (*after) = ((*before) * gamma5).dagger();
-        (*after) *= gamma5;
-        ++after;
-	++before;
+        QCD::Tensor tmp(*it);
+        tmp *= gamma5;
+        (*it) = tmp.dagger();
+        (*it) *= gamma5;
+        ++it;
       }
-      assert(before==end(t) && after==p->end(t));
     }
-    return p;
   }
 
   inline double Propagator::diff(Propagator const& other) const
@@ -161,14 +179,12 @@ namespace Core
       Propagator::const_iterator it1 = begin(t);
       Propagator::const_iterator it2 = other.begin(t);
 
-      if (it1==end(t)) continue;
-
-      do
+      while(it1 != end(t))
       {
         diff += abs((*it1).diff(*it2));
         ++it2;
+        ++it1;
       }
-      while(++it1 != end(t));
     }
     diff /= (double(d_components->volume())*double(size()));
     return diff;
@@ -183,7 +199,7 @@ namespace Core
       {
         (*it).setToRandom();
         ++it;
-      }      
+      }
     }
   }
 

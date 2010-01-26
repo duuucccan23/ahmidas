@@ -28,6 +28,7 @@ namespace QCD
       reverse_iterator rend();
 
       WeylSpinor &operator*=(std::complex< double > const &rhand);
+      WeylSpinor &operator*=(double const &rhand);
 
       void leftMultiply(Dirac::Identity);
 

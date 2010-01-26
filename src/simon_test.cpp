@@ -16,7 +16,7 @@
 #include <L2/Contract/Meson.h>
 
 
-// #define __PRINT__PROPS__
+//#define __PRINT__PROPS__
 #define __LOAD__PROPS__
 
 #define __REPOSITORY__PROPS__
@@ -89,8 +89,8 @@ int main(int argc, char **argv)
     exit(EXIT_FAILURE);
   }
 #else
-  uProp->setToRandom();
-  dProp->setToRandom();
+//   uProp->setToRandom();
+//   dProp->setToRandom();
 #endif
 
   std::cout << "average difference between u and d propagator: " << uProp->diff(*dProp) << std::endl;
@@ -137,6 +137,14 @@ int main(int argc, char **argv)
 #endif
 
   Contract::light_meson_twopoint(*uProp, *dProp, gamma5, gamma5);
+
+#ifdef __REPOSITORY__PROPS__
+  std::cout <<  "reliable code gives the following result:" << std::endl;
+  std::cout <<  "0  +1.616433453    +0" << std::endl;
+  std::cout <<  "1  +0.2010924642   +0" << std::endl;
+  std::cout <<  "2  +0.04286512674  +0" << std::endl;
+  std::cout <<  "3  +0.2105727402   +0" << std::endl;
+#endif
 
   delete uProp;
   delete dProp;

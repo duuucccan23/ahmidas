@@ -1,6 +1,9 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
 PROJECT(Ahmidas CXX)
 
+# SET(CMAKE_CXX_COMPILER "icc")
+
+
 # Options for setting the type of build
 OPTION(USE_MPI "Build Ahmidas for use on parallel systems, using MPI for parallelism." OFF)
 OPTION(USE_OPENMP "Build Ahmidas for use on shared memory parallel systems." OFF)
@@ -13,7 +16,8 @@ ENDIF(USE_MPI)
 ENABLE_TESTING()
 
 INCLUDE_DIRECTORIES(BEFORE SYSTEM src)
-SET(CMAKE_CXX_FLAGS "-O3 -pg -g -Wall -pedantic")
+SET(CMAKE_CXX_FLAGS "-pg -g -Wall -mfpmath=sse -msse2")
+# SET(CMAKE_CXX_FLAGS "-O3 -pg -g -Wall -pedantic")
 
 IF(USE_SCALAR)
 INCLUDE_DIRECTORIES(BEFORE SYSTEM arch/scalar)

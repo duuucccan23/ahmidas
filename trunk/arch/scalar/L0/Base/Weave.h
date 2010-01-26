@@ -2,10 +2,15 @@
 
 #include <L0/Base/Base.h>
 
+class Correlator;
+
 namespace Base
 {
   class Weave
   {
+
+    friend class Correlator;
+
     size_t d_surfaces[4];
     size_t d_L;
     size_t d_T;

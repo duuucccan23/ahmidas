@@ -130,20 +130,16 @@ namespace Core
 //     Dirac::Gamma<5> gamma5 =  Dirac::Gamma<5>();
 //     Propagator *p = new Propagator(L(), T());
 //     p->isolate();
-//     for (size_t t=0; t<T(); t++)
+//     Propagator::const_iterator before = begin();
+//     Propagator::iterator after  = p->begin();
+//     while(before != end())
 //     {
-//       Propagator::const_iterator before = begin(t);
-// 
-//       Propagator::iterator after  = p->begin(t);
-//       while(before != end(t))
-//       {
-//         (*after) = ((*before) * gamma5).dagger();
-//         (*after) *= gamma5;
-//         ++after;
-//         ++before;
-//       }
-//       assert(before==end(t) && after==p->end(t));
+//       (*after) = ((*before) * gamma5).dagger();
+//       (*after) *= gamma5;
+//       ++after;
+//       ++before;
 //     }
+//     assert(before==end() && after==p->end());
 //     return p;
 //   }
 
@@ -151,17 +147,14 @@ namespace Core
   {
     Dirac::Gamma<5> gamma5 = Dirac::Gamma<5>();
     isolate();
-    for (size_t t=0; t<T(); t++)
+    Propagator::iterator it = begin();
+    while(it != end())
     {
-      Propagator::iterator it = begin(t);
-      while(it != end(t))
-      {
-        QCD::Tensor tmp(*it);
-        tmp *= gamma5;
-        (*it) = tmp.dagger();
-        (*it) *= gamma5;
-        ++it;
-      }
+      QCD::Tensor tmp(*it);
+      tmp *= gamma5;
+      (*it) = tmp.dagger();
+      (*it) *= gamma5;
+      ++it;
     }
   }
 
@@ -174,17 +167,14 @@ namespace Core
 
     double diff(0.0);
 
-    for (size_t t=0; t<T(); t++)
-    {
-      Propagator::const_iterator it1 = begin(t);
-      Propagator::const_iterator it2 = other.begin(t);
+    Propagator::const_iterator it1 = begin();
+    Propagator::const_iterator it2 = other.begin();
 
-      while(it1 != end(t))
-      {
-        diff += abs((*it1).diff(*it2));
-        ++it2;
-        ++it1;
-      }
+    while(it1 != end())
+    {
+      diff += abs((*it1).diff(*it2));
+      ++it2;
+      ++it1;
     }
     diff /= (double(d_components->volume())*double(size()));
     return diff;
@@ -192,40 +182,34 @@ namespace Core
 
   inline void Propagator::setToRandom()
   {
-    for (size_t t=0; t<T(); t++)
+    Propagator::iterator it = begin();
+    while(it != end())
     {
-      Propagator::iterator it = begin(t);
-      while(it != end(t))
-      {
-        (*it).setToRandom();
-        ++it;
-      }
+      (*it).setToRandom();
+      ++it;
     }
   }
 
-  inline Propagator::iterator Propagator::begin(size_t const timeslice)
+  inline Propagator::iterator Propagator::begin()
   {
     isolate();
-    // NOTE this function is supposed to return end() if part of the timeslice is not available
-    return iterator(*this, timeslice*d_components->spatialSize(), timeslice);
+    return iterator(*this, d_components->size());
   }
 
-  inline Propagator::const_iterator Propagator::begin(size_t const timeslice) const
+  inline Propagator::const_iterator Propagator::begin() const
   {
-    // NOTE this function is supposed to return end() if part of the timeslice is not available
-    return const_iterator(*this, timeslice*d_components->spatialSize(), timeslice);
+    return const_iterator(*this, d_components->size());
   }
 
-
-  inline Propagator::iterator Propagator::end(size_t const timeslice)
+  inline Propagator::iterator Propagator::end()
   {
     isolate();
-    return iterator(*this, (timeslice+1)*d_components->spatialSize(), timeslice);
+    return iterator(*this, d_components->size());
   }
 
-  inline Propagator::const_iterator Propagator::end(size_t const timeslice) const
+  inline Propagator::const_iterator Propagator::end() const
   {
-    return const_iterator(*this, (timeslice+1)*d_components->spatialSize(), timeslice);
+    return const_iterator(*this, d_components->size());
   }
 
   inline size_t const Propagator::size() const

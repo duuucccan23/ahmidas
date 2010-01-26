@@ -5,14 +5,11 @@ namespace Core
   inline void Propagator::operator*=(Dirac::Gamma< Index > const &gamma)
   {
     isolate();
-    for(size_t ts=0; ts<d_components->T(); ts++)
+    Propagator::iterator I(begin());
+    while(I!=end())
     {
-      Propagator::iterator I(begin(ts));
-      while(I!=end(ts))
-      {
-        (*I) *= gamma;
-        ++I;
-      }
+      (*I) *= gamma;
+      ++I;
     }
   }
 
@@ -25,37 +22,26 @@ namespace Core
   }
 
 
-  inline Field< QCD::reducedTensor > **Propagator::operator*(Propagator const &other) const
+  inline Field< QCD::reducedTensor > *Propagator::operator*(Propagator const &other) const
   {
-//     static size_t count(0);
 
     assert (T()==other.T() && L()==other.L());
 
-    Field< QCD::reducedTensor > **field = new Field< QCD::reducedTensor > *[T()];
+    Field< QCD::reducedTensor > *field = new Field< QCD::reducedTensor > (L(), T());
 
-    for(size_t ts=0; ts<d_components->T(); ts++)
+    Propagator::const_iterator Ia(begin());
+    Propagator::const_iterator Ib(other.begin());
+
+    Field< QCD::reducedTensor >::iterator Ic(field->begin());
+
+    while(Ia!=end())
     {
-      field[ts] = new Core::Field< QCD::reducedTensor > (L(), 1);
-
-      Propagator::const_iterator Ia(begin(ts));
-      Propagator::const_iterator Ib(other.begin(ts));
-
-      Field< QCD::reducedTensor >::iterator Ic(field[ts]->begin());
-
-      while(Ia!=end(ts))
-      {
-        (*Ic) = QCD::reducedTensor((*Ia),(*Ib));
-//         std::cout << "call no. ";
-//         std::cout.width(7);
-//         std::cout << count++ << " of assignment operator of class reducedTensor" <<std::endl;
-//         std::cout << " lhs = \n" << (*Ic) << std::endl;
-//         std::cout << " rhs = \n" << QCD::reducedTensor(*Ia,*Ib) << std::endl; 
-        ++Ia;
-        ++Ib;
-        ++Ic;
-      }
-      assert(Ia == end(ts) && Ib==other.end(ts) && Ic==(field)[ts]->end());
+      (*Ic) = QCD::reducedTensor((*Ia),(*Ib));
+      ++Ia;
+      ++Ib;
+      ++Ic;
     }
+    assert(Ia==end() && Ib==other.end() && Ic==field->end());
     return field;
   }
 

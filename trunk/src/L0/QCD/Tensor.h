@@ -165,6 +165,8 @@ namespace QCD
       template< size_t Index >
       void operator*=(Dirac::Gamma< Index > const &gamma);
 
+      reducedTensor operator*(std::complex< double > const &factor);
+
       void operator*=(reducedTensor const &rhs);
 
       std::complex< double > const &operator()(Base::DiracIndex const Dirac_src, Base::DiracIndex const Dirac_snk) const;

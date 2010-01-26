@@ -3,12 +3,6 @@ Core::Field< Element > Tool::IO::loadScidac(std::string const &filename, size_t 
 {
   Lime::Reader reader(filename);
   Scidacinfo info(reader);
-
-  std::cout << "[[DEBUG]]" << info.field << std::endl;
-  std::cout << "[[DEBUG]]" << info.precision << std::endl;
-  std::cout << "[[DEBUG]]" << info.flavours << std::endl;
-
-  size_t const elements = sizeof(Element) / sizeof(double);
   Core::Field< Element > result(L, T);
 
   reader.retrieveRecord(reader.findRecord("scidac-binary-data"));
@@ -18,17 +12,28 @@ Core::Field< Element > Tool::IO::loadScidac(std::string const &filename, size_t 
     exit(EXIT_FAILURE);
     return result; //NOTE Record not found, returning empty field! Add error exit here.
   }
-  //Poor man's parser for reading the precision should be inserted here, beyond we now assume double as input
+  assert(reader.good());
 
   Element *dataPtr = result.raw(); //Starting memory address of the field.
-  float buffer[elements];
+
+  if (info.precision.compare("64") == 0)
+  {
+    reader.read(dataPtr, result.volume());
+    if (!Base::bigEndian)
+      Base::swapEndian(dataPtr, dataPtr + result.volume(), sizeof(double));
+    return result;
+  }
+
+  size_t const elSize = sizeof(Element) / sizeof(double);
+  uint32_t elem32[elSize];
 
   for (size_t siteIdx = 0; siteIdx < result.volume(); ++siteIdx)
   {
-    reader.read(buffer, elements);
+    reader.read(elem32, elSize);
     if (!Base::bigEndian)
-      Base::swapEndian(buffer, buffer + elements, sizeof(float));
-    std::copy(buffer, buffer + elements, reinterpret_cast< double* >(dataPtr + siteIdx));
+      Base::swapEndian(elem32, elem32 + elSize);
+    std::copy(reinterpret_cast< float* >(elem32), reinterpret_cast< float* >(elem32) + elSize,
+              reinterpret_cast< double* >(dataPtr));
   }
   return result;
 }

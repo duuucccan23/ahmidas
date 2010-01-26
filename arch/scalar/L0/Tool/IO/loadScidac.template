@@ -27,7 +27,7 @@ Core::Field< Element > Tool::IO::loadScidac(std::string const &filename, size_t 
   size_t const elSize = sizeof(Element) / sizeof(double);
   uint32_t elem32[elSize];
 
-  for (size_t siteIdx = 0; siteIdx < result.volume(); ++siteIdx)
+  for (size_t ctr = 0; ctr < result.volume(); ++ctr, ++dataPtr)
   {
     reader.read(elem32, elSize);
     if (!Base::bigEndian)

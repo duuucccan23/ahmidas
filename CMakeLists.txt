@@ -16,7 +16,7 @@ ENDIF(USE_MPI)
 ENABLE_TESTING()
 
 INCLUDE_DIRECTORIES(BEFORE SYSTEM src)
-SET(CMAKE_CXX_FLAGS "-pg -g -Wall -mfpmath=sse -msse2")
+SET(CMAKE_CXX_FLAGS "-O3 -pg -g -Wall -mfpmath=sse -msse2")
 # SET(CMAKE_CXX_FLAGS "-O3 -pg -g -Wall -pedantic")
 
 IF(USE_SCALAR)

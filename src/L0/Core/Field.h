@@ -115,6 +115,7 @@ namespace Core
       Element const *at(size_t x, size_t y, size_t z, size_t t) const;
       Element const *constAt(size_t x, size_t y, size_t z, size_t t) const;
 
+      size_t size() const;
       size_t spatialSize() const; // (for looping over a single timeslice)
       void isolate();
       void fill(Element const &element); // Flush a field with a constant quantity

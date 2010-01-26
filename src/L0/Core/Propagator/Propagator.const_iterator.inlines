@@ -3,8 +3,8 @@ namespace Core
 
   /* private constructor */
 
-  inline Propagator::const_iterator::const_iterator(Core::Propagator const &target,  size_t const idx, size_t const timeslice)
-    : Core::Field< QCD::Tensor >::const_iterator(*(target.d_components), idx), d_target(target), d_timeslice(timeslice)
+  inline Propagator::const_iterator::const_iterator(Core::Propagator const &target,  size_t const idx)
+    : Core::Field< QCD::Tensor >::const_iterator(*(target.d_components), idx), d_target(target)
   {}
 
 
@@ -25,28 +25,28 @@ namespace Core
   {
     return    (dynamic_cast< Core::Field< QCD::Tensor >::const_iterator const & >(*this) ==
                dynamic_cast< Core::Field< QCD::Tensor >::const_iterator const & >(other))
-           && (&d_target == &other.d_target) && (d_timeslice == other.d_timeslice);
+           && (&d_target == &other.d_target);
   }
 
   inline bool Propagator::const_iterator::operator==(Propagator::iterator const &other) const
   {
     return    (dynamic_cast< Core::Field< QCD::Tensor >::const_iterator const & >(*this) ==
                dynamic_cast< Core::Field< QCD::Tensor >::iterator const & >(other))
-           && (&d_target == &other.d_target) && (d_timeslice == other.d_timeslice);
+           && (&d_target == &other.d_target);
   }
 
   inline bool Propagator::const_iterator::operator!=(Propagator::const_iterator const &other) const
   {
     return    (dynamic_cast< Core::Field< QCD::Tensor >::const_iterator const & >(*this) !=
                dynamic_cast< Core::Field< QCD::Tensor >::const_iterator const & >(other))
-           || (&d_target != &other.d_target) || (d_timeslice != other.d_timeslice);
+           || (&d_target != &other.d_target);
   }
 
   inline bool Propagator::const_iterator::operator!=(Propagator::iterator const &other) const
   {
     return    (dynamic_cast< Core::Field< QCD::Tensor >::const_iterator const & >(*this) !=
                dynamic_cast< Core::Field< QCD::Tensor >::iterator const & >(other))
-           || (&d_target != &other.d_target) || (d_timeslice != other.d_timeslice);
+           || (&d_target != &other.d_target);
   }
 
 

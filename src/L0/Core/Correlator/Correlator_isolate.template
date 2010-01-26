@@ -4,10 +4,20 @@ void Core::Correlator::isolate()
     return;
 
   *d_references -= 1;
-  d_references = new size_t(1);
-  d_weave = *(new Base::Weave(L, T));
+  d_references   = new size_t(1);
 
-  QCD::reducedTensor *data = new QCD::reducedTensor[T];
-  std::copy(d_data, d_data + T, data);
+  QCD::reducedTensor *sumTimeslice = new QCD::reducedTensor(T);
+  std::copy(d_sumTimeslice, d_sumTimeslice + T, sumTimeslice);
+  d_sumTimeslice = sumTimeslice;
+
+  Core::Field< QCD::reducedTensor > *data = new Core::Field < QCD::reducedTensor >(L, T);
+  Core::Field< QCD::reducedTensor >::iterator itOld = d_data->begin();
+  Core::Field< QCD::reducedTensor >::iterator itNew = data->begin();
+  while(itOld != d_data->end())
+  {
+    *itNew = *itOld;
+    ++itOld;
+    ++itNew;
+  }
   d_data = data;
 }

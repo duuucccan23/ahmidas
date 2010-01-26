@@ -11,10 +11,7 @@ class const_iterator : public Core::Field< QCD::Tensor >::const_iterator
 
   Propagator  const &d_target;
 
-  // const_iterator only makes sense for timeslice
-  size_t d_timeslice;
-
-  const_iterator(Propagator const &target, size_t const idx, size_t const timeslice);
+  const_iterator(Propagator const &target, size_t const idx);
 
   public:
     const_iterator(const_iterator const &other);

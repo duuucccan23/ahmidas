@@ -1,24 +1,18 @@
 namespace Core
 {
 
-  inline Correlator::Correlator(size_t const L_, size_t const T_)
-    : L(L_), T(T_),d_weave(*(new Base::Weave(L_, T_))), d_references(new size_t(1)),
-      d_data(new QCD::reducedTensor[T_])
-  {}
-
-
   inline Correlator::Correlator(Correlator const &other)
-    : L(other.L), T(other.T), d_weave(other.d_weave), d_references(other.d_references), d_data(other.d_data)
+    : L(other.L), T(other.T), d_weave(other.d_weave), d_data(other.d_data),
+      d_sumTimeslice(other.d_sumTimeslice), d_references(other.d_references)
   {
     *d_references += 1;
   }
 
 
-  inline Correlator::Correlator(size_t const L_, size_t const T_, std::complex< double > const &value)
-    : L(L_), T(T_), d_weave(*(new Base::Weave(L_, T_))), d_references(new size_t(1)),
-      d_data(new QCD::reducedTensor[T_])
+  inline Correlator::Correlator(size_t const L_, size_t const T_, Core::Field<QCD::reducedTensor>* data)
+    : L(L_), T(T_), d_weave(new Base::Weave(L_,T_)), d_data(data),
+      d_sumTimeslice(new QCD::reducedTensor[T_]), d_references(new size_t(1))
   {
-    std::fill_n(d_data, d_weave.localSize(Base::idx_T), value);
   }
 
 
@@ -28,38 +22,73 @@ namespace Core
   }
 
 
-  inline QCD::reducedTensor &Correlator::operator[](size_t const idx)
+  inline QCD::reducedTensor &Correlator::operator[](size_t const t)
   {
-    return d_data[idx];
+    assert(t < T);
+    return d_sumTimeslice[t];
   }
 
 
-  inline QCD::reducedTensor const &Correlator::operator[](size_t const idx) const
+  inline QCD::reducedTensor const &Correlator::operator[](size_t const t) const
   {
-    return d_data[idx];
+    assert(t < T);
+    return d_sumTimeslice[t];
   }
 
 
-  inline QCD::reducedTensor Correlator::sum(Core::Field< QCD::reducedTensor > const *field)
+  // there must be some way to do this more efficiently!
+  inline void Correlator::sumOverTimeSlices(size_t const *momentum)
   {
-    assert(field->T() == 1);
     isolate();
-    Core::Field< QCD::reducedTensor >::const_iterator it = field->begin();
-    QCD::reducedTensor result(std::complex< double >(0.0, 0.0));
-    while(it != field->end())
+    std::complex< double > phase;
+    size_t x[4] = {0, 0, 0, 0};
+    for(x[0]=0; x[0]<T; x[0]++)
     {
-      result += *it;
-      ++it;
+      d_sumTimeslice[x[0]] = QCD::reducedTensor(std::complex< double >(0.0, 0.0));
+      for(x[3]=0; x[3]<L; x[3]++)
+      {
+      for(x[2]=0; x[2]<L; x[2]++)
+      {
+      for(x[1]=0; x[1]<L; x[1]++)
+      {
+        if (d_weave->isLocallyAvailable(x[1], x[2], x[3], x[0]))
+        {
+          phase = exp(std::complex< double >(0, 2.*M_PI/L())*std::inner_product(x,x+4,momentum));
+          d_sumTimeslice[x[0]] += (*(d_data->at(x[1], x[2], x[3], x[0])))*phase;
+        }
+      }
+      }
+      }
     }
-    return result;
   }
 
-  inline void Correlator::sumOverTimeSlices(Core::Field< QCD::reducedTensor > **timeslices)
+  inline void Correlator::sumOverTimeSlices()
   {
-    for (size_t t=0; t<T; t++)
+    isolate();
+    size_t x[4] = {0, 0, 0, 0};
+    for(x[0]=0; x[0]<T; x[0]++)
     {
-      d_data[t] = sum(timeslices[t]);
+      d_sumTimeslice[x[0]] = QCD::reducedTensor(std::complex< double >(0.0, 0.0));
+      for(x[3]=0; x[3]<L; x[3]++)
+      {
+      for(x[2]=0; x[2]<L; x[2]++)
+      {
+      for(x[1]=0; x[1]<L; x[1]++)
+      {
+        if (d_weave->isLocallyAvailable(x[1], x[2], x[3], x[0]))
+        {
+          d_sumTimeslice[x[0]] += (*(d_data->at(x[1], x[2], x[3], x[0])));
+        }
+      }
+      }
+      }
     }
+  }
+
+  inline std::complex< double > Correlator::getTrSum(size_t const timeslice)
+  {
+    assert(timeslice < T);
+    return d_sumTimeslice[timeslice].tr();
   }
 
   inline size_t Correlator::getT() const

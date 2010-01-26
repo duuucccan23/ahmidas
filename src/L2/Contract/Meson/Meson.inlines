@@ -15,12 +15,10 @@ namespace Contract
     Core::Propagator tmpU(u*interpolSnk);
     Core::Propagator tmpD(d_bw*interpolSrc);
 
-    // one could think of making this Field a member of Correlator
-    Core::Field< QCD::reducedTensor > **result = tmpD*tmpU;
 
+    Core::Correlator twopoint(u.L(), u.T(), tmpD*tmpU);
 
-    Core::Correlator twopoint(u.L(), u.T());
-    twopoint.sumOverTimeSlices(result);
+    twopoint.sumOverTimeSlices();
 
     for (size_t t=0; t<twopoint.getT(); t++)
     {

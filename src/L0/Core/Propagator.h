@@ -58,7 +58,7 @@ namespace Core
       Propagator operator*(Dirac::Gamma< Index > const &gamma) const;
 
       // needed for meson contractions
-      Core::Field< QCD::reducedTensor > **operator*(Propagator const &other) const;
+      Core::Field< QCD::reducedTensor > *operator*(Propagator const &other) const;
 
       /*
           Revert Propagator using gamma5 hermeticity trick:
@@ -81,10 +81,10 @@ namespace Core
 #include "Propagator/Propagator.iterator"
 #include "Propagator/Propagator.const_iterator"
 
-      iterator begin(size_t const timeslice);
-      iterator end(size_t const timeslice);
-      const_iterator begin(size_t const timeslice) const;
-      const_iterator end(size_t const timeslice) const;
+      iterator begin();
+      iterator end();
+      const_iterator begin() const;
+      const_iterator end() const;
 
       size_t const size() const;
       size_t const L() const;

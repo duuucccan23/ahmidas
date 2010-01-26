@@ -12,10 +12,7 @@ class iterator : public Core::Field< QCD::Tensor >::iterator
 
   Propagator  &d_target;
 
-  // iterator only makes sense for timeslice
-  size_t d_timeslice;
-
-  iterator(Propagator &target, size_t const idx, size_t const timeslice);
+  iterator(Propagator &target, size_t const idx);
 
   public:
     iterator(iterator const &other);

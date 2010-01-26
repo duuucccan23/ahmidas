@@ -13,15 +13,19 @@ namespace Core
 
   class Correlator
   {
+
+    friend class Weave;
+
     size_t T;
     size_t L;
-    Base::Weave  &d_weave;
+    Base::Weave *d_weave;
     size_t *d_references;
-    QCD::reducedTensor *d_data;
+    Field < QCD::reducedTensor > *d_data;
+    QCD::reducedTensor *d_sumTimeslice;
 
     public:
       Correlator(size_t const L_, size_t const T_);
-      Correlator(size_t const L_, size_t const T_, std::complex< double > const &value);
+      Correlator(size_t const L_, size_t const T_, Field < QCD::reducedTensor > *d_data);
       Correlator(Correlator const &other);
 
       ~Correlator();
@@ -30,14 +34,11 @@ namespace Core
       QCD::reducedTensor const &operator[](size_t const idx) const;
 
       void sumOverTimeSlices();
-
-      void sumOverTimeSlices(Core::Field< QCD::reducedTensor > **timeslices);
-      void sumOverTimeSlices(Core::Field< QCD::reducedTensor > **timeslices, double const *momentum);
+      void sumOverTimeSlices(size_t const *momentum);
 
       void save(std::string const&file);
 
-      QCD::reducedTensor sum(Core::Field< QCD::reducedTensor > const *field);
-      QCD::reducedTensor sum(Core::Field< QCD::reducedTensor > const *field, double * const momentum);
+      std::complex <double> getTrSum(size_t const timeslice);
 
 
       size_t getT() const;

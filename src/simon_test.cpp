@@ -48,20 +48,19 @@ int main(int argc, char **argv)
     propfilesD.push_back(oss.str());
   }
 #else
-  const std::string filename_base("../test/propagators/source");
+  const std::string filename_base("../test/source4x4");
   for (int f=0; f<12; f++)
   {
     std::ostringstream oss;
-    oss << filename_base << ".";
+    oss <<  ".";
     oss.fill('0');
     oss.width(2);
     oss << f;
     oss << ".inverted";
     oss.flush();
     std::cout << oss.str() << std::endl;
-    //propfilesU.push_back(oss.str());
-    propfilesU.push_back(oss.str().append("_u"));
-    propfilesD.push_back(oss.str().append("_d"));
+    propfilesU.push_back(std::string(filename_base).append("_u").append(oss.str()));
+    propfilesD.push_back(std::string(filename_base).append("_u").append(oss.str()));
   }
 #endif
 

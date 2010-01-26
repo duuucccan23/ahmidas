@@ -180,6 +180,12 @@ namespace Core
   }
 
   template< typename Element >
+  inline size_t Field< Element >::size() const
+  {
+    return d_weave.localVolume();
+  }
+
+  template< typename Element >
   inline size_t Field< Element >::spatialSize() const
   {
     return d_weave.localSpatialVolume();

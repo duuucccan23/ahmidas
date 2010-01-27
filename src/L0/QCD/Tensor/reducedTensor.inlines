@@ -94,7 +94,7 @@ namespace QCD
                    std::multiplies< std::complex< double > >());
   }
 
-  inline reducedTensor reducedTensor::operator*(std::complex< double > const &factor)
+  inline reducedTensor reducedTensor::operator*(std::complex< double > const &factor) const
   {
     reducedTensor tmp;
     std::transform(d_data, d_data+16, tmp.d_data,
@@ -102,6 +102,11 @@ namespace QCD
     return tmp;
   }
 
+  inline void reducedTensor::operator*=(std::complex< double > const &factor)
+  {
+    std::transform(d_data, d_data+16, d_data,
+                   bind2nd(std::multiplies< std::complex< double > >(), factor));
+  }
 
   inline std::complex< double > const &reducedTensor::operator()(Base::DiracIndex const Dirac_src,
                                                                  Base::DiracIndex const Dirac_snk) const

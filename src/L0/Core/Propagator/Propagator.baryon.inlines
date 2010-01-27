@@ -1,0 +1,31 @@
+
+  template< size_t index >
+  inline Field< QCD::reducedTensor > *Propagator::operator*(Propagator const &no2, Propagator const &no3,
+                                                            Dirac:Gamma< Index > const &ipol) const
+  {
+    assert (T()==no2.T() && L()==no2.L() && T()==no3.T() && L()==no3.L());
+
+    Field< QCD::reducedTensor > *field = new Field< QCD::reducedTensor > (L(), T());
+
+    Propagator::const_iterator Ia(begin());
+    Propagator::const_iterator Ib(other.begin());
+
+    Field< QCD::reducedTensor >::iterator Id(field->begin());
+
+    while(Ia != end())
+    {
+      // the constructor of reducedTensor has to process
+      // the (anti-symmetric) colour structure epsilon_abc
+      // as well as the interpolating Dirac structure
+      // between the second and third quark field
+      (*Id) = QCD::reducedTensor((*Ia),(*Ib),(*Ic), ipol);
+      ++Ia;
+      ++Ib;
+      ++Ic;
+      ++Id;
+    }
+    assert(Ia==end());
+    assert(Ib==other.end());
+    assert(Ic==field->end());
+    return field;
+  }

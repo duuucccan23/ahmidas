@@ -17,9 +17,8 @@
 
 
 //#define __PRINT__PROPS__
-#define __LOAD__PROPS__
 
-#define __REPOSITORY__PROPS__
+//#define __REPOSITORY__PROPS_1__
 
 int main(int argc, char **argv)
 {
@@ -27,12 +26,16 @@ int main(int argc, char **argv)
   const size_t L = 4;
   const size_t T = 4;
 
+  Dirac::Gamma5 gamma5;
+  Dirac::Gamma0 gamma0;
+  Dirac::Unity identity;
+
   std::cout << "this is a test ..." << std::endl;
 
   std::vector<std::string> propfilesU;
   std::vector<std::string> propfilesD;
 
-#ifdef __REPOSITORY__PROPS__
+#ifdef __REPOSITORY__PROPS_1__
   const std::string filename_base("../test/source.9999.01");
   for (int f=0; f<12; f++)
   {
@@ -58,9 +61,10 @@ int main(int argc, char **argv)
     oss << f;
     oss << ".inverted";
     oss.flush();
-    std::cout << oss.str() << std::endl;
     propfilesU.push_back(std::string(filename_base).append("_u").append(oss.str()));
-    propfilesD.push_back(std::string(filename_base).append("_u").append(oss.str()));
+    propfilesD.push_back(std::string(filename_base).append("_d").append(oss.str()));
+    std::cout << propfilesU[f] << std::endl;
+    std::cout << propfilesD[f] << std::endl;
   }
 #endif
 
@@ -68,7 +72,6 @@ int main(int argc, char **argv)
   Core::Propagator *uProp = new Core::Propagator(L, T);
   Core::Propagator *dProp = new Core::Propagator(L, T);
 
-#ifdef __LOAD__PROPS__
   if (uProp->load(propfilesU, "Scidac"))
   {
     std::cout << "u quark propagator successfully loaded\n" << std::endl;
@@ -87,62 +90,57 @@ int main(int argc, char **argv)
     std::cout << "error reading d quark  propagator\n" << std::endl;
     exit(EXIT_FAILURE);
   }
-#else
-//   uProp->setToRandom();
-//   dProp->setToRandom();
-#endif
+
 
   std::cout << "average difference between u and d propagator: " << uProp->diff(*dProp) << std::endl;
-#ifdef __REPOSITORY__PROPS__
+#ifdef __REPOSITORY__PROPS_1__
   std::cout << "(should be zero up to precision) " << std::endl;
 #endif
 
-  Dirac::Gamma<5> gamma5;
 
 #ifdef __PRINT__PROPS__
-  for (size_t t=0; t<T; t++)
+
+  Core::Propagator::iterator my_iterator = uProp->begin();
+
+  int count(0);
+  do
   {
-    std::cout << "timeslice no. " << t << std::endl;
+    std::cout << "Element no. " << count++ << std::endl;
     std::cout << std::endl;
-
-    Core::Propagator::iterator my_iterator = uProp->begin(t);
-
-    int count(0);
-    do
-    {
-      std::cout << "Element no. " << count++ << std::endl;
-      std::cout << std::endl;
-      std::cout << *(my_iterator);
-    }
-    while(++my_iterator != uProp->end(t));
+    std::cout << *(my_iterator);
   }
+  while(++my_iterator != uProp->end());
 
-  for (size_t t=0; t<T; t++)
+
+  Core::Propagator::iterator my_iterator = dProp->begin();
+
+  int count(0);
+  do
   {
-    std::cout << "timeslice no. " << t << std::endl;
+    std::cout << "Element no. " << count++ << std::endl;
     std::cout << std::endl;
-
-    Core::Propagator::iterator my_iterator = dProp->begin(t);
-
-    int count(0);
-    do
-    {
-      std::cout << "Element no. " << count++ << std::endl;
-      std::cout << std::endl;
-      std::cout << *(my_iterator);
-    }
-    while(++my_iterator != dProp->end(t));
+    std::cout << *(my_iterator);
   }
+  while(++my_iterator != dProp->end());
+
 #endif
 
-  Contract::light_meson_twopoint(*uProp, *dProp, gamma5, gamma5);
+  Contract::light_meson_twopoint(dProp, 0, gamma5, gamma5);
+//   Contract::light_meson_twopoint(*uProp, *dProp, gamma0, gamma0);
+  Contract::light_meson_twopoint(dProp, 0, identity, identity);
 
-#ifdef __REPOSITORY__PROPS__
+#ifdef __REPOSITORY__PROPS_1__
   std::cout <<  "reliable code gives the following result:" << std::endl;
   std::cout <<  "0  +1.616433453    +0" << std::endl;
   std::cout <<  "1  +0.2010924642   +0" << std::endl;
   std::cout <<  "2  +0.04286512674  +0" << std::endl;
   std::cout <<  "3  +0.2105727402   +0" << std::endl;
+#else
+  std::cout <<  "reliable code gives the following result:" << std::endl;
+  std::cout <<  " 0  +0.5412652273    +0" << std::endl;
+  std::cout <<  " 1  +0.01456410538   +0" << std::endl;
+  std::cout <<  " 2  +0.001637160312  +0" << std::endl;
+  std::cout <<  " 3  +0.01443586407   +0" << std::endl;
 #endif
 
   delete uProp;

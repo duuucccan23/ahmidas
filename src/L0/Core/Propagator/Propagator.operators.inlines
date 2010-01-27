@@ -1,6 +1,22 @@
 namespace Core
 {
 
+
+//   inline Propagator &Propagator::operator=(Propagator const &rhs)
+//   {
+//     if (this != &rhs)
+//     {
+//       destroy();
+//       d_references   = rhs.d_references;
+//       d_components   = rhs.d_components;
+//       colour_strides = rhs.colour_strides;
+//       dirac_strides  = rhs.dirac_strides;
+//       *d_references += 1;
+//     }
+//     isolate();
+//     return *this;
+//   }
+
   template< size_t Index >
   inline void Propagator::operator*=(Dirac::Gamma< Index > const &gamma)
   {
@@ -24,7 +40,6 @@ namespace Core
 
   inline Field< QCD::reducedTensor > *Propagator::operator*(Propagator const &other) const
   {
-
     assert (T()==other.T() && L()==other.L());
 
     Field< QCD::reducedTensor > *field = new Field< QCD::reducedTensor > (L(), T());
@@ -34,14 +49,16 @@ namespace Core
 
     Field< QCD::reducedTensor >::iterator Ic(field->begin());
 
-    while(Ia!=end())
+    while(Ia != end())
     {
       (*Ic) = QCD::reducedTensor((*Ia),(*Ib));
       ++Ia;
       ++Ib;
       ++Ic;
     }
-    assert(Ia==end() && Ib==other.end() && Ic==field->end());
+    assert(Ia==end());
+    assert(Ib==other.end());
+    assert(Ic==field->end());
     return field;
   }
 

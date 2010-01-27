@@ -1,5 +1,12 @@
 namespace QCD
 {
+
+  template< >
+  inline void Spinor::leftMultiply(Dirac::Unity)
+  {
+    // nothing to do
+  }
+
   template< >
   inline void Spinor::leftMultiply(Dirac::Gamma< 1 > const)
   {
@@ -27,7 +34,6 @@ namespace QCD
   template< >
   inline void Spinor::leftMultiply(Dirac::Gamma< 5 > const)
   {
-    //lower() *= std::complex< double >(-1, 0);
     lower() *= -1;
   }
 

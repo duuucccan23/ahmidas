@@ -39,6 +39,7 @@ namespace Core
 
   inline bool Propagator::load(std::vector< std::string > const filenames, std::string const format)
   {
+    isolate();
     if (d_components == NULL)
     {
       std::cerr << "Error in void Propagator::loadILDG(std::vector< std::string > const filenames):" << std::endl;
@@ -150,10 +151,21 @@ namespace Core
     Propagator::iterator it = begin();
     while(it != end())
     {
-      QCD::Tensor tmp(*it);
+      QCD::Tensor tmp((*it).dagger());
       tmp *= gamma5;
-      (*it) = tmp.dagger();
-      (*it) *= gamma5;
+      (*it) = gamma5*tmp;
+
+      ++it;
+    }
+  }
+
+  inline void Propagator::dagger()
+  {
+    isolate();
+    Propagator::iterator it = begin();
+    while(it != end())
+    {
+      (*it) = QCD::Tensor((*it).dagger());
       ++it;
     }
   }
@@ -182,6 +194,7 @@ namespace Core
 
   inline void Propagator::setToRandom()
   {
+    isolate();
     Propagator::iterator it = begin();
     while(it != end())
     {
@@ -193,12 +206,12 @@ namespace Core
   inline Propagator::iterator Propagator::begin()
   {
     isolate();
-    return iterator(*this, d_components->size());
+    return iterator(*this, 0);
   }
 
   inline Propagator::const_iterator Propagator::begin() const
   {
-    return const_iterator(*this, d_components->size());
+    return const_iterator(*this, 0);
   }
 
   inline Propagator::iterator Propagator::end()

@@ -27,6 +27,17 @@ namespace QCD
     br *= reducedTensor(B, Base::col_RED,   Base::col_BLUE);
     bb *= reducedTensor(B, Base::col_BLUE,  Base::col_BLUE);
     bg *= reducedTensor(B, Base::col_GREEN, Base::col_BLUE);
+
+//     rr *= reducedTensor(B, Base::col_RED,   Base::col_RED);
+//     rg *= reducedTensor(B, Base::col_RED,   Base::col_GREEN);
+//     rb *= reducedTensor(B, Base::col_RED,   Base::col_BLUE);
+//     gr *= reducedTensor(B, Base::col_GREEN, Base::col_RED);
+//     gb *= reducedTensor(B, Base::col_GREEN, Base::col_BLUE);
+//     gg *= reducedTensor(B, Base::col_GREEN, Base::col_GREEN);
+//     br *= reducedTensor(B, Base::col_BLUE,  Base::col_RED);
+//     bb *= reducedTensor(B, Base::col_BLUE,  Base::col_BLUE);
+//     bg *= reducedTensor(B, Base::col_BLUE,  Base::col_GREEN);
+
     rr += rg;
     rr += rb;
     rr += gr;

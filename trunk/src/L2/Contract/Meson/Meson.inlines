@@ -2,21 +2,27 @@ namespace Contract
 {
 
   template< size_t IndexSrc, size_t IndexSnk >
-  inline Core::Correlator light_meson_twopoint(Core::Propagator const &u, Core::Propagator const &d,
-                                               Dirac::Gamma< IndexSrc > const &interpolSrc,
-                                               Dirac::Gamma< IndexSnk > const &interpolSnk)
+  Core::Correlator light_meson_twopoint(Core::Propagator const *u, Core::Propagator const *d,
+                                        Dirac::Gamma< IndexSrc > const &interpolSrc,
+                                        Dirac::Gamma< IndexSnk > const &interpolSnk,
+                                        size_t const *momentum)
   {
-    assert(u.T() == d.T());
-    assert(u.L() == d.L());
+    if (d != 0)
+    {
+      assert(u->T() == d->T());
+      assert(u->L() == d->L());
+    }
 
-    Core::Propagator d_bw = u;
-    d_bw.revert();
+    Core::Propagator d_bw = *u;
+//     d_bw.revert();
+    d_bw.dagger();
 
-    Core::Propagator tmpU(u*interpolSnk);
+    Core::Propagator tmpU((*u)*interpolSnk);
     Core::Propagator tmpD(d_bw*interpolSrc);
+//     Core::Propagator tmpU(u);
+//     Core::Propagator tmpD(d_bw);
 
-
-    Core::Correlator twopoint(u.L(), u.T(), tmpD*tmpU);
+    Core::Correlator twopoint(u->L(), u->T(), tmpD*tmpU);
 
     twopoint.sumOverTimeSlices();
 
@@ -24,16 +30,23 @@ namespace Contract
     {
       std::cout << t << "  " << std::scientific << std::setprecision(10) << std::showpos
                 << tr(twopoint[t]).real() << "  " << tr(twopoint[t]).imag() << std::endl;
-      std::cout << " = trace of" << std::endl;
-      std::cout << twopoint[t]   << std::endl;
-      delete result[t];
+      if (t==twopoint.getT()-1)
+      {
+        std::cout << " = trace of" << std::endl;
+        std::cout << twopoint[t]   << std::endl;
+      }
     }
-
-    delete [] result;
-
-
     return twopoint;
   }
 
+  template< size_t IndexSrc, size_t IndexSnk >
+  inline Core::Correlator light_meson_twopoint(Core::Propagator const *u, Core::Propagator const *d,
+                                               Dirac::Gamma< IndexSrc > const &interpolSrc,
+                                               Dirac::Gamma< IndexSnk > const &interpolSnk)
+  {
+    // zero momentum projection
+    size_t const p[3] = {0, 0, 0};
+    return light_meson_twopoint(u, d, interpolSrc, interpolSnk, p);
+  }
 
 }

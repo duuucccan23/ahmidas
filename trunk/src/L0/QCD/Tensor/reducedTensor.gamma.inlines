@@ -45,6 +45,7 @@ namespace QCD
   template< size_t Index >
   inline void reducedTensor::operator*=(Dirac::Gamma< Index > const &gamma)
   {
+    //std::complex<double> data[16];
     std::swap(d_data   , d_data+Dirac::Gamma< Index >::s_perm[0]);
     std::swap(d_data+ 1, d_data+Dirac::Gamma< Index >::s_perm[1]);
     std::swap(d_data+ 2, d_data+Dirac::Gamma< Index >::s_perm[2]);
@@ -77,16 +78,18 @@ namespace QCD
     d_data[13] *= Dirac::Gamma< Index >::s_sign[1];
     d_data[14] *= Dirac::Gamma< Index >::s_sign[2];
     d_data[15] *= Dirac::Gamma< Index >::s_sign[3];
+
+    //std::copy(data, data+16, d_data);
   }
 
   template< size_t Index >
-  QCD::reducedTensor operator*(Dirac::Gamma< Index > const &gamma, Tensor const &tensor)
+  QCD::reducedTensor operator*(Dirac::Gamma< Index > const &gamma, reducedTensor const &rTensor)
   {
     reducedTensor tmp;
-    std::copy(tmp.d_data   , tmp.d_data+ 4, tensor.d_data+Dirac::Gamma< Index >::s_perm[0]);
-    std::copy(tmp.d_data+ 4, tmp.d_data+ 8, tensor.d_data+Dirac::Gamma< Index >::s_perm[1]);
-    std::copy(tmp.d_data+ 8, tmp.d_data+12, tensor.d_data+Dirac::Gamma< Index >::s_perm[2]);
-    std::copy(tmp.d_data+12, tmp.d_data+16, tensor.d_data+Dirac::Gamma< Index >::s_perm[3]);
+    std::copy(tmp.d_data   , tmp.d_data+ 4, rTensor.d_data+4*Dirac::Gamma< Index >::s_perm[0]);
+    std::copy(tmp.d_data+ 4, tmp.d_data+ 8, rTensor.d_data+4*Dirac::Gamma< Index >::s_perm[1]);
+    std::copy(tmp.d_data+ 8, tmp.d_data+12, rTensor.d_data+4*Dirac::Gamma< Index >::s_perm[2]);
+    std::copy(tmp.d_data+12, tmp.d_data+16, rTensor.d_data+4*Dirac::Gamma< Index >::s_perm[3]);
     std::transform(tmp.d_data   , tmp.d_data+ 4, tmp.d_data,
                    std::bind2nd(std::multiplies< std::complex< double > >(), Dirac::Gamma< Index >::s_sign[0]));
     std::transform(tmp.d_data+ 4, tmp.d_data+ 8, tmp.d_data+ 4,

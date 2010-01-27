@@ -63,25 +63,6 @@ namespace QCD
     return d_data[dirSink * 36 + colSink * 12 + dirSource * 3 + colSource];
   }
 
-  template< size_t Index >
-  inline Tensor &Tensor::operator*(Dirac::Gamma< Index > const &gamma) const
-  {
-    Tensor newTensor(*this);
-    for(size_t Idx=0; Idx<12; Idx++)
-    {
-      (newTensor(Idx)).leftMultiply(gamma);
-    }
-    return newTensor;
-  }
-
-  template< size_t Index >
-  inline void Tensor::operator*=(Dirac::Gamma< Index > const &gamma)
-  {
-    for(size_t Idx=0; Idx<12; Idx++)
-    {
-      ((*this)(Idx)).leftMultiply(gamma);
-    }
-  }
 
   inline hcTensor Tensor::dagger() const
   {

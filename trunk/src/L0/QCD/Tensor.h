@@ -94,13 +94,13 @@ namespace QCD
       friend std::ostream &operator<<(std::ostream &out, Tensor const &tensor);
 
       template< size_t Index >
-      friend Tensor &operator*(Dirac::Gamma< Index > const &gamma, Tensor const &tensor);
+      friend Tensor operator*(Dirac::Gamma< Index > const &gamma, Tensor const &tensor);
   };
 
   std::ostream &operator<<(std::ostream &out, Tensor const &tensor);
 
   template< size_t Index >
-  QCD::Tensor &operator*(Dirac::Gamma< Index > const &gamma, Tensor const &tensor);
+  QCD::Tensor operator*(Dirac::Gamma< Index > const &gamma, Tensor const &tensor);
 
 
   class hcTensor
@@ -165,7 +165,9 @@ namespace QCD
       template< size_t Index >
       void operator*=(Dirac::Gamma< Index > const &gamma);
 
-      reducedTensor operator*(std::complex< double > const &factor);
+      reducedTensor operator*(std::complex< double > const &factor) const;
+
+      void operator*=(std::complex< double > const &factor);
 
       void operator*=(reducedTensor const &rhs);
 
@@ -174,13 +176,13 @@ namespace QCD
       size_t size() const;
 
       template< size_t Index >
-      friend reducedTensor &operator*(Dirac::Gamma< Index > const &gamma, Tensor const &tensor);
+      friend reducedTensor operator*(Dirac::Gamma< Index > const &gamma, reducedTensor const &rTensor);
 
       friend std::ostream &operator<<(std::ostream &out, reducedTensor const &rTensor);
   };
 
   template< size_t Index >
-  QCD::reducedTensor operator*(Dirac::Gamma< Index > const &gamma, Tensor const &tensor);
+  QCD::reducedTensor operator*(Dirac::Gamma< Index > const &gamma, reducedTensor const &rTensor);
 
   std::ostream &operator<<(std::ostream &out, reducedTensor const &rTensor);
 
@@ -188,6 +190,7 @@ namespace QCD
 
 #include "Tensor/Tensor.inlines"
 #include "Tensor/hcTensor.inlines"
+#include "Tensor/Tensor.gamma.inlines"
 
 #include "Tensor/reducedTensor.inlines"
 #include "Tensor/reducedTensor.constructors.inlines"

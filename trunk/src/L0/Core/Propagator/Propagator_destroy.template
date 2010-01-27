@@ -1,5 +1,5 @@
 
-void Core::Propagator::destroy()
+inline void Core::Propagator::destroy()
 {
   *d_references -= 1;
   if (*d_references == 0)

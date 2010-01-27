@@ -1,12 +1,14 @@
 #pragma once
 
 #include <algorithm>
+#include <numeric>
 #include <complex>
 #include <string>
 
 #include <L0/Base/Weave.h>
 #include <L0/Core/Field.h>
 #include <L0/QCD/Tensor.h>
+
 
 namespace Core
 {

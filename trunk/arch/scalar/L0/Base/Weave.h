@@ -2,14 +2,10 @@
 
 #include <L0/Base/Base.h>
 
-class Correlator;
-
 namespace Base
 {
   class Weave
   {
-
-    friend class Correlator;
 
     size_t d_surfaces[4];
     size_t d_L;
@@ -42,9 +38,10 @@ namespace Base
       template< typename Element >
       void sumOverTimeSlices(Element *data) const;
 
-    private:
       bool isLocallyAvailable(size_t x, size_t y, size_t z) const;
       bool isLocallyAvailable(size_t x, size_t y, size_t z, size_t t) const;
+
+    private:
       size_t fromGlobal(size_t x, Base::SpaceTimeIndex idx) const;
   };
 }

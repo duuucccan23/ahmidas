@@ -50,6 +50,7 @@ namespace Core
 
       bool load(std::vector< std::string > const filenames, std::string const format);
 
+      //Propagator &operator=(Propagator const &rhs);
 
       template< size_t Index >
       void operator*=(Dirac::Gamma< Index > const &gamma);
@@ -70,6 +71,8 @@ namespace Core
       */
       // Propagator * revert() const;
       void revert();
+
+      void dagger();
 
       // average difference of two different propagators
       double diff(Propagator const& other) const;

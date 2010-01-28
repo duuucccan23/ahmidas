@@ -19,8 +19,11 @@ namespace Core
      maybe at some point we should include the source properties, in whatever format,
      as a member variable
   */
-
+  template< size_t NComp >
   class StochasticSource;
+
+  template< size_t NComp >
+  class StochasticPropagator;
 
   class Propagator
   {
@@ -64,7 +67,6 @@ namespace Core
       // needed for meson contractions
       Core::Field< QCD::reducedTensor > *operator*(Propagator const &other) const;
 
-      void operator*=(StochasticSource &sSource);
 
       /*
           Revert Propagator using gamma5 hermeticity trick:
@@ -111,20 +113,57 @@ namespace Core
   };
 
 
-  class StochasticSource : public Propagator
+  template< size_t NComp >
+  class StochasticSource
   {
+
+    friend class Propagator;
+    friend class StochasticPropagator< NComp >;
 
     size_t *d_references;
 
     public:
 
-    //overload base class function in order to be able to load non-diluted sources
-    //bool load(std::vector< std::string > const filenames, std::string const format);
+      StochasticSource< NComp > (size_t const L, size_t const T);
 
-    Propagator operator*(Propagator const &propagator) const;
+      StochasticSource< NComp > (StochasticSource< NComp > const &other);
+
+      ~StochasticSource< NComp > ();
+
+      Propagator operator*(StochasticPropagator< NComp > const &sPropagator) const;
+
+      size_t const L() const;
+      size_t const T() const;
 
   };
 
+  template< size_t NComp >
+  class StochasticPropagator
+  {
+
+    friend class Propagator;
+    friend class StochasticSource< NComp >;
+
+    Core::Field< QCD::Spinor > *d_components;
+
+    size_t *d_references;
+
+    public:
+
+      StochasticPropagator< NComp > (size_t const L, size_t const T);
+
+      StochasticPropagator< NComp > (StochasticPropagator< NComp > const &other);
+
+      ~StochasticPropagator< NComp > ();
+
+      inline Propagator operator*(StochasticSource< NComp > const &sSource) const
+      {
+        return sSource*(*this);
+      }
+
+      size_t const L() const;
+      size_t const T() const;
+  };
 
 }
 

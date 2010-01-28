@@ -2,38 +2,46 @@ namespace QCD
 {
 
   template< size_t Index >
-  inline Tensor Tensor::operator*(Dirac::Gamma< Index > const &gamma) const
-  {
-    Tensor newTensor(*this);
-    for(size_t Idx=0; Idx<12; Idx++)
-    {
-      (newTensor(Idx)).leftMultiply(gamma);
-    }
-    return newTensor;
-  }
-
-  template< size_t Index >
   inline void Tensor::operator*=(Dirac::Gamma< Index > const &gamma)
   {
-    for(size_t Idx=0; Idx<12; Idx++)
-    {
-      ((*this)(Idx)).leftMultiply(gamma);
-    }
-  }
-
-  template< size_t Index >
-  inline QCD::Tensor operator*(Dirac::Gamma< Index > const &gamma, Tensor const &tensor)
-  {
-    std::cerr << "Trying to multiply Dirac::Gamma< size_t Index >*QCDTensor..." << std::endl;
+    std::cerr << "Trying to multiply QCDTensor*Dirac::Gamma< size_t Index >" << std::endl;
     std::cerr << "THIS HAS NOT BEEN IMPLEMENTED YET" << std::endl;
     std::cerr << "See Tensor.gamma.inlines for template specializations." << std::endl;
     exit(1);
   }
 
   template< >
-  inline QCD::Tensor operator*(Dirac::Gamma< 5 > const &gamma, Tensor const &tensor)
+  inline void Tensor::operator*=(Dirac::Gamma< 5 > const &gamma)
   {
-    Tensor tmp(tensor);
+    std::transform(reinterpret_cast< double * > (d_data +  72),
+                   reinterpret_cast< double * > (d_data + 144),
+                   reinterpret_cast< double * > (d_data +  72),
+                   std::bind1st(std::multiplies< double >(), -1));
+  }
+
+
+  // NEED GAMMA_0 HERE!!!
+
+
+  template< >
+  inline void Tensor::operator*=(Dirac::Unity const &gamma)
+  {
+    // nothing to do
+  }
+
+  template< size_t Index >
+  inline Tensor Tensor::operator*(Dirac::Gamma< Index > const &gamma) const
+  {
+    std::cerr << "Trying to multiply QCDTensor*Dirac::Gamma< size_t Index >" << std::endl;
+    std::cerr << "THIS HAS NOT BEEN IMPLEMENTED YET" << std::endl;
+    std::cerr << "See Tensor.gamma.inlines for template specializations." << std::endl;
+    exit(1);
+  }
+
+  template< >
+  inline Tensor Tensor::operator*(Dirac::Gamma< 5 > const &gamma) const
+  {
+    Tensor tmp(*this);
     std::transform(reinterpret_cast< double * > (tmp.d_data +  72),
                    reinterpret_cast< double * > (tmp.d_data + 144),
                    reinterpret_cast< double * > (tmp.d_data +  72),
@@ -41,8 +49,48 @@ namespace QCD
     return tmp;
   }
 
+
+  // NEED GAMMA_0 HERE!!!
+
+
   template< >
-  inline QCD::Tensor operator*(Dirac::Unity const &gamma, Tensor const &tensor)
+  inline Tensor Tensor::operator*(Dirac::Unity const &gamma) const
+  {
+    return Tensor(*this);
+  }
+
+
+  // ------ non-member operators ---------------------------------------------
+
+
+  template< size_t Index >
+  inline void operator*=(Dirac::Gamma< Index > const &gamma, Tensor &tensor)
+  {
+    for(size_t Idx=0; Idx<12; Idx++)
+    {
+      (tensor(Idx)).leftMultiply(gamma);
+    }
+  }
+
+  template< >
+  inline void operator*=(Dirac::Unity const &gamma, Tensor &tensor)
+  {
+    // nothing to do
+  }
+
+  template< size_t Index >
+  inline Tensor operator*(Dirac::Gamma< Index > const &gamma, Tensor const &tensor)
+  {
+    Tensor tmp(tensor);
+    for(size_t Idx=0; Idx<12; Idx++)
+    {
+      (tmp(Idx)).leftMultiply(gamma);
+    }
+    return tmp;
+  }
+
+  template< >
+  inline Tensor operator*(Dirac::Unity const &gamma, Tensor const &tensor)
   {
     return Tensor(tensor);
   }

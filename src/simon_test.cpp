@@ -16,6 +16,8 @@
 #include <L2/Contract/Meson.h>
 
 
+//#define __GAMMA_TEST__
+
 //#define __PRINT__PROPS__
 
 //#define __REPOSITORY__PROPS_1__
@@ -23,12 +25,37 @@
 int main(int argc, char **argv)
 {
 
-  const size_t L = 4;
-  const size_t T = 4;
-
   Dirac::Gamma5 gamma5;
   Dirac::Gamma0 gamma0;
   Dirac::Unity identity;
+
+#ifdef __GAMMA_TEST__
+  std::complex< double > tensor_data [144];
+  for (int i=0; i<144; i++)
+   tensor_data[i] = i;
+
+  QCD::Tensor t1(tensor_data);
+  QCD::Tensor t2(tensor_data);
+
+  t1*=gamma0;
+
+  std::ofstream fout1, fout2, fout3;
+  fout1.open("bla1");
+  fout2.open("bla2");
+  fout3.open("bla3");
+  fout1 << t1 << std::endl;
+  fout2 << t2*gamma0 << std::endl;
+  fout3 << gamma0*t2 << std::endl;
+  fout1.close();
+  fout2.close();
+  fout3.close();
+  exit(0);
+#endif
+
+  const size_t L = 4;
+  const size_t T = 4;
+
+
 
   std::cout << "this is a test ..." << std::endl;
 
@@ -125,9 +152,14 @@ int main(int argc, char **argv)
 
 #endif
 
-  Contract::light_meson_twopoint(dProp, 0, gamma5, gamma5);
-//   Contract::light_meson_twopoint(*uProp, *dProp, gamma0, gamma0);
-  Contract::light_meson_twopoint(dProp, 0, identity, identity);
+  std::cout <<  "t:" << std::endl;
+  Contract::light_meson_twopoint(uProp, 0, gamma5, gamma5);
+//   Contract::light_meson_twopoint(uProp, 0, gamma0, gamma0);
+//   Contract::light_meson_twopoint(uProp, 0, identity, identity);
+
+//   Contract::light_meson_twopoint(dProp, 0, gamma5, gamma5);
+//   Contract::light_meson_twopoint(dProp, 0, gamma0, gamma0);
+//   Contract::light_meson_twopoint(dProp, 0, identity, identity);
 
 #ifdef __REPOSITORY__PROPS_1__
   std::cout <<  "reliable code gives the following result:" << std::endl;

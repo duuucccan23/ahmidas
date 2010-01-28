@@ -1,3 +1,6 @@
+
+// #define __NO_INTERPOLATING_FIELD__
+
 namespace Contract
 {
 
@@ -13,16 +16,40 @@ namespace Contract
       assert(u->L() == d->L());
     }
 
-    Core::Propagator d_bw = *u;
-//     d_bw.revert();
-    d_bw.dagger();
+    Core::Propagator *d_bar;
+
+
+#ifdef __NO_INTERPOLATING_FIELD__
+
+    std::cout << "\n ------ interpolating field left out ------ \n" << std::endl;
+    d_bar = new Core::Propagator(*u);
+//     d_bar->dagger();
+    d_bar->revert();
+    Core::Correlator twopoint_nif(u->L(), u->T(), (*u)*(*d_bar));
+    twopoint_nif.sumOverTimeSlices();
+    for (size_t t=0; t<twopoint_nif.getT(); t++)
+    {
+      std::cout << t << "  " << std::scientific << std::setprecision(10) << std::showpos
+                << tr(twopoint_nif[t]).real() << "  " << tr(twopoint_nif[t]).imag() << std::endl;
+      if (t==twopoint_nif.getT()-1)
+      {
+        std::cout << " = trace of" << std::endl;
+        std::cout << twopoint_nif[t]   << std::endl;
+      }
+    }
+    std::cout << "\n ------------------------------------------ \n" << std::endl;
+    delete d_bar;
+#endif
+
+    d_bar = new Core::Propagator(*u);
+    d_bar->revert();
 
     Core::Propagator tmpU((*u)*interpolSnk);
-    Core::Propagator tmpD(d_bw*interpolSrc);
-//     Core::Propagator tmpU(u);
-//     Core::Propagator tmpD(d_bw);
+    Core::Propagator tmpD((*d_bar)*interpolSrc);
 
-    Core::Correlator twopoint(u->L(), u->T(), tmpD*tmpU);
+    delete d_bar;
+
+    Core::Correlator twopoint(u->L(), u->T(), tmpU*tmpD);
 
     twopoint.sumOverTimeSlices();
 

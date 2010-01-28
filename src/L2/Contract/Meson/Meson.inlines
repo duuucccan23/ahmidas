@@ -1,5 +1,5 @@
 
-// #define __NO_INTERPOLATING_FIELD__
+#define __NO_INTERPOLATING_FIELD__
 
 namespace Contract
 {
@@ -23,19 +23,18 @@ namespace Contract
 
     std::cout << "\n ------ interpolating field left out ------ \n" << std::endl;
     d_bar = new Core::Propagator(*u);
-//     d_bar->dagger();
-    d_bar->revert();
+    d_bar->dagger();
     Core::Correlator twopoint_nif(u->L(), u->T(), (*u)*(*d_bar));
     twopoint_nif.sumOverTimeSlices();
     for (size_t t=0; t<twopoint_nif.getT(); t++)
     {
       std::cout << t << "  " << std::scientific << std::setprecision(10) << std::showpos
                 << tr(twopoint_nif[t]).real() << "  " << tr(twopoint_nif[t]).imag() << std::endl;
-      if (t==twopoint_nif.getT()-1)
-      {
-        std::cout << " = trace of" << std::endl;
-        std::cout << twopoint_nif[t]   << std::endl;
-      }
+//       if (t==twopoint_nif.getT()-1)
+//       {
+//         std::cout << " = trace of" << std::endl;
+//         std::cout << twopoint_nif[t]   << std::endl;
+//       }
     }
     std::cout << "\n ------------------------------------------ \n" << std::endl;
     delete d_bar;
@@ -57,11 +56,11 @@ namespace Contract
     {
       std::cout << t << "  " << std::scientific << std::setprecision(10) << std::showpos
                 << tr(twopoint[t]).real() << "  " << tr(twopoint[t]).imag() << std::endl;
-      if (t==twopoint.getT()-1)
-      {
-        std::cout << " = trace of" << std::endl;
-        std::cout << twopoint[t]   << std::endl;
-      }
+//       if (t==twopoint.getT()-1)
+//       {
+//         std::cout << " = trace of" << std::endl;
+//         std::cout << twopoint[t]   << std::endl;
+//       }
     }
     return twopoint;
   }

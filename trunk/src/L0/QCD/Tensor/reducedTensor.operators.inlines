@@ -1,0 +1,115 @@
+namespace QCD
+{
+
+ inline reducedTensor reducedTensor::operator+(reducedTensor const &other) const
+  {
+    reducedTensor tmp;
+    std::transform(d_data, d_data+16, other.d_data, tmp.d_data,
+                   std::plus< std::complex< double > >());
+    return tmp;
+  }
+
+  inline reducedTensor reducedTensor::operator-(reducedTensor const &other) const
+  {
+    reducedTensor tmp;
+    std::transform(d_data, d_data+16, other.d_data, tmp.d_data,
+                   std::minus< std::complex< double > >());
+    return tmp;
+  }
+
+  inline void reducedTensor::operator+=(reducedTensor const &other)
+  {
+    std::transform(d_data, d_data+16, other.d_data, d_data,
+                   std::plus< std::complex< double > >());
+  }
+
+  inline void reducedTensor::operator-=(reducedTensor const &other)
+  {
+    std::transform(d_data, d_data+16, other.d_data, d_data,
+                   std::minus< std::complex< double > >());
+  }
+
+  inline reducedTensor &reducedTensor::operator=(reducedTensor const &rhs)
+  {
+    if (this != &rhs)
+      std::copy(rhs.d_data, rhs.d_data + 16, d_data);
+    return *this;
+  }
+
+  inline void reducedTensor::operator*=(reducedTensor const &rhs)
+  {
+    reducedTensor tmpR(rhs);
+    reducedTensor tmpL(*this);
+    std::complex< double > zero(0, 0);
+    //transpose in order to use inner_product of ranges
+    std::swap(tmpR.d_data[ 1], tmpR.d_data[ 4]);
+    std::swap(tmpR.d_data[ 2], tmpR.d_data[ 8]);
+    std::swap(tmpR.d_data[ 3], tmpR.d_data[12]);
+    std::swap(tmpR.d_data[ 6], tmpR.d_data[ 9]);
+    std::swap(tmpR.d_data[ 7], tmpR.d_data[13]);
+    std::swap(tmpR.d_data[11], tmpR.d_data[14]);
+    d_data[ 0] = std::inner_product(tmpL.d_data     , tmpL.d_data +  4, tmpR.d_data,      zero);
+    d_data[ 1] = std::inner_product(tmpL.d_data     , tmpL.d_data +  4, tmpR.d_data +  4, zero);
+    d_data[ 2] = std::inner_product(tmpL.d_data     , tmpL.d_data +  4, tmpR.d_data +  8, zero);
+    d_data[ 3] = std::inner_product(tmpL.d_data     , tmpL.d_data +  4, tmpR.d_data + 12, zero);
+    d_data[ 4] = std::inner_product(tmpL.d_data +  4, tmpL.d_data +  8, tmpR.d_data,      zero);
+    d_data[ 5] = std::inner_product(tmpL.d_data +  4, tmpL.d_data +  8, tmpR.d_data +  4, zero);
+    d_data[ 6] = std::inner_product(tmpL.d_data +  4, tmpL.d_data +  8, tmpR.d_data +  8, zero);
+    d_data[ 7] = std::inner_product(tmpL.d_data +  4, tmpL.d_data +  8, tmpR.d_data + 12, zero);
+    d_data[ 8] = std::inner_product(tmpL.d_data +  8, tmpL.d_data + 12, tmpR.d_data,      zero);
+    d_data[ 9] = std::inner_product(tmpL.d_data +  8, tmpL.d_data + 12, tmpR.d_data +  4, zero);
+    d_data[10] = std::inner_product(tmpL.d_data +  8, tmpL.d_data + 12, tmpR.d_data +  8, zero);
+    d_data[11] = std::inner_product(tmpL.d_data +  8, tmpL.d_data + 12, tmpR.d_data + 12, zero);
+    d_data[12] = std::inner_product(tmpL.d_data + 12, tmpL.d_data + 16, tmpR.d_data,      zero);
+    d_data[13] = std::inner_product(tmpL.d_data + 12, tmpL.d_data + 16, tmpR.d_data +  4, zero);
+    d_data[14] = std::inner_product(tmpL.d_data + 12, tmpL.d_data + 16, tmpR.d_data +  8, zero);
+    d_data[15] = std::inner_product(tmpL.d_data + 12, tmpL.d_data + 16, tmpR.d_data + 12, zero);
+  }
+
+  inline reducedTensor reducedTensor::operator*(std::complex< double > const &factor) const
+  {
+    reducedTensor tmp;
+    std::transform(d_data, d_data+16, tmp.d_data,
+                   bind2nd(std::multiplies< std::complex< double > >(), factor));
+    return tmp;
+  }
+
+  inline void reducedTensor::operator*=(std::complex< double > const &factor)
+  {
+    std::transform(d_data, d_data+16, d_data,
+                   bind2nd(std::multiplies< std::complex< double > >(), factor));
+  }
+
+  inline std::complex< double > const &reducedTensor::operator()(Base::DiracIndex const Dirac_src,
+                                                                 Base::DiracIndex const Dirac_snk) const
+  {
+    return d_data[Dirac_src + 4*Dirac_snk];
+  }
+
+  inline std::ostream &operator<<(std::ostream &out, reducedTensor const &rTensor)
+  {
+    out << std::scientific << std::setprecision(3) << std::showpos
+        << "[ " << rTensor.d_data[ 0].real() << "  " << rTensor.d_data[ 0].imag() << " * i   "
+                << rTensor.d_data[ 1].real() << "  " << rTensor.d_data[ 2].imag() << " * i   "
+                << rTensor.d_data[ 2].real() << "  " << rTensor.d_data[ 2].imag() << " * i   "
+                << rTensor.d_data[ 3].real() << "  " << rTensor.d_data[ 3].imag() << " * i  ]"
+                << std::endl
+        << "[ " << rTensor.d_data[ 4].real() << "  " << rTensor.d_data[ 4].imag() << " * i   "
+                << rTensor.d_data[ 5].real() << "  " << rTensor.d_data[ 5].imag() << " * i   "
+                << rTensor.d_data[ 6].real() << "  " << rTensor.d_data[ 6].imag() << " * i   "
+                << rTensor.d_data[ 7].real() << "  " << rTensor.d_data[ 7].imag() << " * i  ]"
+                << std::endl
+        << "[ " << rTensor.d_data[ 8].real() << "  " << rTensor.d_data[ 8].imag() << " * i   "
+                << rTensor.d_data[ 9].real() << "  " << rTensor.d_data[ 9].imag() << " * i   "
+                << rTensor.d_data[10].real() << "  " << rTensor.d_data[10].imag() << " * i   "
+                << rTensor.d_data[11].real() << "  " << rTensor.d_data[11].imag() << " * i  ]"
+                << std::endl
+        << "[ " << rTensor.d_data[12].real() << "  " << rTensor.d_data[12].imag() << " * i   "
+                << rTensor.d_data[13].real() << "  " << rTensor.d_data[13].imag() << " * i   "
+                << rTensor.d_data[14].real() << "  " << rTensor.d_data[14].imag() << " * i   "
+                << rTensor.d_data[15].real() << "  " << rTensor.d_data[15].imag() << " * i  ]"
+                << std::endl;
+    return out;
+  }
+
+}

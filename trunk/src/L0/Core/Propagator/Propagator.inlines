@@ -154,7 +154,6 @@ namespace Core
       QCD::Tensor tmp((*it).dagger());
       tmp *= gamma5;
       (*it) = gamma5*tmp;
-
       ++it;
     }
   }

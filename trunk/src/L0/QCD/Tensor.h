@@ -62,7 +62,7 @@ namespace QCD
                                                size_t const dirSource, size_t const colSource) const;
 
       template< size_t Index >
-      Tensor &operator*(Dirac::Gamma< Index > const &gamma) const;
+      Tensor operator*(Dirac::Gamma< Index > const &gamma) const;
 
       template< size_t Index >
       void operator*=(Dirac::Gamma< Index > const &gamma);
@@ -194,6 +194,7 @@ namespace QCD
 
 #include "Tensor/reducedTensor.inlines"
 #include "Tensor/reducedTensor.constructors.inlines"
+#include "Tensor/reducedTensor.operators.inlines"
 #include "Tensor/reducedTensor.gamma.inlines"
 
 #include "Tensor/Tensor.iterator.inlines"

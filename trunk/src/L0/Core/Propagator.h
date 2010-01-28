@@ -19,6 +19,9 @@ namespace Core
      maybe at some point we should include the source properties, in whatever format,
      as a member variable
   */
+
+  class StochasticSource;
+
   class Propagator
   {
 
@@ -60,6 +63,8 @@ namespace Core
 
       // needed for meson contractions
       Core::Field< QCD::reducedTensor > *operator*(Propagator const &other) const;
+
+      void operator*=(StochasticSource &sSource);
 
       /*
           Revert Propagator using gamma5 hermeticity trick:
@@ -104,6 +109,22 @@ namespace Core
       void isolate();
 
   };
+
+
+  class StochasticSource : public Propagator
+  {
+
+    size_t *d_references;
+
+    public:
+
+    //overload base class function in order to be able to load non-diluted sources
+    //bool load(std::vector< std::string > const filenames, std::string const format);
+
+    Propagator operator*(Propagator const &propagator) const;
+
+  };
+
 
 }
 

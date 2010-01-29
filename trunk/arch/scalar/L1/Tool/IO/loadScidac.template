@@ -1,33 +1,32 @@
 template< typename Element >
-Core::Field< Element > Tool::IO::loadScidac(std::string const &filename, size_t L, size_t T)
+void Tool::IO::loadScidac(Core::Field< Element > *field, std::string const &filename)
 {
   Lime::Reader reader(filename);
   Scidacinfo info(reader);
-  Core::Field< Element > result(L, T);
 
   reader.retrieveRecord(reader.findRecord("scidac-binary-data"));
   if (reader.fail())
   {
-    std::cerr << "Lime reader could not find the record, check path and file, and check lime contents of file.\nField remains empty!.\n";
+    std::cerr << "Lime reader could not find the record, check path and file, and check lime contents of file.\nField unchanged!.\n";
     exit(EXIT_FAILURE);
-    return result; //NOTE Record not found, returning empty field! Add error exit here.
+    return;
   }
   assert(reader.good());
 
-  Element *dataPtr = result.raw(); //Starting memory address of the field.
+  Element *dataPtr = field->raw(); //Starting memory address of the field.
 
   if (info.precision.compare("64") == 0)
   {
-    reader.read(dataPtr, result.volume());
+    reader.read(dataPtr, field->volume());
     if (!Base::bigEndian)
-      Base::swapEndian(dataPtr, dataPtr + result.volume(), sizeof(double));
-    return result;
+      Base::swapEndian(dataPtr, dataPtr + field->volume(), sizeof(double));
+    return;
   }
 
   size_t const elSize = sizeof(Element) / sizeof(double);
   uint32_t elem32[elSize];
 
-  for (size_t ctr = 0; ctr < result.volume(); ++ctr, ++dataPtr)
+  for (size_t ctr = 0; ctr < field->volume(); ++ctr, ++dataPtr)
   {
     reader.read(elem32, elSize);
     if (!Base::bigEndian)
@@ -35,5 +34,4 @@ Core::Field< Element > Tool::IO::loadScidac(std::string const &filename, size_t 
     std::copy(reinterpret_cast< float* >(elem32), reinterpret_cast< float* >(elem32) + elSize,
               reinterpret_cast< double* >(dataPtr));
   }
-  return result;
 }

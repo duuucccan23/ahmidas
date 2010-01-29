@@ -2,14 +2,15 @@
 #include <iomanip>
 #include <iostream>
 
-#include <L0/Tool/IO.h>
 #include <L0/Core/Field.h>
 #include <L0/QCD/Gauge.h>
 #include <L1/Tool.h>
+#include <L1/Tool/IO.h>
 
 int main(int argc, char **argv)
 {
-  Core::Field< QCD::Gauge > myfield = Tool::IO::loadILDG< QCD::Gauge >("../../test/conf.88", 8, 8);
+  Core::Field< QCD::Gauge > myfield(8,8);
+  Tool::IO::load(&myfield, "../../test/conf.88", Tool::IO::fileILDG);
   std::cout << "Read conf.88 from test directory.\n";
   double stored = 0.5998194411656625;
   double prec = 1e-14;

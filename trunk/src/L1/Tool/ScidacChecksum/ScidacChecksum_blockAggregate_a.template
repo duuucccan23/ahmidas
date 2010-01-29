@@ -1,5 +1,5 @@
 template< typename Element >
-size_t Base::ScidacChecksum::blockAggregate(Element const *data, size_t blockSize, size_t blocks, size_t rank)
+size_t Tool::ScidacChecksum::blockAggregate(Element const *data, size_t blockSize, size_t blocks, size_t rank)
 {
   for(size_t ctr = 0; ctr < blocks; ++ctr, ++rank)
   {

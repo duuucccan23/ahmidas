@@ -6,7 +6,7 @@
 #include <cstdlib>
 #include <stdint.h>
 
-namespace Base
+namespace Tool
 {
   class ScidacChecksum
   {

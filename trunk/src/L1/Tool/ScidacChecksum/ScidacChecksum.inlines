@@ -1,0 +1,31 @@
+inline Tool::ScidacChecksum::ScidacChecksum()
+{
+  d_sum.as64 = 0;
+  createTable();
+}
+
+inline Tool::ScidacChecksum::ScidacChecksum(uint64_t const &init)
+{
+  d_sum.as64 = init;
+  createTable();
+}
+
+inline void Tool::ScidacChecksum::clear()
+{
+  d_sum.as64 = 0;
+}
+
+inline uint64_t Tool::ScidacChecksum::checksum() const
+{
+  return d_sum.as64;
+}
+
+inline uint32_t Tool::ScidacChecksum::lower() const
+{
+  return d_sum.as32[0];
+}
+
+inline uint32_t Tool::ScidacChecksum::upper() const
+{
+  return d_sum.as32[1];
+}

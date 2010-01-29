@@ -19,7 +19,7 @@ TARGET_LINK_LIBRARIES(fieldcomponent Weave)
 ADD_TEST(fieldcomponent_setup fieldcomponent)
 
 ADD_EXECUTABLE(loadMILC loadMILC.cpp)
-TARGET_LINK_LIBRARIES(loadMILC Base Tool MILC SU3)
+TARGET_LINK_LIBRARIES(loadMILC Base IO SU3)
 ADD_TEST(load_MILC_lattice loadMILC)
 
 ADD_EXECUTABLE(random random.cpp)
@@ -27,7 +27,7 @@ TARGET_LINK_LIBRARIES(random Base)
 ADD_TEST(random_performance random)
 
 ADD_EXECUTABLE(config config.cpp)
-TARGET_LINK_LIBRARIES(config Base ILDG Lime SU3 Tool)
+TARGET_LINK_LIBRARIES(config Base IO SU3)
 ADD_TEST(basic_config_stuff config)
 
 #ADD_EXECUTABLE(light_mesons light_mesons.cpp)

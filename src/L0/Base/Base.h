@@ -41,22 +41,22 @@ namespace Base
   // Definitions to be used in the characterization of sources
   enum SourcePolarization
   {
-    sou_UNPOLARIZED = 0,
-    sou_PARTLY_POLARIZED = 1,
-    sou_FULLY_POLARIZED = 2
+    sou_UNPOLARIZED,
+    sou_PARTLY_POLARIZED,
+    sou_FULLY_POLARIZED
   };
 
   enum SourceColorState
   {
-    sou_WHITE = 0,
-    sou_PURE = 1,
-    sou_GENERIC = 2
+    sou_WHITE,
+    sou_PURE,
+    sou_GENERIC
   };
 
   enum weaveOperator
   {
-    wea_SUM = 0,
-    wea_XOR = 1
+    wea_SUM,
+    wea_XOR
   };
 
   extern bool const bigEndian;

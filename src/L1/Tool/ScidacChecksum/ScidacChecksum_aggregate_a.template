@@ -1,9 +1,9 @@
 template< typename Element >
-size_t Base::ScidacChecksum::aggregate(Element const &data, size_t elements, size_t rank)
+size_t Tool::ScidacChecksum::aggregate(Element const *data, size_t elements, size_t rank)
 {
   for(size_t ctr = 0; ctr < elements; ++ctr, ++rank)
   {
-    uint32_t crcSum = crc32(data);
+    uint32_t crcSum = crc32(data[ctr]);
     d_sum.as32[0] ^= crcSum << (rank % 29) | crcSum >> (32 - (rank % 29));
     d_sum.as32[1] ^= crcSum << (rank % 31) | crcSum >> (32 - (rank % 31));
   }

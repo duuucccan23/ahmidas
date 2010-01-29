@@ -1,19 +1,25 @@
 #pragma once
 
-#include <fstream>
 #include <string>
 #include <iostream>
-#include <L0/Base/ScidacChecksum.h>
 #include <L0/Base/Weave.h>
 #include <L0/Core/Field.h>
-#include <L0/Tool/IO/Lime/Reader.h>
-#include <L0/Tool/IO/Lime/Writer.h>
 #include <L1/Tool.h>
+#include <L1/Tool/IO/Lime/Reader.h>
+#include <L1/Tool/IO/Lime/Writer.h>
+#include <L1/Tool/ScidacChecksum.h>
 
 namespace Tool
 {
   namespace IO
   {
+    enum filetype
+    {
+      fileILDG,
+      fileSCIDAC,
+      fileMILC
+    };
+
     struct ILDGinfo
     {
       std::string version;
@@ -45,14 +51,17 @@ namespace Tool
       Scidacinfo(Lime::Reader &reader);
     };
 
-    template< typename Element >
-    Core::Field< Element > loadILDG(std::string const &filename, size_t L, size_t T);
+    void load(Core::Field< QCD::Gauge > *field, std::string const &filename, Tool::IO::filetype);
+    void load(Core::Field< QCD::Spinor > *field, std::string const &filename, Tool::IO::filetype);
 
     template< typename Element >
-    Core::Field< Element > loadScidac(std::string const &filename, size_t L, size_t T);
+    void loadILDG(Core::Field< Element > *field, std::string const &filename);
 
     template< typename Element >
-    Core::Field< Element > loadMILC(std::string const &filename, size_t L, size_t T);
+    void loadScidac(Core::Field< Element > *field, std::string const &filename);
+
+    template< typename Element >
+    void loadMILC(Core::Field< Element > *field, std::string const &filename);
 
     template< typename Element >
     void saveILDG(Core::Field< Element > const &field, std::string const &filename);

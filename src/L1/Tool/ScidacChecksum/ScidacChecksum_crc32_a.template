@@ -1,5 +1,5 @@
 template< typename Element >
-uint32_t Base::ScidacChecksum::crc32(Element const *buffer, size_t length, uint32_t crc)
+uint32_t Tool::ScidacChecksum::crc32(Element const *buffer, size_t length, uint32_t crc)
 {
   unsigned char const *cBuffer = reinterpret_cast< unsigned char const* >(buffer);
 

@@ -28,10 +28,6 @@
 #include <L0/Base/Base.h>
 #include <L0/Base/Weave.h>
 
-/* A field is a 4 dimensional object with an X, Y, Z and T dimension. X = Y = Z = L.
- *
- */
-
 namespace Core
 {
   template< typename Element, typename Atom >

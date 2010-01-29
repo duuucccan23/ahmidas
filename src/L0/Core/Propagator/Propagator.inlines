@@ -68,11 +68,10 @@ namespace Core
       for (size_t i=0; i<12; i++)
       {
         if (format == std::string("ILDG"))
-         tmp[i] = Tool::IO::loadILDG< QCD::Spinor >(filenames[i], d_components->L(), d_components->T());
+         Tool::IO::load(tmp+i,filenames[i], Tool::IO::fileILDG);
         else if (format == std::string("Scidac"))
         {
-          tmp[i] = Tool::IO::loadScidac< QCD::Spinor >(filenames[i], d_components->L(), d_components->T());
-          //std::cout << (tmp[i])[0]; //exit(1);
+          Tool::IO::load(tmp+i,filenames[i], Tool::IO::fileSCIDAC);
         }
         else
         {

@@ -1,6 +1,6 @@
 #include "ILDGinfo.ih"
 
-// Unfortunately, ETMC includes spurious spaces in its ILDG header. We'll have to strip those out.
+// Unfortunately, ETMC used to include spurious spaces in its ILDG header. We'll have to strip those out.
 
 inline char *realFront(char *string)
 {

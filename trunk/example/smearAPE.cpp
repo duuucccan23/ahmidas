@@ -3,10 +3,10 @@
 #include <iomanip>
 #include <iostream>
 
-#include <L0/Tool/IO.h>
 #include <L0/Core/Field.h>
 #include <L0/QCD/Gauge.h>
 #include <L1/Smear/APE.h>
+#include <L1/Tool/IO.h>
 
 int main(int argc, char **argv)
 {
@@ -15,7 +15,8 @@ int main(int argc, char **argv)
   std::cout << "Executable tag: " << Id.substr(1,Id.length()-2) << std::endl;
 
   std::cout << "Reading gauge file conf.88 from test directory.\n";
-  Core::Field< QCD::Gauge > myfield = Tool::IO::loadILDG<QCD::Gauge >("../../test/conf.88", 8, 8);
+  Core::Field< QCD::Gauge > myfield(8, 8);
+  Tool::IO::load(&myfield, "../../test/conf.88", Tool::IO::fileILDG);
 
   std::cout << "Showing the gauge link in the x-up direction from point (0,0,0,0).\n";
   std::cout << myfield[0][Base::idx_X];

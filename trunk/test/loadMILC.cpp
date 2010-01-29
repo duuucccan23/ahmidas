@@ -1,13 +1,13 @@
 #include <iostream>
 #include <L0/Core/Field.h>
 #include <L0/QCD/Gauge.h>
-#include <L0/Tool/IO.h>
 #include <L1/Tool.h>
-#include <L0/SU3/Matrix.h>
+#include <L1/Tool/IO.h>
 
 int main(int argc, char **argv)
 {
-  Core::Field< QCD::Gauge > field = Tool::IO::loadMILC< QCD::Gauge >("../../test/lat.sample.16x6.milc", 16, 6);
+  Core::Field< QCD::Gauge > field(16,6);
+  Tool::IO::load(&field, "../../test/lat.sample.16x6.milc", Tool::IO::fileMILC);
   double sp = Tool::spatialPlaquette(field);
   double tp = Tool::temporalPlaquette(field);
   std::cout << "Spatial plaquette:  " << sp << ", should be 0.396411." << std::endl;

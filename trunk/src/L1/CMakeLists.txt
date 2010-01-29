@@ -1,4 +1,3 @@
-ADD_SUBDIRECTORY(Source)
 ADD_SUBDIRECTORY(Smear)
 
 SET(Sources_Tool Tool/Tool_localTrace.cpp Tool/Tool_reunitarize.cpp Tool/Tool_fixCoulombGauge.cpp

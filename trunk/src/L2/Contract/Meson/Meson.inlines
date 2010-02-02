@@ -75,4 +75,55 @@ namespace Contract
     return light_meson_twopoint(u, d, interpolSrc, interpolSnk, p);
   }
 
+  // this works using the one-end trick and gives all 16 gamma-combinations
+  inline Core::Correlator *light_meson_twopoint_stochastic(Core::Propagator const *u)
+  {
+//     static const size_t gamma_combination[16] = 
+//     {
+//       4, 1, 2, 3, -1, 5,      // gamma0, gamma1, gamma2, gamma3, unity, gamma5
+//       54, 51, 52, 53,         // gamma5*gamma0, gamma5*gamma1, gamma5*gamma2, gamma5*gamma3,
+//       10, 20, 23, 21, 31, 32  // sigma01, sigma02, sigma03, sigma12, sigma13, sigma23
+//     };
+// 
+    static const std::string gamma_names[16] = 
+    {
+      "gamma0", "gamma1", "gamma2", "gamma3", "unity", "gamma5",
+      "gamma5*gamma0", "gamma5*gamma1", "gamma5*gamma2", "gamma5*gamma3",
+      "sigma01", "sigma02", "sigma03", "sigma12", "sigma13", "sigma23"
+    };
+    
+    Core::Propagator *d_bar;
+
+    d_bar = new Core::Propagator(*u);
+    d_bar->revert();
+
+
+    Core::Correlator *twopoint = new Core::Correlator[16];
+    
+    Core::Propagator *tmpU;
+    Core::Propagator *tmpD;
+    Dirac::Gamma< 4 > gamma0;
+    tmpU = new Core::Propagator(gamma0 * (*u));
+    tmpD = new Core::Propagator(gamma0 * (*d_bar));
+    twopoint[0] = Core::Correlator(u->L(), u->T(), (*tmpU)*(*tmpD));
+    twopoint[0].sumOverTimeSlices();
+    delete tmpU;
+    delete tmpD;
+    
+    for  (size_t idx=0; idx<16; idx++)
+    {
+      std::cout << "\nGamma combination: " << gamma_names[idx] << " \n" << std::endl; 
+      for (size_t t=0; t<u->T(); t++)
+      {
+        std::cout << t << "  " << std::scientific << std::setprecision(10) << std::showpos
+          << tr((twopoint[idx])[t]).real() << "  " << tr((twopoint[idx])[t]).imag() << std::endl;
+      }
+    }
+    
+    delete d_bar;
+    return twopoint;
+  }
+
+
+
 }

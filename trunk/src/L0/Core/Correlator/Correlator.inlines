@@ -1,6 +1,11 @@
 namespace Core
 {
 
+  inline Correlator::Correlator()
+    : L(0), T(0), d_weave(0), d_data(0),
+      d_sumTimeslice(0), d_references(new size_t(1))
+  {}
+  
   inline Correlator::Correlator(Correlator const &other)
     : L(other.L), T(other.T), d_weave(other.d_weave), d_data(other.d_data),
       d_sumTimeslice(other.d_sumTimeslice), d_references(other.d_references)

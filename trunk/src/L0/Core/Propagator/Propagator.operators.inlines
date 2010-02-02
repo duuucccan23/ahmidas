@@ -37,6 +37,21 @@ namespace Core
     return tmp;
   }
 
+  template< size_t Index >
+  Propagator operator*(Dirac::Gamma< Index > const &gamma, Propagator const &p)
+  {
+    Propagator tmp(p.L(), p.T());
+    Propagator::const_iterator before(p.begin());
+    Propagator::iterator after(tmp.begin());
+    while(before != p.end())
+    {
+      (*after) = gamma*(*before);
+      ++before;
+      ++after;
+    }
+    return tmp;
+  }
+
 
   inline Field< QCD::reducedTensor > *Propagator::operator*(Propagator const &other) const
   {

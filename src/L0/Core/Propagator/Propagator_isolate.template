@@ -9,13 +9,6 @@ inline void Core::Propagator::isolate()
   *d_references -= 1;
   d_references = new size_t(1);
 
-  colour_strides = new size_t [nColour];
-  dirac_strides  = new size_t [nDirac];
-  colour_strides[0] = ColourStrideSink;
-  colour_strides[1] = ColourStrideSource;
-  dirac_strides[0]  = DiracStrideSink;
-  dirac_strides[1]  = DiracStrideSource;
-
   Core::Field< QCD::Tensor > *d_components_new = new Core::Field< QCD::Tensor > (L(), T());
   Core::Field< QCD::Tensor >::const_iterator itOld = d_components->begin();
   Core::Field< QCD::Tensor >::iterator itNew = d_components_new->begin();

@@ -4,10 +4,22 @@ namespace QCD
   template< size_t Index >
   inline void Tensor::operator*=(Dirac::Gamma< Index > const &gamma)
   {
-    std::cerr << "Trying to multiply QCDTensor*Dirac::Gamma< size_t Index >" << std::endl;
-    std::cerr << "THIS HAS NOT BEEN IMPLEMENTED YET" << std::endl;
-    std::cerr << "See Tensor.gamma.inlines for template specializations." << std::endl;
-    exit(1);
+    // swapping entries belonging to first <-> second as well as third <-> forth index
+    // does never appear (but when multiplying Dirac::Sigma matrices),
+    // i.e. gamma.perm(0) = {0,2,3}, gamma.perm(1) = {1,2,3}.
+    // so regarding the permutation the following two lines will do the job
+    std::swap_ranges(d_data,       d_data +  36, d_data + 36*gamma.perm(0));
+    std::swap_ranges(d_data +  36, d_data +  72, d_data + 36*gamma.perm(1));
+
+    std::transform(d_data,       d_data +  36,
+                   std::bind1st(std::multiplies< std::complex< double > >(), gamma.sign(0)));
+    std::transform(d_data +  36, d_data +  72,
+                   std::bind1st(std::multiplies< std::complex< double > >(), gamma.sign(1)));
+    std::transform(d_data +  72, d_data + 108,
+                   std::bind1st(std::multiplies< std::complex< double > >(), gamma.sign(2)));
+    std::transform(d_data + 108, d_data + 144,
+                   std::bind1st(std::multiplies< std::complex< double > >(), gamma.sign(3)));
+    std::cerr << "warning: using unspecialized template function for Tensor*Gamma" << Index << std::endl;
   }
 
   template< >
@@ -20,7 +32,15 @@ namespace QCD
   }
 
 
-  // NEED GAMMA_0 HERE!!!
+  template< >
+  inline void Tensor::operator*=(Dirac::Gamma< 0 > const &gamma)
+  {
+
+    std::transform(reinterpret_cast< double * > (d_data),
+                   reinterpret_cast< double * > (d_data + 144),
+                   reinterpret_cast< double * > (d_data),
+                   std::bind1st(std::multiplies< double >(), -1));
+  }
 
 
   template< >
@@ -32,10 +52,9 @@ namespace QCD
   template< size_t Index >
   inline Tensor Tensor::operator*(Dirac::Gamma< Index > const &gamma) const
   {
-    std::cerr << "Trying to multiply QCDTensor*Dirac::Gamma< size_t Index >" << std::endl;
-    std::cerr << "THIS HAS NOT BEEN IMPLEMENTED YET" << std::endl;
-    std::cerr << "See Tensor.gamma.inlines for template specializations." << std::endl;
-    exit(1);
+    Tensor tmp(*this);
+    tmp *= gamma;
+    return tmp;
   }
 
   template< >
@@ -48,10 +67,6 @@ namespace QCD
                    std::bind1st(std::multiplies< double >(), -1));
     return tmp;
   }
-
-
-  // NEED GAMMA_0 HERE!!!
-
 
   template< >
   inline Tensor Tensor::operator*(Dirac::Unity const &gamma) const

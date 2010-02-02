@@ -1,0 +1,122 @@
+namespace QCD
+{
+
+  // note: all sigma matrices (in the representation we use here) act like
+  // swapping either the entries of the first and the second pair of indices or not at all
+  // (sigma_12 and sigma_03 are diagonal)
+
+  namespace
+  {
+    std::complex< double > const I = std::complex< double >(0, 1);
+  }
+
+
+  template< >
+  inline void Tensor::operator*=(Dirac::Sigma< 41 > const &sigma)
+  {
+    std::swap_ranges(d_data,      d_data +  36, d_data +  36);
+    std::swap_ranges(d_data + 72, d_data + 108, d_data + 108);
+    std::transform(d_data,      d_data +  72, d_data,
+                   std::bind2nd(std::multiplies< std::complex< double > >(), -I));
+    std::transform(d_data + 72, d_data + 144, d_data +  72,
+                   std::bind2nd(std::multiplies< std::complex< double > >(),  I));
+  }
+
+  template< >
+  inline void Tensor::operator*=(Dirac::Sigma< 42 > const &sigma)
+  {
+    std::swap_ranges(d_data,      d_data +  36, d_data +  36);
+    std::swap_ranges(d_data + 72, d_data + 108, d_data + 108);
+    std::transform(reinterpret_cast< double * > (d_data),
+                   reinterpret_cast< double * > (d_data +  36),
+                   reinterpret_cast< double * > (d_data),
+                   std::bind2nd(std::multiplies< double >(), -1));
+    std::transform(reinterpret_cast< double * > (d_data + 108),
+                   reinterpret_cast< double * > (d_data + 144),
+                   reinterpret_cast< double * > (d_data + 108),
+                   std::bind2nd(std::multiplies< double >(), -1));
+  }
+
+  template< >
+  inline void Tensor::operator*=(Dirac::Sigma< 43 > const &sigma)
+  {
+    std::transform(d_data,       d_data +  36, d_data,
+                   std::bind2nd(std::multiplies< std::complex< double > >(), -I));
+    std::transform(d_data +  36, d_data + 108, d_data +  36,
+                   std::bind2nd(std::multiplies< std::complex< double > >(),  I));
+    std::transform(d_data + 108, d_data + 144, d_data + 108,
+                   std::bind2nd(std::multiplies< std::complex< double > >(), -I));
+  }
+
+  template< >
+  inline void Tensor::operator*=(Dirac::Sigma< 12 > const &sigma)
+  {
+    std::transform(d_data,       d_data +  36, d_data,
+                   std::bind2nd(std::multiplies< std::complex< double > >(),  I));
+    std::transform(d_data +  36, d_data +  72, d_data +  36,
+                   std::bind2nd(std::multiplies< std::complex< double > >(), -I));
+    std::transform(d_data +  72, d_data + 108, d_data +  72,
+                   std::bind2nd(std::multiplies< std::complex< double > >(),  I));
+    std::transform(d_data + 108, d_data + 144, d_data + 108,
+                   std::bind2nd(std::multiplies< std::complex< double > >(), -I));
+  }
+
+  template< >
+  inline void Tensor::operator*=(Dirac::Sigma< 13 > const &sigma)
+  {
+    std::swap_ranges(d_data,      d_data +  36, d_data +  36);
+    std::swap_ranges(d_data + 72, d_data + 108, d_data + 108);
+    std::transform(reinterpret_cast< double * > (d_data),
+                   reinterpret_cast< double * > (d_data +  36),
+                   reinterpret_cast< double * > (d_data),
+                   std::bind2nd(std::multiplies< double >(), -1));
+    std::transform(reinterpret_cast< double * > (d_data +  72),
+                   reinterpret_cast< double * > (d_data + 108),
+                   reinterpret_cast< double * > (d_data +  72),
+                   std::bind2nd(std::multiplies< double >(), -1));
+  }
+
+  template< >
+  inline void Tensor::operator*=(Dirac::Sigma< 23 > const &sigma)
+  {
+    std::swap_ranges(d_data,      d_data +  36, d_data +  36);
+    std::swap_ranges(d_data + 72, d_data + 108, d_data + 108);
+    std::transform(d_data, d_data + 144, d_data,
+                   std::bind2nd(std::multiplies< std::complex< double > >(), I));
+  }
+
+
+  template< size_t Index >
+  inline Tensor Tensor::operator*(Dirac::Sigma< Index > const &sigma) const
+  {
+    Tensor tmp(*this);
+    tmp *= sigma;
+    return tmp;
+  }
+
+
+
+  // ------ non-member operators ---------------------------------------------
+
+
+  template< size_t Index >
+  inline void operator*=(Dirac::Sigma< Index > const &sigma, Tensor &tensor)
+  {
+    for(size_t Idx=0; Idx<12; Idx++)
+    {
+      (tensor(Idx)).leftMultiply(sigma);
+    }
+  }
+
+  template< size_t Index >
+  inline Tensor operator*(Dirac::Sigma< Index > const &sigma, Tensor const &tensor)
+  {
+    Tensor tmp(tensor);
+    for(size_t Idx=0; Idx<12; Idx++)
+    {
+      (tmp(Idx)).leftMultiply(sigma);
+    }
+    return tmp;
+  }
+
+}

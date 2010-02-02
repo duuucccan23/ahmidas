@@ -65,6 +65,8 @@ namespace Contract
     return twopoint;
   }
 
+
+
   template< size_t IndexSrc, size_t IndexSnk >
   inline Core::Correlator light_meson_twopoint(Core::Propagator const *u, Core::Propagator const *d,
                                                Dirac::Gamma< IndexSrc > const &interpolSrc,
@@ -75,51 +77,45 @@ namespace Contract
     return light_meson_twopoint(u, d, interpolSrc, interpolSnk, p);
   }
 
+
+
   // this works using the one-end trick and gives all 16 gamma-combinations
-  inline Core::Correlator *light_meson_twopoint_stochastic(Core::Propagator const *u)
+  inline Core::Correlator *light_meson_twopoint_stochastic(Core::StochasticPropagator< 4 > const &psi1,
+                                                           Core::StochasticPropagator< 4 > const &psi2)
   {
-//     static const size_t gamma_combination[16] = 
-//     {
-//       4, 1, 2, 3, -1, 5,      // gamma0, gamma1, gamma2, gamma3, unity, gamma5
-//       54, 51, 52, 53,         // gamma5*gamma0, gamma5*gamma1, gamma5*gamma2, gamma5*gamma3,
-//       10, 20, 23, 21, 31, 32  // sigma01, sigma02, sigma03, sigma12, sigma13, sigma23
-//     };
-// 
-    static const std::string gamma_names[16] = 
-    {
-      "gamma0", "gamma1", "gamma2", "gamma3", "unity", "gamma5",
-      "gamma5*gamma0", "gamma5*gamma1", "gamma5*gamma2", "gamma5*gamma3",
-      "sigma01", "sigma02", "sigma03", "sigma12", "sigma13", "sigma23"
-    };
-    
-    Core::Propagator *d_bar;
-
-    d_bar = new Core::Propagator(*u);
-    d_bar->revert();
-
 
     Core::Correlator *twopoint = new Core::Correlator[16];
-    
-    Core::Propagator *tmpU;
-    Core::Propagator *tmpD;
-    Dirac::Gamma< 4 > gamma0;
-    tmpU = new Core::Propagator(gamma0 * (*u));
-    tmpD = new Core::Propagator(gamma0 * (*d_bar));
-    twopoint[0] = Core::Correlator(u->L(), u->T(), (*tmpU)*(*tmpD));
+
+    Dirac::Gamma< 5 >  gamma5;
+    Dirac::Gamma< 4 >  gamma0;
+    Dirac::Gamma< 1 >  gamma1;
+    Dirac::Gamma< 2 >  gamma2;
+    Dirac::Gamma< 3 >  gamma3;
+    Dirac::Unity       one; 
+    Dirac::Gamma< 45 > gamma0gamma5;
+    Dirac::Gamma< 15 > gamma1gamma5;
+    Dirac::Gamma< 25 > gamma2gamma5;
+    Dirac::Gamma< 35 > gamma3gamma5;
+    Dirac::Sigma< 41 > sigma01;
+    Dirac::Sigma< 42 > sigma02;
+    Dirac::Sigma< 43 > sigma03;
+    Dirac::Sigma< 12 > sigma12;
+    Dirac::Sigma< 13 > sigma13;
+    Dirac::Sigma< 23 > sigma23;
+
+    twopoint[0] = Core::Correlator(u->L(), u->T(), (p*s)*(p*s));
     twopoint[0].sumOverTimeSlices();
-    delete tmpU;
-    delete tmpD;
-    
+
     for  (size_t idx=0; idx<16; idx++)
     {
-      std::cout << "\nGamma combination: " << gamma_names[idx] << " \n" << std::endl; 
+      std::cout << "\nGamma combination index " << idx << " \n" << std::endl;
       for (size_t t=0; t<u->T(); t++)
       {
         std::cout << t << "  " << std::scientific << std::setprecision(10) << std::showpos
           << tr((twopoint[idx])[t]).real() << "  " << tr((twopoint[idx])[t]).imag() << std::endl;
       }
     }
-    
+
     delete d_bar;
     return twopoint;
   }

@@ -32,18 +32,16 @@ namespace Core
 
     Core::Field< QCD::Tensor > *d_components;
 
-    enum PropagatorStride
-    {
-      ColourStrideSink   =  1,
-      ColourStrideSource = 12,
-      DiracStrideSink    =  3,
-      DiracStrideSource  = 36
-    };
+//     enum PropagatorStride
+//     {
+//       ColourStrideSink   =  1,
+//       ColourStrideSource = 12,
+//       DiracStrideSink    =  3,
+//       DiracStrideSource  = 36
+//     };
 
     static const size_t nDirac  = 2;
     static const size_t nColour = 2;
-    size_t *colour_strides;
-    size_t *dirac_strides;
 
     static const size_t d_size = 144;
 
@@ -52,6 +50,8 @@ namespace Core
 
       Propagator(size_t L, size_t T, bool alloc=true);
       Propagator(Propagator const &other);
+      template <>
+      Propagator(StochasticPropagator< 4 > const &sProp);
       ~Propagator();
 
       bool load(std::vector< std::string > const filenames, std::string const format);
@@ -83,7 +83,7 @@ namespace Core
 
       // average difference of two different propagators
       double diff(Propagator const& other) const;
-      
+
       // just for testing
       void setToRandom();
 
@@ -99,20 +99,19 @@ namespace Core
       size_t const size() const;
       size_t const L() const;
       size_t const T() const;
-      
+
       template< size_t Index >
       friend Propagator operator*(Dirac::Gamma< Index > const &gamma, Propagator const &p);
 
     private:
       void destroy();
       void isolate();
-      
-    
+
   };
-  
+
   template< size_t Index >
   Propagator operator*(Dirac::Gamma< Index > const &gamma, Propagator const &p);
-  
+
 
   template< size_t NComp >
   class StochasticSource
@@ -175,6 +174,8 @@ namespace Core
 #include "Propagator/Propagator.const_iterator.inlines"
 
 #include "Propagator/Propagator.operators.inlines"
+
+#include "Propagator/Propagator_Propagator_a.template"
 
 #include "Propagator/Propagator_destroy.template"
 #include "Propagator/Propagator_isolate.template"

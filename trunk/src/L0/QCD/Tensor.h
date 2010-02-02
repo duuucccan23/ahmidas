@@ -61,11 +61,27 @@ namespace QCD
       std::complex< double > const &operator()(size_t const dirSink, size_t const colSink,
                                                size_t const dirSource, size_t const colSource) const;
 
+      /*  NOTE for performance reason the (template) member operator
+          Tensor Tensor::operator*(Dirac::Gamma< Index > const &gamma) const
+          and the non-member operator
+          Tensor operator*(Dirac::Gamma< Index > const &gamma, Tensor const &tensor)
+          should be replaced by
+          Tensor::left_multiply(Dirac::Gamma< Index > const &gamma, Tensor &result) const
+          and
+          Tensor::right_multiply(Dirac::Gamma< Index > const &gamma, Tensor &result) const
+          in the near future.
+      */
       template< size_t Index >
       Tensor operator*(Dirac::Gamma< Index > const &gamma) const;
 
       template< size_t Index >
+      Tensor operator*(Dirac::Sigma< Index > const &gamma) const;
+
+      template< size_t Index >
       void operator*=(Dirac::Gamma< Index > const &gamma);
+
+      template< size_t Index >
+      void operator*=(Dirac::Sigma< Index > const &gamma);
 
 
       Tensor &leftMultiply(Tensor const &other);
@@ -95,12 +111,16 @@ namespace QCD
 
       template< size_t Index >
       friend Tensor operator*(Dirac::Gamma< Index > const &gamma, Tensor const &tensor);
+      template< size_t Index >
+      friend Tensor operator*(Dirac::Sigma< Index > const &gamma, Tensor const &tensor);
   };
 
   std::ostream &operator<<(std::ostream &out, Tensor const &tensor);
 
   template< size_t Index >
   QCD::Tensor operator*(Dirac::Gamma< Index > const &gamma, Tensor const &tensor);
+  template< size_t Index >
+  QCD::Tensor operator*(Dirac::Sigma< Index > const &gamma, Tensor const &tensor);
 
 
   class hcTensor
@@ -191,6 +211,7 @@ namespace QCD
 #include "Tensor/Tensor.inlines"
 #include "Tensor/hcTensor.inlines"
 #include "Tensor/Tensor.gamma.inlines"
+#include "Tensor/Tensor.sigma.inlines"
 
 #include "Tensor/reducedTensor.inlines"
 #include "Tensor/reducedTensor.constructors.inlines"

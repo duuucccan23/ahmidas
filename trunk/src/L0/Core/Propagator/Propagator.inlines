@@ -3,15 +3,8 @@ namespace Core
 
 
   inline Propagator::Propagator(size_t L, size_t T, bool alloc)
-    : d_references(new size_t(1)),
-      colour_strides(new size_t[nColour]),
-      dirac_strides(new size_t[nDirac])
+    : d_references(new size_t(1))
   {
-
-    colour_strides[0] = ColourStrideSink;
-    colour_strides[1] = ColourStrideSource;
-    dirac_strides[0]  = DiracStrideSink;
-    dirac_strides[1]  = DiracStrideSource;
 
     if(alloc)
     {
@@ -22,10 +15,8 @@ namespace Core
 
 
   inline Propagator::Propagator(Propagator const &other)
-    : d_references(other.d_references), 
-      d_components(other.d_components),
-      colour_strides(other.colour_strides),
-      dirac_strides(other.dirac_strides)
+    : d_references(other.d_references),
+      d_components(other.d_components)
   {
     *d_references += 1;
   }

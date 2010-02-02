@@ -6,7 +6,5 @@ inline void Core::Propagator::destroy()
   {
     delete d_references;
     delete d_components;
-    delete [] colour_strides;
-    delete [] dirac_strides;
   }
 }

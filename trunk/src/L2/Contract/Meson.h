@@ -26,10 +26,11 @@ namespace Contract
   
   // this works using the one-end trick and gives all 16 gamma-combinations
   // return value: Array of 16 Core::Correlator arranged as follows:
-  // gamma0, gamma1, gamma2, gamma3, unity, gamma5
+  // gamma5, gamma0, gamma1, gamma2, gamma3, unity,
   // gamma5*gamma0, gamma5*gamma1, gamma5*gamma2, gamma5*gamma3,
   // sigma01, sigma02, sigma03, sigma12, sigma13, sigma23
-  inline Core::Correlator *light_meson_twopoint_stochastic(Core::Propagator const *u);
+  inline Core::Correlator *light_meson_twopoint_stochastic(Core::StochasticPropagator< 4 > const &psi1,
+                                                           Core::StochasticPropagator< 4 > const &psi2);
 }
 
 #include "Meson/Meson.inlines"

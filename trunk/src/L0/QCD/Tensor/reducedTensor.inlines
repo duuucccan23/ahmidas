@@ -9,44 +9,6 @@ namespace QCD
     return rTensor.trace();
   }
 
-  // private constructor
-  inline reducedTensor::reducedTensor(Tensor const &fullTensor, Base::ColourIndex const colour_src, Base::ColourIndex const colour_snk)
-  {
-    size_t index = 12*colour_snk + colour_src;
-    d_data[ 0] = fullTensor.d_data[index     ];
-    d_data[ 1] = fullTensor.d_data[index +   3];
-    d_data[ 2] = fullTensor.d_data[index +   6];
-    d_data[ 3] = fullTensor.d_data[index +   9];
-    d_data[ 4] = fullTensor.d_data[index +  36];
-    d_data[ 5] = fullTensor.d_data[index +  39];
-    d_data[ 6] = fullTensor.d_data[index +  42];
-    d_data[ 7] = fullTensor.d_data[index +  45];
-    d_data[ 8] = fullTensor.d_data[index +  72];
-    d_data[ 9] = fullTensor.d_data[index +  75];
-    d_data[10] = fullTensor.d_data[index +  78];
-    d_data[11] = fullTensor.d_data[index +  81];
-    d_data[12] = fullTensor.d_data[index + 108];
-    d_data[13] = fullTensor.d_data[index + 111];
-    d_data[14] = fullTensor.d_data[index + 114];
-    d_data[15] = fullTensor.d_data[index + 117];
-  }
-
-  inline reducedTensor::reducedTensor()
-  {
-    //std::fill(d_data, d_data + 16, std::complex< double >(0.0, 0.0));
-  }
-
-  inline reducedTensor::reducedTensor(std::complex< double > const& value)
-  {
-    std::fill_n(d_data, 16, value);
-  }
-
-
-  inline reducedTensor::reducedTensor(reducedTensor const &other)
-  {
-    std::copy(other.d_data, other.d_data + 16, d_data);
-  }
-
 
   inline std::complex< double > reducedTensor::trace() const
   {

@@ -1,13 +1,50 @@
 namespace QCD
 {
+
+  // private constructor
+  inline reducedTensor::reducedTensor(Tensor const &fullTensor, Base::ColourIndex const colour_src, Base::ColourIndex const colour_snk)
+  {
+    size_t index = 12*colour_snk + colour_src;
+    d_data[ 0] = fullTensor.d_data[index     ];
+    d_data[ 1] = fullTensor.d_data[index +   3];
+    d_data[ 2] = fullTensor.d_data[index +   6];
+    d_data[ 3] = fullTensor.d_data[index +   9];
+    d_data[ 4] = fullTensor.d_data[index +  36];
+    d_data[ 5] = fullTensor.d_data[index +  39];
+    d_data[ 6] = fullTensor.d_data[index +  42];
+    d_data[ 7] = fullTensor.d_data[index +  45];
+    d_data[ 8] = fullTensor.d_data[index +  72];
+    d_data[ 9] = fullTensor.d_data[index +  75];
+    d_data[10] = fullTensor.d_data[index +  78];
+    d_data[11] = fullTensor.d_data[index +  81];
+    d_data[12] = fullTensor.d_data[index + 108];
+    d_data[13] = fullTensor.d_data[index + 111];
+    d_data[14] = fullTensor.d_data[index + 114];
+    d_data[15] = fullTensor.d_data[index + 117];
+  }
+
+  inline reducedTensor::reducedTensor()
+  {
+    //std::fill(d_data, d_data + 16, std::complex< double >(0.0, 0.0));
+  }
+
+  inline reducedTensor::reducedTensor(std::complex< double > const& value)
+  {
+    std::fill_n(d_data, 16, value);
+  }
+
+
+  inline reducedTensor::reducedTensor(reducedTensor const &other)
+  {
+    std::copy(other.d_data, other.d_data + 16, d_data);
+  }
+
+
+  /* the following constructors are used to perform contractions */
+
   inline reducedTensor::reducedTensor(Tensor const &A, Tensor const &B)
   {
-//     static size_t count(0);
-//     std::cout << "call no. ";
-//     std::cout.width(7);
-//     std::cout << count++ << " of reducedTensor(Tensor const &A, Tensor const &B)" <<std::endl;
-//     std::cout << " A = \n" << A << std::endl;
-//     std::cout << " B = \n" << A << std::endl;
+
     reducedTensor rr(A, Base::col_RED,   Base::col_RED);
     reducedTensor rg(A, Base::col_RED,   Base::col_GREEN);
     reducedTensor rb(A, Base::col_RED,   Base::col_BLUE);
@@ -28,16 +65,6 @@ namespace QCD
     bb *= reducedTensor(B, Base::col_BLUE,  Base::col_BLUE);
     bg *= reducedTensor(B, Base::col_GREEN, Base::col_BLUE);
 
-//     rr *= reducedTensor(B, Base::col_RED,   Base::col_RED);
-//     rg *= reducedTensor(B, Base::col_RED,   Base::col_GREEN);
-//     rb *= reducedTensor(B, Base::col_RED,   Base::col_BLUE);
-//     gr *= reducedTensor(B, Base::col_GREEN, Base::col_RED);
-//     gb *= reducedTensor(B, Base::col_GREEN, Base::col_BLUE);
-//     gg *= reducedTensor(B, Base::col_GREEN, Base::col_GREEN);
-//     br *= reducedTensor(B, Base::col_BLUE,  Base::col_RED);
-//     bb *= reducedTensor(B, Base::col_BLUE,  Base::col_BLUE);
-//     bg *= reducedTensor(B, Base::col_BLUE,  Base::col_GREEN);
-
     rr += rg;
     rr += rb;
     rr += gr;
@@ -46,7 +73,33 @@ namespace QCD
     rr += br;
     rr += bb;
     rr += bg;
+
     std::copy(rr.d_data, rr.d_data + 16, d_data);
-//     std::cout << " *this = \n" << *this << std::endl;    
   }
+
+  /*  For a white source propagator we can use a faster constructor
+      since we know which entries of the tensors are zero.
+      This constructor is in particular used for of Dirac-diluted
+      stochastic propagators, and therefore important in appication
+      of the one-end-trick.
+  */
+  inline reducedTensor::reducedTensorWhiteSource(Tensor const &A, Tensor const &B)
+  {
+    // note that "RED" as the "source" indes actually means white
+    reducedTensor wr(A, Base::col_RED,   Base::col_RED);
+    reducedTensor wg(A, Base::col_RED,   Base::col_GREEN);
+    reducedTensor wb(A, Base::col_RED,   Base::col_BLUE);
+
+    // note that second Tensor is suppoed to appear as a
+    // hermitian conjugate one, so source and sink indices are swapped
+    wr *= reducedTensor(B, Base::col_RED,   Base::col_RED);
+    wg *= reducedTensor(B, Base::col_GREEN, Base::col_RED);
+    wb *= reducedTensor(B, Base::col_BLUE,  Base::col_RED);
+
+    wr += wg;
+    wr += wb;
+    std::copy(rw.d_data, rr.d_data + 16, d_data);
+  }
+
 }
+

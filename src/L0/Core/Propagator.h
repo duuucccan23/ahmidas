@@ -99,19 +99,20 @@ namespace Core
       size_t const size() const;
       size_t const L() const;
       size_t const T() const;
-
-/* NOTE we should include something like Propagator*Gamma*Propagator
-   and maybe some herm. conj. derived class
-   type cast of a propagator with one dirac and one colour index to a Core::Field< SU3::Spinor >
-   would simplify I/O for standard ILDG format
-*/
+      
+      template< size_t Index >
+      friend Propagator operator*(Dirac::Gamma< Index > const &gamma, Propagator const &p);
 
     private:
       void destroy();
       void isolate();
-
+      
+    
   };
-
+  
+  template< size_t Index >
+  Propagator operator*(Dirac::Gamma< Index > const &gamma, Propagator const &p);
+  
 
   template< size_t NComp >
   class StochasticSource

@@ -20,7 +20,7 @@
 
 //#define __PRINT__PROPS__
 
-// #define __REPOSITORY__PROPS_1__
+#define __REPOSITORY__PROPS_1__
 
 int main(int argc, char **argv)
 {
@@ -153,13 +153,16 @@ int main(int argc, char **argv)
 #endif
 
   std::cout <<  "t:" << std::endl;
-  Contract::light_meson_twopoint(uProp, 0, gamma5, gamma5);
+  //Contract::light_meson_twopoint(uProp, 0, gamma5, gamma5);
 //   Contract::light_meson_twopoint(uProp, 0, gamma0, gamma0);
 //   Contract::light_meson_twopoint(uProp, 0, identity, identity);
 
 //   Contract::light_meson_twopoint(dProp, 0, gamma5, gamma5);
 //   Contract::light_meson_twopoint(dProp, 0, gamma0, gamma0);
 //   Contract::light_meson_twopoint(dProp, 0, identity, identity);
+
+  Contract::light_meson_twopoint_stochastic(uProp);
+
 
 #ifdef __REPOSITORY__PROPS_1__
   std::cout <<  "reliable code gives the following result:" << std::endl;

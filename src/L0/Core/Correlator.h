@@ -26,6 +26,7 @@ namespace Core
     QCD::reducedTensor *d_sumTimeslice;
 
     public:
+      Correlator();
       Correlator(size_t const L_, size_t const T_);
       Correlator(size_t const L_, size_t const T_, Field < QCD::reducedTensor > *d_data);
       Correlator(Correlator const &other);

@@ -9,16 +9,20 @@ namespace QCD
     // i.e. gamma.perm(0) = {0,2,3}, gamma.perm(1) = {1,2,3}.
     // so regarding the permutation the following two lines will do the job
     std::swap_ranges(d_data,       d_data +  36, d_data + 36*gamma.perm(0));
-    std::swap_ranges(d_data +  36, d_data +  72, d_data + 36*gamma.perm(1));
-
-    std::transform(d_data,       d_data +  36,
-                   std::bind1st(std::multiplies< std::complex< double > >(), gamma.sign(0)));
-    std::transform(d_data +  36, d_data +  72,
-                   std::bind1st(std::multiplies< std::complex< double > >(), gamma.sign(1)));
-    std::transform(d_data +  72, d_data + 108,
-                   std::bind1st(std::multiplies< std::complex< double > >(), gamma.sign(2)));
-    std::transform(d_data + 108, d_data + 144,
-                   std::bind1st(std::multiplies< std::complex< double > >(), gamma.sign(3)));
+//     std::swap_ranges(d_data +  36, d_data +  72, d_data + 36*Dirac::Gamma< Index >::s_perm[1]);
+// 
+//     std::transform(d_data,       d_data +  36, d_data,
+//                    std::bind1st(std::multiplies< std::complex< double > >(),
+//                                 Dirac::Gamma< Index >::s_sign[0]));
+//     std::transform(d_data +  36, d_data +  72, d_data +  36,
+//                    std::bind1st(std::multiplies< std::complex< double > >(),
+//                                 Dirac::Gamma< Index >::s_sign[1]));
+//     std::transform(d_data +  72, d_data + 108, d_data +  72,
+//                    std::bind1st(std::multiplies< std::complex< double > >(),
+//                                 Dirac::Gamma< Index >::s_sign[2]));
+//     std::transform(d_data + 108, d_data + 144, d_data + 108,
+//                    std::bind1st(std::multiplies< std::complex< double > >(),
+//                                 Dirac::Gamma< Index >::s_sign[3]));
     std::cerr << "warning: using unspecialized template function for Tensor*Gamma" << Index << std::endl;
   }
 

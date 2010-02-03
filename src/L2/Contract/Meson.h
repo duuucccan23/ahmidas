@@ -2,6 +2,7 @@
 
 #include <cassert>
 #include <string>
+#include <vector>
 
 #include <L0/Base/Base.h>
 #include <L0/Dirac/Gamma.h>
@@ -29,7 +30,7 @@ namespace Contract
   // gamma5, gamma0, gamma1, gamma2, gamma3, unity,
   // gamma5*gamma0, gamma5*gamma1, gamma5*gamma2, gamma5*gamma3,
   // sigma01, sigma02, sigma03, sigma12, sigma13, sigma23
-  inline Core::Correlator *light_meson_twopoint_stochastic(Core::StochasticPropagator< 4 > const &psi1,
+  inline std::vector< Core::Correlator > light_meson_twopoint_stochastic(Core::StochasticPropagator< 4 > const &psi1,
                                                            Core::StochasticPropagator< 4 > const &psi2);
 }
 

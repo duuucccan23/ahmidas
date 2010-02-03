@@ -3,8 +3,12 @@ void Core::Correlator::isolate()
   if (*d_references == 1)
     return;
 
+  assert(*d_references > 1);
+
   *d_references -= 1;
   d_references   = new size_t(1);
+
+  d_weave = new Base::Weave(L, T);
 
   QCD::reducedTensor *sumTimeslice = new QCD::reducedTensor(T);
   std::copy(d_sumTimeslice, d_sumTimeslice + T, sumTimeslice);

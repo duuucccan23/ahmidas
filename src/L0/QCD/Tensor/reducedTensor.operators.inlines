@@ -66,14 +66,28 @@ namespace QCD
     d_data[15] = std::inner_product(tmpL.d_data + 12, tmpL.d_data + 16, tmpR.d_data + 12, zero);
   }
 
-  inline reducedTensor reducedTensor::operator*(std::complex< double > const &factor) const
+  inline reducedTensor reducedTensor::operator*(double const &factor) const
   {
     reducedTensor tmp;
-    std::transform(d_data, d_data+16, tmp.d_data,
-                   bind2nd(std::multiplies< std::complex< double > >(), factor));
+    tmp *= factor;
     return tmp;
   }
 
+  inline reducedTensor reducedTensor::operator*(std::complex< double > const &factor) const
+  {
+    reducedTensor tmp;
+    tmp *= factor;
+    return tmp;
+  }
+
+  inline void reducedTensor::operator*=(double const &factor)
+  {
+    std::transform(reinterpret_cast< double * > (d_data),
+                   reinterpret_cast< double * > (d_data+16),
+                   reinterpret_cast< double * > (d_data),
+                   bind2nd(std::multiplies< double >(), factor));
+  }
+  
   inline void reducedTensor::operator*=(std::complex< double > const &factor)
   {
     std::transform(d_data, d_data+16, d_data,

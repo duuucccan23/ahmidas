@@ -50,8 +50,6 @@ namespace Core
 
       Propagator(size_t L, size_t T, bool alloc=true);
       Propagator(Propagator const &other);
-      template <>
-      Propagator(StochasticPropagator< 4 > const &sProp);
       ~Propagator();
 
       bool load(std::vector< std::string > const filenames, std::string const format);
@@ -76,10 +74,9 @@ namespace Core
            - for point or similar source x is generally fixed
            - for twisted mass this also changes the flavour
       */
-      // Propagator * revert() const;
-      void revert();
+      Propagator &revert();
 
-      void dagger();
+      Propagator &dagger();
 
       // average difference of two different propagators
       double diff(Propagator const& other) const;
@@ -117,7 +114,6 @@ namespace Core
   class StochasticSource
   {
 
-    friend class Propagator;
     friend class StochasticPropagator< NComp >;
 
     size_t *d_references;
@@ -138,44 +134,35 @@ namespace Core
   };
 
   template< size_t NComp >
-  class StochasticPropagator
+  class StochasticPropagator : public Propagator
   {
 
-    friend class Propagator;
     friend class StochasticSource< NComp >;
-
-    Core::Field< QCD::Spinor > *d_components;
-
-    size_t *d_references;
 
     public:
 
       StochasticPropagator< NComp > (size_t const L, size_t const T);
 
+      StochasticPropagator< NComp > (Propagator const &other);
+
       StochasticPropagator< NComp > (StochasticPropagator< NComp > const &other);
 
-      ~StochasticPropagator< NComp > ();
+      Field< QCD::reducedTensor > *operator*(StochasticPropagator< NComp > const &other) const;
 
-      inline Propagator operator*(StochasticSource< NComp > const &sSource) const
-      {
-        return sSource*(*this);
-      }
+      Propagator operator*(StochasticSource< NComp > const &sSource) const;
 
-      size_t const L() const;
-      size_t const T() const;
   };
 
 }
 
 
 #include "Propagator/Propagator.inlines"
+#include "Propagator/StochasticPropagator.inlines"
 
 #include "Propagator/Propagator.iterator.inlines"
 #include "Propagator/Propagator.const_iterator.inlines"
 
 #include "Propagator/Propagator.operators.inlines"
-
-#include "Propagator/Propagator_Propagator_a.template"
 
 #include "Propagator/Propagator_destroy.template"
 #include "Propagator/Propagator_isolate.template"

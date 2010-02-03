@@ -11,8 +11,8 @@ namespace Dirac
     static std::complex< double > const s_sign[4];
 
     public:
-      size_t const &perm(size_t index);
-      std::complex< double > const &sign(size_t index);
+      size_t const &perm(size_t index) const;
+      std::complex< double > const &sign(size_t index) const;
   };
 
   typedef Gamma< -1 > Unity;

@@ -164,10 +164,11 @@ namespace QCD
 
       reducedTensor();
       reducedTensor(reducedTensor const &other);
-      reducedTensor(std::complex< double > const& value);
+      reducedTensor(std::complex< double > const &value);
 
       // important for contractions
-      reducedTensor(Tensor const& a, Tensor const& b);
+      reducedTensor(Tensor const &a, Tensor const &b);
+      reducedTensor(Tensor const &A, Tensor const &B, bool const colourDilutedSource);
 
       std::complex< double > trace() const;
 
@@ -185,8 +186,10 @@ namespace QCD
       template< size_t Index >
       void operator*=(Dirac::Gamma< Index > const &gamma);
 
+      reducedTensor operator*(double const &factor) const;
       reducedTensor operator*(std::complex< double > const &factor) const;
 
+      void operator*=(double const &factor);
       void operator*=(std::complex< double > const &factor);
 
       void operator*=(reducedTensor const &rhs);

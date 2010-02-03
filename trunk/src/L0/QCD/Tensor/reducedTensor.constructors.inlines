@@ -83,22 +83,27 @@ namespace QCD
       stochastic propagators, and therefore important in appication
       of the one-end-trick.
   */
-  inline reducedTensor::reducedTensorWhiteSource(Tensor const &A, Tensor const &B)
+  inline reducedTensor::reducedTensor(Tensor const &A, Tensor const &B, bool const colourDilutedSource)
   {
-    // note that "RED" as the "source" indes actually means white
-    reducedTensor wr(A, Base::col_RED,   Base::col_RED);
-    reducedTensor wg(A, Base::col_RED,   Base::col_GREEN);
-    reducedTensor wb(A, Base::col_RED,   Base::col_BLUE);
+    if (!colourDilutedSource)
+    {
+      // note that "RED" as the "source" indes actually means white
+      reducedTensor xr(A, Base::col_RED,   Base::col_RED);
+      reducedTensor xg(A, Base::col_RED,   Base::col_GREEN);
+      reducedTensor xb(A, Base::col_RED,   Base::col_BLUE);
 
-    // note that second Tensor is suppoed to appear as a
-    // hermitian conjugate one, so source and sink indices are swapped
-    wr *= reducedTensor(B, Base::col_RED,   Base::col_RED);
-    wg *= reducedTensor(B, Base::col_GREEN, Base::col_RED);
-    wb *= reducedTensor(B, Base::col_BLUE,  Base::col_RED);
+      // note that second Tensor is suppoed to appear as a
+      // hermitian conjugate one, so source and sink indices are swapped
+      xr *= reducedTensor(B, Base::col_RED,   Base::col_RED);
+      xg *= reducedTensor(B, Base::col_GREEN, Base::col_RED);
+      xb *= reducedTensor(B, Base::col_BLUE,  Base::col_RED);
 
-    wr += wg;
-    wr += wb;
-    std::copy(rw.d_data, rr.d_data + 16, d_data);
+      xr += xg;
+      xr += xb;
+      std::copy(xr.d_data, xr.d_data + 16, d_data);
+    }
+    else if (colourDilutedSource)
+      *this = reducedTensor(A, B);
   }
 
 }

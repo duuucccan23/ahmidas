@@ -116,25 +116,7 @@ namespace Core
     }
   }
 
-//   inline Propagator *Propagator::revert() const
-//   {
-//     Dirac::Gamma<5> gamma5 =  Dirac::Gamma<5>();
-//     Propagator *p = new Propagator(L(), T());
-//     p->isolate();
-//     Propagator::const_iterator before = begin();
-//     Propagator::iterator after  = p->begin();
-//     while(before != end())
-//     {
-//       (*after) = ((*before) * gamma5).dagger();
-//       (*after) *= gamma5;
-//       ++after;
-//       ++before;
-//     }
-//     assert(before==end() && after==p->end());
-//     return p;
-//   }
-
-  inline void Propagator::revert()
+  inline Propagator &Propagator::revert()
   {
     Dirac::Gamma<5> gamma5 = Dirac::Gamma<5>();
     isolate();
@@ -146,9 +128,10 @@ namespace Core
       (*it) = gamma5*tmp;
       ++it;
     }
+    return *this;
   }
 
-  inline void Propagator::dagger()
+  inline Propagator &Propagator::dagger()
   {
     isolate();
     Propagator::iterator it = begin();
@@ -157,6 +140,7 @@ namespace Core
       (*it) = QCD::Tensor((*it).dagger());
       ++it;
     }
+    return *this;
   }
 
   inline double Propagator::diff(Propagator const& other) const

@@ -1,11 +1,6 @@
 namespace Core
 {
 
-  inline Correlator::Correlator()
-    : L(0), T(0), d_weave(0), d_data(0),
-      d_sumTimeslice(0), d_references(new size_t(1))
-  {}
-  
   inline Correlator::Correlator(Correlator const &other)
     : L(other.L), T(other.T), d_weave(other.d_weave), d_data(other.d_data),
       d_sumTimeslice(other.d_sumTimeslice), d_references(other.d_references)
@@ -19,7 +14,6 @@ namespace Core
       d_sumTimeslice(new QCD::reducedTensor[T_]), d_references(new size_t(1))
   {
   }
-
 
   inline Correlator::~Correlator()
   {
@@ -40,6 +34,28 @@ namespace Core
     return d_sumTimeslice[t];
   }
 
+
+  void Correlator::operator*=(double const &factor)
+  {
+    isolate();
+    Core::Field< QCD::reducedTensor >::iterator I = d_data->begin();
+    while(I != d_data->end())
+    {
+      (*I) *= factor;
+      ++I;
+    }
+  }
+
+  void Correlator::operator*=(std::complex< double > const &factor)
+  {
+    isolate();
+    Core::Field< QCD::reducedTensor >::iterator I = d_data->begin();
+    while(I != d_data->end())
+    {
+      (*I) *= factor;
+      ++I;
+    }
+  }
 
   // there must be some way to do this more efficiently!
   inline void Correlator::sumOverTimeSlices(size_t const *momentum)

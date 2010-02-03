@@ -1,13 +1,13 @@
 namespace Dirac
 {
   template< size_t Index >
-  inline size_t const &Gamma< Index >::perm(size_t index)
+  inline size_t const &Gamma< Index >::perm(size_t index) const
   {
     return s_perm[index];
   }
 
   template< size_t Index >
-  inline std::complex< double > const &Gamma< Index >::sign(size_t index)
+  inline std::complex< double > const &Gamma< Index >::sign(size_t index) const
   {
     return s_sign[index];
   }

@@ -25,9 +25,9 @@
 int main(int argc, char **argv)
 {
 
-  Dirac::Gamma5 gamma5;
-  Dirac::Gamma0 gamma0;
-  Dirac::Unity identity;
+//   Dirac::Gamma5 gamma5;
+//   Dirac::Gamma0 gamma0;
+//   Dirac::Unity identity;
 
 #ifdef __GAMMA_TEST__
   std::complex< double > tensor_data [144];
@@ -152,7 +152,7 @@ int main(int argc, char **argv)
 
 #endif
 
-  std::cout <<  "t:" << std::endl;
+
   //Contract::light_meson_twopoint(uProp, 0, gamma5, gamma5);
 //   Contract::light_meson_twopoint(uProp, 0, gamma0, gamma0);
 //   Contract::light_meson_twopoint(uProp, 0, identity, identity);
@@ -161,7 +161,7 @@ int main(int argc, char **argv)
 //   Contract::light_meson_twopoint(dProp, 0, gamma0, gamma0);
 //   Contract::light_meson_twopoint(dProp, 0, identity, identity);
 
-  Contract::light_meson_twopoint_stochastic(uProp);
+  std::vector< Core::Correlator > C2 = Contract::light_meson_twopoint_stochastic(*uProp, *uProp);
 
 
 #ifdef __REPOSITORY__PROPS_1__
@@ -184,7 +184,7 @@ int main(int argc, char **argv)
   delete uProp;
   delete dProp;
 
-  std::cout << "programm is going to exit normally now\n" << std::endl;
+  std::cout << "\nprogramm is going to exit normally now\n" << std::endl;
 
 
   return EXIT_SUCCESS;

@@ -1,0 +1,74 @@
+namespace Core
+{
+  template< >
+  inline StochasticPropagator< 4 >::StochasticPropagator(size_t const L, size_t const T)
+    : Propagator(L, T)
+  {}
+
+  template< >
+  inline StochasticPropagator< 4 >::StochasticPropagator(Propagator const &other)
+    : Propagator(other.L(), other.T())
+  {
+    Propagator::const_iterator Iold = other.begin();
+    Propagator::iterator Inew = begin();
+    while(Inew != end())
+    {
+
+// for some reason this does not seem to work!!!
+    
+      (*Inew)( 0) = (*Iold)(0);
+      (*Inew)( 1).setToZero();
+      (*Inew)( 2).setToZero();
+      (*Inew)( 3) = (*Iold)(1);
+      (*Inew)( 4).setToZero();
+      (*Inew)( 5).setToZero();
+      (*Inew)( 6) = (*Iold)(2);
+      (*Inew)( 7).setToZero();
+      (*Inew)( 8).setToZero();
+      (*Inew)( 9) = (*Iold)(3);
+      (*Inew)(10).setToZero();
+      (*Inew)(11).setToZero();
+      ++Inew;
+      ++Iold;
+    }
+  }
+
+  template< size_t NComp >
+  inline StochasticPropagator< NComp >::StochasticPropagator(StochasticPropagator< NComp > const &other)
+   : Propagator(dynamic_cast< Propagator const& >(other))
+  {}
+
+  template< >
+  inline Field< QCD::reducedTensor > *StochasticPropagator< 4 >::operator*(StochasticPropagator< 4 > const &other) const
+  {
+    assert (T()==other.T() && L()==other.L());
+    Field< QCD::reducedTensor > *field = new Field< QCD::reducedTensor > (L(), T());
+
+    Propagator::const_iterator Ia(begin());
+    Propagator::const_iterator Ib(other.begin());
+
+    Field< QCD::reducedTensor >::iterator Ic(field->begin());
+
+//     const bool colourDilution = true;
+    const bool colourDilution = false;
+    while(Ia != end())
+    {
+      (*Ic) = QCD::reducedTensor((*Ia),(*Ib), colourDilution);
+      ++Ia;
+      ++Ib;
+      ++Ic;
+    }
+    assert(Ia==end());
+    assert(Ib==other.end());
+    assert(Ic==field->end());
+    return field;
+
+  }
+
+  template< size_t NComp >
+  inline Propagator StochasticPropagator< NComp >::operator*(StochasticSource< NComp > const &sSource) const
+  {
+    return sSource*(*this);
+  }
+
+}

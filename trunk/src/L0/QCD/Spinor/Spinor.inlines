@@ -26,7 +26,7 @@ namespace QCD
   inline Spinor &Spinor::operator=(Spinor const &other)
   {
     if (&other != this)
-      std::copy(other.d_data, other.d_data + 3, d_data);
+      std::copy(other.d_data, other.d_data + 4, d_data);
     return *this;
   }
 

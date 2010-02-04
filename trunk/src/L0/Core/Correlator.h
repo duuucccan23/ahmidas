@@ -26,7 +26,7 @@ namespace Core
     QCD::reducedTensor *d_sumTimeslice;
 
     public:
-      //Correlator();
+
       Correlator(size_t const L_, size_t const T_);
       Correlator(size_t const L_, size_t const T_, Field < QCD::reducedTensor > *d_data);
       Correlator(Correlator const &other);
@@ -36,7 +36,7 @@ namespace Core
       QCD::reducedTensor &operator[](size_t const idx);
       QCD::reducedTensor const &operator[](size_t const idx) const;
 
-      void operator*=(double const &factor);
+      void operator*=(double const factor);
       void operator*=(std::complex< double > const &factor);
 
       void sumOverTimeSlices();

@@ -35,7 +35,7 @@ namespace Core
   }
 
 
-  void Correlator::operator*=(double const &factor)
+  void Correlator::operator*=(double const factor)
   {
     isolate();
     Core::Field< QCD::reducedTensor >::iterator I = d_data->begin();

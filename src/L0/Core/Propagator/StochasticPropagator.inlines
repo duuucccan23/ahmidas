@@ -13,9 +13,6 @@ namespace Core
     Propagator::iterator Inew = begin();
     while(Inew != end())
     {
-
-// for some reason this does not seem to work!!!
-    
       (*Inew)( 0) = (*Iold)(0);
       (*Inew)( 1).setToZero();
       (*Inew)( 2).setToZero();
@@ -49,8 +46,8 @@ namespace Core
 
     Field< QCD::reducedTensor >::iterator Ic(field->begin());
 
-//     const bool colourDilution = true;
     const bool colourDilution = false;
+    //colourDilution = true;
     while(Ia != end())
     {
       (*Ic) = QCD::reducedTensor((*Ia),(*Ib), colourDilution);

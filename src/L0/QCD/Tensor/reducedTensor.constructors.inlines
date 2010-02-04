@@ -4,7 +4,7 @@ namespace QCD
   // private constructor
   inline reducedTensor::reducedTensor(Tensor const &fullTensor, Base::ColourIndex const colour_src, Base::ColourIndex const colour_snk)
   {
-    size_t index = 12*colour_snk + colour_src;
+    size_t index = 12*colour_src + colour_snk;
     d_data[ 0] = fullTensor.d_data[index     ];
     d_data[ 1] = fullTensor.d_data[index +   3];
     d_data[ 2] = fullTensor.d_data[index +   6];
@@ -47,8 +47,11 @@ namespace QCD
 
     reducedTensor rr(A, Base::col_RED,   Base::col_RED);
     reducedTensor rg(A, Base::col_RED,   Base::col_GREEN);
+    //std::cout << "rg = \n" << rg << std::endl;
     reducedTensor rb(A, Base::col_RED,   Base::col_BLUE);
     reducedTensor gr(A, Base::col_GREEN, Base::col_RED);
+    //std::cout << "gr = \n" << gr << std::endl;
+    //exit(1);
     reducedTensor gb(A, Base::col_GREEN, Base::col_BLUE);
     reducedTensor gg(A, Base::col_GREEN, Base::col_GREEN);
     reducedTensor br(A, Base::col_BLUE,  Base::col_RED);
@@ -87,7 +90,7 @@ namespace QCD
   {
     if (!colourDilutedSource)
     {
-      // note that "RED" as the "source" indes actually means white
+      // note that "RED" as the "source" index actually addresses the only non-zero entries
       reducedTensor xr(A, Base::col_RED,   Base::col_RED);
       reducedTensor xg(A, Base::col_RED,   Base::col_GREEN);
       reducedTensor xb(A, Base::col_RED,   Base::col_BLUE);

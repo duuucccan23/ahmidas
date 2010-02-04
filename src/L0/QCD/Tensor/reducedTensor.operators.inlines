@@ -87,7 +87,7 @@ namespace QCD
                    reinterpret_cast< double * > (d_data),
                    bind2nd(std::multiplies< double >(), factor));
   }
-  
+
   inline void reducedTensor::operator*=(std::complex< double > const &factor)
   {
     std::transform(d_data, d_data+16, d_data,

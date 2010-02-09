@@ -1,3 +1,5 @@
+#include "Grid.ih"
+
 namespace Base
 {
   size_t Grid::greatestCommonDivisor(size_t x, size_t y)

@@ -1,7 +1,7 @@
 #include "Weave.ih"
 
-Base::Weave::Weave(size_t L, size_t T)
-: d_L(L), d_T(T), d_grid(Base::Grid(L, T))
+Base::Weave::Weave(Base::Weave const &other)
+: d_L(other.d_L), d_T(other.d_T), d_grid(other.d_grid)
 {
   d_globalVolume = d_L*d_L*d_L*d_T;
   d_localVolume = d_grid.localVolume();

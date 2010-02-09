@@ -1,0 +1,37 @@
+template< typename Element >
+void Tool::IO::loadScidac(Core::Field< Element > *field, std::string const &filename)
+{
+  Lime::Reader reader(filename);
+  Scidacinfo info(reader);
+
+  reader.retrieveRecord(reader.findRecord("scidac-binary-data"));
+  if (reader.fail())
+  {
+    std::cerr << "Lime reader could not find the record, check path and file, and check lime contents of file.\nField unchanged!.\n";
+    exit(EXIT_FAILURE);
+    return;
+  }
+  assert(reader.good());
+
+  Element *dataPtr = field->raw(); //Starting memory address of the field.
+
+  if (info.precision.compare("64") == 0)
+  {
+    reader.read(dataPtr, field->volume());
+    if (!Base::bigEndian)
+      Base::swapEndian(dataPtr, dataPtr + field->volume(), sizeof(double));
+    return;
+  }
+
+  size_t const elSize = sizeof(Element) / sizeof(double);
+  uint32_t elem32[elSize];
+
+  for (size_t ctr = 0; ctr < field->volume(); ++ctr, ++dataPtr)
+  {
+    reader.read(elem32, elSize);
+    if (!Base::bigEndian)
+      Base::swapEndian(elem32, elem32 + elSize);
+    std::copy(reinterpret_cast< float* >(elem32), reinterpret_cast< float* >(elem32) + elSize,
+              reinterpret_cast< double* >(dataPtr));
+  }
+}

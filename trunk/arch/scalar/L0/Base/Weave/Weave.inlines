@@ -66,8 +66,10 @@ namespace Base
   }
 
   template< typename Element >
-  inline void Weave::sumOverTimeSlices(Element *data) const
-  {}
+  void sumOverTimeSlices(Element const *data_send, Element *data_recv)
+  {
+    std::memcpy(static_cast< void * >(data_send), static_cast< const void * >(data_send), d_T*sizeof(Element))
+  }
 
   inline bool Weave::isLocallyAvailable(size_t, size_t, size_t) const
   {

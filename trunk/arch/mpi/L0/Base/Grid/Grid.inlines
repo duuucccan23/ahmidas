@@ -3,7 +3,7 @@ namespace Base
   inline Grid::~Grid()
   {}
 
-  inline MPI::Cartcomm &Grid::grid()
+  inline MPI::Cartcomm const &Grid::grid() const
   {
     return d_grid;
   }

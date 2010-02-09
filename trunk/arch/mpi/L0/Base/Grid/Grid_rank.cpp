@@ -1,3 +1,5 @@
+#include "Grid.ih"
+
 namespace Base
 {
   size_t Grid::rank(size_t index) const

@@ -1,7 +1,10 @@
+#include "Grid.ih"
+
 namespace Base
 {
-  Grid::Grid()
-    : d_bufferVolume(0), d_bigEndian(bigEndian())
+
+  Grid::Grid(size_t L, size_t T)
+    : d_L(L), d_T(T), d_bufferVolume(0), d_bigEndian(bigEndian())
   {
     MPI::Init();
     size_t gridSize = static_cast< size_t >(MPI::COMM_WORLD.Get_size());

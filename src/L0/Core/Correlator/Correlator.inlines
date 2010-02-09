@@ -58,11 +58,11 @@ namespace Core
   }
 
   // there must be some way to do this more efficiently!
-  inline void Correlator::sumOverTimeSlices(size_t const *momentum)
+  inline void Correlator::sumOverSpatialVolume(size_t const *momentum)
   {
     if (momentum[0]==0 && momentum[1]==0 && momentum[2]==0)
     {
-      sumOverTimeSlices();
+      sumOverSpatialVolume();
       return;
     }
     isolate();
@@ -94,7 +94,7 @@ namespace Core
     }
   }
 
-  inline void Correlator::sumOverTimeSlices()
+  inline void Correlator::sumOverSpatialVolume()
   {
     isolate();
     size_t x4, x1, x2, x3;

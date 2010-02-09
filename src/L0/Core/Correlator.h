@@ -25,6 +25,8 @@ namespace Core
     Field < QCD::reducedTensor > *d_data;
     QCD::reducedTensor *d_sumTimeslice;
 
+    QCD::reducedTensor *d_sumTimeslice_global;
+
     public:
 
       Correlator(size_t const L_, size_t const T_);
@@ -39,8 +41,8 @@ namespace Core
       void operator*=(double const factor);
       void operator*=(std::complex< double > const &factor);
 
-      void sumOverTimeSlices();
-      void sumOverTimeSlices(size_t const *momentum);
+      void sumOverSpatialVolume();
+      void sumOverSpatialVolume(size_t const *momentum);
 
       void save(std::string const&file);
 

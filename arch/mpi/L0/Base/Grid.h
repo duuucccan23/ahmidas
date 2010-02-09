@@ -5,19 +5,21 @@
 #include <functional>
 #include <iostream>
 
-#include <mpi/mpi.h>
+#include <mpi.h>
 
 #include "L0/Base/Base.h"
-#include "L0/Base/Weave.h"
+// #include "L0/Base/Weave.h"
 
 namespace Base
 {
-  template< size_t L, size_t T >
   class Grid
   {
     MPI::Cartcomm d_grid;
     MPI::Cartcomm d_timeSlice;
     MPI::Cartcomm d_backbone;
+
+    size_t d_L;
+    size_t d_T;
 
     size_t d_dims[4]; //number of nodes in each dimension
     size_t d_sizes[4]; //local dimension sizes = L/d_dims(idx_XYZ), T/d_dims(idx_T)
@@ -33,9 +35,9 @@ namespace Base
 
     public:
       ~Grid(); //Public "destructor" for now
-      Grid();
+      Grid(size_t L, size_t T);
 
-      MPI::Cartcomm &grid(); //NOTE: world?
+      MPI::Cartcomm const &grid() const; //NOTE: world?
       MPI::Cartcomm &timeSlice();
       MPI::Cartcomm &backbone();
 
@@ -75,4 +77,3 @@ namespace Base
 }
 
 #include "Grid/Grid.inlines"
-#include "Grid/Grid_Grid.template"

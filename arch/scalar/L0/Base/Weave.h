@@ -35,8 +35,10 @@ namespace Base
       size_t globalCoordToLocalIndex(size_t x, size_t y, size_t z) const;
       size_t globalCoordToLocalIndex(size_t x, size_t y, size_t z, size_t t) const;
 
-      template< typename Element >
-      void sumOverTimeSlices(Element *data) const;
+//       // This funtion exists only for compatibility with parallel implementation
+//       // here, it simply does not do anything but copy the data;
+//       template< typename Element >
+//       void sumOverTimeSlices(Element const *data_send, Element *data_recv);
 
       bool isLocallyAvailable(size_t x, size_t y, size_t z) const;
       bool isLocallyAvailable(size_t x, size_t y, size_t z, size_t t) const;

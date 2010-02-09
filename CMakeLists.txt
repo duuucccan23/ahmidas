@@ -16,8 +16,14 @@ ENDIF(USE_MPI)
 ENABLE_TESTING()
 
 INCLUDE_DIRECTORIES(BEFORE SYSTEM src)
-SET(CMAKE_CXX_FLAGS "-O3 -pg -g -Wall -mfpmath=sse -msse2")
+SET(CMAKE_CXX_FLAGS "-O3 -pg -g -Wall")
 # SET(CMAKE_CXX_FLAGS "-O3 -pg -g -Wall -pedantic")
+
+IF(USE_MPI)
+SET(MPI_COMPILE_FLAGS "-O3 -pg -g -Wall")
+ENDIF(USE_MPI)
+
+
 
 IF(USE_SCALAR)
 INCLUDE_DIRECTORIES(BEFORE SYSTEM arch/scalar)
@@ -39,10 +45,16 @@ ADD_SUBDIRECTORY(src)
 ADD_SUBDIRECTORY(test)
 ADD_SUBDIRECTORY(example)
 
-ADD_EXECUTABLE(main src/main.cpp)
-TARGET_LINK_LIBRARIES(main Weave SU3 IO QCD Base)
 
-ADD_EXECUTABLE(simon_test src/simon_test.cpp)
-TARGET_LINK_LIBRARIES(simon_test SU3 QCD IO Base Core Dirac Weave Contract)
+# ADD_EXECUTABLE(main src/main.cpp)
+# TARGET_LINK_LIBRARIES(main Weave SU3 IO QCD Base)
+# 
+# ADD_EXECUTABLE(simon_test src/simon_test.cpp)
+# TARGET_LINK_LIBRARIES(simon_test SU3 QCD IO Base Core Dirac Weave Contract)
 
+
+IF(USE_MPI)
+ADD_EXECUTABLE(para_test src/para_test.cpp)
+TARGET_LINK_LIBRARIES(para_test SU3 QCD IO Base Core Dirac Weave Contract)
+ENDIF(USE_MPI)
 

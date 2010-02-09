@@ -1,0 +1,5 @@
+ADD_SUBDIRECTORY(IO)
+SET(Sources_Scidac   IO/Scidacinfo_Scidacinfo.cpp)
+SET(Sources_IO       IO/load.cpp)
+ADD_LIBRARY(IO ${Sources_Scidac} ${Sources_IO})
+TARGET_LINK_LIBRARIES(IO Tool Lime)

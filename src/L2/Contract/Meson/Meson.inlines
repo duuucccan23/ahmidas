@@ -25,7 +25,7 @@ namespace Contract
     d_bar = new Core::Propagator(*u);
     d_bar->dagger();
     Core::Correlator twopoint_nif(u->L(), u->T(), (*u)*(*d_bar));
-    twopoint_nif.sumOverTimeSlices();
+    twopoint_nif.sumOverSpatialVolume();
     for (size_t t=0; t<twopoint_nif.getT(); t++)
     {
       std::cout << t << "  " << std::scientific << std::setprecision(10) << std::showpos
@@ -50,7 +50,7 @@ namespace Contract
 
     Core::Correlator twopoint(u->L(), u->T(), tmpU*tmpD);
 
-    twopoint.sumOverTimeSlices();
+    twopoint.sumOverSpatialVolume();
 
     for (size_t t=0; t<twopoint.getT(); t++)
     {
@@ -128,7 +128,7 @@ namespace Contract
     gamma5_Gamma_psi1 = new Core::StochasticPropagator< 4 >(psi1);
     gamma5_Gamma_psi2_dagger = new Core::StochasticPropagator< 4 >(psi2_dagger);
     twopoint = new Core::Correlator(psi1.L(), psi2.T(), (*gamma5_Gamma_psi1)*(*gamma5_Gamma_psi2_dagger));
-    twopoint->sumOverTimeSlices();
+    twopoint->sumOverSpatialVolume();
     twopoints.push_back(*twopoint);
     delete twopoint;
     delete gamma5_Gamma_psi1;
@@ -139,7 +139,7 @@ namespace Contract
     gamma5_Gamma_psi2_dagger = new Core::StochasticPropagator< 4 >(psi2_dagger);
     (*gamma5_Gamma_psi2_dagger) *= gamma0;
     twopoint = new Core::Correlator(psi1.L(), psi2.T(), (*gamma5_Gamma_psi1)*(*gamma5_Gamma_psi2_dagger));
-    twopoint->sumOverTimeSlices();
+    twopoint->sumOverSpatialVolume();
     twopoints.push_back(*twopoint);
     delete twopoint;
     delete gamma5_Gamma_psi1;
@@ -150,7 +150,7 @@ namespace Contract
     (*gamma5_Gamma_psi1) *= gamma0;
     gamma5_Gamma_psi2_dagger = new Core::StochasticPropagator< 4 >(psi2_dagger);
     twopoint = new Core::Correlator(psi1.L(), psi2.T(), (*gamma5_Gamma_psi1)*(*gamma5_Gamma_psi2_dagger));
-    twopoint->sumOverTimeSlices();
+    twopoint->sumOverSpatialVolume();
     twopoints.push_back(*twopoint);
     delete twopoint;
     delete gamma5_Gamma_psi1;
@@ -162,7 +162,7 @@ namespace Contract
     gamma5_Gamma_psi2_dagger = new Core::StochasticPropagator< 4 >(psi2_dagger);
     (*gamma5_Gamma_psi2_dagger) *= gamma0;
     twopoint = new Core::Correlator(psi1.L(), psi2.T(), (*gamma5_Gamma_psi1)*(*gamma5_Gamma_psi2_dagger));
-    twopoint->sumOverTimeSlices();
+    twopoint->sumOverSpatialVolume();
     twopoints.push_back(*twopoint);
     delete twopoint;
     delete gamma5_Gamma_psi1;
@@ -174,7 +174,7 @@ namespace Contract
     gamma5_Gamma_psi2_dagger = new Core::StochasticPropagator< 4 >(psi2_dagger);
     (*gamma5_Gamma_psi2_dagger) *= gamma5gamma0;
     twopoint = new Core::Correlator(psi1.L(), psi2.T(), (*gamma5_Gamma_psi1)*(*gamma5_Gamma_psi2_dagger));
-    twopoint->sumOverTimeSlices();
+    twopoint->sumOverSpatialVolume();
     twopoints.push_back(*twopoint);
     delete twopoint;
     delete gamma5_Gamma_psi1;
@@ -185,7 +185,7 @@ namespace Contract
     gamma5_Gamma_psi2_dagger = new Core::StochasticPropagator< 4 >(psi2_dagger);
     (*gamma5_Gamma_psi2_dagger) *= gamma5gamma0;
     twopoint = new Core::Correlator(psi1.L(), psi2.T(), (*gamma5_Gamma_psi1)*(*gamma5_Gamma_psi2_dagger));
-    twopoint->sumOverTimeSlices();
+    twopoint->sumOverSpatialVolume();
     twopoints.push_back(*twopoint);
     delete twopoint;
     delete gamma5_Gamma_psi1;
@@ -196,7 +196,7 @@ namespace Contract
     (*gamma5_Gamma_psi1) *= gamma0gamma5;
     gamma5_Gamma_psi2_dagger = new Core::StochasticPropagator< 4 >(psi2_dagger);
     twopoint = new Core::Correlator(psi1.L(), psi2.T(), (*gamma5_Gamma_psi1)*(*gamma5_Gamma_psi2_dagger));
-    twopoint->sumOverTimeSlices();
+    twopoint->sumOverSpatialVolume();
     twopoints.push_back(*twopoint);
     delete twopoint;
     delete gamma5_Gamma_psi1;
@@ -208,7 +208,7 @@ namespace Contract
     gamma5_Gamma_psi2_dagger = new Core::StochasticPropagator< 4 >(psi2_dagger);
     (*gamma5_Gamma_psi2_dagger) *= gamma5gamma0;
     twopoint = new Core::Correlator(psi1.L(), psi2.T(), (*gamma5_Gamma_psi1)*(*gamma5_Gamma_psi2_dagger));
-    twopoint->sumOverTimeSlices();
+    twopoint->sumOverSpatialVolume();
     twopoints.push_back(*twopoint);
     delete twopoint;
     delete gamma5_Gamma_psi1;
@@ -220,7 +220,7 @@ namespace Contract
     gamma5_Gamma_psi2_dagger = new Core::StochasticPropagator< 4 >(psi2_dagger);
     (*gamma5_Gamma_psi2_dagger) *= gamma0;
     twopoint = new Core::Correlator(psi1.L(), psi2.T(), (*gamma5_Gamma_psi1)*(*gamma5_Gamma_psi2_dagger));
-    twopoint->sumOverTimeSlices();
+    twopoint->sumOverSpatialVolume();
     twopoints.push_back(*twopoint);
     delete twopoint;
     delete gamma5_Gamma_psi1;
@@ -255,7 +255,5 @@ namespace Contract
 
     return twopoints;
   }
-
-
 
 }

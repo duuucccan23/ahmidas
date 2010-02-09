@@ -20,4 +20,72 @@ namespace Base
     return d_localVolume;
   }
 
+  inline size_t Weave::globalVolume() const
+  {
+    return d_globalVolume;
+  }
+
+  inline size_t Weave::L() const
+  {
+    return d_L;
+  }
+
+  inline size_t Weave::T() const
+  {
+    return d_T;
+  }
+
+  inline double Weave::sum(double result) const
+  {
+    double all_result;
+    d_grid.grid().Allreduce(static_cast< const void * >(&result), static_cast< void * >(&all_result),
+                           1, MPI_DOUBLE, MPI_SUM);
+    return all_result;
+  }
+
+  // SD: this is quite inefficient, but will do the job.
+  // btw, where do we actually need this?
+  inline bool Weave::isLocallyAvailable(size_t const x, size_t const y, size_t const z) const
+  {
+    for (size_t t=0; t<d_T; t++)
+    {
+      if ((d_grid.grid()).Get_rank() == d_grid.rank(t * d_L * d_L * d_L +
+                                                    z * d_L * d_L +
+                                                    y * d_L + x))
+      {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  inline bool Weave::isLocallyAvailable(size_t const x, size_t const y, size_t const z, size_t const  t) const
+  {
+    return (d_grid.grid()).Get_rank() == d_grid.rank(t * d_L * d_L * d_L +
+                                                     z * d_L * d_L +
+                                                     y * d_L + x);
+  }
+
+  inline size_t Weave::fromGlobal(size_t const idx, Base::SpaceTimeIndex const mu) const
+  {
+    //private note (SD): at the moment I am not sure whether this is really meant ...
+    return idx % dim(mu);
+  }
+
+  inline size_t Weave::globalCoordToLocalIndex(size_t const x, size_t const y, size_t const z) const
+  {
+    if (!isLocallyAvailable(x, y, z))
+      return d_localVolume; // this is our error condition
+    return (fromGlobal(x, Base::idx_X) * localSurface(Base::idx_X) + fromGlobal(y, Base::idx_Y) * localSurface(Base::idx_Y)
+            + fromGlobal(z, Base::idx_Z) * localSurface(Base::idx_Z));
+  }
+
+  inline size_t Weave::globalCoordToLocalIndex(size_t const x, size_t const y, size_t const z, size_t const t) const
+  {
+    if (!isLocallyAvailable(x, y, z, t))
+      return d_localVolume; // error condition
+    return (fromGlobal(x, Base::idx_X) * localSurface(Base::idx_X) + fromGlobal(y, Base::idx_Y) * localSurface(Base::idx_Y)
+            + fromGlobal(z, Base::idx_Z) * localSurface(Base::idx_Z) + fromGlobal(t, Base::idx_T) * localSurface(Base::idx_T));
+  }
+
 }

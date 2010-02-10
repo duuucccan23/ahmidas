@@ -42,15 +42,11 @@ namespace Base
       size_t globalCoordToLocalIndex(size_t const x, size_t const y, size_t const z) const;
       size_t globalCoordToLocalIndex(size_t const x, size_t const y, size_t const z, size_t const t) const;
 
-//       template< typename Element >
-//       void sumOverTimeSlices(Element const *data_send, Element *data_recv);
+      void sumOverTimeSlices(std::complex< double > const *data_send, 
+                             std::complex< double > *data_recv, size_t const count) const;
 
-      void sumOverTimeSlices(std::complex< double > const *data_send, std::complex< double > *data_recv)  const;
-
-      // SD: Compiler complained about the const declaration, so I left it out
-      // this could be cured by a const_cast of d_grid within the function body
-      bool isLocallyAvailable(size_t x, size_t y, size_t z) const;
-      bool isLocallyAvailable(size_t x, size_t y, size_t z, size_t t) const;
+      bool isLocallyAvailable(size_t const x, size_t const y, size_t const z) const;
+      bool isLocallyAvailable(size_t const x, size_t const y, size_t const z, size_t const t) const;
 
     private:
       size_t fromGlobal(size_t const x, Base::SpaceTimeIndex const idx) const;

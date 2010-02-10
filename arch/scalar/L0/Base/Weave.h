@@ -1,5 +1,7 @@
 #pragma once
 
+#include<complex>
+
 #include <L0/Base/Base.h>
 
 namespace Base
@@ -32,19 +34,19 @@ namespace Base
       template< typename Element >
       void fieldShift(Base::SpaceTimeIndex idx, Base::Direction dir, Element *field, size_t const *offsets) const;
 
-      size_t globalCoordToLocalIndex(size_t x, size_t y, size_t z) const;
-      size_t globalCoordToLocalIndex(size_t x, size_t y, size_t z, size_t t) const;
+      size_t globalCoordToLocalIndex(size_t const x, size_t const y, size_t const z) const;
+      size_t globalCoordToLocalIndex(size_t const x, size_t const y, size_t const z, size_t const t) const;
 
-//       // This funtion exists only for compatibility with parallel implementation
-//       // here, it simply does not do anything but copy the data;
-//       template< typename Element >
-//       void sumOverTimeSlices(Element const *data_send, Element *data_recv);
-
-      bool isLocallyAvailable(size_t x, size_t y, size_t z) const;
-      bool isLocallyAvailable(size_t x, size_t y, size_t z, size_t t) const;
+      // This funtion exists only for compatibility with parallel implementation
+      // here, it simply does not do anything but copy the data;
+      void sumOverTimeSlices(std::complex< double > const *data_send, 
+                             std::complex< double > *data_recv, size_t const count) const;
+      
+      bool isLocallyAvailable(size_t const x, size_t const y, size_t const z) const;
+      bool isLocallyAvailable(size_t const x, size_t const y, size_t const z, size_t const t) const;
 
     private:
-      size_t fromGlobal(size_t x, Base::SpaceTimeIndex idx) const;
+      size_t fromGlobal(size_t const idx, Base::SpaceTimeIndex const mu) const;
   };
 }
 

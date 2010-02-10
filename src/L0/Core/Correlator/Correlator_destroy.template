@@ -7,6 +7,7 @@ void Core::Correlator::destroy()
     delete    d_references;
     delete    d_weave;
     delete [] d_sumTimeslice;
+    delete [] d_sumTimeslice_global;
     delete    d_data;
   }
 }

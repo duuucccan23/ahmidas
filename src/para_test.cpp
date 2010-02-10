@@ -21,14 +21,14 @@
 
 int main(int argc, char **argv)
 {
-  int numprocs;
-  int myid;
-  MPI_Status stat; 
 
-  MPI_Init(&argc,&argv);
-  MPI_Comm_size(MPI_COMM_WORLD,&numprocs);
-  MPI_Comm_rank(MPI_COMM_WORLD,&myid);
-
+  MPI::Init(argc, argv);
+  int numprocs(MPI::COMM_WORLD.Get_size());
+  int myid(MPI::COMM_WORLD.Get_rank());
+  
+  if (myid==0) 
+    std::cout << "\nprogramm is running on " << numprocs << "cpu(s)\n" << std::endl;
+  
   const size_t L = 4;
   const size_t T = 4;
 
@@ -44,13 +44,16 @@ int main(int argc, char **argv)
     oss << f%4;
     oss << ".inverted";
     oss.flush();
-    std::cout << oss.str() << std::endl;
+    if (myid==0)
+      std::cout << oss.str() << std::endl;
     propfilesU.push_back(oss.str());
   }
 
 
   Core::Propagator *uProp = new Core::Propagator(L, T);
-
+  
+  if (myid==0) 
+    std::cout << "\nmemory for Propagator structure allocated\n" << std::endl;
 
   if (uProp->load(propfilesU, "Scidac"))
   {
@@ -75,7 +78,7 @@ int main(int argc, char **argv)
   if (myid==0) 
     std::cout << "\nprogramm is going to exit normally now\n" << std::endl;
 
-  MPI_Finalize();
+  MPI::Finalize();
 
   return EXIT_SUCCESS;
 }

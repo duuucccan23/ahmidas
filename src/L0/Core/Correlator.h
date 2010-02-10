@@ -25,6 +25,7 @@ namespace Core
     Field < QCD::reducedTensor > *d_data;
     QCD::reducedTensor *d_sumTimeslice;
 
+    // for compatibility with parallel code
     QCD::reducedTensor *d_sumTimeslice_global;
 
     public:

@@ -46,11 +46,14 @@ ADD_SUBDIRECTORY(test)
 ADD_SUBDIRECTORY(example)
 
 
-# ADD_EXECUTABLE(main src/main.cpp)
-# TARGET_LINK_LIBRARIES(main Weave SU3 IO QCD Base)
-# 
-# ADD_EXECUTABLE(simon_test src/simon_test.cpp)
-# TARGET_LINK_LIBRARIES(simon_test SU3 QCD IO Base Core Dirac Weave Contract)
+ADD_EXECUTABLE(main src/main.cpp)
+TARGET_LINK_LIBRARIES(main Weave SU3 IO QCD Base)
+
+ADD_EXECUTABLE(light_mesons test/light_mesons.cpp)
+TARGET_LINK_LIBRARIES(light_mesons SU3 QCD IO Base Core Dirac Weave Contract)
+
+ADD_EXECUTABLE(simon_test src/simon_test.cpp)
+TARGET_LINK_LIBRARIES(simon_test SU3 QCD IO Base Core Dirac Weave Contract)
 
 
 IF(USE_MPI)

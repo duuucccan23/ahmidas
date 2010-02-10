@@ -5,7 +5,7 @@
 #include <functional>
 #include <iostream>
 
-#include <mpi.h>
+#include "mpi.h"
 
 #include "L0/Base/Base.h"
 // #include "L0/Base/Weave.h"

@@ -65,23 +65,24 @@ namespace Base
             + fromGlobal(z, Base::idx_Z) * localSurface(Base::idx_Z) + fromGlobal(t, Base::idx_T) * localSurface(Base::idx_T));
   }
 
-  template< typename Element >
-  void sumOverTimeSlices(Element const *data_send, Element *data_recv)
+
+  inline void Weave::sumOverTimeSlices(std::complex< double > const *data_send, 
+                                       std::complex< double > *data_recv, size_t const count) const
   {
-    std::memcpy(static_cast< void * >(data_send), static_cast< const void * >(data_send), d_T*sizeof(Element))
+    std::copy(data_send, data_send + count*d_T, data_recv);
   }
 
-  inline bool Weave::isLocallyAvailable(size_t, size_t, size_t) const
-  {
-    return true;
-  }
-
-  inline bool Weave::isLocallyAvailable(size_t, size_t, size_t, size_t) const
+  inline bool Weave::isLocallyAvailable(size_t const, size_t const, size_t const) const
   {
     return true;
   }
 
-  inline size_t Weave::fromGlobal(size_t idx, Base::SpaceTimeIndex) const
+  inline bool Weave::isLocallyAvailable(size_t const, size_t const, size_t const, size_t const) const
+  {
+    return true;
+  }
+
+  inline size_t Weave::fromGlobal(size_t const idx, Base::SpaceTimeIndex const mu) const
   {
     return idx;
   }

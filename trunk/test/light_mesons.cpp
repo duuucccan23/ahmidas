@@ -8,7 +8,7 @@
 #include <sstream>
 #include <cassert>
 
-#include <L0/Tool/IO.h>
+#include <L1/Tool/IO.h>
 #include <L0/Dirac/Gamma.h>
 #include <L0/Core/Field.h>
 #include <L0/QCD/Gauge.h>
@@ -27,7 +27,7 @@ int main(int argc, char **argv)
 
   std::vector<std::string> propfilesU;
 
-  const std::string filename_base("../../test/source4x4");
+  const std::string filename_base("../test/source4x4");
   for (int f=0; f<12; f++)
   {
     std::ostringstream oss;

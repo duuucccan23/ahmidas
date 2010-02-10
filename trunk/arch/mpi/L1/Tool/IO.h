@@ -15,7 +15,8 @@ namespace Tool
     enum filetype
     {
       fileILDG,
-      fileSCIDAC
+      fileSCIDAC,
+      fileMILC
     };
 
     struct Scidacinfo
@@ -40,6 +41,28 @@ namespace Tool
       std::cerr << "loadILDG(...) has not been implemented yet for parallel architecture! Aborting..." << std::endl;
       exit(1);
     }
+
+    template< typename Element >
+    inline void loadMILC(Core::Field< Element > *field, std::string const &filename)
+    {
+      std::cerr << "loadMILC(...) has not been implemented yet for parallel architecture! Aborting..." << std::endl;
+      exit(1);
+    }
+
+    template< typename Element >
+    inline void saveILDG(Core::Field< Element > const &field, std::string const &filename)
+    {
+      std::cerr << "saveILDG(...) has not been implemented yet for parallel architecture! Aborting..." << std::endl;
+      exit(1);
+    }
+
+    template< typename Element >
+    inline void saveScidac(Core::Field< Element > const &field, std::string const &filename)
+    {
+      std::cerr << "saveScidac(...) has not been implemented yet for parallel architecture! Aborting..." << std::endl;
+      exit(1);
+    }
+    
 
   }
 }

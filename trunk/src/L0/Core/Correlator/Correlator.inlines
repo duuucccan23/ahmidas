@@ -3,7 +3,8 @@ namespace Core
 
   inline Correlator::Correlator(Correlator const &other)
     : L(other.L), T(other.T), d_weave(other.d_weave), d_data(other.d_data),
-      d_sumTimeslice(other.d_sumTimeslice), d_references(other.d_references)
+      d_sumTimeslice(other.d_sumTimeslice), d_sumTimeslice_global(other.d_sumTimeslice_global),
+      d_references(other.d_references)
   {
     *d_references += 1;
   }
@@ -11,7 +12,8 @@ namespace Core
 
   inline Correlator::Correlator(size_t const L_, size_t const T_, Core::Field<QCD::reducedTensor>* data)
     : L(L_), T(T_), d_weave(new Base::Weave(L_,T_)), d_data(data),
-      d_sumTimeslice(new QCD::reducedTensor[T_]), d_references(new size_t(1))
+      d_sumTimeslice(new QCD::reducedTensor[T_]), d_sumTimeslice_global(new QCD::reducedTensor[T_]),
+      d_references(new size_t(1))
   {
   }
 
@@ -24,14 +26,14 @@ namespace Core
   inline QCD::reducedTensor &Correlator::operator[](size_t const t)
   {
     assert(t < T);
-    return d_sumTimeslice[t];
+    return d_sumTimeslice_global[t];
   }
 
 
   inline QCD::reducedTensor const &Correlator::operator[](size_t const t) const
   {
     assert(t < T);
-    return d_sumTimeslice[t];
+    return d_sumTimeslice_global[t];
   }
 
 
@@ -92,6 +94,8 @@ namespace Core
       }
       }
     }
+    d_weave->sumOverTimeSlices(reinterpret_cast< std::complex< double> const * >(d_sumTimeslice),
+                               reinterpret_cast< std::complex< double> * >(d_sumTimeslice_global), d_sumTimeslice[0].size());
   }
 
   inline void Correlator::sumOverSpatialVolume()
@@ -107,6 +111,9 @@ namespace Core
       {
       for(x1=0; x1<L; x1++)
       {
+        // this clearly will have to be done more efficiently in the future,
+        // perhaps by using a common communicator for each timeslice
+        // which of course has to be handled by a Weave routine
         if (d_weave->isLocallyAvailable(x1, x2, x3, x4))
         {
           d_sumTimeslice[x4] += (*(d_data->at(x1, x2, x3, x4)));
@@ -115,12 +122,14 @@ namespace Core
       }
       }
     }
+    d_weave->sumOverTimeSlices(reinterpret_cast< std::complex< double> const * >(d_sumTimeslice),
+                               reinterpret_cast< std::complex< double> * >(d_sumTimeslice_global), d_sumTimeslice[0].size());
   }
 
   inline std::complex< double > Correlator::getTrSum(size_t const timeslice)
   {
     assert(timeslice < T);
-    return d_sumTimeslice[timeslice].trace();
+    return d_sumTimeslice_global[timeslice].trace();
   }
 
   inline size_t Correlator::getT() const

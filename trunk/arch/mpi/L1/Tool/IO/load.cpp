@@ -4,6 +4,8 @@ void Tool::IO::load(Core::Field< QCD::Gauge > *field, std::string const &filenam
 {
    switch(type) {
    case Tool::IO::fileILDG :
+      // at current status, this will give an error message and
+      // exit, since not implemented yet
       Tool::IO::loadILDG(field, filename);
       break;
    default :

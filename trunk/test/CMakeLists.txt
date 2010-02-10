@@ -30,9 +30,6 @@ ADD_EXECUTABLE(config config.cpp)
 TARGET_LINK_LIBRARIES(config Base IO SU3)
 ADD_TEST(basic_config_stuff config)
 
-#ADD_EXECUTABLE(light_mesons light_mesons.cpp)
-#TARGET_LINK_LIBRARIES(light_mesons SU3 Lime QCD ILDG Scidac Base Core Dirac Weave Contract)
-
 IF(USE_MPI)
 ADD_EXECUTABLE(MPIstartstop MPIstartstop.cpp)
 ADD_TEST(MPIstarting_stopping MPIstartstop)

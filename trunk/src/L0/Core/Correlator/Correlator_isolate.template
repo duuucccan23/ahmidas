@@ -13,6 +13,10 @@ void Core::Correlator::isolate()
   QCD::reducedTensor *sumTimeslice = new QCD::reducedTensor(T);
   std::copy(d_sumTimeslice, d_sumTimeslice + T, sumTimeslice);
   d_sumTimeslice = sumTimeslice;
+  
+  QCD::reducedTensor *sumTimeslice_global = new QCD::reducedTensor(T);
+  std::copy(d_sumTimeslice_global, d_sumTimeslice_global + T, sumTimeslice_global);
+  d_sumTimeslice_global = sumTimeslice_global;
 
   Core::Field< QCD::reducedTensor > *data = new Core::Field < QCD::reducedTensor >(L, T);
   Core::Field< QCD::reducedTensor >::iterator itOld = d_data->begin();

@@ -78,7 +78,8 @@ int main(int argc, char **argv)
   if (myid==0) 
     std::cout << "\nprogramm is going to exit normally now\n" << std::endl;
 
-  MPI::Finalize();
+  if (!MPI::Is_finalized())
+    MPI::Finalize();
 
   return EXIT_SUCCESS;
 }

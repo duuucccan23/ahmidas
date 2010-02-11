@@ -6,7 +6,9 @@ namespace Base
   Grid::Grid(size_t L, size_t T)
     : d_L(L), d_T(T), d_bufferVolume(0), d_bigEndian(bigEndian())
   {
-    //MPI::Init();
+    if(!MPI::Is_initialized())
+      MPI::Init();
+    
     size_t gridSize = static_cast< size_t >(MPI::COMM_WORLD.Get_size());
     if (totalVolume() % gridSize) // No balanced distribution available
       MPI::COMM_WORLD.Abort(EDEADLK);

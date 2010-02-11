@@ -124,6 +124,8 @@ namespace Contract
 
     // note Gamma -> Gamma*gamma5, Gamma' -> gamma5*Gamma'
 
+    return twopoints;
+
     // 1) ------ Gamma = gamma5 = Gamma' ------
     gamma5_Gamma_psi1 = new Core::StochasticPropagator< 4 >(psi1);
     gamma5_Gamma_psi2_dagger = new Core::StochasticPropagator< 4 >(psi2_dagger);

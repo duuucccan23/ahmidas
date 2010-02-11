@@ -15,11 +15,11 @@ class iterator : public Core::Field< QCD::Tensor >::iterator
   iterator(Propagator &target, size_t const idx);
 
   public:
-    iterator(iterator const &other);
+    iterator(Propagator::iterator const &other);
 
-    bool operator==(iterator const &other) const;
+    bool operator==(Propagator::iterator const &other) const;
 
-    bool operator!=(iterator const &other) const;
+    bool operator!=(Propagator::iterator const &other) const;
 
     QCD::Tensor &operator*();
     QCD::Tensor const &operator*() const;

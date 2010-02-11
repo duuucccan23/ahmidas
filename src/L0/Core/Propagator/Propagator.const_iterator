@@ -14,14 +14,14 @@ class const_iterator : public Core::Field< QCD::Tensor >::const_iterator
   const_iterator(Propagator const &target, size_t const idx);
 
   public:
-    const_iterator(const_iterator const &other);
-    const_iterator(iterator const &other);
+    const_iterator(Propagator::const_iterator const &other);
+    const_iterator(Propagator::iterator const &other);
 
-    bool operator==(const_iterator const &other) const;
-    bool operator==(iterator const &other) const;
+    bool operator==(Propagator::const_iterator const &other) const;
+    bool operator==(Propagator::iterator const &other) const;
 
-    bool operator!=(const_iterator const &other) const;
-    bool operator!=(iterator const &other) const;
+    bool operator!=(Propagator::const_iterator const &other) const;
+    bool operator!=(Propagator::iterator const &other) const;
 
     //QCD::Tensor &operator*();
     QCD::Tensor const &operator*() const;

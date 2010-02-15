@@ -1,17 +1,17 @@
 template< typename Element >
 void Tool::IO::loadScidac(Core::Field< Element > *field, std::string const &filename)
-{   
+{
   Base::Weave weave(field->L(), field->T());
-  
+
   int nprocs((weave.d_grid.grid()).Get_size());
   int rank((weave.d_grid.grid()).Get_rank());
-  
+
   unsigned long elem_offset(0);
-  
+
   for (int irank=0; irank<nprocs; irank++)
   {
     (weave.d_grid.grid()).Barrier();
-    
+
     // actually, this is serial reading, which is
     // not going to work if the Communicator reordered the processes
     // or if one process has to read non-contiguous data
@@ -30,7 +30,11 @@ void Tool::IO::loadScidac(Core::Field< Element > *field, std::string const &file
       assert(reader.good());
 
       //go to position from which the data is supposed to be read
-      reader.seekg(elem_offset*sizeof(Element), reader.findRecord("scidac-binary-data"));
+      if (info.precision.compare("64") == 0)
+        reader.seekg(elem_offset*sizeof(Element), reader.findRecord("scidac-binary-data"));
+      else
+        reader.seekg(elem_offset*sizeof(Element)/2, reader.findRecord("scidac-binary-data"));
+
       assert(reader.good());
 
       Element *dataPtr = field->raw(); //Starting memory address of the field.
@@ -40,10 +44,7 @@ void Tool::IO::loadScidac(Core::Field< Element > *field, std::string const &file
         reader.read(dataPtr, field->size());
         if (!Base::bigEndian)
           Base::swapEndian(dataPtr, dataPtr + field->size(), sizeof(double));
-        
-        elem_offset += weave.localVolume();
-        (weave.d_grid.grid()).Bcast(static_cast< void * >(&elem_offset), 1, MPI_UNSIGNED_LONG, rank);
-        
+
         return;
       }
 
@@ -58,11 +59,13 @@ void Tool::IO::loadScidac(Core::Field< Element > *field, std::string const &file
         std::copy(reinterpret_cast< float* >(elem32), reinterpret_cast< float* >(elem32) + elSize,
                   reinterpret_cast< double* >(dataPtr));
       }
-      
+      std::cout << "elem_offset = " << elem_offset << std::endl;
       elem_offset += weave.localVolume();
-    }    
+    }
     // all processes should know where we are
-    (weave.d_grid.grid()).Bcast(static_cast< void * >(&elem_offset), 1, MPI_UNSIGNED_LONG, rank);
+    (weave.d_grid.grid()).Bcast(static_cast< void * >(&elem_offset), 1, MPI_UNSIGNED_LONG, irank);
+
+      std::cout << "elem_offset after broadcast: " << elem_offset << std::endl;
   }
   (weave.d_grid.grid()).Barrier();
 }

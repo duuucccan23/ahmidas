@@ -8,7 +8,7 @@ namespace Base
   {
     if(!MPI::Is_initialized())
       MPI::Init();
-    
+
     size_t gridSize = static_cast< size_t >(MPI::COMM_WORLD.Get_size());
     if (totalVolume() % gridSize) // No balanced distribution available
       MPI::COMM_WORLD.Abort(EDEADLK);
@@ -84,5 +84,13 @@ namespace Base
       if (d_dims[ctr] != 1 && d_surfaces[ctr] > d_bufferVolume)
         d_bufferVolume = d_surfaces[ctr];
     }
+//     for (size_t mu=0; mu<4; mu++)
+//     {
+//       std::cout << d_sizes[mu]    << std::endl;
+//       std::cout << d_dims[mu]     << std::endl;
+//       std::cout << d_dimSizes[mu] << std::endl;
+//       std::cout << d_surfaces[mu] << std::endl;
+//     }
   }
+
 }

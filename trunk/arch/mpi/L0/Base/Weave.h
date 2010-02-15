@@ -48,6 +48,9 @@ namespace Base
       bool isLocallyAvailable(size_t const x, size_t const y, size_t const z) const;
       bool isLocallyAvailable(size_t const x, size_t const y, size_t const z, size_t const t) const;
 
+      void gridBarrier();
+      void timesliceBarrier();
+
     private:
       size_t fromGlobal(size_t const x, Base::SpaceTimeIndex const idx) const;
   };

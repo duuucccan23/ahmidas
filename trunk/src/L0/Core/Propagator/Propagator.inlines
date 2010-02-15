@@ -59,7 +59,7 @@ namespace Core
       for (size_t i=0; i<12; i++)
       {
         if (format == std::string("ILDG"))
-         Tool::IO::load(tmp+i,filenames[i], Tool::IO::fileILDG);
+          Tool::IO::load(tmp+i,filenames[i], Tool::IO::fileILDG);
         else if (format == std::string("Scidac"))
         {
           Tool::IO::load(tmp+i,filenames[i], Tool::IO::fileSCIDAC);
@@ -86,23 +86,27 @@ namespace Core
       for (size_t i=0; i<12; i++)
         spinors[i] = NULL;
 
+      static size_t tag(0);
+      static size_t tagS(0);
       // would like to see for loop here
       // but postfix Field::iterator operator++(int) is not implemented yet
-      do
+      while (itTensor != d_components->end())
       {
+        std:: cout << "Tensor no.: " << tag++ <<std::endl;
         for (size_t i=0; i<12; i++)
         {
           spinors[i] = new QCD::Spinor(*(itsSpinor[i]));
-          //std::cout << *(spinors[i]) << std::endl;
+          std:: cout << "Spinor no.: " << tagS++ <<std::endl;
+          std::cout << *(spinors[i]) << std::endl;
           ++(itsSpinor[i]);
         }
-        *(itTensor) = QCD::Tensor(spinors);
+        (*itTensor) = QCD::Tensor(spinors);
         for (size_t i=0; i<12; i++)
         {
           delete spinors[i];
         }
+        ++itTensor;
       }
-      while (++itTensor != d_components->end());
 
      delete [] spinors;
 

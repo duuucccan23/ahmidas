@@ -25,10 +25,10 @@ int main(int argc, char **argv)
   MPI::Init(argc, argv);
   int numprocs(MPI::COMM_WORLD.Get_size());
   int myid(MPI::COMM_WORLD.Get_rank());
-  
+
   if (myid==0) 
     std::cout << "\nprogramm is running on " << numprocs << "cpu(s)\n" << std::endl;
-  
+
   const size_t L = 4;
   const size_t T = 4;
 
@@ -51,18 +51,18 @@ int main(int argc, char **argv)
 
 
   Core::Propagator *uProp = new Core::Propagator(L, T);
-  
-  if (myid==0) 
+
+  if (myid==0)
     std::cout << "\nmemory for Propagator structure allocated\n" << std::endl;
 
   if (uProp->load(propfilesU, "Scidac"))
   {
-    if (myid==0) 
+    if (myid==0)
       std::cout << "u quark propagator successfully loaded\n" << std::endl;
   }
   else
   {
-    if (myid==0) 
+    if (myid==0)
     {
       std::cout << "error reading u quark  propagator\n" << std::endl;
       exit(EXIT_FAILURE);
@@ -75,7 +75,7 @@ int main(int argc, char **argv)
 
   delete uProp;
 
-  if (myid==0) 
+  if (myid==0)
     std::cout << "\nprogramm is going to exit normally now\n" << std::endl;
 
   if (!MPI::Is_finalized())

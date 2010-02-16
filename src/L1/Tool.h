@@ -1,7 +1,10 @@
 #pragma once
 
+#include <vector>
+#include <string>
+
 #include <L0/Core/Field.h>
-//#include <L0/Core/Propagator.h>
+#include <L0/Core/Correlator.h>
 #include <L0/QCD/Gauge.h>
 #include <L0/QCD/Spinor.h>
 #include <L0/SU3/Matrix.h>
@@ -16,6 +19,9 @@ namespace Tool
   void randomize(Core::Field< Element > *field);
 
 //   void randomize(Core::Propagator *propagator);
+
+  // print correlation functions in a quasi-standard ETMC format
+  void printLightMesonCorrelator(std::vector< Core::Correlator > const &correlator, std::string const filename = "output.txt");
 
   template< typename Element >
   void setToZero(Core::Field< Element > *field);

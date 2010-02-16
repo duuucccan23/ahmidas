@@ -59,13 +59,13 @@ void Tool::IO::loadScidac(Core::Field< Element > *field, std::string const &file
         std::copy(reinterpret_cast< float* >(elem32), reinterpret_cast< float* >(elem32) + elSize,
                   reinterpret_cast< double* >(dataPtr));
       }
-      std::cout << "elem_offset = " << elem_offset << std::endl;
+      //std::cout << "elem_offset = " << elem_offset << std::endl;
       elem_offset += weave.localVolume();
     }
     // all processes should know where we are
     (weave.d_grid.grid()).Bcast(static_cast< void * >(&elem_offset), 1, MPI_UNSIGNED_LONG, irank);
 
-      std::cout << "elem_offset after broadcast: " << elem_offset << std::endl;
+    //std::cout << "elem_offset after broadcast: " << elem_offset << std::endl;
   }
   (weave.d_grid.grid()).Barrier();
 }

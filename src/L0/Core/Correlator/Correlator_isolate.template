@@ -1,4 +1,4 @@
-void Core::Correlator::isolate()
+inline void Core::Correlator::isolate()
 {
   if (*d_references == 1)
     return;

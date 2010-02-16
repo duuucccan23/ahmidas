@@ -19,9 +19,17 @@
 
 // #define __PRINT__PROPS__
 
+#define __MPI_ARCH__
+
 
 int main(int argc, char **argv)
 {
+
+#ifdef __MPI_ARCH__
+  MPI::Init(argc, argv);
+  int numprocs(MPI::COMM_WORLD.Get_size());
+  int myid(MPI::COMM_WORLD.Get_rank());
+#endif
 
   const size_t L = 4;
   const size_t T = 4;
@@ -44,6 +52,7 @@ int main(int argc, char **argv)
 
 
   Core::Propagator *uProp = new Core::Propagator(L, T);
+
 
 
   if (uProp->load(propfilesU, "Scidac"))
@@ -73,6 +82,7 @@ int main(int argc, char **argv)
   }
   while(++my_iterator != uProp->end());
 
+
 //   //xProp->dagger();
 //   Core::Propagator::iterator my_iteratorX = xProp->begin();
 // 
@@ -88,15 +98,55 @@ int main(int argc, char **argv)
 #endif
 
 
-  double normFactor = 1.0/double(L*L*L);
-  std::vector< Core::Correlator > C2 = Contract::light_meson_twopoint_stochastic(*uProp, *uProp, normFactor);
+  //double normFactor = 1.0/double(L*L*L);
+  std::vector< Core::Correlator > C2 = Contract::light_meson_twopoint_stochastic(*uProp, *uProp);
 
+
+
+
+
+//   propfilesU.clear();
+//   const std::string filename_base1("../test/source4x4");
+//   for (int f=0; f<12; f++)
+//   {
+//     std::ostringstream oss;
+//     oss <<  ".";
+//     oss.fill('0');
+//     oss.width(2);
+//     oss << f;
+//     oss << ".inverted";
+//     oss.flush();
+//     propfilesU.push_back(std::string(filename_base1).append("_u").append(oss.str()));
+//     std::cout << propfilesU[f] << std::endl;
+//   }
+// 
+//   if (uProp->load(propfilesU, "Scidac"))
+//   {
+//     std::cout << "u quark propagator successfully loaded\n" << std::endl;
+//   }
+//   else
+//   {
+//     std::cout << "error reading u quark  propagator\n" << std::endl;
+//     exit(EXIT_FAILURE);
+//   }
+
+  //charged_pion
+  Dirac::Gamma5 gamma5;
+  Core::Correlator C2_naive = Contract::light_meson_twopoint(uProp, 0, gamma5, gamma5);
 
 
   delete uProp;
   //delete xProp;
 
+#ifdef __MPI_ARCH__
+  if (myid == 0)
+#endif
   std::cout << "\nprogramm is going to exit normally now\n" << std::endl;
+
+#ifdef __MPI_ARCH__
+  if (!MPI::Is_finalized())
+    MPI::Finalize();
+#endif
 
 
   return EXIT_SUCCESS;

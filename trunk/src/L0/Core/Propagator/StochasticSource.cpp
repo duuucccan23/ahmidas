@@ -6,6 +6,10 @@ namespace Core
   Propagator StochasticSource< NComp >::operator*(StochasticPropagator< NComp > const &sPropagator) const
   {
 
+    std::cerr << "Propagator StochasticSource< NComp >::operator*(StochasticPropagator< NComp > const &) const\n"
+              << "has not been implemented yet" << std::endl;
+    exit(1);
+
     Propagator tmp(sPropagator);
 //     //assert (T()==propagator.T() && L()==propagator.L());
 // 

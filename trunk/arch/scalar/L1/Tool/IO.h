@@ -4,6 +4,7 @@
 #include <iostream>
 #include <L0/Base/Weave.h>
 #include <L0/Core/Field.h>
+#include <L0/Core/Propagator.h>
 #include <L1/Tool.h>
 #include <L1/Tool/IO/Lime/Reader.h>
 #include <L1/Tool/IO/Lime/Writer.h>
@@ -53,6 +54,12 @@ namespace Tool
 
     void load(Core::Field< QCD::Gauge > *field, std::string const &filename, Tool::IO::filetype);
     void load(Core::Field< QCD::Spinor > *field, std::string const &filename, Tool::IO::filetype);
+
+    void load(Core::Propagator *propagator, std::vector< std::string > const &filenames,
+              Tool::IO::filetype type);
+
+    void load(Core::StochasticPropagator< 4 > *sPropagator, std::vector< std::string > const &filenames,
+              Tool::IO::filetype type);
 
     template< typename Element >
     void loadILDG(Core::Field< Element > *field, std::string const &filename);

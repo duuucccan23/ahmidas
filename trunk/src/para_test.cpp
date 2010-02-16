@@ -35,13 +35,13 @@ int main(int argc, char **argv)
   std::vector<std::string> propfilesU;
 
   const std::string filename_base("../test/source.9999.01");
-  for (int f=0; f<12; f++)
+  for (int f=0; f<4; f++)
   {
     std::ostringstream oss;
     oss << filename_base << ".";
     oss.fill('0');
     oss.width(2);
-    oss << f%4;
+    oss << f;
     oss << ".inverted";
     oss.flush();
     if (myid==0)
@@ -50,24 +50,15 @@ int main(int argc, char **argv)
   }
 
 
-  Core::Propagator *uProp = new Core::Propagator(L, T);
+  Core::StochasticPropagator< 4 > *uProp = new Core::StochasticPropagator< 4 >(L, T);
 
   if (myid==0)
     std::cout << "\nmemory for Propagator structure allocated\n" << std::endl;
 
-  if (uProp->load(propfilesU, "Scidac"))
-  {
-    if (myid==0)
-      std::cout << "u quark propagator successfully loaded\n" << std::endl;
-  }
-  else
-  {
-    if (myid==0)
-    {
-      std::cout << "error reading u quark  propagator\n" << std::endl;
-      exit(EXIT_FAILURE);
-    }
-  }
+  Tool::IO::load(uProp, propfilesU, Tool::IO::fileSCIDAC);
+
+  if (myid==0)
+    std::cout << "u quark propagator successfully loaded\n" << std::endl;
 
 
   std::vector< Core::Correlator > C2 = Contract::light_meson_twopoint_stochastic(*uProp, *uProp);

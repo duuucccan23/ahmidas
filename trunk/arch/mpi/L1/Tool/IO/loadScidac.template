@@ -1,71 +1,83 @@
+#include "../IO.h"
+
 template< typename Element >
 void Tool::IO::loadScidac(Core::Field< Element > *field, std::string const &filename)
 {
   Base::Weave weave(field->L(), field->T());
 
+  (weave.d_grid.grid()).Barrier();
+
+  if (weave.dim(Base::idx_X) > 1 ||
+      weave.dim(Base::idx_Y) > 1 ||
+      weave.dim(Base::idx_Z) > 1)
+  {
+    std::cerr << "parallel reading does not work for parallalization in spatial directions" << std::endl;
+    exit(1);
+  }
+
   int nprocs((weave.d_grid.grid()).Get_size());
   int rank((weave.d_grid.grid()).Get_rank());
 
-  unsigned long elem_offset(0);
+  assert (nprocs == int(weave.dim(Base::idx_T)));
 
-  for (int irank=0; irank<nprocs; irank++)
+  unsigned long elem_offset(weave.globalVolume());
+
+  // each node has to find his own offset
+  for (size_t my_offset = 0; my_offset < weave.globalVolume();
+       my_offset += weave.localVolume())
   {
-    (weave.d_grid.grid()).Barrier();
-
-    // actually, this is serial reading, which is
-    // not going to work if the Communicator reordered the processes
-    // or if one process has to read non-contiguous data
-    if (irank == rank)
+    //if (rank == 0)
+    //  std::cout << "rank(" << my_offset << ") = " << weave.d_grid.rank(my_offset) << std::endl;
+    if ((unsigned int)(rank) == weave.d_grid.rank(my_offset))
     {
-      Lime::Reader reader(filename);
-      Scidacinfo info(reader);
-
-      reader.retrieveRecord(reader.findRecord("scidac-binary-data"));
-      if (reader.fail())
-      {
-        std::cerr << "Lime reader could not find the record, check path and file, and check lime contents of file.\nField unchanged!.\n";
-        exit(EXIT_FAILURE);
-        return;
-      }
-      assert(reader.good());
-
-      //go to position from which the data is supposed to be read
-      if (info.precision.compare("64") == 0)
-        reader.seekg(elem_offset*sizeof(Element), reader.findRecord("scidac-binary-data"));
-      else
-        reader.seekg(elem_offset*sizeof(Element)/2, reader.findRecord("scidac-binary-data"));
-
-      assert(reader.good());
-
-      Element *dataPtr = field->raw(); //Starting memory address of the field.
-
-      if (info.precision.compare("64") == 0)
-      {
-        reader.read(dataPtr, field->size());
-        if (!Base::bigEndian)
-          Base::swapEndian(dataPtr, dataPtr + field->size(), sizeof(double));
-
-        return;
-      }
-
-      size_t const elSize = sizeof(Element) / sizeof(double);
-      uint32_t elem32[elSize];
-
-      for (size_t ctr = 0; ctr < field->size(); ++ctr, ++dataPtr)
-      {
-        reader.read(elem32, elSize);
-        if (!Base::bigEndian)
-          Base::swapEndian(elem32, elem32 + elSize);
-        std::copy(reinterpret_cast< float* >(elem32), reinterpret_cast< float* >(elem32) + elSize,
-                  reinterpret_cast< double* >(dataPtr));
-      }
-      //std::cout << "elem_offset = " << elem_offset << std::endl;
-      elem_offset += weave.localVolume();
+      elem_offset = (unsigned long)(my_offset);
+      break;
     }
-    // all processes should know where we are
-    (weave.d_grid.grid()).Bcast(static_cast< void * >(&elem_offset), 1, MPI_UNSIGNED_LONG, irank);
+  }
 
-    //std::cout << "elem_offset after broadcast: " << elem_offset << std::endl;
+  assert(elem_offset < weave.globalVolume());
+
+  Lime::Reader reader(filename);
+  Scidacinfo info(reader);
+
+  reader.retrieveRecord(reader.findRecord("scidac-binary-data"));
+  if (reader.fail())
+  {
+    std::cerr << "Lime reader could not find the record, check path and file, and check lime contents of file.\nField unchanged!.\n";
+    exit(EXIT_FAILURE);
+    return;
+  }
+  assert(reader.good());
+
+  //go to position from which the data is supposed to be read
+  if (info.precision.compare("64") == 0)
+    reader.seekg(elem_offset*sizeof(Element), reader.findRecord("scidac-binary-data"));
+  else
+    reader.seekg(elem_offset*sizeof(Element)/2, reader.findRecord("scidac-binary-data"));
+
+  assert(reader.good());
+
+  Element *dataPtr = field->raw(); //Starting memory address of the field.
+
+  if (info.precision.compare("64") == 0)
+  {
+    reader.read(dataPtr, field->size());
+    if (!Base::bigEndian)
+      Base::swapEndian(dataPtr, dataPtr + field->size(), sizeof(double));
+
+    return;
+  }
+
+  size_t const elSize = sizeof(Element) / sizeof(double);
+  uint32_t elem32[elSize];
+
+  for (size_t ctr = 0; ctr < field->size(); ++ctr, ++dataPtr)
+  {
+    reader.read(elem32, elSize);
+    if (!Base::bigEndian)
+      Base::swapEndian(elem32, elem32 + elSize);
+    std::copy(reinterpret_cast< float* >(elem32), reinterpret_cast< float* >(elem32) + elSize,
+              reinterpret_cast< double* >(dataPtr));
   }
   (weave.d_grid.grid()).Barrier();
 }

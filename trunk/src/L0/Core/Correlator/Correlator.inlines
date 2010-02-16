@@ -37,7 +37,7 @@ namespace Core
   }
 
 
-  void Correlator::operator*=(double const factor)
+  inline void Correlator::operator*=(double const factor)
   {
     isolate();
     Core::Field< QCD::reducedTensor >::iterator I = d_data->begin();
@@ -48,7 +48,7 @@ namespace Core
     }
   }
 
-  void Correlator::operator*=(std::complex< double > const &factor)
+  inline void Correlator::operator*=(std::complex< double > const &factor)
   {
     isolate();
     Core::Field< QCD::reducedTensor >::iterator I = d_data->begin();
@@ -59,74 +59,8 @@ namespace Core
     }
   }
 
-  // there must be some way to do this more efficiently!
-  inline void Correlator::sumOverSpatialVolume(size_t const *momentum)
-  {
-    if (momentum[0]==0 && momentum[1]==0 && momentum[2]==0)
-    {
-      sumOverSpatialVolume();
-      return;
-    }
-    isolate();
-    std::complex< double > phase;
-    const size_t zero(0);
-    size_t x[3] = {0, 0, 0};
-    size_t &x1 = x[0];
-    size_t &x2 = x[1];
-    size_t &x3 = x[1];
-    size_t x4;
-    for(x4=0; x4<T; x4++)
-    {
-      d_sumTimeslice[x4] = QCD::reducedTensor(std::complex< double >(0.0, 0.0));
-      for(x3=0; x3<L; x3++)
-      {
-      for(x2=0; x2<L; x2++)
-      {
-      for(x1=0; x1<L; x1++)
-      {
-        if (d_weave->isLocallyAvailable(x1, x2, x3, x4))
-        {
-          phase = exp(  std::complex< double >(0, 2.*M_PI/double(L))
-                      * double(std::inner_product(x, x+3, momentum, zero)));
-          d_sumTimeslice[x4] += (*(d_data->at(x1, x2, x3, x4)))*phase;
-        }
-      }
-      }
-      }
-    }
-    d_weave->sumOverTimeSlices(reinterpret_cast< std::complex< double> const * >(d_sumTimeslice),
-                               reinterpret_cast< std::complex< double> * >(d_sumTimeslice_global), d_sumTimeslice[0].size());
-  }
 
-  inline void Correlator::sumOverSpatialVolume()
-  {
-    isolate();
-    size_t x4, x1, x2, x3;
-    for(x4=0; x4<T; x4++)
-    {
-      d_sumTimeslice[x4] = QCD::reducedTensor(std::complex< double >(0.0, 0.0));
-      for(x3=0; x3<L; x3++)
-      {
-      for(x2=0; x2<L; x2++)
-      {
-      for(x1=0; x1<L; x1++)
-      {
-        // this clearly will have to be done more efficiently in the future,
-        // perhaps by using a common communicator for each timeslice
-        // which of course has to be handled by a Weave routine
-        if (d_weave->isLocallyAvailable(x1, x2, x3, x4))
-        {
-          d_sumTimeslice[x4] += (*(d_data->at(x1, x2, x3, x4)));
-        }
-      }
-      }
-      }
-    }
-    d_weave->sumOverTimeSlices(reinterpret_cast< std::complex< double> const * >(d_sumTimeslice),
-                               reinterpret_cast< std::complex< double> * >(d_sumTimeslice_global), d_sumTimeslice[0].size());
-  }
-
-  inline std::complex< double > Correlator::getTrSum(size_t const timeslice)
+  inline std::complex< double > Correlator::getTrSum(size_t const timeslice) const
   {
     assert(timeslice < T);
     return d_sumTimeslice_global[timeslice].trace();
@@ -137,9 +71,19 @@ namespace Core
     return T;
   }
 
+  inline size_t Correlator::getL() const
+  {
+    return L;
+  }
+
   inline size_t Correlator::size() const
   {
     return d_weave->localSize(Base::idx_T);
+  }
+
+  inline bool Correlator::isRoot() const
+  {
+    return d_weave->isRoot();
   }
 
 }

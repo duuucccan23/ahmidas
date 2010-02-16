@@ -66,10 +66,17 @@ namespace Base
                                                      y * d_L + x);
   }
 
+  inline bool Weave::isRoot() const
+  {
+    return d_grid.grid().Get_rank() == 0;
+  }
+
   inline size_t Weave::fromGlobal(size_t const idx, Base::SpaceTimeIndex const mu) const
   {
-    //private note (SD): at the moment I am not sure whether this is really meant ...
-    return idx % dim(mu);
+//     std::cout << "Weave::fromGlobal(" << idx << ", " << mu << ") = "
+//               << idx <<"%" << d_localSize[mu] << " = "
+//               << idx % d_localSize[mu] << std::endl;
+    return idx % d_localSize[mu];
   }
 
   inline size_t Weave::globalCoordToLocalIndex(size_t const x, size_t const y, size_t const z) const

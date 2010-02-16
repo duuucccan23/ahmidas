@@ -13,7 +13,7 @@ int main(int argc, char **argv)
   std::cout << "Spatial plaquette:  " << sp << ", should be 0.396411." << std::endl;
   std::cout << "Temporal plaquette: " << tp << ", should be 0.399299." << std::endl;
 
-  if ((abs(sp - 0.396411) < 1E-6) && (abs(tp - 0.399299) < 1E-6))
+  if ((fabs(sp - 0.396411) < 1E-6) && (fabs(tp - 0.399299) < 1E-6))
     return 0;
   return 1;
 }

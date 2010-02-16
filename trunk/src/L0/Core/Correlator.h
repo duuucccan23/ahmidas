@@ -45,12 +45,12 @@ namespace Core
       void sumOverSpatialVolume();
       void sumOverSpatialVolume(size_t const *momentum);
 
-      void save(std::string const&file);
+      std::complex <double> getTrSum(size_t const timeslice) const;
 
-      std::complex <double> getTrSum(size_t const timeslice);
-
+      bool isRoot() const;
 
       size_t getT() const;
+      size_t getL() const;
       size_t size() const;
 
 
@@ -70,5 +70,3 @@ namespace Core
 
 #include "Correlator/Correlator_destroy.template"
 #include "Correlator/Correlator_isolate.template"
-
-// #include "Correlator/Correlator_sumOverTimeSlices.template"

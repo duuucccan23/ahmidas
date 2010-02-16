@@ -70,10 +70,11 @@ int main(int argc, char **argv)
   }
 
 
-  double normFactor(1.0/double(L*L*L));
-  std::vector< Core::Correlator > C2 = Contract::light_meson_twopoint_stochastic(*uProp, *uProp, normFactor);
+  std::vector< Core::Correlator > C2 = Contract::light_meson_twopoint_stochastic(*uProp, *uProp);
 
   delete uProp;
+
+  Tool::printLightMesonCorrelator(C2, "./lightMesonCorrelator.txt");
 
   if (myid==0)
     std::cout << "\nprogramm is going to exit normally now\n" << std::endl;

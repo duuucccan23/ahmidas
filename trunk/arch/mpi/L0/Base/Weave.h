@@ -43,10 +43,12 @@ namespace Base
       size_t globalCoordToLocalIndex(size_t const x, size_t const y, size_t const z, size_t const t) const;
 
       void sumOverTimeSlices(std::complex< double > const *data_send, 
-                             std::complex< double > *data_recv, size_t const count) const;
+                             std::complex< double > *data_recv, size_t const count=1) const;
 
       bool isLocallyAvailable(size_t const x, size_t const y, size_t const z) const;
       bool isLocallyAvailable(size_t const x, size_t const y, size_t const z, size_t const t) const;
+
+      bool isRoot() const;
 
       void gridBarrier();
       void timesliceBarrier();

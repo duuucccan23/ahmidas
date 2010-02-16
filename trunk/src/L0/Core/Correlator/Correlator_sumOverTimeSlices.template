@@ -1,6 +1,0 @@
-template< size_t L, size_t T >
-void Core::Correlator< L, T >::sumOverTimeSlices()
-{
-  Base::Weave< L, T > &weave = Base::Weave< L, T >::instance();
-  weave.sumOverTimeSlices(d_data);
-}

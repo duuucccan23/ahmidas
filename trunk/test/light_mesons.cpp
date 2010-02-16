@@ -20,6 +20,8 @@
 int main(int argc, char **argv)
 {
 
+  std::cout << "test simplest pion contraction using point sources\n" << std::endl;
+
   Dirac::Gamma5 gamma5;
 
   const size_t L = 4;
@@ -27,19 +29,34 @@ int main(int argc, char **argv)
 
   std::vector<std::string> propfilesU;
 
-  const std::string filename_base("../test/source4x4");
+//   const std::string filename_base("../../test/source4x4");
+//   for (int f=0; f<12; f++)
+//   {
+//     std::ostringstream oss;
+//     oss <<  ".";
+//     oss.fill('0');
+//     oss.width(2);
+//     oss << f;
+//     oss << ".inverted";
+//     oss.flush();
+//     propfilesU.push_back(std::string(filename_base).append("_u").append(oss.str()));
+//     //std::cout << propfilesU[f] << std::endl;
+//   }
+
+  const std::string filename_base("../../test/source.9999.01");
   for (int f=0; f<12; f++)
   {
     std::ostringstream oss;
-    oss <<  ".";
+    oss << filename_base << ".";
     oss.fill('0');
     oss.width(2);
-    oss << f;
+    oss << f%4;
     oss << ".inverted";
     oss.flush();
-    propfilesU.push_back(std::string(filename_base).append("_u").append(oss.str()));
-    //std::cout << propfilesU[f] << std::endl;
+    std::cout << oss.str() << std::endl;
+    propfilesU.push_back(oss.str());
   }
+
 
   Core::Propagator *uProp = new Core::Propagator(L, T);
 
@@ -56,17 +73,7 @@ int main(int argc, char **argv)
   //charged_pion
   Core::Correlator C2 = Contract::light_meson_twopoint(uProp, 0, gamma5, gamma5);
 
-  assert (C2[0].trace().imag() == 0.0);
-  assert (C2[1].trace().imag() == 0.0);
-  assert (C2[2].trace().imag() == 0.0);
-  assert (C2[3].trace().imag() == 0.0);
-
-  double tolerance = 1.e-10;
-
-  assert (C2[0].trace().real() <= (0.5412652273   + tolerance) && C2[0].trace().real() >= (0.5412652273   - tolerance));
-  assert (C2[1].trace().real() <= (0.01456410538  + tolerance) && C2[1].trace().real() >= (0.01456410538  - tolerance));
-  assert (C2[2].trace().real() <= (0.001637160312 + tolerance) && C2[2].trace().real() >= (0.001637160312 - tolerance));
-  assert (C2[3].trace().real() <= (0.01443586407  + tolerance) && C2[3].trace().real() >= (0.01443586407  - tolerance));
+  delete uProp;
 
   std::cout <<  "\nreliable code gives the following result:\n" << std::endl;
   std::cout <<  " 0  +0.5412652273    +0" << std::endl;
@@ -74,7 +81,19 @@ int main(int argc, char **argv)
   std::cout <<  " 2  +0.001637160312  +0" << std::endl;
   std::cout <<  " 3  +0.01443586407   +0\n" << std::endl;
 
-  delete uProp;
+  double tolerance = 1.e-10;
 
-  return EXIT_SUCCESS;
+  if  (C2[0].trace().imag() == 0.0
+    && C2[1].trace().imag() == 0.0
+    && C2[2].trace().imag() == 0.0
+    && C2[3].trace().imag() == 0.0
+    && C2[0].trace().real() <= (0.5412652273   + tolerance) && C2[0].trace().real() >= (0.5412652273   - tolerance)
+    && C2[1].trace().real() <= (0.01456410538  + tolerance) && C2[1].trace().real() >= (0.01456410538  - tolerance)
+    && C2[2].trace().real() <= (0.001637160312 + tolerance) && C2[2].trace().real() >= (0.001637160312 - tolerance)
+    && C2[3].trace().real() <= (0.01443586407  + tolerance) && C2[3].trace().real() >= (0.01443586407  - tolerance))
+  {
+    return EXIT_SUCCESS;
+  }
+
+  return EXIT_FAILURE;
 }

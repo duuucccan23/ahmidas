@@ -82,6 +82,11 @@ namespace Base
     return true;
   }
 
+  inline bool Weave::isRoot() const
+  {
+    return true;
+  }
+
   inline size_t Weave::fromGlobal(size_t const idx, Base::SpaceTimeIndex const mu) const
   {
     return idx;

@@ -8,8 +8,6 @@
 #include <L0/Core/Correlator.h>
 #include <L0/QCD/Spinor.h>
 #include <L0/QCD/Tensor.h>
-#include <L1/Tool/IO.h>
-
 
 namespace Core
 {
@@ -52,7 +50,6 @@ namespace Core
       Propagator(Propagator const &other);
       ~Propagator();
 
-      bool load(std::vector< std::string > const filenames, std::string const format);
 
       //Propagator &operator=(Propagator const &rhs);
 

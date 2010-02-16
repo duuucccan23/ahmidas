@@ -29,46 +29,23 @@ int main(int argc, char **argv)
 
   std::vector<std::string> propfilesU;
 
-//   const std::string filename_base("../../test/source4x4");
-//   for (int f=0; f<12; f++)
-//   {
-//     std::ostringstream oss;
-//     oss <<  ".";
-//     oss.fill('0');
-//     oss.width(2);
-//     oss << f;
-//     oss << ".inverted";
-//     oss.flush();
-//     propfilesU.push_back(std::string(filename_base).append("_u").append(oss.str()));
-//     //std::cout << propfilesU[f] << std::endl;
-//   }
-
-  const std::string filename_base("../../test/source.9999.01");
+  const std::string filename_base("../../test/source4x4");
   for (int f=0; f<12; f++)
   {
     std::ostringstream oss;
-    oss << filename_base << ".";
+    oss <<  ".";
     oss.fill('0');
     oss.width(2);
-    oss << f%4;
+    oss << f;
     oss << ".inverted";
     oss.flush();
-    std::cout << oss.str() << std::endl;
-    propfilesU.push_back(oss.str());
+    propfilesU.push_back(std::string(filename_base).append("_u").append(oss.str()));
+    //std::cout << propfilesU[f] << std::endl;
   }
-
 
   Core::Propagator *uProp = new Core::Propagator(L, T);
 
-  if (uProp->load(propfilesU, "Scidac"))
-  {
-    std::cout << "u quark propagator successfully loaded\n" << std::endl;
-  }
-  else
-  {
-    std::cerr << "error reading u quark  propagator\n" << std::endl;
-    exit(EXIT_FAILURE);
-  }
+  Tool::IO::load(uProp, propfilesU, Tool::IO::fileSCIDAC);
 
   //charged_pion
   Core::Correlator C2 = Contract::light_meson_twopoint(uProp, 0, gamma5, gamma5);

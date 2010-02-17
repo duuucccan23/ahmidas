@@ -11,7 +11,11 @@ namespace Base
 
     size_t gridSize = static_cast< size_t >(MPI::COMM_WORLD.Get_size());
     if (totalVolume() % gridSize) // No balanced distribution available
+    {
+      std::cerr << "total volume = " << totalVolume() << " # cpus = "
+      << gridSize << " => no balanced distribution available. Aborting." << std::endl;
       MPI::COMM_WORLD.Abort(EDEADLK);
+    }
 
     d_localVolume = totalVolume() / gridSize;
     // Compute the gcd using the Euclidian algorithm

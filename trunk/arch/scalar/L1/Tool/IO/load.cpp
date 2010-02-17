@@ -15,6 +15,9 @@ void Tool::IO::load(Core::Field< QCD::Gauge > *field, std::string const &filenam
    case Tool::IO::fileILDG :
       Tool::IO::loadILDG(field, filename);
       break;
+   case Tool::IO::fileMILC :
+      Tool::IO::loadMILC(field, filename);
+      break;
    default :
       break;
    }
@@ -28,7 +31,7 @@ void Tool::IO::load(Core::Field< QCD::Spinor > *field, std::string const &filena
       Tool::IO::loadScidac(field, filename);
       break;
    default :
-      break; 
+      break;
    }
 }
 

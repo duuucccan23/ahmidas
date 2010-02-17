@@ -19,6 +19,8 @@
 #include <L1/Tool/IO.h>
 
 
+#define __LOAD_PROPAGATORS_ONLY__
+
 int main(int argc, char **argv)
 {
 
@@ -26,15 +28,16 @@ int main(int argc, char **argv)
   int numprocs(MPI::COMM_WORLD.Get_size());
   int myid(MPI::COMM_WORLD.Get_rank());
 
-  if (myid==0) 
+  if (myid==0)
     std::cout << "\nprogramm is running on " << numprocs << "cpu(s)\n" << std::endl;
 
-  const size_t L = 4;
-  const size_t T = 4;
+  const size_t L = 16;
+  const size_t T = 32;
 
   std::vector<std::string> propfilesU;
 
-  const std::string filename_base("../test/source.9999.01");
+  //const std::string filename_base("../test/source.9999.01");
+  const std::string filename_base("/usr1/scratch/dinter/ahmidas_test/source");
   for (int f=0; f<4; f++)
   {
     std::ostringstream oss;
@@ -58,12 +61,22 @@ int main(int argc, char **argv)
   Tool::IO::load(uProp, propfilesU, Tool::IO::fileSCIDAC);
 
   if (myid==0)
-    std::cout << "u quark propagator successfully loaded\n" << std::endl;
+    std::cout << "propagator successfully loaded\n" << std::endl;
+
+#ifdef __LOAD_PROPAGATORS_ONLY__
+  if (myid==0)
+    std::cout << "Done! Finalizing now.\n" << std::endl;
+  MPI::Finalize();
+  return EXIT_SUCCESS;
+#endif
 
 
   std::vector< Core::Correlator > C2 = Contract::light_meson_twopoint_stochastic(*uProp, *uProp);
 
   delete uProp;
+
+  if (myid==0)
+    std::cout << "contractions done\n" << std::endl;
 
   Tool::printLightMesonCorrelator(C2, "./lightMesonCorrelator.txt");
 

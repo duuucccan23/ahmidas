@@ -34,32 +34,46 @@ void Tool::IO::loadScidac(Core::Field< Element > *field, std::string const &file
       break;
     }
   }
-
   assert(elem_offset < weave.globalVolume());
 
+
+
+
   Lime::Reader reader(filename);
-  Scidacinfo info(reader);
 
-  reader.retrieveRecord(reader.findRecord("scidac-binary-data"));
-  if (reader.fail())
+  Scidacinfo *info;
+
+  // since this is causing problems in massive parallelization, the following block is
+  // processed serially
+  for (int irank=0; irank<nprocs; irank++)
   {
-    std::cerr << "Lime reader could not find the record, check path and file, and check lime contents of file.\nField unchanged!.\n";
-    exit(EXIT_FAILURE);
-    return;
-  }
-  assert(reader.good());
+    if (rank == irank)
+    {
+      info = new Scidacinfo(reader);
 
-  //go to position from which the data is supposed to be read
-  if (info.precision.compare("64") == 0)
-    reader.seekg(elem_offset*sizeof(Element), reader.findRecord("scidac-binary-data"));
-  else
-    reader.seekg(elem_offset*sizeof(Element)/2, reader.findRecord("scidac-binary-data"));
+      reader.retrieveRecord(reader.findRecord("scidac-binary-data"));
+      if (reader.fail())
+      {
+        std::cerr << "Lime reader could not find the record, check path and file, and check lime contents of file.\nField unchanged!.\n";
+        exit(EXIT_FAILURE);
+        return;
+      }
+      assert(reader.good());
+
+      //go to position from which the data is supposed to be read
+      if (info->precision.compare("64") == 0)
+        reader.seekg(elem_offset*sizeof(Element), reader.findRecord("scidac-binary-data"));
+      else
+        reader.seekg(elem_offset*sizeof(Element)/2, reader.findRecord("scidac-binary-data"));
+    }
+    (weave.d_grid.grid()).Barrier();
+  }
 
   assert(reader.good());
 
   Element *dataPtr = field->raw(); //Starting memory address of the field.
 
-  if (info.precision.compare("64") == 0)
+  if (info->precision.compare("64") == 0)
   {
     reader.read(dataPtr, field->size());
     if (!Base::bigEndian)
@@ -79,5 +93,8 @@ void Tool::IO::loadScidac(Core::Field< Element > *field, std::string const &file
     std::copy(reinterpret_cast< float* >(elem32), reinterpret_cast< float* >(elem32) + elSize,
               reinterpret_cast< double* >(dataPtr));
   }
+
+  delete info;
+
   (weave.d_grid.grid()).Barrier();
 }

@@ -19,7 +19,7 @@
 #include <L1/Tool/IO.h>
 
 
-#define __LOAD_PROPAGATORS_ONLY__
+// #define __LOAD_PROPAGATORS_ONLY__
 
 int main(int argc, char **argv)
 {
@@ -31,13 +31,16 @@ int main(int argc, char **argv)
   if (myid==0)
     std::cout << "\nprogramm is running on " << numprocs << "cpu(s)\n" << std::endl;
 
-  const size_t L = 16;
-  const size_t T = 32;
+//   const size_t L = 16;
+//   const size_t T = 32;
+
+  const size_t L = 4;
+  const size_t T = 4;
 
   std::vector<std::string> propfilesU;
 
-  //const std::string filename_base("../test/source.9999.01");
-  const std::string filename_base("/usr1/scratch/dinter/ahmidas_test/source");
+  const std::string filename_base("../test/source.9999.01");
+  //const std::string filename_base("/usr1/scratch/dinter/ahmidas_test/source");
   for (int f=0; f<4; f++)
   {
     std::ostringstream oss;

@@ -27,10 +27,20 @@ void Tool::printLightMesonCorrelator(std::vector< Core::Correlator > const &corr
   size_t T = correlator[0].getT();
   size_t L = correlator[0].getL();
   double convention_factor = 1.0/double(L*L*L);
+  
+  std::complex< double > complex_factor;
 
   for  (size_t idx=0; idx<correlator.size(); idx++)
   {
-
+    if (idx==5 || idx==6 || idx==7 || idx==8 || idx==14 || idx==16)
+      complex_factor = std::complex< double >(0, 1);
+    else if (idx==15 || idx==17)
+      complex_factor = std::complex< double >(0, -1);
+    else if (idx==9 || idx==10 || idx==12 || idx==13 || idx==19)
+      complex_factor = std::complex< double >(-1, 0); 
+    else
+      complex_factor = std::complex< double >(1, 0);
+    
     //fout << "\nGamma combination index " << idx << " \n" << std::endl;
     for (size_t t=0; t<T; t++)
     {
@@ -42,8 +52,8 @@ void Tool::printLightMesonCorrelator(std::vector< Core::Correlator > const &corr
       fout.width(3);
       fout << t << " ";
       fout << std::scientific << std::setprecision(10) << std::showpos
-                << convention_factor*(correlator[idx].getTrSum(t).real()) << "  "
-                << convention_factor*(correlator[idx].getTrSum(t).imag()) << std::endl;
+                << convention_factor*((complex_factor*(correlator[idx].getTrSum(t))).real()) << "  "
+                << convention_factor*((complex_factor*(correlator[idx].getTrSum(t))).imag()) << std::endl;
     }
   }
   fout<< std::endl;

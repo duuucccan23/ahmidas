@@ -41,6 +41,7 @@ namespace Core
 
       void operator*=(double const factor);
       void operator*=(std::complex< double > const &factor);
+      void operator+=(Correlator const &other);
 
       void sumOverSpatialVolume();
       void sumOverSpatialVolume(size_t const *momentum);

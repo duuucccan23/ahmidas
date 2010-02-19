@@ -59,6 +59,19 @@ namespace Core
     }
   }
 
+  inline void Correlator::operator+=(Correlator const &other)
+  {
+    isolate();
+    Core::Field< QCD::reducedTensor >::iterator I = d_data->begin();
+    Core::Field< QCD::reducedTensor >::const_iterator J = other.d_data->begin();
+    while(I != d_data->end())
+    {
+      (*I) += (*J);
+      ++I;
+      ++J;
+    }
+  }
+
 
   inline std::complex< double > Correlator::getTrSum(size_t const timeslice) const
   {

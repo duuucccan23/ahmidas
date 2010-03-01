@@ -109,5 +109,31 @@ namespace QCD
       *this = reducedTensor(A, B);
   }
 
+
+  /*
+      this is the underlying routine for a baryon contraction
+  */
+  inline reducedTensor::reducedTensor(Tensor const &A, Tensor const &B, Tensor const &C, Base::BaryonInterpolatingField const iPol)
+  {
+    // pre-contraction using interpolating field
+    reducedTensor result(std::complex< double >(0, 0));
+
+//     reducedTensor frst[6] = {
+//     };
+//     reducedTensor scnd[6] = {
+//     };
+
+    std::copy(result.d_data, result.d_data + 16, d_data);
+  }
+
+
+
+
+
+
+
+
+
+
 }
 

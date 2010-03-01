@@ -1,18 +1,20 @@
+namespace Core
+{
 
-  template< size_t index >
-  inline Field< QCD::reducedTensor > *Propagator::operator*(Propagator const &no2, Propagator const &no3,
-                                                            Dirac:Gamma< Index > const &ipol) const
+  inline Field< QCD::reducedTensor > *Propagator::construct_baryon(Propagator const &no2, Propagator const &no3,
+                                                            Base::BaryonInterpolatingField const ipol) const
   {
     assert (T()==no2.T() && L()==no2.L() && T()==no3.T() && L()==no3.L());
 
     Field< QCD::reducedTensor > *field = new Field< QCD::reducedTensor > (L(), T());
 
     Propagator::const_iterator Ia(begin());
-    Propagator::const_iterator Ib(other.begin());
+    Propagator::const_iterator Ib(no2.begin());
+    Propagator::const_iterator Ic(no3.begin());
 
     Field< QCD::reducedTensor >::iterator Id(field->begin());
 
-    while(Ia != end())
+    while(Ia != this->end())
     {
       // the constructor of reducedTensor has to process
       // the (anti-symmetric) colour structure epsilon_abc
@@ -25,7 +27,9 @@
       ++Id;
     }
     assert(Ia==end());
-    assert(Ib==other.end());
-    assert(Ic==field->end());
+    assert(Ib==no2.end());
+    assert(Ic==no3.end());
+    assert(Id==field->end());
     return field;
   }
+}

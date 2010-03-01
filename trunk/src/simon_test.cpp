@@ -12,14 +12,11 @@
 #include <L0/QCD/Gauge.h>
 #include <L0/QCD/Spinor.h>
 #include <L0/Core/Propagator.h>
-#include <L2/Contract/Meson.h>
+#include <L2/Contract/Baryon.h>
 #include <L1/Tool/IO.h>
 
 
-
-// #define __PRINT__PROPS__
-
-#define __MPI_ARCH__
+// #define __MPI_ARCH__
 
 
 int main(int argc, char **argv)
@@ -36,62 +33,11 @@ int main(int argc, char **argv)
 
   std::vector<std::string> propfilesU;
 
-  const std::string filename_base("../test/source.9999.01");
-  for (int f=0; f<4; f++)
-  {
-    std::ostringstream oss;
-    oss << filename_base << ".";
-    oss.fill('0');
-    oss.width(2);
-    oss << f%4;
-    oss << ".inverted";
-    oss.flush();
-#ifdef __MPI_ARCH__
-    if (myid == 0)
-#endif
-      std::cout << oss.str() << std::endl;
-    propfilesU.push_back(oss.str());
-  }
-
-  Core::StochasticPropagator< 4 > *uProp = new Core::StochasticPropagator< 4 >(L, T);
-
-  Tool::IO::load(uProp, propfilesU, Tool::IO::fileSCIDAC);
-
 #ifdef __MPI_ARCH__
   if (myid == 0)
 #endif
-    std::cout << "u quark propagator successfully loaded\n" << std::endl;
+  std::cout << "The following files are going to be read:" << std::endl;
 
-
-#ifdef __PRINT__PROPS__
-
-  Core::Propagator::iterator my_iterator = uProp->begin();
-
-  int count(0);
-  while(++my_iterator != uProp->end())
-  {
- #ifdef __MPI_ARCH__
-    if (myid == 0)
-    {
- #endif
-      std::cout << "Element no. " << count++ << std::endl;
-      std::cout << std::endl;
-      std::cout << *(my_iterator);
- #ifdef __MPI_ARCH__
-    }
- #endif
-    ++my_iterator
-  }
-#endif
-
-
-  //double normFactor = 1.0/double(L*L*L);
-  std::vector< Core::Correlator > C2 = Contract::light_meson_twopoint_stochastic(*uProp, *uProp);
-
-  delete uProp;
-
-
-  propfilesU.clear();
   const std::string filename_base1("../test/source4x4");
   for (int f=0; f<12; f++)
   {
@@ -109,21 +55,26 @@ int main(int argc, char **argv)
       std::cout << propfilesU[f] << std::endl;
   }
 
-  Core::Propagator *uProp12 = new Core::Propagator(L, T);
+  Core::Propagator *uProp = new Core::Propagator(L, T);
 
-  Tool::IO::load(uProp12, propfilesU, Tool::IO::fileSCIDAC);
+  Tool::IO::load(uProp, propfilesU, Tool::IO::fileSCIDAC);
+
+  Core::Propagator *dProp = new Core::Propagator(*uProp);
 
 #ifdef __MPI_ARCH__
     if (myid == 0)
 #endif
       std::cout << "u quark propagator successfully loaded\n" << std::endl;
 
-  //charged_pion
-  Dirac::Gamma5 gamma5;
-  Core::Correlator C2_naive = Contract::light_meson_twopoint(uProp12, 0, gamma5, gamma5);
+  Core::Correlator C2_P = Contract::proton_twopoint(*uProp, *dProp, Base::proj_PARITY_PLUS_TM);
 
+  for (size_t t=0; t<C2_P.getT(); t++)
+  {
+    std::cout << t << " " << tr(C2_P[t]) << std::endl;
+  }
 
-  delete uProp12;
+  delete uProp;
+  delete dProp;
 
 #ifdef __MPI_ARCH__
   if (myid == 0)

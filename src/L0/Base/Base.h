@@ -59,6 +59,20 @@ namespace Base
     wea_XOR
   };
 
+  // Definitions to be used for baryon contractions
+  enum BaryonInterpolatingField
+  {
+    bar_PROTON
+  };
+
+  enum BaryonPropagatorProjector
+  {
+    proj_PARITY_PLUS_STD,
+    proj_PARITY_MINUS_STD,
+    proj_PARITY_PLUS_TM,
+    proj_PARITY_MINUS_TM
+  };
+
   extern bool const bigEndian;
 }
 

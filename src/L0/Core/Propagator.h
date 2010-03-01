@@ -62,6 +62,9 @@ namespace Core
       // needed for meson contractions
       Core::Field< QCD::reducedTensor > *operator*(Propagator const &other) const;
 
+      // needed for baryon contractions
+      Core::Field< QCD::reducedTensor > *construct_baryon(Propagator const &no2, Propagator const &no3,
+                                                          Base::BaryonInterpolatingField const ipol) const;
 
       /*
           Revert Propagator using gamma5 hermeticity trick:
@@ -154,6 +157,7 @@ namespace Core
 
 
 #include "Propagator/Propagator.inlines"
+#include "Propagator/Propagator.baryon.inlines"
 #include "Propagator/StochasticPropagator.inlines"
 
 #include "Propagator/Propagator.iterator.inlines"

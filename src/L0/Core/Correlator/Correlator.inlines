@@ -59,6 +59,7 @@ namespace Core
     }
   }
 
+
   inline void Correlator::operator+=(Correlator const &other)
   {
     isolate();

@@ -169,6 +169,7 @@ namespace QCD
       // important for contractions
       reducedTensor(Tensor const &a, Tensor const &b);
       reducedTensor(Tensor const &A, Tensor const &B, bool const colourDilutedSource);
+      reducedTensor(Tensor const &A, Tensor const &B, Tensor const &C, Base::BaryonInterpolatingField iPol);
 
       std::complex< double > trace() const;
 
@@ -185,6 +186,8 @@ namespace QCD
 
       template< size_t Index >
       void operator*=(Dirac::Gamma< Index > const &gamma);
+      template< size_t Index >
+      void left_multiply(Dirac::Gamma< Index > const &gamma); //does the same
 
       reducedTensor operator*(double const &factor) const;
       reducedTensor operator*(std::complex< double > const &factor) const;

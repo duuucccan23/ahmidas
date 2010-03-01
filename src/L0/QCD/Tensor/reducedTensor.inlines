@@ -9,20 +9,14 @@ namespace QCD
     return rTensor.trace();
   }
 
-
   inline std::complex< double > reducedTensor::trace() const
   {
     return d_data[0] + d_data[5] + d_data[10] + d_data[15];
   }
 
-
-
-
   inline size_t reducedTensor::size() const
   {
     return 16;
   }
-
-
 
 }

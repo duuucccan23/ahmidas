@@ -19,8 +19,10 @@ namespace Contract
       exit(1);
     }
 
-    Core::Correlator twopoint(u.L(), d.L(),  u.construct_baryon(u, d, Base::bar_PROTON));
+    // order of d and u in Propagator::construct_baryon is important!
+    Core::Correlator twopoint(u.L(), u.L(),  u.construct_baryon(d, u, Base::bar_PROTON));
     twopoint *= projector;
+    twopoint.sumOverSpatialVolume();
     return twopoint;
   }
 

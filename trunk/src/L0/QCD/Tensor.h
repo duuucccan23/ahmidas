@@ -41,6 +41,10 @@ namespace QCD
 
     std::complex< double > d_data[144];
 
+    //those functions are for construction of baryon fields
+    void left_multiply_proton();
+    void right_multiply_proton();
+
     public:
       Tensor();
       Tensor(Tensor const &other);
@@ -91,6 +95,7 @@ namespace QCD
       Tensor &rightMultiply(hcTensor const &other);
 
       hcTensor dagger() const;
+      void transposeDirac();
       std::complex< double > trace() const;
 
       size_t size() const;
@@ -196,6 +201,7 @@ namespace QCD
       void operator*=(std::complex< double > const &factor);
 
       void operator*=(reducedTensor const &rhs);
+      reducedTensor operator*(reducedTensor const &rhs) const;
 
       std::complex< double > const &operator()(Base::DiracIndex const Dirac_src, Base::DiracIndex const Dirac_snk) const;
 

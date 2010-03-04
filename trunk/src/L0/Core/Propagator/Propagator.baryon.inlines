@@ -16,6 +16,8 @@ namespace Core
 
     while(Ia != this->end())
     {
+//        std::cout << (*Ia) << std::endl;
+
       // the constructor of reducedTensor has to process
       // the (anti-symmetric) colour structure epsilon_abc
       // as well as the interpolating Dirac structure

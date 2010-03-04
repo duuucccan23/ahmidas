@@ -69,6 +69,38 @@ namespace QCD
     return hcTensor(*this);
   }
 
+  inline void Tensor::transposeDirac()
+  {
+    // only swap non-diagonal SU3 (colour) vectors
+    swap_ranges (d_data +   3, d_data +   6, d_data +  36);
+    swap_ranges (d_data +   6, d_data +   9, d_data +  72);
+    swap_ranges (d_data +   9, d_data +  12, d_data + 108);
+
+    swap_ranges (d_data +  15, d_data +  18, d_data +  48);
+    swap_ranges (d_data +  18, d_data +  21, d_data +  84);
+    swap_ranges (d_data +  21, d_data +  24, d_data + 120);
+
+    swap_ranges (d_data +  27, d_data +  30, d_data +  60);
+    swap_ranges (d_data +  30, d_data +  33, d_data +  96);
+    swap_ranges (d_data +  33, d_data +  36, d_data + 132);
+
+    swap_ranges (d_data +  42, d_data +  45, d_data +  75);
+    swap_ranges (d_data +  45, d_data +  48, d_data + 111);
+
+    swap_ranges (d_data +  54, d_data +  57, d_data +  87);
+    swap_ranges (d_data +  57, d_data +  60, d_data + 123);
+
+    swap_ranges (d_data +  66, d_data +  69, d_data +  99);
+    swap_ranges (d_data +  69, d_data +  72, d_data + 135);
+
+    swap_ranges (d_data +  81, d_data +  84, d_data + 114);
+
+    swap_ranges (d_data +  93, d_data +  96, d_data + 126);
+
+    swap_ranges (d_data + 105, d_data + 108, d_data + 138);
+  }
+
+
   inline std::complex< double > Tensor::trace() const
   {
     return d_data[0] + d_data[13] + d_data[26] + d_data[39] + d_data[52] + d_data[65]

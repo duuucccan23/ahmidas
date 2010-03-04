@@ -71,7 +71,15 @@ int main(int argc, char **argv)
   for (size_t t=0; t<C2_P.getT(); t++)
   {
     std::cout << t << " " << tr(C2_P[t]) << std::endl;
+    std::cout << C2_P[t] << std::endl;
   }
+
+  std::cout << "that is supposed to be the result:\n"
+    << "0   1.60903097e-03  -7.64473273e-05\n"
+    << "1  -9.80937450e-04  -9.66418283e-04\n"
+    << "2  -4.03095025e-08   4.29027982e-05\n"
+    << "3   9.64650917e-04  -9.44681511e-04"
+    << std::endl;
 
   delete uProp;
   delete dProp;

@@ -80,4 +80,5 @@ namespace Dirac
   size_t const Gamma< 54 >::s_perm[4] = {2, 3, 0, 1};
   template< >
   std::complex< double > const Gamma< 54 >::s_sign[4] = {-1, -1, 1, 1};
+
 }

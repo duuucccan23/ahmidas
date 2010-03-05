@@ -87,6 +87,8 @@ namespace QCD
       template< size_t Index >
       void operator*=(Dirac::Sigma< Index > const &gamma);
 
+      void operator*=(std::complex< double > const &factor);
+
 
       Tensor &leftMultiply(Tensor const &other);
       Tensor &rightMultiply(Tensor const &other);

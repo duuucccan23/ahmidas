@@ -1,4 +1,4 @@
-#include "StochasticSource.ih"
+#include "Propagator.ih"
 
 namespace Core
 {

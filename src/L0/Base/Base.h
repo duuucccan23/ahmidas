@@ -59,6 +59,14 @@ namespace Base
     wea_XOR
   };
 
+//   enum boundaryConditions
+//   {
+//     bc_ANTIPERIODIC_FIXED;
+//     bc_ANTIPERIODIC_UNIFORM;
+//     bc_PERIODIC_FIXED;
+//     bc_PERIODIC_UNIFORM;
+//   }
+
   // Definitions to be used for baryon contractions
   enum BaryonInterpolatingField
   {

@@ -127,7 +127,7 @@ namespace QCD
       case Base::bar_PROTON:
         B_.left_multiply_proton();
         B_.right_multiply_proton();
-        B_.transposeDirac();
+        B_.transposeFull();
       break;
       default:
       std::cerr << "unknown interpolating field in reducedTensor::reducedTensor(3 x Tensor, Base::BaryonInterpolatingField)!"
@@ -153,34 +153,45 @@ namespace QCD
     //  -(bbA, rgB, grC), +(bbA, rrB, ggC), +(bbA, ggB, rrC), -(bbA, grB, rgC)
 
     reducedTensor rrA(A, Base::col_RED,   Base::col_RED);
-    reducedTensor rgA(A, Base::col_RED,   Base::col_RED);
+    reducedTensor rgA(A, Base::col_RED,   Base::col_GREEN);
     reducedTensor rbA(A, Base::col_RED,   Base::col_BLUE);
     reducedTensor grA(A, Base::col_GREEN, Base::col_RED);
-    reducedTensor gbA(A, Base::col_GREEN, Base::col_BLUE);
     reducedTensor ggA(A, Base::col_GREEN, Base::col_GREEN);
+    reducedTensor gbA(A, Base::col_GREEN, Base::col_BLUE);
     reducedTensor brA(A, Base::col_BLUE,  Base::col_RED);
-    reducedTensor bbA(A, Base::col_BLUE,  Base::col_BLUE);
     reducedTensor bgA(A, Base::col_BLUE,  Base::col_GREEN);
+    reducedTensor bbA(A, Base::col_BLUE,  Base::col_BLUE);
 
+//     reducedTensor rrB(B_, Base::col_RED,   Base::col_RED);
+//     reducedTensor rgB(B_, Base::col_RED,   Base::col_GREEN);
+//     reducedTensor rbB(B_, Base::col_RED,   Base::col_BLUE);
+//     reducedTensor grB(B_, Base::col_GREEN, Base::col_RED);
+//     reducedTensor gbB(B_, Base::col_GREEN, Base::col_BLUE);
+//     reducedTensor ggB(B_, Base::col_GREEN, Base::col_GREEN);
+//     reducedTensor brB(B_, Base::col_BLUE,  Base::col_RED);
+//     reducedTensor bbB(B_, Base::col_BLUE,  Base::col_BLUE);
+//     reducedTensor bgB(B_, Base::col_BLUE,  Base::col_GREEN);
+
+    // the source and sink colours are interchanged due to transposing
     reducedTensor rrB(B_, Base::col_RED,   Base::col_RED);
-    reducedTensor rgB(B_, Base::col_RED,   Base::col_RED);
-    reducedTensor rbB(B_, Base::col_RED,   Base::col_BLUE);
-    reducedTensor grB(B_, Base::col_GREEN, Base::col_RED);
-    reducedTensor gbB(B_, Base::col_GREEN, Base::col_BLUE);
+    reducedTensor rgB(B_, Base::col_GREEN, Base::col_RED);
+    reducedTensor rbB(B_, Base::col_BLUE,  Base::col_RED);
+    reducedTensor grB(B_, Base::col_RED,   Base::col_GREEN);
     reducedTensor ggB(B_, Base::col_GREEN, Base::col_GREEN);
-    reducedTensor brB(B_, Base::col_BLUE,  Base::col_RED);
+    reducedTensor gbB(B_, Base::col_BLUE,  Base::col_GREEN);
+    reducedTensor brB(B_, Base::col_RED,   Base::col_BLUE);
+    reducedTensor bgB(B_, Base::col_GREEN, Base::col_BLUE);
     reducedTensor bbB(B_, Base::col_BLUE,  Base::col_BLUE);
-    reducedTensor bgB(B_, Base::col_BLUE,  Base::col_GREEN);
 
     reducedTensor rrC(C, Base::col_RED,   Base::col_RED);
-    reducedTensor rgC(C, Base::col_RED,   Base::col_RED);
+    reducedTensor rgC(C, Base::col_RED,   Base::col_GREEN);
     reducedTensor rbC(C, Base::col_RED,   Base::col_BLUE);
     reducedTensor grC(C, Base::col_GREEN, Base::col_RED);
-    reducedTensor gbC(C, Base::col_GREEN, Base::col_BLUE);
     reducedTensor ggC(C, Base::col_GREEN, Base::col_GREEN);
+    reducedTensor gbC(C, Base::col_GREEN, Base::col_BLUE);
     reducedTensor brC(C, Base::col_BLUE,  Base::col_RED);
-    reducedTensor bbC(C, Base::col_BLUE,  Base::col_BLUE);
     reducedTensor bgC(C, Base::col_BLUE,  Base::col_GREEN);
+    reducedTensor bbC(C, Base::col_BLUE,  Base::col_BLUE);
 
     result += rrA*(ggB*bbC);
     result -= rrA*(gbB*bgC);

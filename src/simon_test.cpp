@@ -32,6 +32,7 @@ int main(int argc, char **argv)
   const size_t T = 4;
 
   std::vector<std::string> propfilesU;
+  std::vector<std::string> propfilesD;
 
 #ifdef __MPI_ARCH__
   if (myid == 0)
@@ -49,17 +50,21 @@ int main(int argc, char **argv)
     oss << ".inverted";
     oss.flush();
     propfilesU.push_back(std::string(filename_base1).append("_u").append(oss.str()));
+    propfilesD.push_back(std::string(filename_base1).append("_d").append(oss.str()));
 #ifdef __MPI_ARCH__
     if (myid == 0)
 #endif
       std::cout << propfilesU[f] << std::endl;
+      std::cout << propfilesD[f] << std::endl;
   }
 
   Core::Propagator *uProp = new Core::Propagator(L, T);
 
   Tool::IO::load(uProp, propfilesU, Tool::IO::fileSCIDAC);
 
-  Core::Propagator *dProp = new Core::Propagator(*uProp);
+  Core::Propagator *dProp = new Core::Propagator(L, T);
+
+  Tool::IO::load(dProp, propfilesD, Tool::IO::fileSCIDAC);
 
 #ifdef __MPI_ARCH__
     if (myid == 0)
@@ -68,17 +73,27 @@ int main(int argc, char **argv)
 
   Core::Correlator C2_P = Contract::proton_twopoint(*uProp, *dProp, Base::proj_PARITY_PLUS_TM);
 
+#ifdef __MPI_ARCH__
+    if (myid == 0)
+#endif
+      std::cout << "d quark propagator successfully loaded\n" << std::endl;
+
+  std::ofstream fout("p2p.dat");
+
   for (size_t t=0; t<C2_P.getT(); t++)
   {
+    fout << t << " " << (tr(C2_P[t])).real() << " " << (tr(C2_P[t])).imag() << std::endl;
     std::cout << t << " " << tr(C2_P[t]) << std::endl;
     std::cout << C2_P[t] << std::endl;
   }
+  
+  fout.close();
 
   std::cout << "that is supposed to be the result:\n"
-    << "0   1.60903097e-03  -7.64473273e-05\n"
-    << "1  -9.80937450e-04  -9.66418283e-04\n"
-    << "2  -4.03095025e-08   4.29027982e-05\n"
-    << "3   9.64650917e-04  -9.44681511e-04"
+    << "0   1.16145514e-03  -7.64689531e-05\n"
+    << "1  -9.81284515e-04  -9.66748261e-04\n"
+    << "2  -3.89420319e-08   4.29020380e-05\n"
+    << "3   9.64361650e-04  -9.44408748e-04"
     << std::endl;
 
   delete uProp;

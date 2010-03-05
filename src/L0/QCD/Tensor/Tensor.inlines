@@ -72,33 +72,115 @@ namespace QCD
   inline void Tensor::transposeDirac()
   {
     // only swap non-diagonal SU3 (colour) vectors
-    swap_ranges (d_data +   3, d_data +   6, d_data +  36);
-    swap_ranges (d_data +   6, d_data +   9, d_data +  72);
-    swap_ranges (d_data +   9, d_data +  12, d_data + 108);
+    std::swap_ranges(d_data +   3, d_data +   6, d_data +  36);
+    std::swap_ranges(d_data +   6, d_data +   9, d_data +  72);
+    std::swap_ranges(d_data +   9, d_data +  12, d_data + 108);
 
-    swap_ranges (d_data +  15, d_data +  18, d_data +  48);
-    swap_ranges (d_data +  18, d_data +  21, d_data +  84);
-    swap_ranges (d_data +  21, d_data +  24, d_data + 120);
+    std::swap_ranges(d_data +  15, d_data +  18, d_data +  48);
+    std::swap_ranges(d_data +  18, d_data +  21, d_data +  84);
+    std::swap_ranges(d_data +  21, d_data +  24, d_data + 120);
 
-    swap_ranges (d_data +  27, d_data +  30, d_data +  60);
-    swap_ranges (d_data +  30, d_data +  33, d_data +  96);
-    swap_ranges (d_data +  33, d_data +  36, d_data + 132);
+    std::swap_ranges(d_data +  27, d_data +  30, d_data +  60);
+    std::swap_ranges(d_data +  30, d_data +  33, d_data +  96);
+    std::swap_ranges(d_data +  33, d_data +  36, d_data + 132);
 
-    swap_ranges (d_data +  42, d_data +  45, d_data +  75);
-    swap_ranges (d_data +  45, d_data +  48, d_data + 111);
+    std::swap_ranges(d_data +  42, d_data +  45, d_data +  75);
+    std::swap_ranges(d_data +  45, d_data +  48, d_data + 111);
 
-    swap_ranges (d_data +  54, d_data +  57, d_data +  87);
-    swap_ranges (d_data +  57, d_data +  60, d_data + 123);
+    std::swap_ranges(d_data +  54, d_data +  57, d_data +  87);
+    std::swap_ranges(d_data +  57, d_data +  60, d_data + 123);
 
-    swap_ranges (d_data +  66, d_data +  69, d_data +  99);
-    swap_ranges (d_data +  69, d_data +  72, d_data + 135);
+    std::swap_ranges(d_data +  66, d_data +  69, d_data +  99);
+    std::swap_ranges(d_data +  69, d_data +  72, d_data + 135);
 
-    swap_ranges (d_data +  81, d_data +  84, d_data + 114);
+    std::swap_ranges(d_data +  81, d_data +  84, d_data + 114);
 
-    swap_ranges (d_data +  93, d_data +  96, d_data + 126);
+    std::swap_ranges(d_data +  93, d_data +  96, d_data + 126);
 
-    swap_ranges (d_data + 105, d_data + 108, d_data + 138);
+    std::swap_ranges(d_data + 105, d_data + 108, d_data + 138);
   }
+
+  inline void Tensor::transposeFull()
+  {
+    // only swap non-diagonal elements
+    std::swap(*(d_data +   1), *(d_data +  12));
+    std::swap(*(d_data +   2), *(d_data +  24));
+    std::swap(*(d_data +   3), *(d_data +  36));
+    std::swap(*(d_data +   4), *(d_data +  48));
+    std::swap(*(d_data +   5), *(d_data +  60));
+    std::swap(*(d_data +   6), *(d_data +  72));
+    std::swap(*(d_data +   7), *(d_data +  84));
+    std::swap(*(d_data +   8), *(d_data +  96));
+    std::swap(*(d_data +   9), *(d_data + 108));
+    std::swap(*(d_data +  10), *(d_data + 120));
+    std::swap(*(d_data +  11), *(d_data + 132));
+    // ---
+    std::swap(*(d_data +  14), *(d_data +  25));
+    std::swap(*(d_data +  15), *(d_data +  37));
+    std::swap(*(d_data +  16), *(d_data +  49));
+    std::swap(*(d_data +  17), *(d_data +  61));
+    std::swap(*(d_data +  18), *(d_data +  73));
+    std::swap(*(d_data +  19), *(d_data +  85));
+    std::swap(*(d_data +  20), *(d_data +  97));
+    std::swap(*(d_data +  21), *(d_data + 109));
+    std::swap(*(d_data +  22), *(d_data + 121));
+    std::swap(*(d_data +  23), *(d_data + 133));
+    // ---
+    std::swap(*(d_data +  27), *(d_data +  38));
+    std::swap(*(d_data +  28), *(d_data +  50));
+    std::swap(*(d_data +  29), *(d_data +  62));
+    std::swap(*(d_data +  30), *(d_data +  74));
+    std::swap(*(d_data +  31), *(d_data +  86));
+    std::swap(*(d_data +  32), *(d_data +  98));
+    std::swap(*(d_data +  33), *(d_data + 110));
+    std::swap(*(d_data +  34), *(d_data + 122));
+    std::swap(*(d_data +  35), *(d_data + 134));
+    // ---
+    std::swap(*(d_data +  40), *(d_data +  51));
+    std::swap(*(d_data +  41), *(d_data +  63));
+    std::swap(*(d_data +  42), *(d_data +  75));
+    std::swap(*(d_data +  43), *(d_data +  87));
+    std::swap(*(d_data +  44), *(d_data +  99));
+    std::swap(*(d_data +  45), *(d_data + 111));
+    std::swap(*(d_data +  46), *(d_data + 123));
+    std::swap(*(d_data +  47), *(d_data + 135));
+    // ---
+    std::swap(*(d_data +  53), *(d_data +  64));
+    std::swap(*(d_data +  54), *(d_data +  76));
+    std::swap(*(d_data +  55), *(d_data +  88));
+    std::swap(*(d_data +  56), *(d_data + 100));
+    std::swap(*(d_data +  57), *(d_data + 112));
+    std::swap(*(d_data +  58), *(d_data + 124));
+    std::swap(*(d_data +  59), *(d_data + 136));
+    // ---
+    std::swap(*(d_data +  66), *(d_data +  77));
+    std::swap(*(d_data +  67), *(d_data +  89));
+    std::swap(*(d_data +  68), *(d_data + 101));
+    std::swap(*(d_data +  69), *(d_data + 113));
+    std::swap(*(d_data +  70), *(d_data + 125));
+    std::swap(*(d_data +  71), *(d_data + 137));
+    // ---
+    std::swap(*(d_data +  79), *(d_data +  90));
+    std::swap(*(d_data +  80), *(d_data + 102));
+    std::swap(*(d_data +  81), *(d_data + 114));
+    std::swap(*(d_data +  82), *(d_data + 126));
+    std::swap(*(d_data +  83), *(d_data + 138));
+    // ---
+    std::swap(*(d_data +  92), *(d_data + 103));
+    std::swap(*(d_data +  93), *(d_data + 115));
+    std::swap(*(d_data +  94), *(d_data + 127));
+    std::swap(*(d_data +  95), *(d_data + 139));
+    // ---
+    std::swap(*(d_data + 105), *(d_data + 116));
+    std::swap(*(d_data + 106), *(d_data + 128));
+    std::swap(*(d_data + 107), *(d_data + 140));
+    // ---
+    std::swap(*(d_data + 118), *(d_data + 129));
+    std::swap(*(d_data + 119), *(d_data + 141));
+    // ---
+    std::swap(*(d_data + 131), *(d_data + 142));
+  }
+
 
 
   inline std::complex< double > Tensor::trace() const

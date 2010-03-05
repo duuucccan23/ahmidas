@@ -96,6 +96,7 @@ namespace QCD
 
       hcTensor dagger() const;
       void transposeDirac();
+      void transposeFull();
       std::complex< double > trace() const;
 
       size_t size() const;
@@ -184,7 +185,7 @@ namespace QCD
       void operator+=(reducedTensor const &other);
       void operator-=(reducedTensor const &other);
 
-      reducedTensor &operator=(reducedTensor const &rhs);
+//       reducedTensor &operator=(reducedTensor const &rhs);
 
       template< size_t Index >
       reducedTensor operator*(Dirac::Gamma< Index > const &gamma) const;

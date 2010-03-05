@@ -29,12 +29,12 @@ namespace QCD
                    std::minus< std::complex< double > >());
   }
 
-  inline reducedTensor &reducedTensor::operator=(reducedTensor const &rhs)
-  {
-    if (this != &rhs)
-      std::copy(rhs.d_data, rhs.d_data + 16, d_data);
-    return *this;
-  }
+//   inline reducedTensor &reducedTensor::operator=(reducedTensor const &rhs)
+//   {
+//     if (this != &rhs)
+//       std::copy(rhs.d_data, rhs.d_data + 16, d_data);
+//     return *this;
+//   }
 
   inline void reducedTensor::operator*=(reducedTensor const &rhs)
   {

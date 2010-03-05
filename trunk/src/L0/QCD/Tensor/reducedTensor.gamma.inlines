@@ -46,6 +46,7 @@ namespace QCD
   {
     (*this)*=gamma;
   }
+  
 
   // NOTE: specialization could speed up this routine
   template< size_t Index >
@@ -91,11 +92,11 @@ namespace QCD
   template< size_t Index >
   QCD::reducedTensor operator*(Dirac::Gamma< Index > const &gamma, reducedTensor const &rTensor)
   {
-    reducedTensor tmp;
-    std::copy(tmp.d_data   , tmp.d_data+ 4, rTensor.d_data+4*gamma.perm(0));
-    std::copy(tmp.d_data+ 4, tmp.d_data+ 8, rTensor.d_data+4*gamma.perm(1));
-    std::copy(tmp.d_data+ 8, tmp.d_data+12, rTensor.d_data+4*gamma.perm(2));
-    std::copy(tmp.d_data+12, tmp.d_data+16, rTensor.d_data+4*gamma.perm(3));
+    QCD::reducedTensor tmp;
+    std::copy(rTensor.d_data   , rTensor.d_data+ 4, tmp.d_data+4*gamma.perm(0));
+    std::copy(rTensor.d_data+ 4, rTensor.d_data+ 8, tmp.d_data+4*gamma.perm(1));
+    std::copy(rTensor.d_data+ 8, rTensor.d_data+12, tmp.d_data+4*gamma.perm(2));
+    std::copy(rTensor.d_data+12, rTensor.d_data+16, tmp.d_data+4*gamma.perm(3));
     std::transform(tmp.d_data   , tmp.d_data+ 4, tmp.d_data,
                    std::bind2nd(std::multiplies< std::complex< double > >(), gamma.sign(0)));
     std::transform(tmp.d_data+ 4, tmp.d_data+ 8, tmp.d_data+ 4,

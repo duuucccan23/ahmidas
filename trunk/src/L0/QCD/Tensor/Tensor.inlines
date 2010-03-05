@@ -64,6 +64,13 @@ namespace QCD
   }
 
 
+  inline void Tensor::operator*=(std::complex< double > const &factor)
+  {
+    std::transform(d_data   , d_data + 144, d_data,
+                   std::bind2nd(std::multiplies< std::complex< double > >(), factor));
+  }
+
+
   inline hcTensor Tensor::dagger() const
   {
     return hcTensor(*this);

@@ -7,9 +7,7 @@
 #include <fstream>
 #include <sstream>
 
-#include <L0/Dirac/Gamma.h>
 #include <L0/Core/Field.h>
-#include <L0/QCD/Gauge.h>
 #include <L0/QCD/Spinor.h>
 #include <L0/Core/Propagator.h>
 #include <L2/Contract/Baryon.h>
@@ -39,7 +37,7 @@ int main(int argc, char **argv)
 #endif
   std::cout << "The following files are going to be read:" << std::endl;
 
-  const std::string filename_base1("../test/source4x4");
+  const std::string filename_base1("../../test/source4x4");
   for (int f=0; f<12; f++)
   {
     std::ostringstream oss;
@@ -99,7 +97,7 @@ int main(int argc, char **argv)
 
   fout.close();
 
-  std::cout << "\nthat is supposed to be the result:\n"
+  std::cout << "\nreliable code gives this result:\n"
     << "0   1.16145514e-03  -7.64689531e-05\n"
     << "1   1.37746719e-03  -1.02786839e-05\n"
     << "2   4.29020380e-05   3.89420319e-08\n"
@@ -109,15 +107,26 @@ int main(int argc, char **argv)
   delete uProp;
   delete dProp;
 
-#ifdef __MPI_ARCH__
-  if (myid == 0)
-#endif
-  std::cout << "\nprogramm is going to exit normally now\n" << std::endl;
+  double tolerance = 1.e-9;
+
+  if  (C2_P[0].trace().imag() < (-7.64689531e-05 + tolerance) && C2_P[0].trace().imag() > (-7.64689531e-05 - tolerance)
+    && C2_P[1].trace().imag() < (-1.02786839e-05 + tolerance) && C2_P[1].trace().imag() > (-1.02786839e-05 - tolerance)
+    && C2_P[2].trace().imag() < ( 3.89420319e-08 + tolerance) && C2_P[2].trace().imag() > ( 3.89420319e-08 - tolerance)
+    && C2_P[3].trace().imag() < ( 1.41088319e-05 + tolerance) && C2_P[3].trace().imag() > ( 1.41088319e-05 - tolerance)
+    && C2_P[0].trace().real() < ( 1.16145514e-03 + tolerance) && C2_P[0].trace().real() > ( 1.16145514e-03 - tolerance)
+    && C2_P[1].trace().real() < ( 1.37746719e-03 + tolerance) && C2_P[1].trace().real() > ( 1.37746719e-03 - tolerance)
+    && C2_P[2].trace().real() < ( 4.29020380e-05 + tolerance) && C2_P[2].trace().real() > ( 4.29020380e-05 - tolerance)
+    && C2_P[3].trace().real() < ( 1.34970449e-03 + tolerance) && C2_P[3].trace().real() > ( 1.34970449e-03 - tolerance))
+  {
+    return EXIT_SUCCESS;
+  }
+
+
 
 #ifdef __MPI_ARCH__
   if (!MPI::Is_finalized())
     MPI::Finalize();
 #endif
 
-  return EXIT_SUCCESS;
+  return EXIT_FAILURE;
 }

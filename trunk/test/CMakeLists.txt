@@ -34,6 +34,11 @@ ADD_EXECUTABLE(light_mesons light_mesons.cpp)
 TARGET_LINK_LIBRARIES(light_mesons SU3 QCD IO Base Core Dirac Weave Contract)
 ADD_TEST(light_mesons_naive light_mesons)
 
+ADD_EXECUTABLE(proton proton.cpp)
+TARGET_LINK_LIBRARIES(proton SU3 QCD IO Base Core Weave Contract)
+ADD_TEST(proton_two_point proton)
+
+
 IF(USE_MPI)
 ADD_EXECUTABLE(MPIstartstop MPIstartstop.cpp)
 ADD_TEST(MPIstarting_stopping MPIstartstop)

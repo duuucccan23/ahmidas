@@ -84,6 +84,8 @@ namespace Core
       // just for testing
       void setToRandom();
 
+      void changeBoundaryConditions_uniformToFixed(size_t timesliceSource, size_t timesliceBoundary);
+
 
 #include "Propagator/Propagator.iterator"
 #include "Propagator/Propagator.const_iterator"

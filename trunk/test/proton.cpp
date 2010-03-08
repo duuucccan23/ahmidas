@@ -83,20 +83,6 @@ int main(int argc, char **argv)
   Core::Correlator C2_P = Contract::proton_twopoint(*uProp, *dProp, Base::proj_PARITY_PLUS_TM);
 
 
-
-  std::ofstream fout("p2p.dat");
-
-  for (size_t t=0; t<C2_P.getT(); t++)
-  {
-    fout      << std::scientific << std::setprecision(8) << std::showpos;
-    std::cout << std::scientific << std::setprecision(8) << std::showpos;
-    fout      << t << " " << (tr(C2_P[t])).real() << " " << (tr(C2_P[t])).imag() << std::endl;
-    std::cout << t << "  " << (tr(C2_P[t])).real() << "  " << (tr(C2_P[t])).imag() << std::endl;
-    //std::cout << C2_P[t] << std::endl;
-  }
-
-  fout.close();
-
   std::cout << "\nreliable code gives this result:\n"
     << "0   1.16145514e-03  -7.64689531e-05\n"
     << "1   1.37746719e-03  -1.02786839e-05\n"
@@ -118,6 +104,10 @@ int main(int argc, char **argv)
     && C2_P[2].trace().real() < ( 4.29020380e-05 + tolerance) && C2_P[2].trace().real() > ( 4.29020380e-05 - tolerance)
     && C2_P[3].trace().real() < ( 1.34970449e-03 + tolerance) && C2_P[3].trace().real() > ( 1.34970449e-03 - tolerance))
   {
+  #ifdef __MPI_ARCH__
+    if (!MPI::Is_finalized())
+      MPI::Finalize();
+  #endif
     return EXIT_SUCCESS;
   }
 

@@ -20,7 +20,7 @@ namespace Contract
     }
 
     // order of d and u in Propagator::construct_baryon is important!
-    Core::Correlator twopoint(u.L(), u.L(),  u.construct_baryon(d, u, Base::bar_PROTON));
+    Core::Correlator twopoint(u.L(), u.T(),  u.construct_baryon(d, u, Base::bar_PROTON));
     twopoint.sumOverSpatialVolume();
     std::cout << "\nFull proton two point function:\n" << std::endl;
     for (size_t t=0; t<u.T(); t++)

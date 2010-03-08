@@ -214,6 +214,83 @@ namespace QCD
     std::generate_n(reinterpret_cast< double* >(d_data), 288, Base::Random::fastSymmetric);
   }
 
+  inline void Tensor::setToRandom_Z4(Base::SourcePolarization const DState, Base::SourceColorState const CState)
+  {
+    std::fill_n(d_data, 144, std::complex< double >(0, 0));
+    std::complex< double > tmp_data [12];
+    std::generate_n(reinterpret_cast< double* >(tmp_data), 24, Base::Random::Z2);
+    switch (DState)
+    {
+      // case Base::sou_UNPOLARIZED:
+      case Base::sou_PARTLY_POLARIZED:
+        switch (CState)
+        {
+          case Base::sou_GENERIC:
+            std::copy(tmp_data, tmp_data + 12, d_data);
+            std::copy(tmp_data, tmp_data + 12, d_data +  12);
+            std::copy(tmp_data, tmp_data + 12, d_data +  24);
+            std::copy(tmp_data, tmp_data + 12, d_data +  36);
+            std::copy(tmp_data, tmp_data + 12, d_data +  48);
+            std::copy(tmp_data, tmp_data + 12, d_data +  60);
+            std::copy(tmp_data, tmp_data + 12, d_data +  72);
+            std::copy(tmp_data, tmp_data + 12, d_data +  84);
+            std::copy(tmp_data, tmp_data + 12, d_data +  96);
+            std::copy(tmp_data, tmp_data + 12, d_data + 108);
+            std::copy(tmp_data, tmp_data + 12, d_data + 120);
+            std::copy(tmp_data, tmp_data + 12, d_data + 132);
+            break;
+          default:
+          std::cerr << "This Base::SourceColorState is not implemented in Tensor::setToRandom_Z4()\n";
+          std::cerr << "Aborting ..." << std::endl;
+          exit(1);
+        }
+        break;
+      case Base::sou_FULLY_POLARIZED:
+        switch (CState)
+        {
+          // this is what is called spin diluted
+          case Base::sou_GENERIC:
+            std::copy(tmp_data,     tmp_data +  3, d_data);
+            std::copy(tmp_data,     tmp_data +  3, d_data +  12);
+            std::copy(tmp_data,     tmp_data +  3, d_data +  24);
+            std::copy(tmp_data + 3, tmp_data +  6, d_data +  39);
+            std::copy(tmp_data + 3, tmp_data +  6, d_data +  51);
+            std::copy(tmp_data + 3, tmp_data +  6, d_data +  63);
+            std::copy(tmp_data + 6, tmp_data +  9, d_data +  78);
+            std::copy(tmp_data + 6, tmp_data +  9, d_data +  90);
+            std::copy(tmp_data + 6, tmp_data +  9, d_data + 102);
+            std::copy(tmp_data + 9, tmp_data + 12, d_data + 117);
+            std::copy(tmp_data + 9, tmp_data + 12, d_data + 129);
+            std::copy(tmp_data + 9, tmp_data + 12, d_data + 141);
+            break;
+          // this is what is called spin and color diluted
+          case Base::sou_PURE:
+            d_data[  0] = tmp_data[ 0];
+            d_data[ 13] = tmp_data[ 1];
+            d_data[ 26] = tmp_data[ 2];
+            d_data[ 39] = tmp_data[ 3];
+            d_data[ 52] = tmp_data[ 4];
+            d_data[ 65] = tmp_data[ 5];
+            d_data[ 78] = tmp_data[ 6];
+            d_data[ 91] = tmp_data[ 7];
+            d_data[104] = tmp_data[ 8];
+            d_data[117] = tmp_data[ 9];
+            d_data[130] = tmp_data[10];
+            d_data[143] = tmp_data[11];
+            break;
+          default:
+          std::cerr << "This Base::SourceColorState is not implemented in Tensor::setToRandom_Z4()\n";
+          std::cerr << "Aborting ..." << std::endl;
+          exit(1);
+        }
+        break;
+      default:
+      std::cerr << "This Base::SourcePolarization is not implemented in Tensor::setToRandom_Z4()\n";
+      std::cerr << "Aborting ..." << std::endl;
+      exit(1);
+    }
+  }
+
   inline Tensor::iterator Tensor::begin(Base::ColourIndex const idx, TensorColourStride const stride)
   {
     return iterator(*this, stride, 0);

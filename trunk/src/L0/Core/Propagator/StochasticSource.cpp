@@ -2,33 +2,34 @@
 
 namespace Core
 {
-  template< size_t NComp >
-  Propagator StochasticSource< NComp >::operator*(StochasticPropagator< NComp > const &sPropagator) const
+  template<  >
+  Propagator StochasticSource< 4 >::operator*(StochasticPropagator< 4 > const &sPropagator) const
   {
 
-    std::cerr << "Propagator StochasticSource< NComp >::operator*(StochasticPropagator< NComp > const &) const\n"
-              << "has not been implemented yet" << std::endl;
-    exit(1);
-
     Propagator tmp(sPropagator);
-//     //assert (T()==propagator.T() && L()==propagator.L());
-// 
-// 
-// 
-//     Propagator::iterator Itmp(tmp.begin()); //isolate() is called automatically here
-//     Propagator::const_iterator Is(begin());
-//     Propagator::const_iterator Ip(begin());
-// 
-//     while(Is != end())
+    assert (T()==sPropagator.T() && L()==sPropagator.L());
+
+//     if (!(NComp == 4))
 //     {
-//       std::transform(&((*Is)[0]), &((*Is)[0]) + 144, &((*Ip)[0]), &((*Itmp)[0]),
-//                      std::multiplies< std::complex< double > >());
-//       ++Itmp;
-//       ++Is;
-//       ++Ip;
+//       std::cerr << "Propagator StochasticSource< NComp >::operator*(StochasticPropagator< NComp > const &) const\n"
+//           << "has not been implemented yet for NComp != 4" << std::endl;
+//       exit(1);
 //     }
-//     assert(Itmp == tmp.end());
-//     assert(Ip == propagator.end());
+
+    Propagator::iterator Itmp(tmp.begin()); //isolate() is called automatically here
+    Propagator::const_iterator Is(begin());
+    Propagator::const_iterator Ip(sPropagator.begin());
+
+    while(Is != end())
+    {
+      std::transform(&((*Is)[0]), &((*Is)[0]) + 144, &((*Ip)[0]), &((*Itmp)[0]),
+                     std::multiplies< std::complex< double > >());
+      ++Itmp;
+      ++Is;
+      ++Ip;
+    }
+    assert(Itmp == tmp.end());
+    assert(Ip == sPropagator.end());
     return tmp;
   }
 

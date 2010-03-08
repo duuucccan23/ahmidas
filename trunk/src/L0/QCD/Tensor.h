@@ -104,6 +104,8 @@ namespace QCD
       size_t size() const;
       std::complex< double > diff(Tensor const &other) const;
       void setToRandom();
+      // this produces tensor filled with random Z(4) elements
+      void setToRandom_Z4(Base::SourcePolarization const, Base::SourceColorState const);
 
   #include "Tensor/Tensor.iterator"
 

@@ -5,6 +5,7 @@ namespace Tool
   namespace IO
   {
     void loadScidac(Core::Propagator *propagator, std::vector< std::string > const &filenames);
+    void loadScidac(Core::Propagator *propagator, std::vector< std::string > const &filenames, size_t const precision);
     void loadScidac(Core::StochasticPropagator< 4 > *sPropagator, std::vector< std::string > const &filenames);
   }
 }
@@ -22,6 +23,17 @@ void Tool::IO::load(Core::Field< QCD::Gauge > *field, std::string const &filenam
       break;
    }
 
+}
+
+void Tool::IO::load(Core::Field< QCD::Spinor > *field, std::string const &filename, Tool::IO::filetype type, size_t const precision)
+{
+   switch(type) {
+   case Tool::IO::fileSCIDAC :
+      Tool::IO::loadScidac(field, filename, precision);
+      break;
+   default :
+      break;
+   }
 }
 
 void Tool::IO::load(Core::Field< QCD::Spinor > *field, std::string const &filename, Tool::IO::filetype type)
@@ -46,6 +58,16 @@ void Tool::IO::load(Core::Propagator *propagator, std::vector< std::string> cons
   }
 }
 
+void Tool::IO::load(Core::Propagator *propagator, std::vector< std::string> const &filenames, filetype type, size_t const precision)
+{
+  switch(type) {
+  case fileSCIDAC :
+      loadScidac(propagator, filenames, precision);
+      break;
+  default :
+      break;
+  }
+}
 
 void Tool::IO::load(Core::StochasticPropagator< 4 > *sPropagator, std::vector< std::string> const &filenames, filetype type)
 {
@@ -129,6 +151,79 @@ void Tool::IO::loadScidac(Core::Propagator *propagator, std::vector< std::string
     exit(1);
   }
 }
+
+void Tool::IO::loadScidac(Core::Propagator *propagator, std::vector< std::string> const &filenames, size_t const precision)
+{
+  // would like to do this, but isolate is private
+  // propagator->isolate();
+
+  if (filenames.size() == 12)
+  {
+    Core::Field< QCD::Spinor > tmp [12] =
+    {
+      Core::Field< QCD::Spinor > (propagator->L(), propagator->T()),
+      Core::Field< QCD::Spinor > (propagator->L(), propagator->T()),
+      Core::Field< QCD::Spinor > (propagator->L(), propagator->T()),
+      Core::Field< QCD::Spinor > (propagator->L(), propagator->T()),
+      Core::Field< QCD::Spinor > (propagator->L(), propagator->T()),
+      Core::Field< QCD::Spinor > (propagator->L(), propagator->T()),
+      Core::Field< QCD::Spinor > (propagator->L(), propagator->T()),
+      Core::Field< QCD::Spinor > (propagator->L(), propagator->T()),
+      Core::Field< QCD::Spinor > (propagator->L(), propagator->T()),
+      Core::Field< QCD::Spinor > (propagator->L(), propagator->T()),
+      Core::Field< QCD::Spinor > (propagator->L(), propagator->T()),
+      Core::Field< QCD::Spinor > (propagator->L(), propagator->T())
+    };
+
+    for (size_t i=0; i<12; i++)
+    {
+      Tool::IO::load(tmp+i,filenames[i], Tool::IO::fileSCIDAC, precision);
+    }
+
+    Core::Propagator::iterator itTensor = propagator->begin();
+    Core::Field< QCD::Spinor >::iterator itsSpinor [12] =
+    {
+      tmp[ 0].begin(),tmp[ 1].begin(),tmp[ 2].begin(),
+      tmp[ 3].begin(),tmp[ 4].begin(),tmp[ 5].begin(),
+      tmp[ 6].begin(),tmp[ 7].begin(),tmp[ 8].begin(),
+      tmp[ 9].begin(),tmp[10].begin(),tmp[11].begin()
+    };
+
+    QCD::Spinor **spinors = new QCD::Spinor *[12];
+    for (size_t i=0; i<12; i++)
+      spinors[i] = NULL;
+
+    // would like to see for loop here
+    // but postfix Field::iterator operator++(int) is not implemented yet
+    while (itTensor != propagator->end())
+    {
+      for (size_t i=0; i<12; i++)
+      {
+        spinors[i] = new QCD::Spinor(*(itsSpinor[i]));
+        ++(itsSpinor[i]);
+      }
+      (*itTensor) = QCD::Tensor(spinors);
+      for (size_t i=0; i<12; i++)
+      {
+        delete spinors[i];
+      }
+      ++itTensor;
+    }
+
+    delete [] spinors;
+
+  }
+  else
+  {
+    std::cerr << "Error in void Tool::IO::loadScidac(Core::Propagator *, std::vector< std::string> const &):"
+              << std::endl;
+    std::cerr << "filenames.size() should be 12" << std::endl;
+    exit(1);
+  }
+}
+
+
+
 
 void Tool::IO::loadScidac(Core::StochasticPropagator< 4 > *sPropagator, std::vector< std::string> const &filenames)
 {

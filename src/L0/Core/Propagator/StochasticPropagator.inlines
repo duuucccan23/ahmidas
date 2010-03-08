@@ -1,7 +1,7 @@
 namespace Core
 {
-  template< >
-  inline StochasticPropagator< 4 >::StochasticPropagator(size_t const L, size_t const T)
+  template< size_t NComp >
+  inline StochasticPropagator< NComp >::StochasticPropagator(size_t const L, size_t const T)
     : Propagator(L, T)
   {}
 
@@ -46,11 +46,9 @@ namespace Core
 
     Field< QCD::reducedTensor >::iterator Ic(field->begin());
 
-    const bool colourDilution = false;
-    //colourDilution = true;
     while(Ia != end())
     {
-      (*Ic) = QCD::reducedTensor((*Ia),(*Ib), colourDilution);
+      (*Ic) = QCD::reducedTensor((*Ia),(*Ib));
       ++Ia;
       ++Ib;
       ++Ic;

@@ -53,6 +53,13 @@ namespace Base
     sou_GENERIC
   };
 
+  enum SourceSpatialLayout
+  {
+    sou_POINT,
+    sou_FULL,
+    sou_WALL
+  };
+
   enum weaveOperator
   {
     wea_SUM,

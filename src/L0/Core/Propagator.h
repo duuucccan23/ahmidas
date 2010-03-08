@@ -28,20 +28,13 @@ namespace Core
 
     size_t *d_references;
 
-    Core::Field< QCD::Tensor > *d_components;
-
-//     enum PropagatorStride
-//     {
-//       ColourStrideSink   =  1,
-//       ColourStrideSource = 12,
-//       DiracStrideSink    =  3,
-//       DiracStrideSource  = 36
-//     };
-
     static const size_t nDirac  = 2;
     static const size_t nColour = 2;
 
     static const size_t d_size = 144;
+
+    protected:
+    Core::Field< QCD::Tensor > *d_components;
 
 
     public:
@@ -86,6 +79,8 @@ namespace Core
 
       void changeBoundaryConditions_uniformToFixed(size_t timesliceSource, size_t timesliceBoundary);
 
+      Propagator &shift(Base::SpaceTimeIndex idx, Base::Direction shift, size_t times);
+
 
 #include "Propagator/Propagator.iterator"
 #include "Propagator/Propagator.const_iterator"
@@ -111,22 +106,22 @@ namespace Core
   template< size_t Index >
   Propagator operator*(Dirac::Gamma< Index > const &gamma, Propagator const &p);
 
-
   template< size_t NComp >
-  class StochasticSource
+  class StochasticSource : public Propagator
   {
 
     friend class StochasticPropagator< NComp >;
 
-    size_t *d_references;
-
     public:
 
       StochasticSource< NComp > (size_t const L, size_t const T);
+      StochasticSource< NComp > (size_t const L, size_t const T,
+                                 Base::SourcePolarization const, Base::SourceColorState const);
 
+      explicit StochasticSource< NComp > (Propagator const &base);
       StochasticSource< NComp > (StochasticSource< NComp > const &other);
 
-      ~StochasticSource< NComp > ();
+      // ~StochasticSource< NComp > ();
 
       Propagator operator*(StochasticPropagator< NComp > const &sPropagator) const;
 
@@ -161,6 +156,7 @@ namespace Core
 #include "Propagator/Propagator.inlines"
 #include "Propagator/Propagator.baryon.inlines"
 #include "Propagator/StochasticPropagator.inlines"
+#include "Propagator/StochasticSource.inlines"
 
 #include "Propagator/Propagator.iterator.inlines"
 #include "Propagator/Propagator.const_iterator.inlines"
@@ -169,5 +165,7 @@ namespace Core
 
 #include "Propagator/Propagator_destroy.template"
 #include "Propagator/Propagator_isolate.template"
+
+
 
 

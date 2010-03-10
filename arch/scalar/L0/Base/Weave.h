@@ -1,6 +1,7 @@
 #pragma once
 
 #include<complex>
+#include<cstring>
 
 #include <L0/Base/Base.h>
 
@@ -41,6 +42,9 @@ namespace Base
       // here, it simply does not do anything but copy the data;
       void sumOverTimeSlices(std::complex< double > const *data_send,
                              std::complex< double > *data_recv, size_t const count=1) const;
+
+      void share(void const *data_send,
+                             void *data_recv, size_t const count, size_t const *position) const;
 
       bool isLocallyAvailable(size_t const x, size_t const y, size_t const z) const;
       bool isLocallyAvailable(size_t const x, size_t const y, size_t const z, size_t const t) const;

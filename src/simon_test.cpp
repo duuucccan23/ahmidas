@@ -1,5 +1,5 @@
 
-#include <string>
+#include <cstring>
 #include <vector>
 #include <complex>
 #include <iomanip>
@@ -14,7 +14,7 @@
 #include <L0/Core/Propagator.h>
 #include <L2/Contract/Baryon.h>
 #include <L1/Tool/IO.h>
-
+#include <L2/Input/FileReader.h>
 
 // #define __MPI_ARCH__
 
@@ -43,7 +43,8 @@ int main(int argc, char **argv)
 
   const std::string filename_baseU("../../../crosscheck_dru/point_source_u_propagators/source");
   const std::string filename_baseD("../../../crosscheck_dru/point_source_d_propagators/source");
-  const std::string filename_base1("../../../crosscheck_dru/stochastic_source_d_propagators/source.0000.0000");
+  // this is necessary since we have the stochastic source at the sink, reverting propagator changes flavour
+  const std::string filename_base1("../../../crosscheck_dru/stochastic_source_u_propagators/source.0000.0000");
   for (int f=0; f<12; f++)
   {
     std::ostringstream oss;
@@ -113,29 +114,42 @@ int main(int argc, char **argv)
     std::cout << "stochastic d quark propagator successfully loaded\n" << std::endl;
 
   Tool::IO::load(dynamic_cast< Core::Propagator *> (stochasticSource),
-                 propfilesD, Tool::IO::fileSCIDAC, 64);
+                 stochasticSourceFiles, Tool::IO::fileSCIDAC, 64);
 
 #ifdef __MPI_ARCH__
   if (myid == 0)
 #endif
     std::cout << "stochastic source successfully loaded\n" << std::endl;
 
-  Core::Propagator *dProp_stoch =  new Core::Propagator((*stochasticSource)*(*stochastic_dProp));
+
+
+  size_t const timeslice_source(0);
+  size_t const source_position[4] = {0,0,0,timeslice_source};
+//   size_t timeslice_boundary(T-1);
+  size_t const timeslice_stochSource(4);
+//   uProp->changeBoundaryConditions_uniformToFixed(timeslice_source, timeslice_boundary);
+//   dProp->changeBoundaryConditions_uniformToFixed(timeslice_source, timeslice_boundary);
+
+
+  // perform field shift ...
+  //stochastic_dProp->shift(Base::idx_T, Base::dir_UP, int(timeslice_stochSource)-int(timeslice_source));
+
+  stochasticSource->dagger(); // in this particular case we have Z(2) sources so this does not change anything
+  Core::Propagator *dProp_stoch =  new Core::Propagator((stochasticSource->createStochasticPropagator_fixedSink(*stochastic_dProp, source_position)).revert());
+
+  std::ofstream f("fake_propagator");
+  f << *dProp_stoch << std::endl;
+  f.close();
+
 
   delete stochasticSource;
   delete stochastic_dProp;
 
-//   size_t timeslice_source(0);
-//   size_t timeslice_boundary(T-1);
-//   uProp->changeBoundaryConditions_uniformToFixed(timeslice_source, timeslice_boundary);
-//   dProp->changeBoundaryConditions_uniformToFixed(timeslice_source, timeslice_boundary);
 
   Core::Correlator C2_P = Contract::proton_twopoint(*uProp, *dProp, Base::proj_PARITY_PLUS_TM);
 
   Core::Correlator C2_P_stoch = Contract::proton_twopoint(*uProp, *dProp_stoch, Base::proj_PARITY_PLUS_TM);
 
-
-  // have to perform field shift here...
 
   std::cout << "\nstandard proton twopoint:\n" <<std::endl;
   std::ofstream fout("p2p.dat");

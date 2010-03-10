@@ -32,6 +32,10 @@ namespace Base
 
       double sum(double result) const;
 
+      size_t rank() const;
+      size_t rank(size_t index) const; // rank of the node holding the lattice site with index index
+      size_t rank(size_t const *coords) const; // rank of the node with node coordinates coords
+
       template< typename Element >
       void fieldShift(Base::SpaceTimeIndex idx, Base::Direction dir, Element *field, size_t const *offsets) const;
 
@@ -43,8 +47,8 @@ namespace Base
       void sumOverTimeSlices(std::complex< double > const *data_send,
                              std::complex< double > *data_recv, size_t const count=1) const;
 
-      void share(void const *data_send,
-                             void *data_recv, size_t const count, size_t const *position) const;
+      template< typename Element >
+      void broadcast(Element *data, size_t const count, int root) const;
 
       bool isLocallyAvailable(size_t const x, size_t const y, size_t const z) const;
       bool isLocallyAvailable(size_t const x, size_t const y, size_t const z, size_t const t) const;

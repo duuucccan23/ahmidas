@@ -110,9 +110,4 @@ namespace Base
   {
     return d_grid.rank(index);
   }
-
-  inline size_t Weave::rank(size_t const *coords) const
-  {
-    return d_grid.rank(coords);
-  }
 }

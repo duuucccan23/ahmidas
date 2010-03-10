@@ -10,10 +10,11 @@ int main(int argc, char **argv)
   std::cout << myWeave.dim(Base::idx_X) << '\t';
   std::cout << myWeave.dim(Base::idx_Y) << '\t';
   std::cout << myWeave.dim(Base::idx_Z) << '\t';
-  std::cout << myWeave.dim(Base::idx_T) << std::endl;  
+  std::cout << myWeave.dim(Base::idx_T) << std::endl;
   std::cout << myWeave.localSize(Base::idx_X) << '\t';
   std::cout << myWeave.localSize(Base::idx_Y) << '\t';
   std::cout << myWeave.localSize(Base::idx_Z) << '\t';
-  std::cout << myWeave.localSize(Base::idx_T) << std::endl;  
+  std::cout << myWeave.localSize(Base::idx_T) << std::endl;
+  MPI::Finalize();
   return 0;
 }

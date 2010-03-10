@@ -90,11 +90,6 @@ namespace Base
     return result;
   }
 
-  inline size_t Grid::bufferVolume() const
-  {
-    return d_bufferVolume;
-  }
-
   inline size_t Grid::contiguousBlock() const
   {
     return d_contiguousBlock;

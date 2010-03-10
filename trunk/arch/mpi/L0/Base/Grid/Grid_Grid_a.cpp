@@ -4,7 +4,7 @@ namespace Base
 {
 
   Grid::Grid(size_t L, size_t T)
-    : d_L(L), d_T(T), d_bufferVolume(0), d_bigEndian(bigEndian())
+    : d_L(L), d_T(T), d_bufferVolume(0)
   {
     if(!MPI::Is_initialized())
       MPI::Init();
@@ -83,18 +83,7 @@ namespace Base
     // Finally, we'd like to know the 3D surface of each dimension,
     // and the largest surface over which we will be using communication
     for (size_t ctr = 0; ctr < 4; ++ctr)
-    {
       d_surfaces[ctr] = d_localVolume / d_sizes[ctr];
-      if (d_dims[ctr] != 1 && d_surfaces[ctr] > d_bufferVolume)
-        d_bufferVolume = d_surfaces[ctr];
-    }
-//     for (size_t mu=0; mu<4; mu++)
-//     {
-//       std::cout << d_sizes[mu]    << std::endl;
-//       std::cout << d_dims[mu]     << std::endl;
-//       std::cout << d_dimSizes[mu] << std::endl;
-//       std::cout << d_surfaces[mu] << std::endl;
-//     }
   }
 
 }

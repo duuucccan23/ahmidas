@@ -1,5 +1,4 @@
-template< size_t L, size_t T >
-Base::Weave< L, T >::Weave()
+Base::Weave::Weave()
 : d_grid(Base::Grid< L, T >())
 {
   d_localVolume = d_grid.localVolume();

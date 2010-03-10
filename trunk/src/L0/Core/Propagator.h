@@ -46,6 +46,10 @@ namespace Core
 
       //Propagator &operator=(Propagator const &rhs);
 
+      // return entry at particular lattice site, corresponding to the propagator sink
+      // for parallelization reasons this does not return a reference
+      QCD::Tensor operator()(size_t const* sinkSite) const;
+
       template< size_t Index >
       void operator*=(Dirac::Gamma< Index > const &gamma);
 
@@ -79,7 +83,7 @@ namespace Core
 
       void changeBoundaryConditions_uniformToFixed(size_t timesliceSource, size_t timesliceBoundary);
 
-      Propagator &shift(Base::SpaceTimeIndex idx, Base::Direction shift, size_t times);
+      Propagator &shift(Base::SpaceTimeIndex const idx, Base::Direction const dir, int const times);
 
 
 #include "Propagator/Propagator.iterator"
@@ -97,6 +101,8 @@ namespace Core
       template< size_t Index >
       friend Propagator operator*(Dirac::Gamma< Index > const &gamma, Propagator const &p);
 
+      friend std::ostream &operator<<(std::ostream &out, Propagator const &p);
+
     private:
       void destroy();
       void isolate();
@@ -105,6 +111,8 @@ namespace Core
 
   template< size_t Index >
   Propagator operator*(Dirac::Gamma< Index > const &gamma, Propagator const &p);
+
+  std::ostream &operator<<(std::ostream &out, Propagator const &p);
 
   template< size_t NComp >
   class StochasticSource : public Propagator
@@ -124,6 +132,8 @@ namespace Core
       // ~StochasticSource< NComp > ();
 
       Propagator operator*(StochasticPropagator< NComp > const &sPropagator) const;
+
+      Propagator createStochasticPropagator_fixedSink(StochasticPropagator< NComp > const &, size_t const *) const;
 
       size_t const L() const;
       size_t const T() const;

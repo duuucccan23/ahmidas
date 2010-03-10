@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<ahmidas>
+  <params>
+    <L> 4 </L>
+    <T> 4 </L>
+    <!-- position of point source -->
+    <positon>0 0 0 0</positon>
+    <!-- position of stochastic source -->
+    <positon>all all all 4</positon>
+  </params>
+  <files>
+    <file>
+      <type>propagator</type>
+      <directory>../test</directory>
+      <filenameBase>source4x4_d.</filenameBase>
+      <filenameEnding>.inverted</filenameEnding>
+      <firstIndex>0</firstIndex>
+      <lastIndex>11</lastIndex>
+      <indexWidth>2</indexWidth>
+    </file>
+    <file>
+      <type>propagator</type>
+      <directory>../test</directory>
+      <filenameBase>source4x4_u.</filenameBase>
+      <filenameEnding>.inverted</filenameEnding>
+      <firstIndex>0</firstIndex>
+      <lastIndex>11</lastIndex>
+      <indexWidth>2</indexWidth>
+    </file>
+    <file>
+      <type>source</type>
+      <directory>../test</directory>
+      <filenameBase>source4x4_u.</filenameBase>
+      <firstIndex>0</firstIndex>
+      <lastIndex>11</lastIndex>
+      <indexWidth>2</indexWidth>
+    </file>
+  </files>
+</ahmidas>

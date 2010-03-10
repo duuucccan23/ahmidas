@@ -27,6 +27,26 @@ namespace Core
     destroy();
   }
 
+  inline QCD::Tensor Propagator::operator()(size_t const * sinkSite) const
+  {
+    Base::Weave weave(L(), T());
+    QCD::Tensor *tensor;
+
+    size_t localIndex = weave.globalCoordToLocalIndex(sinkSite[Base::idx_X],
+                                                      sinkSite[Base::idx_Y],
+                                                      sinkSite[Base::idx_Z],
+                                                      sinkSite[Base::idx_T]);
+     /* globalCoordToLocalIndex returns local volume if local data is not available on this cpu */
+     if (localIndex == weave.localVolume())
+       tensor = new QCD::Tensor();
+     else
+       tensor = new QCD::Tensor((*d_components)[localIndex]);
+
+     QCD::Tensor result;
+     weave.share(&((*tensor)[0]), &((result)[0]), tensor->size()*sizeof(std::complex< double>), sinkSite);
+     delete tensor;
+     return result;
+  }
 
   inline Propagator &Propagator::revert()
   {
@@ -88,6 +108,57 @@ namespace Core
     }
   }
 
+  inline Propagator &Propagator::shift(Base::SpaceTimeIndex const idx, Base::Direction const dir, int const times)
+  {
+    if (times == 0)
+      return *this;
+
+    Base::Direction my_dir(dir);
+    if(times < 0)
+    {
+      switch (dir)
+      {
+        case Base::dir_UP:
+          my_dir = Base::dir_DOWN;
+          break;
+        case Base::dir_DOWN:
+          my_dir = Base::dir_UP;
+          break;
+        default:
+          std::cerr << "Base::Direction not known in "
+                    << "Propagator &Propagator::shift(Base::SpaceTimeIndex, Base::Direction , int)\n"
+                    << "Aborting..."
+                    << std::endl;
+          exit(1);
+       }
+    }
+
+    size_t my_times = size_t(abs(times)) % T();
+    // make use of periodic boundary conditions to save time
+    if (my_times > T()/2)
+    {
+      my_times = T()-my_times;
+      switch (dir)
+      {
+        case Base::dir_UP:
+          my_dir = Base::dir_DOWN;
+          break;
+        case Base::dir_DOWN:
+          my_dir = Base::dir_UP;
+          break;
+        default:
+          std::cerr << "Base::Direction not known in "
+                    << "Propagator &Propagator::shift(Base::SpaceTimeIndex, Base::Direction , int)\n"
+                    << "Aborting..."
+                    << std::endl;
+          exit(1);
+       }
+    }
+    for (size_t I=0; I<my_times; I++)
+      d_components->shift(idx, my_dir);
+    return *this;
+  }
+
   inline Propagator::iterator Propagator::begin()
   {
     isolate();
@@ -125,6 +196,15 @@ namespace Core
     return d_components->T();
   }
 
-
+  inline std::ostream &operator<<(std::ostream &out, Propagator const &p)
+  {
+    Propagator::const_iterator I(p.begin());
+    while (I != p.end())
+    {
+      out << (*I) << std::endl;
+      ++I;
+    }
+    return out;
+  }
 
 }

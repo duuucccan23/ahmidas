@@ -66,10 +66,16 @@ namespace Base
   }
 
 
-  inline void Weave::sumOverTimeSlices(std::complex< double > const *data_send, 
+  inline void Weave::sumOverTimeSlices(std::complex< double > const *data_send,
                                        std::complex< double > *data_recv, size_t const count) const
   {
     std::copy(data_send, data_send + count*d_T, data_recv);
+  }
+
+  inline void Weave::share(void const *data_send,
+                           void *data_recv, size_t const count, size_t const *position) const
+  {
+     std::memcpy(data_recv, data_send, count);
   }
 
   inline bool Weave::isLocallyAvailable(size_t const, size_t const, size_t const) const

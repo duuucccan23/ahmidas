@@ -17,6 +17,7 @@ ENABLE_TESTING()
 
 INCLUDE_DIRECTORIES(BEFORE SYSTEM src)
 SET(CMAKE_CXX_FLAGS "-O3 -pg -g -Wall")
+# SET(CMAKE_INCLUDE_PATH "/usr/include/libxml2")
 # SET(CMAKE_CXX_FLAGS "-O3 -pg -g -Wall -pedantic")
 
 IF(USE_MPI)

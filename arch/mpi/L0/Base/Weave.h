@@ -1,6 +1,8 @@
 #pragma once
 
-#include<complex>
+#include <algorithm>
+#include <complex>
+#include <mpi.h>
 
 #include <L0/Base/Base.h>
 #include <L0/Base/Grid.h>
@@ -34,6 +36,10 @@ namespace Base
       size_t localSize(Base::SpaceTimeIndex idx) const;
       size_t globalVolume() const;
 
+      size_t rank() const;
+      size_t rank(size_t index) const; // rank of the node holding the lattice site with index index
+      size_t rank(size_t const *coords) const; // rank of the node with node coordinates coords
+
       double sum(double result) const;
 
       template< typename Element >
@@ -44,6 +50,9 @@ namespace Base
 
       void sumOverTimeSlices(std::complex< double > const *data_send,
                              std::complex< double > *data_recv, size_t const count=1) const;
+
+      template< typename Element >
+      inline void broadcast(Element *data, size_t const count, int root) const;
 
       bool isLocallyAvailable(size_t const x, size_t const y, size_t const z) const;
       bool isLocallyAvailable(size_t const x, size_t const y, size_t const z, size_t const t) const;

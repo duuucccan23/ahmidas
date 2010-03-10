@@ -4,7 +4,7 @@ namespace Base
 {
 
   Grid::Grid(size_t L, size_t T)
-    : d_L(L), d_T(T), d_bufferVolume(0)
+    : d_L(L), d_T(T)
   {
     if(!MPI::Is_initialized())
       MPI::Init();

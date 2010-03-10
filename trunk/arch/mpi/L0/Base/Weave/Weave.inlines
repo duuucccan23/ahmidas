@@ -95,4 +95,24 @@ namespace Base
             + fromGlobal(z, Base::idx_Z) * localSurface(Base::idx_Z) + fromGlobal(t, Base::idx_T) * localSurface(Base::idx_T));
   }
 
+  template< typename Element >
+  inline void Weave::broadcast(Element *data, size_t const count, int root) const
+  {
+    MPI_Bcast(data, count * sizeof(Element), MPI_BYTE, root, d_grid.grid());
+  }
+
+  inline size_t Weave::rank() const
+  {
+    return d_grid.rank();
+  }
+
+  inline size_t Weave::rank(size_t index) const
+  {
+    return d_grid.rank(index);
+  }
+
+  inline size_t Weave::rank(size_t const *coords) const
+  {
+    return d_grid.rank(coords);
+  }
 }

@@ -4,20 +4,20 @@ void Base::Weave::fieldShift(Base::SpaceTimeIndex idx, Base::Direction dir, Elem
   // Determine what to send
   // Create a basic datatype for the element -- we want to be agnostic about this
   MPI_Datatype etype;
-  MPI_Type_contiguous(sizeof(Element), MPI_Byte, &etype);
+  MPI_Type_contiguous(sizeof(Element), MPI_BYTE, &etype);
   MPI_Type_commit(&etype);
 
   // Set up arrays for the MPI subarray
   int sizes[4];
-  std::copy_n(d_grid.sizes(), 4, sizes);
+  std::copy(d_grid.sizes(), d_grid.sizes() + 4, sizes);
 
   int subsizes[4];
-  std::copy_n(d_grid.sizes(), 4, subsizes);
+  std::copy(sizes, sizes + 4, subsizes);
   subsizes[idx] = 1;
 
   int starts[4];
-  std::fill_n(starts, 0);
-  array_of_starts[idx] = offsets[idx];
+  std::fill(starts, starts + 4, 0);
+  starts[idx] = offsets[idx];
   if (dir == dir_DOWN)
     starts[idx] = (starts[idx] + sizes[idx] - 1) % sizes[idx];
 

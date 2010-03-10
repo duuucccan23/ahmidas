@@ -38,7 +38,7 @@ namespace Base
 
       size_t rank() const;
       size_t rank(size_t index) const; // rank of the node holding the lattice site with index index
-      size_t rank(size_t const *coords) const; // rank of the node with node coordinates coords
+      size_t rank(size_t const *coords) const; // rank of the node with site coordinates coords
 
       double sum(double result) const;
 
@@ -58,9 +58,6 @@ namespace Base
       bool isLocallyAvailable(size_t const x, size_t const y, size_t const z, size_t const t) const;
 
       bool isRoot() const;
-
-      void gridBarrier();
-      void timesliceBarrier();
 
     private:
       size_t fromGlobal(size_t const x, Base::SpaceTimeIndex const idx) const;

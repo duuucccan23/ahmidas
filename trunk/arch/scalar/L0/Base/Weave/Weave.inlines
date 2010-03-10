@@ -72,11 +72,9 @@ namespace Base
     std::copy(data_send, data_send + count*d_T, data_recv);
   }
 
-  inline void Weave::share(void const *data_send,
-                           void *data_recv, size_t const count, size_t const *position) const
-  {
-     std::memcpy(data_recv, data_send, count);
-  }
+  template< typename Element >
+  inline void Weave::broadcast(Element *, size_t const, int) const
+  {}
 
   inline bool Weave::isLocallyAvailable(size_t const, size_t const, size_t const) const
   {
@@ -96,5 +94,20 @@ namespace Base
   inline size_t Weave::fromGlobal(size_t const idx, Base::SpaceTimeIndex const mu) const
   {
     return idx;
+  }
+
+  inline size_t Weave::rank() const
+  {
+    return 0;
+  }
+
+  inline size_t Weave::rank(size_t index) const
+  {
+    return 0;
+  }
+
+  inline size_t Weave::rank(size_t const *coords) const
+  {
+    return 0;
   }
 }

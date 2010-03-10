@@ -13,7 +13,6 @@ namespace Core
   }
 
 
-
   inline Propagator::Propagator(Propagator const &other)
     : d_references(other.d_references),
       d_components(other.d_components)
@@ -30,22 +29,22 @@ namespace Core
   inline QCD::Tensor Propagator::operator()(size_t const * sinkSite) const
   {
     Base::Weave weave(L(), T());
-    QCD::Tensor *tensor;
+    QCD::Tensor tensor;
+
+    size_t rank = weave.rank(sinkSite);
 
     size_t localIndex = weave.globalCoordToLocalIndex(sinkSite[Base::idx_X],
                                                       sinkSite[Base::idx_Y],
                                                       sinkSite[Base::idx_Z],
                                                       sinkSite[Base::idx_T]);
-     /* globalCoordToLocalIndex returns local volume if local data is not available on this cpu */
-     if (localIndex == weave.localVolume())
-       tensor = new QCD::Tensor();
-     else
-       tensor = new QCD::Tensor((*d_components)[localIndex]);
+    if (rank == weave.rank())
+    {
+      tensor = QCD::Tensor((*d_components)[localIndex]);
+    }
 
-     QCD::Tensor result;
-     weave.share(&((*tensor)[0]), &((result)[0]), tensor->size()*sizeof(std::complex< double>), sinkSite);
-     delete tensor;
-     return result;
+    weave.broadcast(&tensor, tensor.size(), rank);
+
+    return tensor;
   }
 
   inline Propagator &Propagator::revert()

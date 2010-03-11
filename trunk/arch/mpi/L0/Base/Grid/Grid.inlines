@@ -100,4 +100,15 @@ namespace Base
     return d_bigEndian;
   }
 
+  inline Grid::MPIAgent::MPIAgent()
+  : val(42)
+  {
+    // We would need argv and argc to be able to pass arguments
+    MPI_Init(0, 0);
+  }
+
+  inline Grid::MPIAgent::~MPIAgent()
+  {
+    MPI_Finalize();
+  }
 }

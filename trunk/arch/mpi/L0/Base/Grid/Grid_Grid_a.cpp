@@ -2,13 +2,11 @@
 
 namespace Base
 {
-
   Grid::Grid(size_t L, size_t T)
     : d_L(L), d_T(T)
   {
-    if(!MPI::Is_initialized())
-      MPI::Init();
-
+    // NOTE This forces intialization of s_agent - should be really fixed.
+    std::cout << "Fix this! Value is still " << s_agent.val << std::endl;;
     size_t gridSize = static_cast< size_t >(MPI::COMM_WORLD.Get_size());
     if (totalVolume() % gridSize) // No balanced distribution available
     {

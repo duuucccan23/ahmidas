@@ -15,6 +15,5 @@ int main(int argc, char **argv)
   std::cout << myWeave.localSize(Base::idx_Y) << '\t';
   std::cout << myWeave.localSize(Base::idx_Z) << '\t';
   std::cout << myWeave.localSize(Base::idx_T) << std::endl;
-  MPI::Finalize();
   return 0;
 }

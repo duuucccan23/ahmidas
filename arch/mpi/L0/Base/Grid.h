@@ -13,6 +13,18 @@ namespace Base
 {
   class Grid
   {
+    class MPIAgent
+    {
+      friend class Base::Grid;
+
+      MPIAgent(); // Protected constructor
+      public:
+	int val;
+        ~MPIAgent();
+    };
+
+    static MPIAgent s_agent;
+
     MPI::Cartcomm d_grid;
     MPI::Cartcomm d_timeSlice;
     MPI::Cartcomm d_backbone;

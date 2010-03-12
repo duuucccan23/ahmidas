@@ -22,11 +22,11 @@
 int main(int argc, char **argv)
 {
 
-#ifdef __MPI_ARCH__
-  MPI::Init(argc, argv);
-  int numprocs(MPI::COMM_WORLD.Get_size());
-  int myid(MPI::COMM_WORLD.Get_rank());
-#endif
+// #ifdef __MPI_ARCH__
+//   MPI::Init(argc, argv);
+//   int numprocs(MPI::COMM_WORLD.Get_size());
+//   int myid(MPI::COMM_WORLD.Get_rank());
+// #endif
 
   const size_t L = 4;
   const size_t T = 8;
@@ -34,6 +34,7 @@ int main(int argc, char **argv)
   std::vector<std::string> propfilesU;
   std::vector<std::string> propfilesD;
   std::vector<std::string> stochasticPropFilesD;
+  std::vector<std::string> stochasticPropFilesU;
   std::vector<std::string> stochasticSourceFiles;
 
 #ifdef __MPI_ARCH__
@@ -44,7 +45,8 @@ int main(int argc, char **argv)
   const std::string filename_baseU("../../../crosscheck_dru/point_source_u_propagators/source");
   const std::string filename_baseD("../../../crosscheck_dru/point_source_d_propagators/source");
   // this is necessary since we have the stochastic source at the sink, reverting propagator changes flavour
-  const std::string filename_base1("../../../crosscheck_dru/stochastic_source_u_propagators/source.0000.0000");
+  const std::string filename_baseA("../../../crosscheck_dru/stochastic_source_u_propagators/source.0000.0000");
+  const std::string filename_baseB("../../../crosscheck_dru/stochastic_source_d_propagators/source.0000.0000");
   for (int f=0; f<12; f++)
   {
     std::ostringstream oss;
@@ -56,12 +58,13 @@ int main(int argc, char **argv)
     oss.flush();
     propfilesU.push_back(std::string(filename_baseU).append(oss.str()));
     propfilesD.push_back(std::string(filename_baseD).append(oss.str()));
-    stochasticPropFilesD.push_back(std::string(filename_base1).append(oss.str()));
+    stochasticPropFilesD.push_back(std::string(filename_baseA).append(oss.str()));
+    stochasticPropFilesU.push_back(std::string(filename_baseB).append(oss.str()));
 #ifdef __MPI_ARCH__
     if (myid == 0)
 #endif
-      std::cout << propfilesU[f] << std::endl;
-      std::cout << propfilesD[f] << std::endl;
+      std::cout << propfilesU[f]           << "\n" << propfilesD[f]           << std::endl;
+      std::cout << stochasticPropFilesD[f] << "\n" << stochasticPropFilesU[f] << std::endl;
   }
 
   const std::string filename_base2("../../../crosscheck_dru/stochastic_sources/source.0000");
@@ -101,21 +104,29 @@ int main(int argc, char **argv)
 
 
   Core::StochasticPropagator< 12 > *stochastic_dProp = new Core::StochasticPropagator< 12 >(L, T);
+  Core::StochasticPropagator< 12 > *stochastic_uProp = new Core::StochasticPropagator< 12 >(L, T);
   Core::StochasticSource< 12 > *stochasticSource = new Core::StochasticSource< 12 >(L, T, Base::sou_FULLY_POLARIZED,
                                                                                           Base::sou_PURE);
   // the load function with last parameter (size_t) precision is sort of a quick and dirty version
   // but it also reads files without a proper header
   Tool::IO::load(dynamic_cast< Core::Propagator *> (stochastic_dProp),
                  stochasticPropFilesD, Tool::IO::fileSCIDAC, 64);
-
 #ifdef __MPI_ARCH__
   if (myid == 0)
 #endif
     std::cout << "stochastic d quark propagator successfully loaded\n" << std::endl;
 
+
+  Tool::IO::load(dynamic_cast< Core::Propagator *> (stochastic_uProp),
+                 stochasticPropFilesU, Tool::IO::fileSCIDAC, 64);
+#ifdef __MPI_ARCH__
+  if (myid == 0)
+#endif
+    std::cout << "stochastic u quark propagator successfully loaded\n" << std::endl;
+
+
   Tool::IO::load(dynamic_cast< Core::Propagator *> (stochasticSource),
                  stochasticSourceFiles, Tool::IO::fileSCIDAC, 64);
-
 #ifdef __MPI_ARCH__
   if (myid == 0)
 #endif
@@ -132,24 +143,26 @@ int main(int argc, char **argv)
 
 
   // perform field shift ...
-  //stochastic_dProp->shift(Base::idx_T, Base::dir_UP, int(timeslice_stochSource)-int(timeslice_source));
+  // stochastic_dProp->shift(Base::idx_T, Base::dir_UP, int(timeslice_stochSource)-int(timeslice_source));
 
-  stochasticSource->dagger(); // in this particular case we have Z(2) sources so this does not change anything
   Core::Propagator *dProp_stoch =  new Core::Propagator((stochasticSource->createStochasticPropagator_fixedSink(*stochastic_dProp, source_position)).revert());
 
-  std::ofstream f("fake_propagator");
-  f << *dProp_stoch << std::endl;
-  f.close();
+  Core::Propagator *uProp_stoch =  new Core::Propagator((stochasticSource->createStochasticPropagator_fixedSink(*stochastic_uProp, source_position)).revert());
+
+//   std::ofstream f("fake_propagator");
+//   f << *dProp_stoch << std::endl;
+//   f.close();
 
 
   delete stochasticSource;
   delete stochastic_dProp;
 
 
-  Core::Correlator C2_P = Contract::proton_twopoint(*uProp, *dProp, Base::proj_PARITY_PLUS_TM);
+  Core::Correlator C2_P = Contract::proton_twopoint(*uProp, *uProp, *dProp, Base::proj_PARITY_PLUS_TM);
 
-  Core::Correlator C2_P_stoch = Contract::proton_twopoint(*uProp, *dProp_stoch, Base::proj_PARITY_PLUS_TM);
-
+  Core::Correlator C2_P_stoch_d  = Contract::proton_twopoint(*uProp,       *uProp,       *dProp_stoch, Base::proj_PARITY_PLUS_TM);
+  Core::Correlator C2_P_stoch_u1 = Contract::proton_twopoint(*uProp_stoch, *uProp,       *dProp,       Base::proj_PARITY_PLUS_TM);
+  Core::Correlator C2_P_stoch_u2 = Contract::proton_twopoint(*uProp,       *uProp_stoch, *dProp,       Base::proj_PARITY_PLUS_TM);
 
   std::cout << "\nstandard proton twopoint:\n" <<std::endl;
   std::ofstream fout("p2p.dat");
@@ -163,9 +176,22 @@ int main(int argc, char **argv)
   }
 
   std::cout << "\nproton twopoint using stochastic d line:\n" <<std::endl;
-  for (size_t t=0; t<C2_P_stoch.getT(); t++)
+  for (size_t t=0; t<C2_P_stoch_d.getT(); t++)
   {
-    std::cout << t << "  " << (tr(C2_P_stoch[t])).real() << "  " << (tr(C2_P_stoch[t])).imag() << std::endl;
+    if(abs(tr(C2_P_stoch_d[t])) > 1.e-100)
+     std::cout << t << "  " << (tr(C2_P_stoch_d[t])).real() << "  " << (tr(C2_P_stoch_d[t])).imag() << std::endl;
+  }
+  std::cout << "\nproton twopoint using stochastic u line (1):\n" <<std::endl;
+  for (size_t t=0; t<C2_P_stoch_u1.getT(); t++)
+  {
+    if(abs(tr(C2_P_stoch_u1[t])) > 1.e-100)
+      std::cout << t << "  " << (tr(C2_P_stoch_u1[t])).real() << "  " << (tr(C2_P_stoch_u1[t])).imag() << std::endl;
+  }
+  std::cout << "\nproton twopoint using stochastic u line (2):\n" <<std::endl;
+  for (size_t t=0; t<C2_P_stoch_u2.getT(); t++)
+  {
+    if(abs(tr(C2_P_stoch_u2[t])) > 1.e-100)
+      std::cout << t << "  " << (tr(C2_P_stoch_u2[t])).real() << "  " << (tr(C2_P_stoch_u2[t])).imag() << std::endl;
   }
 
 
@@ -188,10 +214,10 @@ int main(int argc, char **argv)
 #endif
   std::cout << "\nprogramm is going to exit normally now\n" << std::endl;
 
-#ifdef __MPI_ARCH__
-  if (!MPI::Is_finalized())
-    MPI::Finalize();
-#endif
+// #ifdef __MPI_ARCH__
+//   if (!MPI::Is_finalized())
+//     MPI::Finalize();
+// #endif
 
   return EXIT_SUCCESS;
 }

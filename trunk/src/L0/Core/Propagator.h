@@ -131,6 +131,8 @@ namespace Core
 
       // ~StochasticSource< NComp > ();
 
+      // void conjugate();
+
       Propagator operator*(StochasticPropagator< NComp > const &sPropagator) const;
 
       Propagator createStochasticPropagator_fixedSink(StochasticPropagator< NComp > const &, size_t const *) const;

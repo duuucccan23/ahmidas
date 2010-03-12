@@ -34,50 +34,17 @@ namespace Core
     : Propagator(dynamic_cast< Propagator const &>(other))
   {}
 
-  // in principle we could use specializations here, but this function is not a performance issue
-  template< size_t NComp >
-  inline Propagator StochasticSource< NComp >::operator*(StochasticPropagator< NComp > const &sPropagator) const
-  {
-    assert (dynamic_cast< Propagator const *>(this)->T()==sPropagator.T() &&
-            dynamic_cast< Propagator const *>(this)->L()==sPropagator.L());
-    Propagator tmp(dynamic_cast< Propagator const *>(this)->L(), dynamic_cast< Propagator const *>(this)->T());
 
-    Propagator::iterator Itmp(tmp.begin()); //isolate() is called automatically here
-    Propagator::const_iterator Is(begin());
-    Propagator::const_iterator Ip(sPropagator.begin());
-
-    while(Is != end())
-    {
-      std::transform(&((*Is)[0]), &((*Is)[0]) + 144, &((*Ip)[0]), &((*Itmp)[0]),
-                     std::multiplies< std::complex< double > >());
-      ++Itmp;
-      ++Is;
-      ++Ip;
-    }
-    return tmp;
-  }
-
-  // in principle we could use specializations here, but this function is not a performance issue
-  template< size_t NComp >
-  inline Propagator StochasticSource< NComp >::createStochasticPropagator_fixedSink(StochasticPropagator< NComp > const &sPropagator, size_t const *sink) const
-  {
-    QCD::Tensor phi_sink(sPropagator(sink));
-    assert (dynamic_cast< Propagator const *>(this)->T()==sPropagator.T() &&
-            dynamic_cast< Propagator const *>(this)->L()==sPropagator.L());
-    Propagator tmp(dynamic_cast< Propagator const *>(this)->L(), dynamic_cast< Propagator const *>(this)->T());
-
-    Propagator::iterator Itmp(tmp.begin()); //isolate() is called automatically here
-    Propagator::const_iterator Is(begin());
-
-    while(Is != end())
-    {
-      std::transform(&((*Is)[0]), &((*Is)[0]) + 144, &(phi_sink[0]), &((*Itmp)[0]),
-                     std::multiplies< std::complex< double > >());
-      ++Itmp;
-      ++Is;
-    }
-    return tmp;
-  }
+//   template< size_t NComp >
+//   void inline StochasticSource< NComp >::conjugate()
+//   {
+//     Propagator::iterator I(begin());
+//     while(I != end())
+//     {
+//       std::transform(&((*I)[0]), &((*I)[0]) + 144, &((*I)[0]), std::mem_fun_ref(&std::complex< double >::conj< double >()));
+//       ++I;
+//     }
+//   }
 
 
 }

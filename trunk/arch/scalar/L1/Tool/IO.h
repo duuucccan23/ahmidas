@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <vector>
 #include <iostream>
 #include <L0/Base/Weave.h>
 #include <L0/Core/Field.h>

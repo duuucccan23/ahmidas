@@ -14,6 +14,6 @@
 namespace Contract
 {
 
-  Core::Correlator proton_twopoint(Core::Propagator const &u, Core::Propagator const &d,
+  Core::Correlator proton_twopoint(Core::Propagator const &u1, Core::Propagator const &u2, Core::Propagator const &d,
                                    Base::BaryonPropagatorProjector const projector);
 }

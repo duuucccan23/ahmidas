@@ -42,7 +42,7 @@ namespace Core
       tensor = QCD::Tensor((*d_components)[localIndex]);
     }
 
-    weave.broadcast(&tensor, tensor.size(), rank);
+    weave.broadcast(&tensor, 1, rank);
 
     return tensor;
   }

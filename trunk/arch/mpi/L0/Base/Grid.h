@@ -19,8 +19,8 @@ namespace Base
 
       MPIAgent(); // Protected constructor
       public:
-	int val;
-        ~MPIAgent();
+      int val;
+      ~MPIAgent();
     };
 
     static MPIAgent s_agent;

@@ -14,17 +14,9 @@
 #include <L1/Tool/IO.h>
 
 
-// #define __MPI_ARCH__
-
 
 int main(int argc, char **argv)
 {
-
-#ifdef __MPI_ARCH__
-  MPI::Init(argc, argv);
-  int numprocs(MPI::COMM_WORLD.Get_size());
-  int myid(MPI::COMM_WORLD.Get_rank());
-#endif
 
   const size_t L = 4;
   const size_t T = 4;
@@ -32,9 +24,6 @@ int main(int argc, char **argv)
   std::vector<std::string> propfilesU;
   std::vector<std::string> propfilesD;
 
-#ifdef __MPI_ARCH__
-  if (myid == 0)
-#endif
   std::cout << "The following files are going to be read:" << std::endl;
 
   const std::string filename_base1("../../test/source4x4");
@@ -49,30 +38,22 @@ int main(int argc, char **argv)
     oss.flush();
     propfilesU.push_back(std::string(filename_base1).append("_u").append(oss.str()));
     propfilesD.push_back(std::string(filename_base1).append("_d").append(oss.str()));
-#ifdef __MPI_ARCH__
-    if (myid == 0)
-#endif
-      std::cout << propfilesU[f] << std::endl;
-      std::cout << propfilesD[f] << std::endl;
+
+    //std::cout << propfilesU[f] << std::endl;
+    //std::cout << propfilesD[f] << std::endl;
   }
 
   Core::Propagator *uProp = new Core::Propagator(L, T);
 
   Tool::IO::load(uProp, propfilesU, Tool::IO::fileSCIDAC);
 
-  #ifdef __MPI_ARCH__
-    if (myid == 0)
-#endif
-      std::cout << "u quark propagator successfully loaded\n" << std::endl;
+  std::cout << "u quark propagator successfully loaded\n" << std::endl;
 
   Core::Propagator *dProp = new Core::Propagator(L, T);
 
   Tool::IO::load(dProp, propfilesD, Tool::IO::fileSCIDAC);
 
-#ifdef __MPI_ARCH__
-    if (myid == 0)
-#endif
-      std::cout << "d quark propagator successfully loaded\n" << std::endl;
+  std::cout << "d quark propagator successfully loaded\n" << std::endl;
 
 
   size_t timeslice_source(0);
@@ -80,7 +61,7 @@ int main(int argc, char **argv)
   uProp->changeBoundaryConditions_uniformToFixed(timeslice_source, timeslice_boundary);
   dProp->changeBoundaryConditions_uniformToFixed(timeslice_source, timeslice_boundary);
 
-  Core::Correlator C2_P = Contract::proton_twopoint(*uProp, *dProp, Base::proj_PARITY_PLUS_TM);
+  Core::Correlator C2_P = Contract::proton_twopoint(*uProp, *uProp, *dProp, Base::proj_PARITY_PLUS_TM);
 
 
   std::cout << "\nreliable code gives this result:\n"
@@ -104,19 +85,8 @@ int main(int argc, char **argv)
     && C2_P[2].trace().real() < ( 4.29020380e-05 + tolerance) && C2_P[2].trace().real() > ( 4.29020380e-05 - tolerance)
     && C2_P[3].trace().real() < ( 1.34970449e-03 + tolerance) && C2_P[3].trace().real() > ( 1.34970449e-03 - tolerance))
   {
-  #ifdef __MPI_ARCH__
-    if (!MPI::Is_finalized())
-      MPI::Finalize();
-  #endif
     return EXIT_SUCCESS;
   }
-
-
-
-#ifdef __MPI_ARCH__
-  if (!MPI::Is_finalized())
-    MPI::Finalize();
-#endif
 
   return EXIT_FAILURE;
 }

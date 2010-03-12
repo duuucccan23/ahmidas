@@ -193,50 +193,50 @@ namespace QCD
     reducedTensor bgC(C, Base::col_BLUE,  Base::col_GREEN);
     reducedTensor bbC(C, Base::col_BLUE,  Base::col_BLUE);
 
-    result += rrA*(ggB*bbC);
-    result -= rrA*(gbB*bgC);
-    result -= rrA*(bgB*gbC);
-    result += rrA*(bbB*ggC);
-    //  ---
-    result -= rgA*(grB*bbC);
-    result += rgA*(gbB*brC);
-    result += rgA*(brB*gbC);
-    result -= rgA*(bbB*grC);
-    //  ---
-    result += rbA*(grB*bgC);
-    result -= rbA*(ggB*brC);
-    result -= rbA*(brB*ggC);
-    result += rbA*(bgB*grC);
-    //  --- --- ---
-    result += grA*(bgB*rbC);
-    result -= grA*(bbB*rgC);
-    result -= grA*(rgB*bbC);
-    result += grA*(rbB*bgC);
-    //  ---
-    result += ggA*(bbB*rrC);
-    result -= ggA*(brB*rbC);
-    result -= ggA*(rbB*brC);
-    result += ggA*(rrB*bbC);
-    //  ---
-    result -= gbA*(bgB*rrC);
-    result += gbA*(brB*rgC);
-    result += gbA*(rgB*brC);
-    result -= gbA*(rrB*bgC);
-    //  --- --- ---
-    result += brA*(rgB*gbC);
-    result -= brA*(rbB*ggC);
-    result -= brA*(ggB*rbC);
-    result += brA*(gbB*rgC);
-    //  ---
-    result += bgA*(rbB*grC);
-    result -= bgA*(rrB*gbC);
-    result -= bgA*(gbB*rrC);
-    result += bgA*(grB*rbC);
-    //  ---
-    result -= bbA*(rgB*grC);
-    result += bbA*(rrB*ggC);
-    result += bbA*(ggB*rrC);
-    result -= bbA*(grB*rgC);
+    result += rrC*(ggB*bbA);
+    result -= rrC*(gbB*bgA);
+    result -= rrC*(bgB*gbA);
+    result += rrC*(bbB*ggA);
+    //  ---               
+    result -= rgC*(grB*bbA);
+    result += rgC*(gbB*brA);
+    result += rgC*(brB*gbA);
+    result -= rgC*(bbB*grA);
+    //  ---               
+    result += rbC*(grB*bgA);
+    result -= rbC*(ggB*brA);
+    result -= rbC*(brB*ggA);
+    result += rbC*(bgB*grA);
+    //  --- ---  --      -
+    result += grC*(bgB*rbA);
+    result -= grC*(bbB*rgA);
+    result -= grC*(rgB*bbA);
+    result += grC*(rbB*bgA);
+    //  ---               
+    result += ggC*(bbB*rrA);
+    result -= ggC*(brB*rbA);
+    result -= ggC*(rbB*brA);
+    result += ggC*(rrB*bbA);
+    //  ---               
+    result -= gbC*(bgB*rrA);
+    result += gbC*(brB*rgA);
+    result += gbC*(rgB*brA);
+    result -= gbC*(rrB*bgA);
+    //  --- ---  --      -
+    result += brC*(rgB*gbA);
+    result -= brC*(rbB*ggA);
+    result -= brC*(ggB*rbA);
+    result += brC*(gbB*rgA);
+    //  ---               
+    result += bgC*(rbB*grA);
+    result -= bgC*(rrB*gbA);
+    result -= bgC*(gbB*rrA);
+    result += bgC*(grB*rbA);
+    //  ---               
+    result -= bbC*(rgB*grA);
+    result += bbC*(rrB*ggA);
+    result += bbC*(ggB*rrA);
+    result -= bbC*(grB*rgA);
 
     //result *= -1.0;
 

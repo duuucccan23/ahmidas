@@ -33,16 +33,22 @@ namespace Tool
 
     void load(Core::Field< QCD::Gauge > *field, std::string const &filename, Tool::IO::filetype);
     void load(Core::Field< QCD::Spinor > *field, std::string const &filename, Tool::IO::filetype);
+    void load(Core::Field< QCD::Spinor > *field, std::string const &filename, Tool::IO::filetype, size_t const precision);
 
     void load(Core::Propagator *propagator, std::vector< std::string > const &filenames,
               Tool::IO::filetype type);
 
+    void load(Core::Propagator *propagator, std::vector< std::string > const &filenames,
+              Tool::IO::filetype type, size_t const precision);
+
     void load(Core::StochasticPropagator< 4 > *sPropagator, std::vector< std::string > const &filenames,
               Tool::IO::filetype type);
 
-
     template< typename Element >
     void loadScidac(Core::Field< Element > *field, std::string const &filename);
+
+    template< typename Element >
+    void loadScidac(Core::Field< Element > *field, std::string const &filename, size_t const precision);
 
     template< typename Element >
     inline void loadILDG(Core::Field< Element > *field, std::string const &filename)

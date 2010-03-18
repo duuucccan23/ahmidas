@@ -1,5 +1,6 @@
 SET(Sources_Tensor     Tensor/Tensor_leftMultiply_a.cpp Tensor/Tensor_rightMultiply_a.cpp
                        Tensor/Tensor_leftMultiply_b.cpp Tensor/Tensor_rightMultiply_b.cpp
+                       Tensor/Tensor_leftMultiply_c.cpp Tensor/Tensor_rightMultiply_c.cpp
                        Tensor/Tensor_operator_assign_a.cpp Tensor/Tensor_operator_assign_b.cpp
                        Tensor/Tensor_Tensor.cpp)
 SET(Sources_WeylSpinor WeylSpinor/WeylSpinor_leftMultiply_a.cpp WeylSpinor/WeylSpinor_leftMultiply_b.cpp

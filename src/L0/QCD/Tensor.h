@@ -95,6 +95,9 @@ namespace QCD
 
       Tensor &leftMultiply(hcTensor const &other);
       Tensor &rightMultiply(hcTensor const &other);
+      
+      Tensor &leftMultiply(SU3::Matrix const &mat);
+      Tensor &rightMultiply(SU3::Matrix const &mat);
 
       hcTensor dagger() const;
       void transposeDirac();

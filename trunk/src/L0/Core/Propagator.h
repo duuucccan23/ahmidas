@@ -85,6 +85,8 @@ namespace Core
 
       Propagator &shift(Base::SpaceTimeIndex const idx, Base::Direction const dir, int const times);
 
+      void gaugeTransform_fixedSource(Field< SU3::Matrix > const &gaugeTrafo, size_t const * sourcePos);
+
 
 #include "Propagator/Propagator.iterator"
 #include "Propagator/Propagator.const_iterator"

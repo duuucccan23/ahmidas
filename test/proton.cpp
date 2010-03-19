@@ -71,10 +71,7 @@ int main(int argc, char **argv)
     << "3   1.34970449e-03   1.41088319e-05"
     << std::endl;
 
-  delete uProp;
-  delete dProp;
-
-  double tolerance = 1.e-9;
+  double tolerance = 1.e-11;
 
   if  (C2_P[0].trace().imag() < (-7.64689531e-05 + tolerance) && C2_P[0].trace().imag() > (-7.64689531e-05 - tolerance)
     && C2_P[1].trace().imag() < (-1.02786839e-05 + tolerance) && C2_P[1].trace().imag() > (-1.02786839e-05 - tolerance)
@@ -85,8 +82,41 @@ int main(int argc, char **argv)
     && C2_P[2].trace().real() < ( 4.29020380e-05 + tolerance) && C2_P[2].trace().real() > ( 4.29020380e-05 - tolerance)
     && C2_P[3].trace().real() < ( 1.34970449e-03 + tolerance) && C2_P[3].trace().real() > ( 1.34970449e-03 - tolerance))
   {
-    return EXIT_SUCCESS;
+    std::cout << "proton two point function coincides with reference data" << std::endl;
+    Core::Field< SU3::Matrix > randomGaugeTrafo(L, T);
+    Core::Field< SU3::Matrix >::iterator I_rgt = randomGaugeTrafo.begin();
+    while (I_rgt != randomGaugeTrafo.end())
+    {
+      (*I_rgt).setToRandom();
+      ++I_rgt;
+    }
+    size_t source_position[4] = {0, 0, 0, 0};
+    dProp->gaugeTransform_fixedSource(randomGaugeTrafo, source_position);
+    Core::Field< SU3::Matrix >::iterator I_rgt_new = randomGaugeTrafo.begin();
+    uProp->gaugeTransform_fixedSource(randomGaugeTrafo, source_position);
+    Core::Correlator C2_P_gt = Contract::proton_twopoint(*uProp, *uProp, *dProp, Base::proj_PARITY_PLUS_TM);
+    if    (C2_P_gt[0].trace().imag() < (-7.64689531e-05 + tolerance) && C2_P_gt[0].trace().imag() > (-7.64689531e-05 - tolerance)
+        && C2_P_gt[1].trace().imag() < (-1.02786839e-05 + tolerance) && C2_P_gt[1].trace().imag() > (-1.02786839e-05 - tolerance)
+        && C2_P_gt[2].trace().imag() < ( 3.89420319e-08 + tolerance) && C2_P_gt[2].trace().imag() > ( 3.89420319e-08 - tolerance)
+        && C2_P_gt[3].trace().imag() < ( 1.41088319e-05 + tolerance) && C2_P_gt[3].trace().imag() > ( 1.41088319e-05 - tolerance)
+        && C2_P_gt[0].trace().real() < ( 1.16145514e-03 + tolerance) && C2_P_gt[0].trace().real() > ( 1.16145514e-03 - tolerance)
+        && C2_P_gt[1].trace().real() < ( 1.37746719e-03 + tolerance) && C2_P_gt[1].trace().real() > ( 1.37746719e-03 - tolerance)
+        && C2_P_gt[2].trace().real() < ( 4.29020380e-05 + tolerance) && C2_P_gt[2].trace().real() > ( 4.29020380e-05 - tolerance)
+        && C2_P_gt[3].trace().real() < ( 1.34970449e-03 + tolerance) && C2_P_gt[3].trace().real() > ( 1.34970449e-03 - tolerance))
+    {
+      std::cerr << "proton two point is invariant under random gauge transformation" << std::endl;
+      delete uProp;
+      delete dProp;
+      return EXIT_SUCCESS;
+    }
+    else
+    {
+      std::cerr << "ERROR: proton two point is  n o t  invariant under gauge transformation" << std::endl;
+    }
   }
+
+  delete uProp;
+  delete dProp;
 
   return EXIT_FAILURE;
 }

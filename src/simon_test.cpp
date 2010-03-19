@@ -7,6 +7,7 @@
 #include <fstream>
 #include <sstream>
 
+#include <L0/Base/Knuth.h>
 #include <L0/Dirac/Gamma.h>
 #include <L0/Core/Field.h>
 #include <L0/QCD/Gauge.h>
@@ -22,14 +23,13 @@
 int main(int argc, char **argv)
 {
 
-// #ifdef __MPI_ARCH__
-//   MPI::Init(argc, argv);
-//   int numprocs(MPI::COMM_WORLD.Get_size());
-//   int myid(MPI::COMM_WORLD.Get_rank());
-// #endif
+  size_t const L = 4;
+  size_t const T = 8;
 
-  const size_t L = 4;
-  const size_t T = 8;
+  size_t const timeslice_source(0);
+  size_t const source_position[4] = {0,0,0,timeslice_source};
+  size_t const timeslice_boundary(T-1);
+  size_t const timeslice_stochSource(4);
 
   std::vector<std::string> propfilesU;
   std::vector<std::string> propfilesD;
@@ -84,6 +84,24 @@ int main(int argc, char **argv)
   }
 
 
+  /* prepare random gauge transformation */
+  int seed = 83141764;
+  Base::Knuth::instance(seed);
+  Core::Field< SU3::Matrix > randomGaugeTrafo(L, T);
+  Core::Field< SU3::Matrix >::iterator I_rgt = randomGaugeTrafo.begin();
+  while (I_rgt != randomGaugeTrafo.end())
+  {
+    (*I_rgt).setToRandom();
+    std::cout << *I_rgt << std::endl;
+    ++I_rgt;
+  }
+//   (*(randomGaugeTrafo.begin())).setToIdentity();
+
+  /* function to be called:
+     gaugeTransform_fixedSource(randomGaugeTrafo, source_position)
+  */
+
+
   Core::Propagator *uProp = new Core::Propagator(L, T);
 
   Tool::IO::load(uProp, propfilesU, Tool::IO::fileSCIDAC, 64);
@@ -101,6 +119,15 @@ int main(int argc, char **argv)
     if (myid == 0)
 #endif
       std::cout << "d quark propagator successfully loaded\n" << std::endl;
+
+
+  // perform random gauge transformation of point source propagators
+  dProp->gaugeTransform_fixedSource(randomGaugeTrafo, source_position);
+  uProp->gaugeTransform_fixedSource(randomGaugeTrafo, source_position);
+
+
+
+
 
 
   Core::StochasticPropagator< 12 > *stochastic_dProp = new Core::StochasticPropagator< 12 >(L, T);
@@ -134,10 +161,6 @@ int main(int argc, char **argv)
 
 
 
-  size_t const timeslice_source(0);
-  size_t const source_position[4] = {0,0,0,timeslice_source};
-//   size_t timeslice_boundary(T-1);
-  size_t const timeslice_stochSource(4);
 //   uProp->changeBoundaryConditions_uniformToFixed(timeslice_source, timeslice_boundary);
 //   dProp->changeBoundaryConditions_uniformToFixed(timeslice_source, timeslice_boundary);
 

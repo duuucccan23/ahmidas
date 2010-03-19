@@ -88,6 +88,13 @@ namespace Base
     proj_PARITY_MINUS_TM
   };
 
+  enum Operator
+  {
+    op_GAMMA_4 = 0
+    // op_CONSERVED_CURRENT_GAMMA_4 = 16,
+    // op_O44 = 32
+  };
+
   extern bool const bigEndian;
 }
 

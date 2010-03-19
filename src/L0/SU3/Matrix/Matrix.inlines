@@ -134,6 +134,15 @@ namespace SU3
     return hcMatrix(*this);
   }
 
+  inline Matrix const  Matrix::transpose() const
+  {
+    Matrix mat_T(*this);
+    std::swap(*(mat_T.d_data + 1), *(mat_T.d_data + 3));
+    std::swap(*(mat_T.d_data + 2), *(mat_T.d_data + 6));
+    std::swap(*(mat_T.d_data + 5), *(mat_T.d_data + 7));
+    return mat_T;
+  }
+
   inline std::complex < double > Matrix::sign(std::complex< double > const &x) const
   {
     return x / abs(x);

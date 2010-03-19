@@ -6,6 +6,11 @@
 
 #include <L0/Base/Random.h>
 
+namespace QCD
+{
+  class Tensor;
+}
+
 namespace SU3
 {
   class Matrix;
@@ -24,6 +29,8 @@ namespace SU3
 
   class Matrix
   {
+    friend class QCD::Tensor;
+
     std::complex< double > d_data[9];
 
     // Some useful constant matrices
@@ -56,6 +63,7 @@ namespace SU3
 #include "Matrix/Matrix.operators"
 
       hcMatrix const dagger() const;
+      Matrix const transpose() const;
 
       void reunitarize();
 

@@ -23,6 +23,10 @@
 int main(int argc, char **argv)
 {
 
+  Input::FileReader reader("../test/input.xml");
+
+  return 0;
+
   size_t const L = 4;
   size_t const T = 8;
 

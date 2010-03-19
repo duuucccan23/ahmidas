@@ -1,16 +1,23 @@
-#ifndef __FileReader_h__
-#define __FileReader_h__
+#ifndef __GUARD_FILE_READER__
+#define __GUARD_FILE_READER__
 
+#include <cstdlib>
+#include <iostream>
+#include <fstream>
 #include <string>
 #include <vector>
 #include <map>
 #include <cstring>
+#include <stack>
 #include <utility>
 
 // SD: Actually, this seems to be incompatible, and since boost uses libxml as well,
 // I think it is better not to use it at all and write an own simple parser.
 // #include <libxml2/libxml/xmlmemory.h>
 // #include <libxml2/libxml/parser.h>
+
+#include <L2/Input/Parser.h>
+
 
 namespace Input
 {
@@ -32,6 +39,9 @@ namespace Input
       type_PARAM = 200
     };
 
+    static const size_t buf_size = 1000;
+
+
 //     std::multimap< int, size_t >      mm_size_ts;
 //     std::multimap< int, int >         mm_integers;
 //     std::multimap< int, double >      mm_floats;
@@ -40,6 +50,7 @@ namespace Input
     std::multimap< InputTag, std::pair< std::string, std::string > > input;
 
     std::vector< std::vector< std::string > > files;
+
 
     public:
 

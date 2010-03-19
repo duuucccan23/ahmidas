@@ -1,0 +1,83 @@
+namespace Input
+{
+
+  inline int Parser::parseLine(std::string const &line, std::string& tag, std::string& data) const
+  {
+    data = "";
+    tag  = "";
+
+    size_t tag_begin(-1), tag_end(-1), tag2_begin(-1), tag2_end(-1);
+    size_t tag_length(0), tag2_length(0), data_length(0);
+
+    tag_begin = line.find("<", 0);
+    tag_end   = line.find(">", 0);
+
+    if (tag_begin == std::string::npos)
+      return Input::tag_ERROR_A;
+    if (tag_end <= tag_begin) /* tag_begin == size_t(-1) is already excluded */
+      return Input::tag_ERROR_B;
+
+    tag_length = tag_end - tag_begin - 1;
+//     std::cout << "tag_begin = " << tag_begin << std::endl;
+//     std::cout << "tag_end = " << tag_end << std::endl;
+//     std::cout << "tag_length = " << tag_length << std::endl;
+    if (tag_length == 0)
+    {
+      return Input::tag_EMPTY;
+    }
+
+
+    tag =  line.substr(tag_begin+1, tag_length);
+
+//     std::cout << line.find_last_of("?", tag_end) << std::endl;
+//     std::cout << line.find_first_of("?", tag_begin) << std::endl;
+//     std::cout << line.find_last_of("--", tag_end) << std::endl;
+//     std::cout << line.find_first_of("!--", tag_begin) << std::endl;
+
+    if (line.find_first_of("?", tag_begin) == tag_begin+1 && line.find_last_of("?", tag_end) == tag_end-1)
+    {
+      std::cout << "tag (headline) = " << tag << std::endl;
+      return tag_HEADLINE;
+    }
+    if (line.find_first_of("!--", tag_begin) == tag_begin+1 && line.find_last_of("--", tag_end) == tag_end-1)
+    {
+      std::cout << "tag (comment) = " << tag << std::endl;
+      return tag_COMMENT;
+    }
+
+
+    tag2_begin = line.find("</", 0);
+    tag2_end   = line.find_last_of(">");
+    if (tag2_begin == std::string::npos || tag2_end == std::string::npos)
+    {
+      std::cout << "tag (opening) = " << tag << std::endl;
+      return Input::tag_OPENING;
+    }
+    else if (tag2_begin == tag_begin && tag2_end == tag_end)
+    {
+      tag.erase(0, 1); // delete first character (slash)
+      std::cout << "tag (closing) = " << tag << std::endl;
+      return Input::tag_CLOSING;
+    }
+
+    tag2_length = tag2_end - tag2_begin - 2;
+    std::string tag2 = line.substr(tag2_begin + 2, tag2_length);
+    if (tag != tag2)
+    {
+      return Input::tag_UNMATCHED;
+    }
+
+    data_length = tag2_begin - tag_end - 1;
+    if (data_length == 0)
+    {
+      return Input::tag_NOCONTENT;
+    }
+    data = line.substr(tag_end+1, data_length);
+
+    std::cout << "tag = " << tag << std::endl;
+    std::cout << "data = " << data << std::endl;
+
+
+    return Input::tag_COMPLETE;
+  }
+}

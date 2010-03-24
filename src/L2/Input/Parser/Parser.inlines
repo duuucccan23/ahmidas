@@ -64,6 +64,8 @@ namespace Input
     std::string tag2 = line.substr(tag2_begin + 2, tag2_length);
     if (tag != tag2)
     {
+      std::cout << "tag (unmatched) = " << tag << std::endl;
+      std::cout << "              vs. " << tag2 << std::endl;
       return Input::tag_UNMATCHED;
     }
 

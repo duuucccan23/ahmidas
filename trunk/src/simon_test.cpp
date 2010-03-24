@@ -1,6 +1,7 @@
 
 #include <cstring>
 #include <vector>
+#include <map>
 #include <complex>
 #include <iomanip>
 #include <iostream>
@@ -23,67 +24,84 @@
 int main(int argc, char **argv)
 {
 
+  size_t L = 0;
+  size_t T = 0;
+  
   Input::FileReader reader("../test/input.xml");
+  
+  std::map< std::string, double > floats;
+  std::vector< size_t * > positions;
+  std::map< std::string, int > operators;
+  std::vector< std::vector< std::string > > files;
 
+  reader.initializeParameters(L, T, files, floats, positions, operators);
+
+    
+  std::cout << "Lattice size: " << L << "x" << L << "x" << L << "x" << T << std::endl;
+  
+  double kappa = floats["kappa"];
+  double mu = floats["mu"];
+  
+  std::cout << "kappa = " << kappa << ", mu = " << mu << std::endl;
+  
   return 0;
-
-  size_t const L = 4;
-  size_t const T = 8;
-
+  
+  
   size_t const timeslice_source(0);
   size_t const source_position[4] = {0,0,0,timeslice_source};
   size_t const timeslice_boundary(T-1);
   size_t const timeslice_stochSource(4);
 
-  std::vector<std::string> propfilesU;
-  std::vector<std::string> propfilesD;
-  std::vector<std::string> stochasticPropFilesD;
-  std::vector<std::string> stochasticPropFilesU;
-  std::vector<std::string> stochasticSourceFiles;
+  std::vector< std::string > const propfilesD(files[0]);
+  std::vector< std::string > const propfilesU(files[1]);
+  std::vector< std::string > const stochasticPropFilesD(files[0]);
+  std::vector< std::string > const stochasticPropFilesU(files[1]);
+  std::vector< std::string > const stochasticSourceFiles(files[23]);
+
 
 #ifdef __MPI_ARCH__
   if (myid == 0)
 #endif
   std::cout << "The following files are going to be read:" << std::endl;
 
-  const std::string filename_baseU("../../../crosscheck_dru/point_source_u_propagators/source");
-  const std::string filename_baseD("../../../crosscheck_dru/point_source_d_propagators/source");
-  // this is necessary since we have the stochastic source at the sink, reverting propagator changes flavour
-  const std::string filename_baseA("../../../crosscheck_dru/stochastic_source_u_propagators/source.0000.0000");
-  const std::string filename_baseB("../../../crosscheck_dru/stochastic_source_d_propagators/source.0000.0000");
+//   const std::string filename_baseU("../../../crosscheck_dru/point_source_u_propagators/source");
+//   const std::string filename_baseD("../../../crosscheck_dru/point_source_d_propagators/source");
+//   // this is necessary since we have the stochastic source at the sink, reverting propagator changes flavour
+//   const std::string filename_baseA("../../../crosscheck_dru/stochastic_source_u_propagators/source.0000.0000");
+//   const std::string filename_baseB("../../../crosscheck_dru/stochastic_source_d_propagators/source.0000.0000");
   for (int f=0; f<12; f++)
   {
-    std::ostringstream oss;
-    oss <<  ".";
-    oss.fill('0');
-    oss.width(2);
-    oss << f;
-    oss << ".inverted";
-    oss.flush();
-    propfilesU.push_back(std::string(filename_baseU).append(oss.str()));
-    propfilesD.push_back(std::string(filename_baseD).append(oss.str()));
-    stochasticPropFilesD.push_back(std::string(filename_baseA).append(oss.str()));
-    stochasticPropFilesU.push_back(std::string(filename_baseB).append(oss.str()));
-#ifdef __MPI_ARCH__
-    if (myid == 0)
-#endif
+//     std::ostringstream oss;
+//     oss <<  ".";
+//     oss.fill('0');
+//     oss.width(2);
+//     oss << f;
+//     oss << ".inverted";
+//     oss.flush();
+//     propfilesU.push_back(std::string(filename_baseU).append(oss.str()));
+//     propfilesD.push_back(std::string(filename_baseD).append(oss.str()));
+//     stochasticPropFilesD.push_back(std::string(filename_baseA).append(oss.str()));
+//     stochasticPropFilesU.push_back(std::string(filename_baseB).append(oss.str()));
+// #ifdef __MPI_ARCH__
+//     if (myid == 0)
+// #endif
       std::cout << propfilesU[f]           << "\n" << propfilesD[f]           << std::endl;
       std::cout << stochasticPropFilesD[f] << "\n" << stochasticPropFilesU[f] << std::endl;
   }
 
-  const std::string filename_base2("../../../crosscheck_dru/stochastic_sources/source.0000");
+//   const std::string filename_base2("../../../crosscheck_dru/stochastic_sources/source.0000");
   for (int f=0; f<12; f++)
   {
-    std::ostringstream oss;
-    oss <<  ".";
-    oss.fill('0');
-    oss.width(2);
-    oss << f;
-    oss.flush();
-    stochasticSourceFiles.push_back(std::string(filename_base2).append(oss.str()));
-#ifdef __MPI_ARCH__
-    if (myid == 0)
-#endif
+//     std::ostringstream oss;
+//     oss <<  ".";
+//     oss.fill('0');
+//     oss.width(2);
+//     oss << f;
+//     oss.flush();
+//     stochasticSourceFiles.push_back(std::string(filename_base2).append(oss.str()));
+// #ifdef __MPI_ARCH__
+//     if (myid == 0)
+// #endif
       std::cout << stochasticSourceFiles[f] << std::endl;
   }
 

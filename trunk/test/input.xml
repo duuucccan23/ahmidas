@@ -2,11 +2,13 @@
 <ahmidas>
   <params>
     <L> 4 </L>
-    <T> 4 </L>
+    <T> 4 </T>
     <!-- position of point source -->
-    <positon>0 0 0 0</positon>
+    <positon>0 1 3 2</positon>
     <!-- position of stochastic source -->
     <positon>all all all 4</positon>
+    <kappa> 0.15 </kappa>
+    <mu> 0.01 </mu>
   </params>
   <files>
     <file>

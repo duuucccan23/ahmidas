@@ -1,6 +1,6 @@
 namespace Input
 {
- 
+
   inline void FileReader::line_error(size_t const line, std::string const message)
   {
     std::cerr << "Error in line " << line << " of input file" << std::endl;
@@ -8,15 +8,15 @@ namespace Input
       std::cerr << message << std::endl;
     exit(101);
   }
-  
+
   inline File::File(std::string const type, std::string const directory,
                     std::string const filenameBase, std::string const filenameEnding,
                     std::string const firstIndex, std::string const lastIndex, std::string const indexWidth)
     : d_type(type), d_directory(directory), d_filenameBase(filenameBase), d_filenameEnding(filenameEnding)
-  {  
+  {
     d_firstIndex = atoi (firstIndex.c_str());
     d_lastIndex  = atoi (lastIndex.c_str());
     d_indexWidth = atoi (indexWidth.c_str());;  
   }
-  
+
 }

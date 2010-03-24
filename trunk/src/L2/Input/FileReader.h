@@ -4,6 +4,7 @@
 #include <cstdlib>
 #include <iostream>
 #include <fstream>
+#include <sstream>
 #include <string>
 #include <vector>
 #include <map>
@@ -38,8 +39,8 @@ namespace Input
     std::string d_directory;
     std::string d_filenameBase;
     std::string d_filenameEnding;
-    int d_firstIndex;
-    int d_lastIndex;
+    size_t d_firstIndex;
+    size_t d_lastIndex;
     size_t d_indexWidth;
     
     public:
@@ -74,23 +75,22 @@ namespace Input
 
     std::stack< std::string > open_tags;
 
-    std::multimap< std::string, std::string > input;
+    std::map< std::string, std::string > input;
     
     // this one does not store the filenames but the raw data
     std::vector< File > files;
     
     void line_error(size_t const line, std::string const message = "");
     
-
     public:
 
     FileReader(std::string file);
     
     void initializeParameters(size_t &L, size_t &T, 
                          std::vector< std::vector< std::string > > &filenames, 
-                         std::vector< double > &floats, 
+                         std::map< std::string, double > &floats, 
                          std::vector< size_t * > &positions, 
-                         std::vector< int > &operators) const;
+                         std::map< std::string, int > &operators) const;
 
   };
 }

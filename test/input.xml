@@ -2,18 +2,16 @@
 <ahmidas>
   <params>
     <L> 4 </L>
-    <T> 4 </T>
+    <T> 8 </T>
     <!-- position of point source -->
-    <positon>0 1 3 2</positon>
-    <!-- position of stochastic source -->
-    <positon>all all all 4</positon>
+    <position>2 0 3 1</position>
     <kappa> 0.15 </kappa>
     <mu> 0.01 </mu>
   </params>
   <files>
     <file>
       <type>propagator</type>
-      <directory>../test</directory>
+      <directory>../../test</directory>
       <filenameBase>source4x4_d.</filenameBase>
       <filenameEnding>.inverted</filenameEnding>
       <firstIndex>0</firstIndex>
@@ -22,7 +20,8 @@
     </file>
     <file>
       <type>propagator</type>
-      <directory>../test</directory>
+      <!-- here we have a trailing slash in directory string, FileReader has to handel that -->
+      <directory>../../test/</directory>
       <filenameBase>source4x4_u.</filenameBase>
       <filenameEnding>.inverted</filenameEnding>
       <firstIndex>0</firstIndex>
@@ -31,8 +30,8 @@
     </file>
     <file>
       <type>source</type>
-      <directory>../test</directory>
-      <filenameBase>source4x4_u.</filenameBase>
+      <directory>../../test</directory>
+      <filenameBase>source4x4.</filenameBase>
       <firstIndex>0</firstIndex>
       <lastIndex>11</lastIndex>
       <indexWidth>2</indexWidth>

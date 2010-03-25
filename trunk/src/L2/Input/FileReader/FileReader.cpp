@@ -28,7 +28,7 @@ namespace Input
     char * buffer = new char[buf_size];
     int state(0), global_state(0);
     size_t line_counter(0);
-    
+
     bool fileMode = false;
     std::string * fileData = NULL;
 
@@ -116,25 +116,25 @@ namespace Input
           std::cerr << state << std::endl;
           line_error(line_counter, "Unmatched opening tag!");
       }// switch (state)
-      
+
     } // while (fin.getline(buffer, buf_size))
-    
-    if (global_state != 0)
+
+    if (global_state != 0 || !open_tags.empty())
     {
       std::cerr << "Unknown error occurred after file " << file << " had been read."  << std::endl;
       exit(100);
     }
-    
+
     delete [] buffer;
     fin.close();
   }
-  
-  
+
+
   // there should be an error handling here
-  void FileReader::initializeParameters(size_t &L, size_t &T, 
-                                        std::vector< std::vector< std::string > > &filenames, 
-                                        std::map< std::string, double > &floats, 
-                                        std::vector< size_t * > &positions, 
+  void FileReader::initializeParameters(size_t &L, size_t &T,
+                                        std::vector< std::vector< std::string > > &filenames,
+                                        std::map< std::string, double > &floats,
+                                        std::vector< size_t * > &positions,
                                         std::map< std::string, int > &operators) const
   {
     for (size_t iF=0; iF<filenames.size(); iF++)
@@ -148,35 +148,43 @@ namespace Input
     {
       if((*It).first == "L")
       {
-        L = atoi((*It).second.c_str());
-        std::cout << "L = " << L << std::endl;
+        std::istringstream iss((*It).second);
+        iss >> L;
+        // std::cout << "L = " << L << std::endl;
         continue;
       }
       if((*It).first == "T")
       {
-        T = atoi((*It).second.c_str());
-        std::cout << "T = " << T << std::endl;
+        std::istringstream iss((*It).second);
+        iss >> T;
+        // std::cout << "T = " << T << std::endl;
         continue;
       }
       if((*It).first == "position")
       {
         size_t *pos = new size_t[4];
-        // have to split the string here ... 
-        pos[0] = atoi((*It).second.c_str());
-        // this has to be implemented 
-        std::cerr << "This is not implemented in FileReader::initializeParameters(...)" << std::endl;
-        pos[1] = pos[2] = pos[3] = -1;
+        std::istringstream iss((*It).second);
+        iss >> pos[0];
+        iss >> pos[1];
+        iss >> pos[2];
+        iss >> pos[3];
         positions.push_back(pos);
         continue;
       }
       if((*It).first == "kappa")
       {
-        floats.insert(make_pair((*It).first, atof((*It).second.c_str())));
+        double tmp;
+        std::istringstream iss((*It).second);
+        iss >> tmp;
+        floats.insert(make_pair((*It).first, tmp));
         continue;
       }
       if((*It).first == "mu")
       {
-        floats.insert(make_pair((*It).first, atof((*It).second.c_str())));
+        double tmp;
+        std::istringstream iss((*It).second);
+        iss >> tmp;
+        floats.insert(make_pair((*It).first, tmp));
         continue;
       }
     }
@@ -187,7 +195,10 @@ namespace Input
       for (size_t idx=(files[iF]).d_firstIndex; idx<=(files[iF]).d_lastIndex; idx++)
       {
         std::ostringstream oss;
-        oss  <<  (files[iF]).d_directory << "/" <<  (files[iF]).d_filenameBase;
+        if((files[iF]).d_directory[((files[iF]).d_directory).size()-1] == '/')
+          oss  <<  (files[iF]).d_directory <<  (files[iF]).d_filenameBase;
+        else
+          oss  <<  (files[iF]).d_directory << "/" <<  (files[iF]).d_filenameBase;
         oss.fill('0');
         oss.width((files[iF]).d_indexWidth);
         oss << idx;
@@ -197,6 +208,5 @@ namespace Input
       }
       filenames.push_back(tmp);
     }
-  }                                   
-
+  }
 }

@@ -14,6 +14,10 @@ ADD_EXECUTABLE(limereader limereader.cpp)
 TARGET_LINK_LIBRARIES(limereader Lime Base)
 ADD_TEST(limereader_read_in limereader ../../test/conf.88)
 
+ADD_EXECUTABLE(readFile readFile.cpp)
+TARGET_LINK_LIBRARIES(readFile Input)
+ADD_TEST(read_input_file readFile)
+
 ADD_EXECUTABLE(fieldcomponent fieldcomponent.cpp)
 TARGET_LINK_LIBRARIES(fieldcomponent Weave)
 ADD_TEST(fieldcomponent_setup fieldcomponent)

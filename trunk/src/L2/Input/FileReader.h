@@ -69,12 +69,18 @@ namespace Input
     public:
 
     FileReader(std::string file);
+    ~FileReader();
 
     void initializeParameters(size_t &L, size_t &T,
-                         std::vector< std::vector< std::string > > &filenames,
-                         std::map< std::string, double > &floats,
-                         std::vector< size_t * > &positions,
-                         std::map< std::string, int > &operators) const;
+                              std::vector< std::vector< std::string > > &filenames,
+                              std::map< std::string, double > &floats,
+                              std::vector< size_t * > &positions,
+                              std::map< std::string, int > &operators) const;
+
+    // shorter version
+    void initializeParameters(size_t &L, size_t &T,
+                              std::vector< std::vector< std::string > > &filenames,
+                              std::map< std::string, double > &floats) const;
 
   };
 }

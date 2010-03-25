@@ -92,7 +92,7 @@ int main(int argc, char **argv)
 
   #ifdef __MPI_ARCH__
     if (myid == 0)
-#endif
+  #endif
       std::cout << "u quark propagator successfully loaded\n" << std::endl;
 
   Core::Propagator *dProp = new Core::Propagator(L, T);
@@ -101,7 +101,7 @@ int main(int argc, char **argv)
 
   #ifdef __MPI_ARCH__
     if (myid == 0)
-#endif
+  #endif
       std::cout << "d quark propagator successfully loaded\n" << std::endl;
 
 

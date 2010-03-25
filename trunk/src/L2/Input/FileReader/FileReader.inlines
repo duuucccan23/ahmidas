@@ -1,6 +1,14 @@
 namespace Input
 {
 
+  inline FileReader::~FileReader()
+  {
+    while(!open_tags.empty())
+      open_tags.pop();
+    files.clear();
+    input.clear();
+  }
+
   inline void FileReader::line_error(size_t const line, std::string const message)
   {
     std::cerr << "Error in line " << line << " of input file" << std::endl;
@@ -8,6 +16,22 @@ namespace Input
       std::cerr << message << std::endl;
     exit(101);
   }
+
+  inline void FileReader::initializeParameters(size_t &L, size_t &T,
+                         std::vector< std::vector< std::string > > &filenames,
+                         std::map< std::string, double > &floats) const
+  {
+    // dummy containers
+    std::map< std::string, int > dummy_ops;
+    std::vector< size_t * > dummy_pos;
+    initializeParameters(L, T, filenames, floats, dummy_pos, dummy_ops);
+    for (size_t i=0; i<dummy_pos.size(); i++)
+    {
+      delete [] dummy_pos[i];
+      dummy_pos[i] = NULL;
+    }
+  }
+
 
   inline File::File(std::string const type, std::string const directory,
                     std::string const filenameBase, std::string const filenameEnding,

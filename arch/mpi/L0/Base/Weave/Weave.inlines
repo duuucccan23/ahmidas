@@ -98,8 +98,19 @@ namespace Base
   template< typename Element >
   inline void Weave::broadcast(Element *data, size_t const count, int root) const
   {
-    MPI_Bcast(data, count * sizeof(Element), MPI_BYTE, root, d_grid.grid());
+    (d_grid.grid()).Bcast(data, count * sizeof(Element), MPI_BYTE, root);
   }
+
+  template< typename Element >
+  inline void Weave::allReduce(Element const *data_send, Element *data_recv, size_t const count) const
+  {
+    // have to wait until all calculations are finished
+    d_grid.grid().Barrier();
+
+    // call MPI::Intracomm::Allreduce(...)
+    (d_grid.grid()).Allreduce(data_send, data_recv, count * sizeof(Element), MPI_BYTE, MPI_SUM);
+  }
+
 
   inline size_t Weave::rank() const
   {

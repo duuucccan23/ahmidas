@@ -76,6 +76,15 @@ namespace QCD
     return hcTensor(*this);
   }
 
+  inline void Tensor::conjugate()
+  {
+    for(size_t i=0; i < 144; i++)
+      d_data[i] = conj(d_data[i]);
+    // there must be a better way to do this using std::transform (the following example does not work):
+    // std::transform(d_data, d_data + 144, d_data, std::ptr_fun(&conj));
+  }
+
+
   inline void Tensor::transposeDirac()
   {
     // only swap non-diagonal SU3 (colour) vectors

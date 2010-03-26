@@ -76,6 +76,12 @@ namespace Base
   inline void Weave::broadcast(Element *, size_t const, int) const
   {}
 
+  template< typename Element >
+  inline void Weave::allReduce(Element const *data_send, Element *data_recv, size_t const count) const
+  {
+    std::copy(data_send, data_send + count, data_recv);
+  }
+
   inline bool Weave::isLocallyAvailable(size_t const, size_t const, size_t const) const
   {
     return true;

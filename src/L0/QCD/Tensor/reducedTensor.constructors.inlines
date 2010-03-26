@@ -298,14 +298,5 @@ namespace QCD
     std::copy(result.d_data, result.d_data + 16, d_data);
   }
 
-
-
-
-
-
-
-
-
-
 }
 

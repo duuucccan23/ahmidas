@@ -54,6 +54,9 @@ namespace Base
       template< typename Element >
       inline void broadcast(Element *data, size_t const count, int root) const;
 
+      template< typename Element >
+      void allReduce(Element const *data_send, Element *data_recv, size_t const count=1) const;
+
       bool isLocallyAvailable(size_t const x, size_t const y, size_t const z) const;
       bool isLocallyAvailable(size_t const x, size_t const y, size_t const z, size_t const t) const;
 

@@ -95,11 +95,12 @@ namespace QCD
 
       Tensor &leftMultiply(hcTensor const &other);
       Tensor &rightMultiply(hcTensor const &other);
-      
+
       Tensor &leftMultiply(SU3::Matrix const &mat);
       Tensor &rightMultiply(SU3::Matrix const &mat);
 
       hcTensor dagger() const;
+      void conjugate();
       void transposeDirac();
       void transposeFull();
       std::complex< double > trace() const;
@@ -163,8 +164,6 @@ namespace QCD
 
     std::complex< double > d_data[16];
 
-    reducedTensor(Tensor const &fullTensor, Base::ColourIndex const colour_src, Base::ColourIndex const colour_snk);
-
     public:
 
 // old idea:
@@ -174,6 +173,8 @@ namespace QCD
 //       // for baryons: colours are summed over with epsilon_abc (Dirac structure is assumed to involve b and c)
 //       template< size_t Index >
 //       reducedTensor(Tensor const &a, Tensor const &b, Tensor const &c, Dirac::Gamma< Index > const &Dirac_structure);
+
+      reducedTensor(Tensor const &fullTensor, Base::ColourIndex const colour_src, Base::ColourIndex const colour_snk);
 
       reducedTensor();
       reducedTensor(reducedTensor const &other);
@@ -210,6 +211,9 @@ namespace QCD
 
       void operator*=(reducedTensor const &rhs);
       reducedTensor operator*(reducedTensor const &rhs) const;
+
+      // needed for threepoints
+      void eq_sandwich_operator(reducedTensor const &first, Base::Operator const op, reducedTensor const &second);
 
       std::complex< double > const &operator()(Base::DiracIndex const Dirac_src, Base::DiracIndex const Dirac_snk) const;
 

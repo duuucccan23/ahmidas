@@ -23,7 +23,7 @@ namespace Contract
                                                 Core::StochasticPropagator <12> const &phi_d,
                                                 Core::StochasticSource <12> const &xi,
                                                 size_t t_source, size_t t_sink,
-                                                /* one eventually might skip this and iterate over all operators */
-                                                Base::Operator my_operator,
+                                                /* this allows for more than one operator */
+                                                std::vector< Base::Operator > const &my_operators,
                                                 Base::BaryonPropagatorProjector const my_projector);
 }

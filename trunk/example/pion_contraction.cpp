@@ -218,7 +218,7 @@ int main(int argc, char **argv)
 
   // now we probably want to know whether we have obtained the correct result,
   // we therefore print the values of another well-tested contraction routine
-  std::cout <<  "\nOutput of reliable contraction routine:\n" << std::endl;
+  std::cout <<  "\nOutput of reliable contraction routine:" << std::endl;
   std::cout <<  " 0  +0.5412652273    +0" << std::endl;
   std::cout <<  " 1  +0.01456410538   +0" << std::endl;
   std::cout <<  " 2  +0.001637160312  +0" << std::endl;

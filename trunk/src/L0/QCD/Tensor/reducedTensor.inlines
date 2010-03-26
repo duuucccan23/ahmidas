@@ -19,4 +19,24 @@ namespace QCD
     return 16;
   }
 
+  inline void reducedTensor::eq_sandwich_operator(reducedTensor const &first, Base::Operator const op,
+                                                  reducedTensor const &second)
+  {
+    std::copy(first.d_data, first.d_data + 16, d_data);
+    switch (op)
+    {
+      case Base::op_GAMMA_4:
+        Dirac::Gamma< 4 > gamma4;
+        (*this) *= gamma4;
+        (*this) *= second;
+        break;
+      default:
+        std::cerr << "unknown Base::Operator field in "
+                  << "void reducedTensor::eq_sandwich_operator(...)!"
+                  << std::endl;
+        std::cerr << "Aborting..." << std::endl;
+        exit(1);
+    }
+  }
+
 }

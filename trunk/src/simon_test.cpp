@@ -19,7 +19,7 @@
 #include <L2/Input/FileReader.h>
 
 // #define __MPI_ARCH__
-
+// #define __STOCHASTIC_TWOPOINT__
 
 int main(int argc, char **argv)
 {
@@ -48,11 +48,11 @@ int main(int argc, char **argv)
   size_t const timeslice_boundary(T-1);
   size_t const timeslice_stochSource(4);
 
-  std::vector< std::string > const propfilesD(files[0]);
-  std::vector< std::string > const propfilesU(files[1]);
-  std::vector< std::string > const stochasticPropFilesD(files[0]);
-  std::vector< std::string > const stochasticPropFilesU(files[1]);
-  std::vector< std::string > const stochasticSourceFiles(files[2]);
+  std::vector< std::string > const &propfilesD(files[0]);
+  std::vector< std::string > const &propfilesU(files[1]);
+  std::vector< std::string > const &stochasticPropFilesD(files[2]);
+  std::vector< std::string > const &stochasticPropFilesU(files[3]);
+  std::vector< std::string > const &stochasticSourceFiles(files[4]);
 
 
   std::cout << "The following files are going to be read:" << std::endl;
@@ -70,16 +70,16 @@ int main(int argc, char **argv)
 
 
   /* prepare random gauge transformation */
-  int seed = 83141764;
-  Base::Knuth::instance(seed);
-  Core::Field< SU3::Matrix > randomGaugeTrafo(L, T);
-  Core::Field< SU3::Matrix >::iterator I_rgt = randomGaugeTrafo.begin();
-  while (I_rgt != randomGaugeTrafo.end())
-  {
-    (*I_rgt).setToRandom();
-    //std::cout << *I_rgt << std::endl;
-    ++I_rgt;
-  }
+//   int seed = 83141764;
+//   Base::Knuth::instance(seed);
+//   Core::Field< SU3::Matrix > randomGaugeTrafo(L, T);
+//   Core::Field< SU3::Matrix >::iterator I_rgt = randomGaugeTrafo.begin();
+//   while (I_rgt != randomGaugeTrafo.end())
+//   {
+//     (*I_rgt).setToRandom();
+//     //std::cout << *I_rgt << std::endl;
+//     ++I_rgt;
+//   }
 
   /* function to be called:
      gaugeTransform_fixedSource(randomGaugeTrafo, source_position)
@@ -105,13 +105,9 @@ int main(int argc, char **argv)
       std::cout << "d quark propagator successfully loaded\n" << std::endl;
 
 
-  // perform random gauge transformation of point source propagators
-  dProp->gaugeTransform_fixedSource(randomGaugeTrafo, source_position);
-  uProp->gaugeTransform_fixedSource(randomGaugeTrafo, source_position);
-
-
-
-
+//   // perform random gauge transformation of point source propagators
+//   dProp->gaugeTransform_fixedSource(randomGaugeTrafo, source_position);
+//   uProp->gaugeTransform_fixedSource(randomGaugeTrafo, source_position);
 
 
   Core::StochasticPropagator< 12 > *stochastic_dProp = new Core::StochasticPropagator< 12 >(L, T);
@@ -143,7 +139,7 @@ int main(int argc, char **argv)
 #endif
     std::cout << "stochastic source successfully loaded\n" << std::endl;
 
-
+//     std::cout << *stochasticSource << std::endl;
 
 //   uProp->changeBoundaryConditions_uniformToFixed(timeslice_source, timeslice_boundary);
 //   dProp->changeBoundaryConditions_uniformToFixed(timeslice_source, timeslice_boundary);
@@ -152,17 +148,19 @@ int main(int argc, char **argv)
   // perform field shift ...
   // stochastic_dProp->shift(Base::idx_T, Base::dir_UP, int(timeslice_stochSource)-int(timeslice_source));
 
-  Core::Propagator *dProp_stoch =  new Core::Propagator((stochasticSource->createStochasticPropagator_fixedSink(*stochastic_dProp, source_position)).revert());
+#ifdef __STOCHASTIC_TWOPOINT__
 
-  Core::Propagator *uProp_stoch =  new Core::Propagator((stochasticSource->createStochasticPropagator_fixedSink(*stochastic_uProp, source_position)).revert());
+  Core::Propagator *dProp_stoch =  new Core::Propagator((stochasticSource->createStochasticPropagator_fixedSink(*stochastic_uProp, source_position)).revert());
+
+  Core::Propagator *uProp_stoch =  new Core::Propagator((stochasticSource->createStochasticPropagator_fixedSink(*stochastic_dProp, source_position)).revert());
 
 //   std::ofstream f("fake_propagator");
 //   f << *dProp_stoch << std::endl;
 //   f.close();
 
 
-  delete stochasticSource;
-  delete stochastic_dProp;
+//   delete stochasticSource;
+//   delete stochastic_dProp;
 
 
   Core::Correlator C2_P = Contract::proton_twopoint(*uProp, *uProp, *dProp, Base::proj_PARITY_PLUS_TM);
@@ -201,9 +199,33 @@ int main(int argc, char **argv)
       std::cout << t << "  " << (tr(C2_P_stoch_u2[t])).real() << "  " << (tr(C2_P_stoch_u2[t])).imag() << std::endl;
   }
 
-
-
   fout.close();
+  delete dProp_stoch;
+  delete uProp_stoch;
+#endif
+
+  std::vector< Base::Operator > my_operators;
+  my_operators.push_back(Base::op_GAMMA_4);
+
+  std::vector< Core::Correlator > p3p = Contract::proton_threepoint_stochastic(*uProp, *dProp,
+                                                                     *stochastic_uProp, *stochastic_dProp,
+                                                                     *stochasticSource,
+                                                                     timeslice_source, timeslice_stochSource,
+                                                                     my_operators, Base::proj_PARITY_PLUS_TM);
+  std::cout << "\nproton threepoint:\n" <<std::endl;
+  std::cout << "\n u_bar*Op*u" <<std::endl;
+  for (size_t t=0; t<p3p[0].getT(); t++)
+  {
+    if(abs(tr((p3p[0])[t])) > 1.e-100)
+      std::cout << t << "  " << (tr((p3p[0])[t])).real() << "  " << (tr((p3p[0])[t])).imag() << std::endl;
+  }
+  std::cout << "\n u_bar*Op*u" <<std::endl;
+  for (size_t t=0; t<p3p[1].getT(); t++)
+  {
+    if(abs(tr((p3p[1])[t])) > 1.e-100)
+      std::cout << t << "  " << (tr((p3p[1])[t])).real() << "  " << (tr((p3p[1])[t])).imag() << std::endl;
+  }
+
 
 //   std::cout << "\nthat is supposed to be the result:\n"
 //     << "0   1.16145514e-03  -7.64689531e-05\n"
@@ -214,7 +236,7 @@ int main(int argc, char **argv)
 
   delete uProp;
   delete dProp;
-  delete dProp_stoch;
+
 
 #ifdef __MPI_ARCH__
   if (myid == 0)

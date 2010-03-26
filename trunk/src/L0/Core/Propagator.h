@@ -59,9 +59,20 @@ namespace Core
       // needed for meson contractions
       Core::Field< QCD::reducedTensor > *operator*(Propagator const &other) const;
 
-      // needed for baryon contractions
+      // needed for baryon contractions (twopoint)
       Core::Field< QCD::reducedTensor > *construct_baryon(Propagator const &no2, Propagator const &no3,
                                                           Base::BaryonInterpolatingField const ipol) const;
+
+      // needed for baryon contractions (threepoint)
+      std::vector< Core::Field< QCD::reducedTensor > * >
+        construct_baryon_with_operator_insertion(Propagator const &no2, Propagator const &no3,
+                                                 StochasticPropagator< 12 > const &phi_no1,
+                                                 StochasticPropagator< 12 > const &phi_no2,
+                                                 StochasticPropagator< 12 > const &phi_no3,
+                                                 StochasticSource< 12 > const &xi,
+                                                 Base::BaryonInterpolatingField const ipol,
+                                                 std::vector< Base::Operator > const &ops,
+                                                 size_t const t_src, size_t const t_snk) const;
 
       /*
           Revert Propagator using gamma5 hermeticity trick:

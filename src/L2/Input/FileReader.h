@@ -68,7 +68,7 @@ namespace Input
 
     public:
 
-    FileReader(std::string file);
+    FileReader(std::string const file);
     ~FileReader();
 
     void initializeParameters(size_t &L, size_t &T,

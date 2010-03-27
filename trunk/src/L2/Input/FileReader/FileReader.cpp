@@ -3,7 +3,7 @@
 namespace Input
 {
 
-  FileReader::FileReader(std::string file)
+  FileReader::FileReader(std::string const file)
   {
     std::ifstream fin(file.c_str());
     if (!fin.is_open())

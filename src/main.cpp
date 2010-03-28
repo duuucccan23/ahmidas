@@ -59,6 +59,9 @@ int main(int argc, char **argv)
       void FileReader::initializeParameters(size_t &L, size_t &T,
                                             std::vector< std::vector< std::string > > &filenames,
                                             std::map< std::string, double > &floats) const;
+         input file:
+         ../example/pion_contraction_input.xml
+
   */
 
 

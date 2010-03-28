@@ -48,7 +48,7 @@ ADD_SUBDIRECTORY(example)
 
 
 ADD_EXECUTABLE(main src/main.cpp)
-TARGET_LINK_LIBRARIES(main Weave SU3 IO QCD Base)
+TARGET_LINK_LIBRARIES(main Base Core IO Contract Input)
 
 
 ADD_EXECUTABLE(simon_test src/simon_test.cpp)

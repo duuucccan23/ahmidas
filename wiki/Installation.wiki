@@ -21,9 +21,10 @@ The entire code is in C++, so a C++ compiler is necessary, we generally use the 
 == openMPI ==
 In order to try parallel programs on a personal computer before running them on a true parallel machine, openmpi can be extremely helpful. This is generally not a preinstalled package on any system, and needs to be installed. Many linux distributions provide the openmpi-dev, openmpi-common and openmpi-bin packages through package managers such as apt, otherwise see: [http://www.open-mpi.org/ open-mpi].
 
-Compilation then goes via an MPI compiler such as mpic++.
+Compilation is then done most easily using the MPI compiler wrapper (usually mpic++).
 
 = Compilation =
   # We suggest to build the entire code inside the {{{bin}}} directory in order to cleanly separate the make and object files. Therefore: run {{{cmake ..}}} from within the bin directory, or run {{{cmake $PATH_TO_MAIN_AHMIDAS_DIRECTORY}}} from the directory where you want to install everything.
   # Then {{{make all}}} to compile all the tests and all executables.
   # Preferably run {{{make test}}} or the more verbose {{{ctest -V}}} to perform all tests.
+  # Note that subdirectories in the source tree will contain their own CMakeList.txt files. These are used while the tree is traversed by CMake, but are not themselves suitable targets for starting a build. The top-level file, located one level _above_ the 'src' subdirectory, sets some basic parameters and starting from a lower level will usually have you encounter compilation errors. 

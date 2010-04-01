@@ -2,6 +2,12 @@ template< typename Element >
 void Tool::IO::loadMILC(Core::Field< Element > *field, std::string const &filename)
 {
   std::ifstream input(filename.c_str());
+  if (!input.good())
+  {
+    std::cerr << "While looking for " << filename << ", ";
+    std::cerr << "loadMILC could not find the record, please check the path and file.\n";
+    std::cerr << "The target of the load remains unchanged!.\n";
+  }
   assert(input.good());
 
   MILCinfo info(input);
@@ -15,8 +21,8 @@ void Tool::IO::loadMILC(Core::Field< Element > *field, std::string const &filena
   Tool::ScidacChecksum calc;
   calc.blockAggregate(raw, elemSize, field->volume());
   std::cerr << "Checksums for file " << filename << '.' << std::endl;
-  std::cerr << "Calculated: " << std::hex << calc.upper() << ' ' << calc.lower() << '.' << std::endl;
-  std::cerr << "Read:       " << std::hex << read.upper() << ' ' << read.lower() << '.' << std::endl;
+  std::cerr << "Calculated: " << std::hex << calc.upper() << ' ' << calc.lower() << ".\n";
+  std::cerr << "Read:       " << std::hex << read.upper() << ' ' << read.lower() << ".\n";
 
   if (!Base::bigEndian)
     Base::swapEndian(raw, raw + field->volume() * elemSize, sizeof(uint32_t));

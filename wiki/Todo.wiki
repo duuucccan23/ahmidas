@@ -29,4 +29,9 @@ Use the standard GTD conventions here. No Someday/Maybe items on this list. Only
   * Benchmarking code.
 
   * Documentation.
+
+  * Rename QCD::reducedTensor to Dirac::Matrix (which is more intuitive).
+
+  * Overload the "<<" operator for output streams in such a way that only one thread does the output.
+
   

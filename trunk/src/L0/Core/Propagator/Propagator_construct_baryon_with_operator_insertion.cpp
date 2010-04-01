@@ -61,10 +61,11 @@ namespace Core
 
     for (size_t opNo=0; opNo<ops.size(); opNo++)
     {
-      Field< QCD::reducedTensor > *field_1 = new Field< QCD::reducedTensor >(L, T);
-      Field< QCD::reducedTensor > *field_2 = new Field< QCD::reducedTensor >(L, T);
-
   /* under construction */
+//      Field< QCD::reducedTensor > *field_1 = new Field< QCD::reducedTensor >(L, T);
+//      Field< QCD::reducedTensor > *field_2 = new Field< QCD::reducedTensor >(L, T);
+
+
 
 //       Field< QCD::reducedTensor >::iterator It_1(field_1->begin());
 //       Field< QCD::reducedTensor >::iterator It_2(field_2->begin());

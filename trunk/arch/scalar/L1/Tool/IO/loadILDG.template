@@ -11,7 +11,7 @@ void Tool::IO::loadILDG(Core::Field< Element > *field, std::string const &filena
     std::cerr << "Lime reader could not find the record, check path and file, and check lime contents of file.\nField unchanged!.\n";
     return;
   }
-assert(reader.good());
+  assert(reader.good());
 
   Element *dataPtr = field->raw();
 
@@ -20,8 +20,8 @@ assert(reader.good());
   {
     reader.read(dataPtr, field->volume());
     calc.aggregate(dataPtr, field->volume());
-	std::cerr << "Checksums for file " << filename << '.' << std::endl;
-	std::cerr << "Calculated: " << std::hex << calc.upper() << ' ' << calc.lower() << '.' << std::endl;
+	std::cerr << "Checksums for file " << filename << ".\n";
+	std::cerr << "Calculated: " << std::hex << calc.upper() << ' ' << calc.lower() << ".\n";
     if (!Base::bigEndian)
       Base::swapEndian(dataPtr, dataPtr + field->volume(), sizeof(double));
     return;

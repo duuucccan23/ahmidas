@@ -1,14 +1,29 @@
 #summary Ahmidas installation manual
 
-= Introduction =
+= Setting up =
 
-During development, all the small incremental steps needed to get Ahmidas running can be easily dismissed as trivial. For a fresh install, all the steps should be gathered. That is the purpose of this page.
+  # The source code for Ahmidas is stored in a Google code SVN repository. So the first requirement is a working SVN-client. Tarballs may be an option at a later point, but are not made now.
 
-= Installation =
+== SVN ==
+Getting a client:
+  # Unix/Linux: GUI variants exist in many forms, command line interfaces are usually installed by default, but always available via package managers such as apt. Note that there is a distinction between a client and a server, and only a client is needed.
+  # Windows: A very good client is [http://tortoisesvn.tigris.org/ tortoisesvn].
+  # Mac OS X: Subversion clients can be installed through various means, presumably one which keeps itself up to date is most desirable. So projects such as [http://www.finkproject.org/ Fink] may be a good choice.
 
-  # Ahmidas is currently stored in an SVN repository. So the first requirement is a working SVN-client. Tarballs may be an option later. Checkout instructions are available on the project website under Source.
-  # The build system is [http://www.cmake.org cmake], which is usually available on systems or through systems such as apt.
-  # Compilation goes via and MPI compiler such as mpic++. If not available, install the packages openmpi-dev, openmpi-common and openmpi-bin.
-  # Then {{{export CXX=mpic++}}} and then run {{{cmake $PATH_TO_SOURCE_DIRECTORY}}} from the directory where you want to install everything (presumably a {{{build}}} directory somewhere in the main directory).
+Checkout instructions are available on the project website under Source.
+
+== C++ Compiler ==
+The entire code is in C++, so a C++ compiler is necessary, we generally use the GCC here, usually the latest versions.
+
+== CMake ==
+  # The build system is [http://www.cmake.org cmake], which is more and more available on systems or through systems such as apt and Fink.
+
+== openMPI ==
+In order to try parallel programs on a personal computer before running them on a true parallel machine, openmpi can be extremely helpful. This is generally not a preinstalled package on any system, and needs to be installed. Many linux distributions provide the openmpi-dev, openmpi-common and openmpi-bin packages through package managers such as apt, otherwise see: [http://www.open-mpi.org/ open-mpi].
+
+Compilation then goes via an MPI compiler such as mpic++.
+
+= Compilation =
+  # We suggest to build the entire code inside the {{{bin}}} directory in order to cleanly separate the make and object files. Therefore: run {{{cmake ..}}} from within the bin directory, or run {{{cmake $PATH_TO_MAIN_AHMIDAS_DIRECTORY}}} from the directory where you want to install everything.
   # Then {{{make all}}} to compile all the tests and all executables.
-  # Preferably run {{{make test}}} or the more verbose {{{ctest -V}}}.
+  # Preferably run {{{make test}}} or the more verbose {{{ctest -V}}} to perform all tests.

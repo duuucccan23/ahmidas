@@ -60,10 +60,10 @@ int main(int argc, char **argv)
 
   double tolerance = 1.e-10;
 
-  if  (C2[0].trace().imag() == 0.0
-    && C2[1].trace().imag() == 0.0
-    && C2[2].trace().imag() == 0.0
-    && C2[3].trace().imag() == 0.0
+  if  (fabs(C2[0].trace().imag()) < 1.e-19
+    && fabs(C2[1].trace().imag()) < 1.e-19
+    && fabs(C2[2].trace().imag()) < 1.e-19
+    && fabs(C2[3].trace().imag()) < 1.e-19
     && C2[0].trace().real() <= (0.5412652273   + tolerance) && C2[0].trace().real() >= (0.5412652273   - tolerance)
     && C2[1].trace().real() <= (0.01456410538  + tolerance) && C2[1].trace().real() >= (0.01456410538  - tolerance)
     && C2[2].trace().real() <= (0.001637160312 + tolerance) && C2[2].trace().real() >= (0.001637160312 - tolerance)

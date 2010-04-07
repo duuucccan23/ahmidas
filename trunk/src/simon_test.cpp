@@ -213,7 +213,7 @@ int main(int argc, char **argv)
                                                                      timeslice_source, timeslice_stochSource,
                                                                      my_operators, Base::proj_PARITY_PLUS_TM);
   std::cout << "\nproton threepoint:\n" <<std::endl;
-  std::cout << "\n u_bar*Op*u" <<std::endl;
+  std::cout << "\n d_bar*Op*d" <<std::endl;
   for (size_t t=0; t<p3p[0].getT(); t++)
   {
     if(abs(tr((p3p[0])[t])) > 1.e-100)

@@ -41,10 +41,6 @@ namespace QCD
 
     std::complex< double > d_data[144];
 
-    //those functions are for construction of baryon fields
-    void left_multiply_proton();
-    void right_multiply_proton();
-
     public:
       Tensor();
       Tensor(Tensor const &other);
@@ -89,6 +85,8 @@ namespace QCD
 
       void operator*=(std::complex< double > const &factor);
 
+      void operator+=(Tensor const &other);
+
 
       Tensor &leftMultiply(Tensor const &other);
       Tensor &rightMultiply(Tensor const &other);
@@ -98,6 +96,16 @@ namespace QCD
 
       Tensor &leftMultiply(SU3::Matrix const &mat);
       Tensor &rightMultiply(SU3::Matrix const &mat);
+
+      //those functions are for construction of baryon fields
+      void left_multiply_proton();
+      void right_multiply_proton();
+
+      // NOTE: there should be a discussion how this is to be named
+      // this function contracts color indices according to epsilon tensor
+      // and Dirac indices with delta
+      void make_sequential(Tensor const &A, Tensor const &B);
+
 
       hcTensor dagger() const;
       void conjugate();

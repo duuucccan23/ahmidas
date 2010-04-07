@@ -66,9 +66,148 @@ namespace QCD
 
   inline void Tensor::operator*=(std::complex< double > const &factor)
   {
-    std::transform(d_data   , d_data + 144, d_data,
+    std::transform(d_data, d_data + 144, d_data,
                    std::bind2nd(std::multiplies< std::complex< double > >(), factor));
   }
+
+
+  inline void Tensor::operator+=(Tensor const &other)
+  {
+    std::transform(d_data, d_data + 144, other.d_data, d_data,
+                   std::plus< std::complex< double > >());
+  }
+
+  inline void Tensor::make_sequential(Tensor const &A, Tensor const &B)
+  {
+    reducedTensor rrA(A, Base::col_RED,   Base::col_RED);
+    reducedTensor rgA(A, Base::col_RED,   Base::col_GREEN);
+    reducedTensor rbA(A, Base::col_RED,   Base::col_BLUE);
+    reducedTensor grA(A, Base::col_GREEN, Base::col_RED);
+    reducedTensor ggA(A, Base::col_GREEN, Base::col_GREEN);
+    reducedTensor gbA(A, Base::col_GREEN, Base::col_BLUE);
+    reducedTensor brA(A, Base::col_BLUE,  Base::col_RED);
+    reducedTensor bgA(A, Base::col_BLUE,  Base::col_GREEN);
+    reducedTensor bbA(A, Base::col_BLUE,  Base::col_BLUE);
+
+    reducedTensor rrB(B, Base::col_RED,   Base::col_RED);
+    reducedTensor rgB(B, Base::col_RED,   Base::col_GREEN);
+    reducedTensor rbB(B, Base::col_RED,   Base::col_BLUE);
+    reducedTensor grB(B, Base::col_GREEN, Base::col_RED);
+    reducedTensor gbB(B, Base::col_GREEN, Base::col_BLUE);
+    reducedTensor ggB(B, Base::col_GREEN, Base::col_GREEN);
+    reducedTensor brB(B, Base::col_BLUE,  Base::col_RED);
+    reducedTensor bbB(B, Base::col_BLUE,  Base::col_BLUE);
+    reducedTensor bgB(B, Base::col_BLUE,  Base::col_GREEN);
+
+    // Non-zero combinations
+    //  +(rrA, ggB, bbC), -(rrA, gbB, bgC), -(rrA, bgB, gbC), +(rrA, bbB, ggC)
+    //  -(rgA, grB, bbC), +(rgA, gbB, brC), +(rgA, brB, gbC), -(rgA, bbB, grC)
+    //  +(rbA, grB, bgC), -(rbA, ggB, brC), -(rbA, brB, ggC), +(rbA, bgB, grC)
+    //  ---
+    //  +(grA, bgB, rbC), -(grA, bbB, rgC), -(grA, rgB, bbC), +(grA, rbB, bgC)
+    //  +(ggA, bbB, rrC), -(ggA, brB, rbC), -(ggA, rbB, brC), +(ggA, rrB, bbC)
+    //  -(gbA, bgB, rrC), +(gbA, brB, rgC), +(gbA, rgB, brC), -(gbA, rrB, bgC)
+    //  ---
+    //  +(brA, rgB, gbC), -(brA, rbB, ggC), -(brA, ggB, rbC), +(brA, gbB, rgC)
+    //  +(bgA, rbB, grC), -(bgA, rrB, gbC), -(bgA, gbB, rrC), +(bgA, grB, rbC)
+    //  -(bbA, rgB, grC), +(bbA, rrB, ggC), +(bbA, ggB, rrC), -(bbA, grB, rgC)
+
+    //experimentally only diagonal elements
+
+    reducedTensor rrC  = ggA*bbB;
+    rrC               -= gbA*bgB;
+    rrC               -= bgA*gbB;
+    rrC               += bbA*ggB;
+
+    reducedTensor ggC  = rrA*bbB;
+    ggC               -= rbA*brB;
+    ggC               -= brA*rbB;
+    ggC               += bbA*rrB;
+
+    reducedTensor bbC  = rrA*ggB;
+    bbC               -= rgA*grB;
+    bbC               -= grA*rgB;
+    bbC               += ggA*rrB;
+
+/*
+  constructor of reducedTensor:
+  inline reducedTensor::reducedTensor(Tensor const &fullTensor, Base::ColourIndex const colour_src, Base::ColourIndex const colour_snk)
+  {
+    size_t index = 12*colour_src + colour_snk;
+    d_data[ 0] = fullTensor.d_data[index     ];
+    d_data[ 1] = fullTensor.d_data[index +   3];
+    d_data[ 2] = fullTensor.d_data[index +   6];
+    d_data[ 3] = fullTensor.d_data[index +   9];
+    d_data[ 4] = fullTensor.d_data[index +  36];
+    d_data[ 5] = fullTensor.d_data[index +  39];
+    d_data[ 6] = fullTensor.d_data[index +  42];
+    d_data[ 7] = fullTensor.d_data[index +  45];
+    d_data[ 8] = fullTensor.d_data[index +  72];
+    d_data[ 9] = fullTensor.d_data[index +  75];
+    d_data[10] = fullTensor.d_data[index +  78];
+    d_data[11] = fullTensor.d_data[index +  81];
+    d_data[12] = fullTensor.d_data[index + 108];
+    d_data[13] = fullTensor.d_data[index + 111];
+    d_data[14] = fullTensor.d_data[index + 114];
+    d_data[15] = fullTensor.d_data[index + 117];
+  }*/
+
+    size_t index = 12*Base::col_RED  + Base::col_RED;
+    d_data[index      ] =  rrC.d_data[ 0];
+    d_data[index +   3] =  rrC.d_data[ 1];
+    d_data[index +   6] =  rrC.d_data[ 2];
+    d_data[index +   9] =  rrC.d_data[ 3];
+    d_data[index +  36] =  rrC.d_data[ 4];
+    d_data[index +  39] =  rrC.d_data[ 5];
+    d_data[index +  42] =  rrC.d_data[ 6];
+    d_data[index +  45] =  rrC.d_data[ 7];
+    d_data[index +  72] =  rrC.d_data[ 8];
+    d_data[index +  75] =  rrC.d_data[ 9];
+    d_data[index +  78] =  rrC.d_data[10];
+    d_data[index +  81] =  rrC.d_data[11];
+    d_data[index + 108] =  rrC.d_data[12];
+    d_data[index + 111] =  rrC.d_data[13];
+    d_data[index + 114] =  rrC.d_data[14];
+    d_data[index + 117] =  rrC.d_data[15];
+
+    index = 12*Base::col_GREEN  + Base::col_GREEN;
+    d_data[index      ] =  ggC.d_data[ 0];
+    d_data[index +   3] =  ggC.d_data[ 1];
+    d_data[index +   6] =  ggC.d_data[ 2];
+    d_data[index +   9] =  ggC.d_data[ 3];
+    d_data[index +  36] =  ggC.d_data[ 4];
+    d_data[index +  39] =  ggC.d_data[ 5];
+    d_data[index +  42] =  ggC.d_data[ 6];
+    d_data[index +  45] =  ggC.d_data[ 7];
+    d_data[index +  72] =  ggC.d_data[ 8];
+    d_data[index +  75] =  ggC.d_data[ 9];
+    d_data[index +  78] =  ggC.d_data[10];
+    d_data[index +  81] =  ggC.d_data[11];
+    d_data[index + 108] =  ggC.d_data[12];
+    d_data[index + 111] =  ggC.d_data[13];
+    d_data[index + 114] =  ggC.d_data[14];
+    d_data[index + 117] =  ggC.d_data[15];
+
+    index = 12*Base::col_BLUE  + Base::col_BLUE;
+    d_data[index      ] =  bbC.d_data[ 0];
+    d_data[index +   3] =  bbC.d_data[ 1];
+    d_data[index +   6] =  bbC.d_data[ 2];
+    d_data[index +   9] =  bbC.d_data[ 3];
+    d_data[index +  36] =  bbC.d_data[ 4];
+    d_data[index +  39] =  bbC.d_data[ 5];
+    d_data[index +  42] =  bbC.d_data[ 6];
+    d_data[index +  45] =  bbC.d_data[ 7];
+    d_data[index +  72] =  bbC.d_data[ 8];
+    d_data[index +  75] =  bbC.d_data[ 9];
+    d_data[index +  78] =  bbC.d_data[10];
+    d_data[index +  81] =  bbC.d_data[11];
+    d_data[index + 108] =  bbC.d_data[12];
+    d_data[index + 111] =  bbC.d_data[13];
+    d_data[index + 114] =  bbC.d_data[14];
+    d_data[index + 117] =  bbC.d_data[15];
+
+  }
+
 
 
   inline hcTensor Tensor::dagger() const

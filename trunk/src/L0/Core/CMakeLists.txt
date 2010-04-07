@@ -7,4 +7,4 @@ SET(Sources_Propagator Propagator.h Propagator/StochasticSource.cpp
     Propagator/Propagator_construct_baryon_with_operator_insertion.cpp)
 ADD_LIBRARY(Core ${Sources_Component} ${Sources_Correlator} ${Sources_Field} ${Sources_Propagator})
 SET_TARGET_PROPERTIES(Core PROPERTIES LINKER_LANGUAGE CXX)
-TARGET_LINK_LIBRARIES(Core Weave Dirac SU3)
+TARGET_LINK_LIBRARIES(Core Weave Dirac SU3 QCD)

@@ -50,6 +50,9 @@ namespace Core
       // for parallelization reasons this does not return a reference
       QCD::Tensor operator()(size_t const* sinkSite) const;
 
+      // unsafe access of Field elements
+      QCD::Tensor const &operator[](size_t const localIndex) const;
+
       template< size_t Index >
       void operator*=(Dirac::Gamma< Index > const &gamma);
 

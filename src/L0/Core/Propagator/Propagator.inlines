@@ -47,6 +47,12 @@ namespace Core
     return tensor;
   }
 
+  inline QCD::Tensor const &Propagator::operator[](size_t const localIndex) const
+  {
+    return (*d_components)[localIndex];
+  }
+
+
   inline Propagator &Propagator::revert()
   {
     Dirac::Gamma<5> gamma5 = Dirac::Gamma<5>();

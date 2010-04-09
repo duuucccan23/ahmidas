@@ -43,10 +43,12 @@ int main(int argc, char **argv)
 
   std::cout << "kappa = " << kappa << ", mu = " << mu << std::endl;
 
-  size_t const timeslice_source(0);
-  size_t const source_position[4] = {0,0,0,timeslice_source};
+  size_t const timeslice_source = (positions[0])[Base::idx_T];
+  std::cout << "timeslice (source) = " << timeslice_source << std::endl;
+  // size_t const source_position[4] = {0,0,0,timeslice_source};
   size_t const timeslice_boundary(T-1);
-  size_t const timeslice_stochSource(4);
+  size_t const timeslice_stochSource = (positions[1])[Base::idx_T];
+  std::cout << "timeslice (stochastic wall source) = " << timeslice_stochSource << std::endl;
 
   std::vector< std::string > const &propfilesD(files[0]);
   std::vector< std::string > const &propfilesU(files[1]);
@@ -216,13 +218,13 @@ int main(int argc, char **argv)
   std::cout << "\n d_bar*Op*d" <<std::endl;
   for (size_t t=0; t<p3p[0].getT(); t++)
   {
-    if(abs(tr((p3p[0])[t])) > 1.e-100)
+   // if(abs(tr((p3p[0])[t])) > 1.e-100)
       std::cout << t << "  " << (tr((p3p[0])[t])).real() << "  " << (tr((p3p[0])[t])).imag() << std::endl;
   }
   std::cout << "\n u_bar*Op*u" <<std::endl;
   for (size_t t=0; t<p3p[1].getT(); t++)
   {
-    if(abs(tr((p3p[1])[t])) > 1.e-100)
+    //if(abs(tr((p3p[1])[t])) > 1.e-100)
       std::cout << t << "  " << (tr((p3p[1])[t])).real() << "  " << (tr((p3p[1])[t])).imag() << std::endl;
   }
 

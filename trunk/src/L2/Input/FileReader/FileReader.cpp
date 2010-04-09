@@ -143,7 +143,7 @@ namespace Input
     floats.clear();
     positions.clear();
     operators.clear();
-    std::map< std::string, std::string >::const_iterator It; 
+    std::multimap< std::string, std::string >::const_iterator It;
     for (It=input.begin(); It!=input.end(); It++)
     {
       if((*It).first == "L")

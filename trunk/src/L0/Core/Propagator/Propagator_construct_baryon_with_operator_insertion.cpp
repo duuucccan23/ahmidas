@@ -95,7 +95,7 @@ namespace Core
      // ***************************************************************
      // ***************************************************************
 
-      QCD::Tensor dd_part2_local;
+      QCD::Tensor dd_part2_local[16];
 
       // this part is only summed over sink timeslice (here one could insert momentum ...)
       size_t localIndex;
@@ -118,19 +118,20 @@ namespace Core
         QCD::Tensor S_d_xf(S_d[localIndex]);
         QCD::Tensor S_u_xf(S_u[localIndex]);
 
-        QCD::Tensor tmp_d;
-        tmp_d.make_sequential(S_u_xf, S_u_xf);
+        QCD::Tensor tmp_d[16];
+        QCD::make_sequential(tmp_d, S_u_xf, S_u_xf);
 
-        tmp_d.rightMultiply(xi_d_snk);
-
-        dd_part2_local += tmp_d;
+        for (size_t idx=0; idx<16; idx++)
+        {
+          tmp_d[idx].rightMultiply(xi_d_snk);
+          dd_part2_local[idx] += tmp_d[idx];
+        }
       }
       }
       }
 
-      QCD::Tensor dd_part2;
-      weave.allReduce(&dd_part2_local, &dd_part2);
-
+      QCD::Tensor dd_part2[16];
+      weave.allReduce(dd_part2_local, dd_part2, 16);
 
 
       //y-dependent loop
@@ -153,7 +154,11 @@ namespace Core
         tmp.left_multiply_proton(); // right_multiply has been applied to Xi
 
 
-        (*It_dd) = QCD::reducedTensor(tmp, dd_part2); 
+
+        (*It_dd)   =  QCD::reducedTensor(tmp, dd_part2[ 0]);
+//         (*It_dd)  +=  QCD::reducedTensor(tmp, dd_part2[ 5]);
+//         (*It_dd)  +=  QCD::reducedTensor(tmp, dd_part2[10]);
+//         (*It_dd)  +=  QCD::reducedTensor(tmp, dd_part2[15]);
 
         ++It_u;
         ++It_d;

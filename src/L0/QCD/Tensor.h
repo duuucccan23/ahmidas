@@ -46,6 +46,7 @@ namespace QCD
       Tensor(Tensor const &other);
       Tensor(Spinor *data[12]);
       Tensor(std::complex< double > *data);
+      Tensor(reducedTensor const * const data[9]);
       explicit Tensor(hcTensor const &other);
       Tensor &operator=(Tensor const &other);
       Tensor &operator=(hcTensor const &other);
@@ -135,6 +136,8 @@ namespace QCD
       friend Tensor operator*(Dirac::Gamma< Index > const &gamma, Tensor const &tensor);
       template< size_t Index >
       friend Tensor operator*(Dirac::Sigma< Index > const &gamma, Tensor const &tensor);
+
+      friend void make_sequential(Tensor result[16], Tensor const &A, Tensor const &B);
   };
 
   std::ostream &operator<<(std::ostream &out, Tensor const &tensor);
@@ -143,6 +146,8 @@ namespace QCD
   QCD::Tensor operator*(Dirac::Gamma< Index > const &gamma, Tensor const &tensor);
   template< size_t Index >
   QCD::Tensor operator*(Dirac::Sigma< Index > const &gamma, Tensor const &tensor);
+
+  void make_sequential(Tensor result[16], Tensor const &A, Tensor const &B);
 
 
   class hcTensor
@@ -220,6 +225,13 @@ namespace QCD
       void operator*=(reducedTensor const &rhs);
       reducedTensor operator*(reducedTensor const &rhs) const;
 
+      // this is just a simple multiplication of the kind (C)_ij = (A)_ij * (B)_ij (no sum!)
+      reducedTensor elementwise_product(reducedTensor const &other) const;
+
+      // returns array of 16 reducedTensor
+      void outer_product(reducedTensor const &other, reducedTensor* result) const;
+      void outer_product(reducedTensor const &other, std::complex< double >* result) const;
+
       // needed for threepoints
       void eq_sandwich_operator(reducedTensor const &first, Base::Operator const op, reducedTensor const &second);
 
@@ -231,6 +243,8 @@ namespace QCD
       friend reducedTensor operator*(Dirac::Gamma< Index > const &gamma, reducedTensor const &rTensor);
 
       friend std::ostream &operator<<(std::ostream &out, reducedTensor const &rTensor);
+
+      friend void make_sequential(Tensor result[16], Tensor const &A, Tensor const &B);
   };
 
   template< size_t Index >

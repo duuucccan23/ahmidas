@@ -59,7 +59,7 @@ namespace Input
 
     std::stack< std::string > open_tags;
 
-    std::map< std::string, std::string > input;
+    std::multimap< std::string, std::string > input;
 
     // this one does not store the filenames but the raw data
     std::vector< File > files;

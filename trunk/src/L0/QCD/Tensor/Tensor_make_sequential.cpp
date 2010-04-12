@@ -10,25 +10,46 @@ namespace QCD
   // where the first index is an index of Tensor A and the second of Tensor B
   void Tensor::make_sequential(Tensor const &A, Tensor const &B)
   {
-    reducedTensor rrA(A, Base::col_RED,   Base::col_RED);
-    reducedTensor rgA(A, Base::col_RED,   Base::col_GREEN);
-    reducedTensor rbA(A, Base::col_RED,   Base::col_BLUE);
-    reducedTensor grA(A, Base::col_GREEN, Base::col_RED);
-    reducedTensor ggA(A, Base::col_GREEN, Base::col_GREEN);
-    reducedTensor gbA(A, Base::col_GREEN, Base::col_BLUE);
-    reducedTensor brA(A, Base::col_BLUE,  Base::col_RED);
-    reducedTensor bgA(A, Base::col_BLUE,  Base::col_GREEN);
-    reducedTensor bbA(A, Base::col_BLUE,  Base::col_BLUE);
+    Dirac::Matrix rrA;
+    Dirac::Matrix rgA;
+    Dirac::Matrix rbA;
+    Dirac::Matrix grA;
+    Dirac::Matrix gbA;
+    Dirac::Matrix ggA;
+    Dirac::Matrix brA;
+    Dirac::Matrix bbA;
+    Dirac::Matrix bgA;
 
-    reducedTensor rrB(B, Base::col_RED,   Base::col_RED);
-    reducedTensor rgB(B, Base::col_RED,   Base::col_GREEN);
-    reducedTensor rbB(B, Base::col_RED,   Base::col_BLUE);
-    reducedTensor grB(B, Base::col_GREEN, Base::col_RED);
-    reducedTensor gbB(B, Base::col_GREEN, Base::col_BLUE);
-    reducedTensor ggB(B, Base::col_GREEN, Base::col_GREEN);
-    reducedTensor brB(B, Base::col_BLUE,  Base::col_RED);
-    reducedTensor bbB(B, Base::col_BLUE,  Base::col_BLUE);
-    reducedTensor bgB(B, Base::col_BLUE,  Base::col_GREEN);
+    Dirac::Matrix rrB;
+    Dirac::Matrix rgB;
+    Dirac::Matrix rbB;
+    Dirac::Matrix grB;
+    Dirac::Matrix gbB;
+    Dirac::Matrix ggB;
+    Dirac::Matrix brB;
+    Dirac::Matrix bbB;
+    Dirac::Matrix bgB;
+
+    A.getDiracMatrix(rrA, Base::col_RED,   Base::col_RED);
+    A.getDiracMatrix(rgA, Base::col_RED,   Base::col_GREEN);
+    A.getDiracMatrix(rbA, Base::col_RED,   Base::col_BLUE);
+    A.getDiracMatrix(grA, Base::col_GREEN, Base::col_RED);
+    A.getDiracMatrix(gbA, Base::col_GREEN, Base::col_BLUE);
+    A.getDiracMatrix(ggA, Base::col_GREEN, Base::col_GREEN);
+    A.getDiracMatrix(brA, Base::col_BLUE,  Base::col_RED);
+    A.getDiracMatrix(bbA, Base::col_BLUE,  Base::col_BLUE);
+    A.getDiracMatrix(bgA, Base::col_BLUE,  Base::col_GREEN);
+
+    B.getDiracMatrix(rrB, Base::col_RED,   Base::col_RED);
+    B.getDiracMatrix(rgB, Base::col_GREEN, Base::col_RED);
+    B.getDiracMatrix(rbB, Base::col_BLUE,  Base::col_RED);
+    B.getDiracMatrix(grB, Base::col_RED,   Base::col_GREEN);
+    B.getDiracMatrix(gbB, Base::col_BLUE,  Base::col_GREEN);
+    B.getDiracMatrix(ggB, Base::col_GREEN, Base::col_GREEN);
+    B.getDiracMatrix(brB, Base::col_RED,   Base::col_BLUE);
+    B.getDiracMatrix(bbB, Base::col_BLUE,  Base::col_BLUE);
+    B.getDiracMatrix(bgB, Base::col_GREEN, Base::col_BLUE);
+
 
     // Non-zero combinations
     //  +(rrA, ggB, bbC), -(rrA, gbB, bgC), -(rrA, bgB, gbC), +(rrA, bbB, ggC)
@@ -44,51 +65,51 @@ namespace QCD
     //  -(bbA, rgB, grC), +(bbA, rrB, ggC), +(bbA, ggB, rrC), -(bbA, grB, rgC)
 
 
-    reducedTensor rrC  = ggA.elementwise_product(bbB);
+    Dirac::Matrix rrC  = ggA.elementwise_product(bbB);
     rrC               -= gbA.elementwise_product(bgB);
     rrC               -= bgA.elementwise_product(gbB);
     rrC               += bbA.elementwise_product(ggB);
 
-    reducedTensor rgC  = gbA.elementwise_product(brB);
+    Dirac::Matrix rgC  = gbA.elementwise_product(brB);
     rgC               -= grA.elementwise_product(bbB);
     rgC               -= bbA.elementwise_product(grB);
     rgC               += brA.elementwise_product(gbB);
 
-    reducedTensor rbC  = grA.elementwise_product(bgB);
+    Dirac::Matrix rbC  = grA.elementwise_product(bgB);
     rbC               -= ggA.elementwise_product(brB);
     rbC               -= brA.elementwise_product(ggB);
     rbC               += bgA.elementwise_product(grB);
 
     /* ----------------------- */
 
-    reducedTensor grC  = rbA.elementwise_product(bgB);
+    Dirac::Matrix grC  = rbA.elementwise_product(bgB);
     grC               -= rgA.elementwise_product(bbB);
     grC               -= bbA.elementwise_product(rgB);
     grC               += bgA.elementwise_product(rbB);
 
-    reducedTensor ggC  = rrA.elementwise_product(bbB);
+    Dirac::Matrix ggC  = rrA.elementwise_product(bbB);
     ggC               -= rbA.elementwise_product(brB);
     ggC               -= brA.elementwise_product(rbB);
     ggC               += bbA.elementwise_product(rrB);
 
-    reducedTensor gbC  = rgA.elementwise_product(brB);
+    Dirac::Matrix gbC  = rgA.elementwise_product(brB);
     gbC               -= rrA.elementwise_product(bgB);
     gbC               -= bgA.elementwise_product(rrB);
     gbC               += brA.elementwise_product(rgB);
 
     /* ----------------------- */
 
-    reducedTensor brC  = rgA.elementwise_product(gbB);
+    Dirac::Matrix brC  = rgA.elementwise_product(gbB);
     brC               -= rbA.elementwise_product(ggB);
     brC               -= ggA.elementwise_product(rbB);
     brC               += gbA.elementwise_product(rgB);
 
-    reducedTensor bgC  = rbA.elementwise_product(grB);
+    Dirac::Matrix bgC  = rbA.elementwise_product(grB);
     bgC               -= rrA.elementwise_product(gbB);
     bgC               -= gbA.elementwise_product(rrB);
     bgC               += grA.elementwise_product(rbB);
 
-    reducedTensor bbC  = rrA.elementwise_product(ggB);
+    Dirac::Matrix bbC  = rrA.elementwise_product(ggB);
     bbC               -= rgA.elementwise_product(grB);
     bbC               -= grA.elementwise_product(rgB);
     bbC               += ggA.elementwise_product(rrB);
@@ -96,170 +117,170 @@ namespace QCD
     /* --------------------------------------------- */
 
     size_t index = 12*Base::col_RED  + Base::col_RED;
-    d_data[index      ] =  rrC.d_data[ 0];
-    d_data[index +   3] =  rrC.d_data[ 1];
-    d_data[index +   6] =  rrC.d_data[ 2];
-    d_data[index +   9] =  rrC.d_data[ 3];
-    d_data[index +  36] =  rrC.d_data[ 4];
-    d_data[index +  39] =  rrC.d_data[ 5];
-    d_data[index +  42] =  rrC.d_data[ 6];
-    d_data[index +  45] =  rrC.d_data[ 7];
-    d_data[index +  72] =  rrC.d_data[ 8];
-    d_data[index +  75] =  rrC.d_data[ 9];
-    d_data[index +  78] =  rrC.d_data[10];
-    d_data[index +  81] =  rrC.d_data[11];
-    d_data[index + 108] =  rrC.d_data[12];
-    d_data[index + 111] =  rrC.d_data[13];
-    d_data[index + 114] =  rrC.d_data[14];
-    d_data[index + 117] =  rrC.d_data[15];
+    d_data[index      ] =  rrC[ 0];
+    d_data[index +   3] =  rrC[ 1];
+    d_data[index +   6] =  rrC[ 2];
+    d_data[index +   9] =  rrC[ 3];
+    d_data[index +  36] =  rrC[ 4];
+    d_data[index +  39] =  rrC[ 5];
+    d_data[index +  42] =  rrC[ 6];
+    d_data[index +  45] =  rrC[ 7];
+    d_data[index +  72] =  rrC[ 8];
+    d_data[index +  75] =  rrC[ 9];
+    d_data[index +  78] =  rrC[10];
+    d_data[index +  81] =  rrC[11];
+    d_data[index + 108] =  rrC[12];
+    d_data[index + 111] =  rrC[13];
+    d_data[index + 114] =  rrC[14];
+    d_data[index + 117] =  rrC[15];
 
     index = 12*Base::col_RED  + Base::col_GREEN;
-    d_data[index      ] =  rgC.d_data[ 0];
-    d_data[index +   3] =  rgC.d_data[ 1];
-    d_data[index +   6] =  rgC.d_data[ 2];
-    d_data[index +   9] =  rgC.d_data[ 3];
-    d_data[index +  36] =  rgC.d_data[ 4];
-    d_data[index +  39] =  rgC.d_data[ 5];
-    d_data[index +  42] =  rgC.d_data[ 6];
-    d_data[index +  45] =  rgC.d_data[ 7];
-    d_data[index +  72] =  rgC.d_data[ 8];
-    d_data[index +  75] =  rgC.d_data[ 9];
-    d_data[index +  78] =  rgC.d_data[10];
-    d_data[index +  81] =  rgC.d_data[11];
-    d_data[index + 108] =  rgC.d_data[12];
-    d_data[index + 111] =  rgC.d_data[13];
-    d_data[index + 114] =  rgC.d_data[14];
-    d_data[index + 117] =  rgC.d_data[15];
+    d_data[index      ] =  rgC[ 0];
+    d_data[index +   3] =  rgC[ 1];
+    d_data[index +   6] =  rgC[ 2];
+    d_data[index +   9] =  rgC[ 3];
+    d_data[index +  36] =  rgC[ 4];
+    d_data[index +  39] =  rgC[ 5];
+    d_data[index +  42] =  rgC[ 6];
+    d_data[index +  45] =  rgC[ 7];
+    d_data[index +  72] =  rgC[ 8];
+    d_data[index +  75] =  rgC[ 9];
+    d_data[index +  78] =  rgC[10];
+    d_data[index +  81] =  rgC[11];
+    d_data[index + 108] =  rgC[12];
+    d_data[index + 111] =  rgC[13];
+    d_data[index + 114] =  rgC[14];
+    d_data[index + 117] =  rgC[15];
 
     index = 12*Base::col_RED  + Base::col_BLUE;
-    d_data[index      ] =  rbC.d_data[ 0];
-    d_data[index +   3] =  rbC.d_data[ 1];
-    d_data[index +   6] =  rbC.d_data[ 2];
-    d_data[index +   9] =  rbC.d_data[ 3];
-    d_data[index +  36] =  rbC.d_data[ 4];
-    d_data[index +  39] =  rbC.d_data[ 5];
-    d_data[index +  42] =  rbC.d_data[ 6];
-    d_data[index +  45] =  rbC.d_data[ 7];
-    d_data[index +  72] =  rbC.d_data[ 8];
-    d_data[index +  75] =  rbC.d_data[ 9];
-    d_data[index +  78] =  rbC.d_data[10];
-    d_data[index +  81] =  rbC.d_data[11];
-    d_data[index + 108] =  rbC.d_data[12];
-    d_data[index + 111] =  rbC.d_data[13];
-    d_data[index + 114] =  rbC.d_data[14];
-    d_data[index + 117] =  rbC.d_data[15];
+    d_data[index      ] =  rbC[ 0];
+    d_data[index +   3] =  rbC[ 1];
+    d_data[index +   6] =  rbC[ 2];
+    d_data[index +   9] =  rbC[ 3];
+    d_data[index +  36] =  rbC[ 4];
+    d_data[index +  39] =  rbC[ 5];
+    d_data[index +  42] =  rbC[ 6];
+    d_data[index +  45] =  rbC[ 7];
+    d_data[index +  72] =  rbC[ 8];
+    d_data[index +  75] =  rbC[ 9];
+    d_data[index +  78] =  rbC[10];
+    d_data[index +  81] =  rbC[11];
+    d_data[index + 108] =  rbC[12];
+    d_data[index + 111] =  rbC[13];
+    d_data[index + 114] =  rbC[14];
+    d_data[index + 117] =  rbC[15];
 
     /* --------------------------------------------- */
 
     index = 12*Base::col_GREEN  + Base::col_RED;
-    d_data[index      ] =  grC.d_data[ 0];
-    d_data[index +   3] =  grC.d_data[ 1];
-    d_data[index +   6] =  grC.d_data[ 2];
-    d_data[index +   9] =  grC.d_data[ 3];
-    d_data[index +  36] =  grC.d_data[ 4];
-    d_data[index +  39] =  grC.d_data[ 5];
-    d_data[index +  42] =  grC.d_data[ 6];
-    d_data[index +  45] =  grC.d_data[ 7];
-    d_data[index +  72] =  grC.d_data[ 8];
-    d_data[index +  75] =  grC.d_data[ 9];
-    d_data[index +  78] =  grC.d_data[10];
-    d_data[index +  81] =  grC.d_data[11];
-    d_data[index + 108] =  grC.d_data[12];
-    d_data[index + 111] =  grC.d_data[13];
-    d_data[index + 114] =  grC.d_data[14];
-    d_data[index + 117] =  grC.d_data[15];
+    d_data[index      ] =  grC[ 0];
+    d_data[index +   3] =  grC[ 1];
+    d_data[index +   6] =  grC[ 2];
+    d_data[index +   9] =  grC[ 3];
+    d_data[index +  36] =  grC[ 4];
+    d_data[index +  39] =  grC[ 5];
+    d_data[index +  42] =  grC[ 6];
+    d_data[index +  45] =  grC[ 7];
+    d_data[index +  72] =  grC[ 8];
+    d_data[index +  75] =  grC[ 9];
+    d_data[index +  78] =  grC[10];
+    d_data[index +  81] =  grC[11];
+    d_data[index + 108] =  grC[12];
+    d_data[index + 111] =  grC[13];
+    d_data[index + 114] =  grC[14];
+    d_data[index + 117] =  grC[15];
 
     index = 12*Base::col_GREEN  + Base::col_GREEN;
-    d_data[index      ] =  ggC.d_data[ 0];
-    d_data[index +   3] =  ggC.d_data[ 1];
-    d_data[index +   6] =  ggC.d_data[ 2];
-    d_data[index +   9] =  ggC.d_data[ 3];
-    d_data[index +  36] =  ggC.d_data[ 4];
-    d_data[index +  39] =  ggC.d_data[ 5];
-    d_data[index +  42] =  ggC.d_data[ 6];
-    d_data[index +  45] =  ggC.d_data[ 7];
-    d_data[index +  72] =  ggC.d_data[ 8];
-    d_data[index +  75] =  ggC.d_data[ 9];
-    d_data[index +  78] =  ggC.d_data[10];
-    d_data[index +  81] =  ggC.d_data[11];
-    d_data[index + 108] =  ggC.d_data[12];
-    d_data[index + 111] =  ggC.d_data[13];
-    d_data[index + 114] =  ggC.d_data[14];
-    d_data[index + 117] =  ggC.d_data[15];
+    d_data[index      ] =  ggC[ 0];
+    d_data[index +   3] =  ggC[ 1];
+    d_data[index +   6] =  ggC[ 2];
+    d_data[index +   9] =  ggC[ 3];
+    d_data[index +  36] =  ggC[ 4];
+    d_data[index +  39] =  ggC[ 5];
+    d_data[index +  42] =  ggC[ 6];
+    d_data[index +  45] =  ggC[ 7];
+    d_data[index +  72] =  ggC[ 8];
+    d_data[index +  75] =  ggC[ 9];
+    d_data[index +  78] =  ggC[10];
+    d_data[index +  81] =  ggC[11];
+    d_data[index + 108] =  ggC[12];
+    d_data[index + 111] =  ggC[13];
+    d_data[index + 114] =  ggC[14];
+    d_data[index + 117] =  ggC[15];
 
     index = 12*Base::col_GREEN  + Base::col_BLUE;
-    d_data[index      ] =  gbC.d_data[ 0];
-    d_data[index +   3] =  gbC.d_data[ 1];
-    d_data[index +   6] =  gbC.d_data[ 2];
-    d_data[index +   9] =  gbC.d_data[ 3];
-    d_data[index +  36] =  gbC.d_data[ 4];
-    d_data[index +  39] =  gbC.d_data[ 5];
-    d_data[index +  42] =  gbC.d_data[ 6];
-    d_data[index +  45] =  gbC.d_data[ 7];
-    d_data[index +  72] =  gbC.d_data[ 8];
-    d_data[index +  75] =  gbC.d_data[ 9];
-    d_data[index +  78] =  gbC.d_data[10];
-    d_data[index +  81] =  gbC.d_data[11];
-    d_data[index + 108] =  gbC.d_data[12];
-    d_data[index + 111] =  gbC.d_data[13];
-    d_data[index + 114] =  gbC.d_data[14];
-    d_data[index + 117] =  gbC.d_data[15];
+    d_data[index      ] =  gbC[ 0];
+    d_data[index +   3] =  gbC[ 1];
+    d_data[index +   6] =  gbC[ 2];
+    d_data[index +   9] =  gbC[ 3];
+    d_data[index +  36] =  gbC[ 4];
+    d_data[index +  39] =  gbC[ 5];
+    d_data[index +  42] =  gbC[ 6];
+    d_data[index +  45] =  gbC[ 7];
+    d_data[index +  72] =  gbC[ 8];
+    d_data[index +  75] =  gbC[ 9];
+    d_data[index +  78] =  gbC[10];
+    d_data[index +  81] =  gbC[11];
+    d_data[index + 108] =  gbC[12];
+    d_data[index + 111] =  gbC[13];
+    d_data[index + 114] =  gbC[14];
+    d_data[index + 117] =  gbC[15];
 
     /* --------------------------------------------- */
 
     index = 12*Base::col_BLUE  + Base::col_RED;
-    d_data[index      ] =  brC.d_data[ 0];
-    d_data[index +   3] =  brC.d_data[ 1];
-    d_data[index +   6] =  brC.d_data[ 2];
-    d_data[index +   9] =  brC.d_data[ 3];
-    d_data[index +  36] =  brC.d_data[ 4];
-    d_data[index +  39] =  brC.d_data[ 5];
-    d_data[index +  42] =  brC.d_data[ 6];
-    d_data[index +  45] =  brC.d_data[ 7];
-    d_data[index +  72] =  brC.d_data[ 8];
-    d_data[index +  75] =  brC.d_data[ 9];
-    d_data[index +  78] =  brC.d_data[10];
-    d_data[index +  81] =  brC.d_data[11];
-    d_data[index + 108] =  brC.d_data[12];
-    d_data[index + 111] =  brC.d_data[13];
-    d_data[index + 114] =  brC.d_data[14];
-    d_data[index + 117] =  brC.d_data[15];
+    d_data[index      ] =  brC[ 0];
+    d_data[index +   3] =  brC[ 1];
+    d_data[index +   6] =  brC[ 2];
+    d_data[index +   9] =  brC[ 3];
+    d_data[index +  36] =  brC[ 4];
+    d_data[index +  39] =  brC[ 5];
+    d_data[index +  42] =  brC[ 6];
+    d_data[index +  45] =  brC[ 7];
+    d_data[index +  72] =  brC[ 8];
+    d_data[index +  75] =  brC[ 9];
+    d_data[index +  78] =  brC[10];
+    d_data[index +  81] =  brC[11];
+    d_data[index + 108] =  brC[12];
+    d_data[index + 111] =  brC[13];
+    d_data[index + 114] =  brC[14];
+    d_data[index + 117] =  brC[15];
 
     index = 12*Base::col_BLUE  + Base::col_GREEN;
-    d_data[index      ] =  bgC.d_data[ 0];
-    d_data[index +   3] =  bgC.d_data[ 1];
-    d_data[index +   6] =  bgC.d_data[ 2];
-    d_data[index +   9] =  bgC.d_data[ 3];
-    d_data[index +  36] =  bgC.d_data[ 4];
-    d_data[index +  39] =  bgC.d_data[ 5];
-    d_data[index +  42] =  bgC.d_data[ 6];
-    d_data[index +  45] =  bgC.d_data[ 7];
-    d_data[index +  72] =  bgC.d_data[ 8];
-    d_data[index +  75] =  bgC.d_data[ 9];
-    d_data[index +  78] =  bgC.d_data[10];
-    d_data[index +  81] =  bgC.d_data[11];
-    d_data[index + 108] =  bgC.d_data[12];
-    d_data[index + 111] =  bgC.d_data[13];
-    d_data[index + 114] =  bgC.d_data[14];
-    d_data[index + 117] =  bgC.d_data[15];
+    d_data[index      ] =  bgC[ 0];
+    d_data[index +   3] =  bgC[ 1];
+    d_data[index +   6] =  bgC[ 2];
+    d_data[index +   9] =  bgC[ 3];
+    d_data[index +  36] =  bgC[ 4];
+    d_data[index +  39] =  bgC[ 5];
+    d_data[index +  42] =  bgC[ 6];
+    d_data[index +  45] =  bgC[ 7];
+    d_data[index +  72] =  bgC[ 8];
+    d_data[index +  75] =  bgC[ 9];
+    d_data[index +  78] =  bgC[10];
+    d_data[index +  81] =  bgC[11];
+    d_data[index + 108] =  bgC[12];
+    d_data[index + 111] =  bgC[13];
+    d_data[index + 114] =  bgC[14];
+    d_data[index + 117] =  bgC[15];
 
     index = 12*Base::col_BLUE  + Base::col_BLUE;
-    d_data[index      ] =  bbC.d_data[ 0];
-    d_data[index +   3] =  bbC.d_data[ 1];
-    d_data[index +   6] =  bbC.d_data[ 2];
-    d_data[index +   9] =  bbC.d_data[ 3];
-    d_data[index +  36] =  bbC.d_data[ 4];
-    d_data[index +  39] =  bbC.d_data[ 5];
-    d_data[index +  42] =  bbC.d_data[ 6];
-    d_data[index +  45] =  bbC.d_data[ 7];
-    d_data[index +  72] =  bbC.d_data[ 8];
-    d_data[index +  75] =  bbC.d_data[ 9];
-    d_data[index +  78] =  bbC.d_data[10];
-    d_data[index +  81] =  bbC.d_data[11];
-    d_data[index + 108] =  bbC.d_data[12];
-    d_data[index + 111] =  bbC.d_data[13];
-    d_data[index + 114] =  bbC.d_data[14];
-    d_data[index + 117] =  bbC.d_data[15];
+    d_data[index      ] =  bbC[ 0];
+    d_data[index +   3] =  bbC[ 1];
+    d_data[index +   6] =  bbC[ 2];
+    d_data[index +   9] =  bbC[ 3];
+    d_data[index +  36] =  bbC[ 4];
+    d_data[index +  39] =  bbC[ 5];
+    d_data[index +  42] =  bbC[ 6];
+    d_data[index +  45] =  bbC[ 7];
+    d_data[index +  72] =  bbC[ 8];
+    d_data[index +  75] =  bbC[ 9];
+    d_data[index +  78] =  bbC[10];
+    d_data[index +  81] =  bbC[11];
+    d_data[index + 108] =  bbC[12];
+    d_data[index + 111] =  bbC[13];
+    d_data[index + 114] =  bbC[14];
+    d_data[index + 117] =  bbC[15];
 
 //     std::cout << *this << std::endl;
 //     exit(1);
@@ -270,25 +291,45 @@ namespace QCD
 
   void make_sequential(Tensor result[16], Tensor const &A, Tensor const &B)
   {
-    reducedTensor rrA(A, Base::col_RED,   Base::col_RED);
-    reducedTensor rgA(A, Base::col_RED,   Base::col_GREEN);
-    reducedTensor rbA(A, Base::col_RED,   Base::col_BLUE);
-    reducedTensor grA(A, Base::col_GREEN, Base::col_RED);
-    reducedTensor ggA(A, Base::col_GREEN, Base::col_GREEN);
-    reducedTensor gbA(A, Base::col_GREEN, Base::col_BLUE);
-    reducedTensor brA(A, Base::col_BLUE,  Base::col_RED);
-    reducedTensor bgA(A, Base::col_BLUE,  Base::col_GREEN);
-    reducedTensor bbA(A, Base::col_BLUE,  Base::col_BLUE);
+    Dirac::Matrix rrA;
+    Dirac::Matrix rgA;
+    Dirac::Matrix rbA;
+    Dirac::Matrix grA;
+    Dirac::Matrix gbA;
+    Dirac::Matrix ggA;
+    Dirac::Matrix brA;
+    Dirac::Matrix bbA;
+    Dirac::Matrix bgA;
 
-    reducedTensor rrB(B, Base::col_RED,   Base::col_RED);
-    reducedTensor rgB(B, Base::col_RED,   Base::col_GREEN);
-    reducedTensor rbB(B, Base::col_RED,   Base::col_BLUE);
-    reducedTensor grB(B, Base::col_GREEN, Base::col_RED);
-    reducedTensor gbB(B, Base::col_GREEN, Base::col_BLUE);
-    reducedTensor ggB(B, Base::col_GREEN, Base::col_GREEN);
-    reducedTensor brB(B, Base::col_BLUE,  Base::col_RED);
-    reducedTensor bbB(B, Base::col_BLUE,  Base::col_BLUE);
-    reducedTensor bgB(B, Base::col_BLUE,  Base::col_GREEN);
+    Dirac::Matrix rrB;
+    Dirac::Matrix rgB;
+    Dirac::Matrix rbB;
+    Dirac::Matrix grB;
+    Dirac::Matrix gbB;
+    Dirac::Matrix ggB;
+    Dirac::Matrix brB;
+    Dirac::Matrix bbB;
+    Dirac::Matrix bgB;
+
+    A.getDiracMatrix(rrA, Base::col_RED,   Base::col_RED);
+    A.getDiracMatrix(rgA, Base::col_RED,   Base::col_GREEN);
+    A.getDiracMatrix(rbA, Base::col_RED,   Base::col_BLUE);
+    A.getDiracMatrix(grA, Base::col_GREEN, Base::col_RED);
+    A.getDiracMatrix(gbA, Base::col_GREEN, Base::col_BLUE);
+    A.getDiracMatrix(ggA, Base::col_GREEN, Base::col_GREEN);
+    A.getDiracMatrix(brA, Base::col_BLUE,  Base::col_RED);
+    A.getDiracMatrix(bbA, Base::col_BLUE,  Base::col_BLUE);
+    A.getDiracMatrix(bgA, Base::col_BLUE,  Base::col_GREEN);
+
+    B.getDiracMatrix(rrB, Base::col_RED,   Base::col_RED);
+    B.getDiracMatrix(rgB, Base::col_GREEN, Base::col_RED);
+    B.getDiracMatrix(rbB, Base::col_BLUE,  Base::col_RED);
+    B.getDiracMatrix(grB, Base::col_RED,   Base::col_GREEN);
+    B.getDiracMatrix(gbB, Base::col_BLUE,  Base::col_GREEN);
+    B.getDiracMatrix(ggB, Base::col_GREEN, Base::col_GREEN);
+    B.getDiracMatrix(brB, Base::col_RED,   Base::col_BLUE);
+    B.getDiracMatrix(bbB, Base::col_BLUE,  Base::col_BLUE);
+    B.getDiracMatrix(bgB, Base::col_GREEN, Base::col_BLUE);
 
     size_t const n_complex = 16*16;
 
@@ -296,7 +337,7 @@ namespace QCD
 
     std::complex< double > zero(0, 0);
 
-    //reducedTensor *tmpTensors = reinterpret_cast< reducedTensor* >(tmp);
+    //Dirac::Matrix *tmpTensors = reinterpret_cast< Dirac::Matrix* >(tmp);
 
     std::complex< double > *tmpTensors = tmp;
 
@@ -622,7 +663,7 @@ namespace QCD
 
 //   getDiracTr(Tensor &result, Tensor const * const doubleDirac)
 //   {
-//     reducedTensor *tmp[9];
+//     Dirac::Matrix *tmp[9];
 //     result = Tensor(tmp);
 //   }
 

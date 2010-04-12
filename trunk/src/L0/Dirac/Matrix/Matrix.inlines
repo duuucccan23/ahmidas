@@ -1,33 +1,44 @@
 #include <iostream>
 #include <iomanip>
 
-namespace QCD
+namespace Dirac
 {
 
-  inline std::complex< double > tr(reducedTensor const &rTensor)
+
+  inline std::complex< double > const &Matrix::operator[](size_t const idx) const
   {
-    return rTensor.trace();
+    return *(d_data + idx);
   }
 
-  inline std::complex< double > reducedTensor::trace() const
+  inline std::complex< double > &Matrix::operator[](size_t const idx)
+  {
+    return *(d_data + idx);
+  }
+
+  inline std::complex< double > tr(Matrix const &mat)
+  {
+    return mat.trace();
+  }
+
+  inline std::complex< double > Matrix::trace() const
   {
     return d_data[0] + d_data[5] + d_data[10] + d_data[15];
   }
 
-  inline size_t reducedTensor::size() const
+  inline size_t Matrix::size() const
   {
     return 16;
   }
 
-  inline reducedTensor reducedTensor::elementwise_product(reducedTensor const &other) const
+  inline Matrix Matrix::elementwise_product(Matrix const &other) const
   {
-    reducedTensor result;
+    Matrix result;
     std::transform(d_data, d_data + 16, other.d_data, result.d_data, std::multiplies< std::complex< double > >());
 
     return result;
   }
 
-  inline void reducedTensor::outer_product(reducedTensor const &other, reducedTensor* result) const
+  inline void Matrix::outer_product(Matrix const &other, Matrix* result) const
   {
     std::transform(d_data, d_data + 16, (*(result     )).d_data,
                    std::bind1st(std::multiplies< std::complex< double > >(), *(other.d_data     )));
@@ -63,7 +74,7 @@ namespace QCD
                    std::bind1st(std::multiplies< std::complex< double > >(), *(other.d_data + 15)));
   }
 
-  inline void reducedTensor::outer_product(reducedTensor const &other, std::complex< double >* result) const
+  inline void Matrix::outer_product(Matrix const &other, std::complex< double >* result) const
   {
     std::transform(d_data, d_data + 16, (result     ),
                    std::bind1st(std::multiplies< std::complex< double > >(), *(other.d_data     )));
@@ -99,20 +110,20 @@ namespace QCD
                    std::bind1st(std::multiplies< std::complex< double > >(), *(other.d_data + 15)));
   }
 
-  inline void reducedTensor::eq_sandwich_operator(reducedTensor const &first, Base::Operator const op,
-                                                  reducedTensor const &second)
+  inline void Matrix::eq_sandwich_operator(Matrix const &first, Base::Operator const op,
+                                                  Matrix const &second)
   {
     std::copy(first.d_data, first.d_data + 16, d_data);
     switch (op)
     {
       case Base::op_GAMMA_4:
-        Dirac::Gamma< 4 > gamma4;
+        Gamma< 4 > gamma4;
         (*this) *= gamma4;
         (*this) *= second;
         break;
       default:
         std::cerr << "unknown Base::Operator field in "
-                  << "void reducedTensor::eq_sandwich_operator(...)!"
+                  << "void Matrix::eq_sandwich_operator(...)!"
                   << std::endl;
         std::cerr << "Aborting..." << std::endl;
         exit(1);

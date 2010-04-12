@@ -53,20 +53,20 @@ namespace Core
   }
 
 
-  inline Field< QCD::reducedTensor > *Propagator::operator*(Propagator const &other) const
+  inline Field< Dirac::Matrix > *Propagator::operator*(Propagator const &other) const
   {
     assert (T()==other.T() && L()==other.L());
 
-    Field< QCD::reducedTensor > *field = new Field< QCD::reducedTensor > (L(), T());
+    Field< Dirac::Matrix > *field = new Field< Dirac::Matrix > (L(), T());
 
     Propagator::const_iterator Ia(begin());
     Propagator::const_iterator Ib(other.begin());
 
-    Field< QCD::reducedTensor >::iterator Ic(field->begin());
+    Field< Dirac::Matrix >::iterator Ic(field->begin());
 
     while(Ia != end())
     {
-      (*Ic) = QCD::reducedTensor((*Ia),(*Ib));
+      QCD::getDiracMatrix((*Ic), (*Ia),(*Ib));
       ++Ia;
       ++Ib;
       ++Ic;

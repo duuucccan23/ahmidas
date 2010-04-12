@@ -5,14 +5,14 @@ namespace Core
   // personal note (SD):
   // at some point I should add an additional parameter "size_t const * sink_momentum" for an obvious reason
 
-  std::vector< Core::Field< QCD::reducedTensor > * > construct_proton_with_operator_insertion(
+  std::vector< Core::Field< Dirac::Matrix > * > construct_proton_with_operator_insertion(
     Propagator const &S_u, Core::Propagator const &S_d,
     StochasticPropagator< 12 > const &phi_u, StochasticPropagator< 12 > const &phi_d,
     StochasticSource< 12 > const &xi, std::vector< Base::Operator > const &ops,
     size_t const t_src, size_t const t_snk);
 
 
-  std::vector< Core::Field< QCD::reducedTensor > * >
+  std::vector< Core::Field< Dirac::Matrix > * >
            Propagator::construct_baryon_with_operator_insertion(
              Propagator const &no2, Propagator const &no3,
              StochasticPropagator< 12 > const &phi_no1,
@@ -30,7 +30,7 @@ namespace Core
         break;
       default:
       std::cerr << "unknown interpolating field in "
-                << "std::vector< Core::Field< QCD::reducedTensor > * > Propagator::construct_baryon_with_operator_insertion(...)!"
+                << "std::vector< Core::Field< Dirac::Matrix > * > Propagator::construct_baryon_with_operator_insertion(...)!"
                 << std::endl;
       std::cerr << "Aborting..." << std::endl;
       exit(1);
@@ -39,7 +39,7 @@ namespace Core
   }
 
 
-  std::vector< Core::Field< QCD::reducedTensor > * > construct_proton_with_operator_insertion(
+  std::vector< Core::Field< Dirac::Matrix > * > construct_proton_with_operator_insertion(
              Propagator const &S_u, Propagator const &S_d,
              StochasticPropagator< 12 > const &phi_u,
              StochasticPropagator< 12 > const &phi_d,
@@ -47,7 +47,7 @@ namespace Core
              std::vector< Base::Operator > const &ops,
              size_t const t_src, size_t const t_snk)
   {
-    std::vector< Field< QCD::reducedTensor > * > fields;
+    std::vector< Field< Dirac::Matrix > * > fields;
     if (ops.size() == 0)
       return fields;
 
@@ -56,17 +56,17 @@ namespace Core
 
     Base::Weave weave(L, T);
 
-    Field< QCD::reducedTensor > *field_uu;
-    Field< QCD::reducedTensor > *field_dd;
+    Field< Dirac::Matrix > *field_uu;
+    Field< Dirac::Matrix > *field_dd;
 
 
     for (size_t opNo=0; opNo<ops.size(); opNo++)
     {
-      field_uu = new Field< QCD::reducedTensor >(L, T);
-      field_dd = new Field< QCD::reducedTensor >(L, T);
+      field_uu = new Field< Dirac::Matrix >(L, T);
+      field_dd = new Field< Dirac::Matrix >(L, T);
 
 
-      Field< QCD::reducedTensor >::iterator It_dd(field_dd->begin());
+      Field< Dirac::Matrix >::iterator It_dd(field_dd->begin());
 
       Propagator::const_iterator It_u(S_u.begin());
       Propagator::const_iterator It_d(S_d.begin());
@@ -85,7 +85,7 @@ namespace Core
           break;
         default:
         std::cerr << "Error in "
-                  << "std::vector< Core::Field< QCD::reducedTensor > * > construct_proton_with_operator_insertion(...):\n"
+                  << "std::vector< Core::Field< Dirac::Matrix > * > construct_proton_with_operator_insertion(...):\n"
                   << "Operator with index " << ops[opNo] << " not implemented yet!" << std::endl;
       }
 
@@ -155,10 +155,10 @@ namespace Core
 
 
 
-        (*It_dd)   =  QCD::reducedTensor(tmp, dd_part2[ 0]);
-//         (*It_dd)  +=  QCD::reducedTensor(tmp, dd_part2[ 5]);
-//         (*It_dd)  +=  QCD::reducedTensor(tmp, dd_part2[10]);
-//         (*It_dd)  +=  QCD::reducedTensor(tmp, dd_part2[15]);
+        QCD::getDiracMatrix(*It_dd, tmp, dd_part2[ 0]);
+//         (*It_dd)  +=  Dirac::Matrix(tmp, dd_part2[ 5]);
+//         (*It_dd)  +=  Dirac::Matrix(tmp, dd_part2[10]);
+//         (*It_dd)  +=  Dirac::Matrix(tmp, dd_part2[15]);
 
         ++It_u;
         ++It_d;

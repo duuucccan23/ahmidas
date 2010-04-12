@@ -55,7 +55,7 @@ namespace Contract
     }
 
     // order of d and u in Propagator::construct_baryon is important!
-    std::vector< Core::Field< QCD::reducedTensor > * > threepoint
+    std::vector< Core::Field< Dirac::Matrix > * > threepoint
       = u.construct_baryon_with_operator_insertion(d, u, phi_u, phi_d, phi_u, xi,
                                                    Base::bar_PROTON, my_operators,
                                                    t_source, t_sink);

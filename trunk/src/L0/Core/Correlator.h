@@ -1,6 +1,7 @@
 #pragma once
 
 #include <L0/Base/Weave.h>
+#include <L0/Dirac/Matrix.h>
 #include <L0/Core/Field.h>
 #include <L0/QCD/Tensor.h>
 
@@ -16,21 +17,21 @@ namespace Core
     size_t L;
     Base::Weave *d_weave;
     size_t *d_references;
-    Field < QCD::reducedTensor > *d_data;
-    QCD::reducedTensor *d_sumTimeslice;
+    Field < Dirac::Matrix > *d_data;
+    Dirac::Matrix *d_sumTimeslice;
 
     // for compatibility with parallel code
-    QCD::reducedTensor *d_sumTimeslice_global;
+    Dirac::Matrix *d_sumTimeslice_global;
 
     public:
 
-      Correlator(size_t const L_, size_t const T_, Field < QCD::reducedTensor > *d_data);
+      Correlator(size_t const L_, size_t const T_, Field < Dirac::Matrix > *d_data);
       Correlator(Correlator const &other);
 
       ~Correlator();
 
-      QCD::reducedTensor &operator[](size_t const idx);
-      QCD::reducedTensor const &operator[](size_t const idx) const;
+      Dirac::Matrix &operator[](size_t const idx);
+      Dirac::Matrix const &operator[](size_t const idx) const;
 
       void operator*=(double const factor);
       void operator*=(std::complex< double > const &factor);

@@ -1,45 +1,45 @@
-namespace QCD
+namespace Dirac
 {
 
- inline reducedTensor reducedTensor::operator+(reducedTensor const &other) const
+ inline Matrix Matrix::operator+(Matrix const &other) const
   {
-    reducedTensor tmp;
+    Matrix tmp;
     std::transform(d_data, d_data+16, other.d_data, tmp.d_data,
                    std::plus< std::complex< double > >());
     return tmp;
   }
 
-  inline reducedTensor reducedTensor::operator-(reducedTensor const &other) const
+  inline Matrix Matrix::operator-(Matrix const &other) const
   {
-    reducedTensor tmp;
+    Matrix tmp;
     std::transform(d_data, d_data+16, other.d_data, tmp.d_data,
                    std::minus< std::complex< double > >());
     return tmp;
   }
 
-  inline void reducedTensor::operator+=(reducedTensor const &other)
+  inline void Matrix::operator+=(Matrix const &other)
   {
     std::transform(d_data, d_data+16, other.d_data, d_data,
                    std::plus< std::complex< double > >());
   }
 
-  inline void reducedTensor::operator-=(reducedTensor const &other)
+  inline void Matrix::operator-=(Matrix const &other)
   {
     std::transform(d_data, d_data+16, other.d_data, d_data,
                    std::minus< std::complex< double > >());
   }
 
-//   inline reducedTensor &reducedTensor::operator=(reducedTensor const &rhs)
+//   inline Matrix &Matrix::operator=(Matrix const &rhs)
 //   {
 //     if (this != &rhs)
 //       std::copy(rhs.d_data, rhs.d_data + 16, d_data);
 //     return *this;
 //   }
 
-  inline void reducedTensor::operator*=(reducedTensor const &rhs)
+  inline void Matrix::operator*=(Matrix const &rhs)
   {
-    reducedTensor tmpR(rhs);
-    reducedTensor tmpL(*this);
+    Matrix tmpR(rhs);
+    Matrix tmpL(*this);
     std::complex< double > zero(0, 0);
     //transpose in order to use inner_product of ranges
     std::swap(tmpR.d_data[ 1], tmpR.d_data[ 4]);
@@ -66,28 +66,28 @@ namespace QCD
     d_data[15] = std::inner_product(tmpL.d_data + 12, tmpL.d_data + 16, tmpR.d_data + 12, zero);
   }
 
-  inline reducedTensor reducedTensor::operator*(reducedTensor const &rhs) const
+  inline Matrix Matrix::operator*(Matrix const &rhs) const
   {
-    reducedTensor tmp(*this);
+    Matrix tmp(*this);
     tmp *= rhs;
     return tmp;
   }
 
-  inline reducedTensor reducedTensor::operator*(double const &factor) const
+  inline Matrix Matrix::operator*(double const &factor) const
   {
-    reducedTensor tmp(*this);
+    Matrix tmp(*this);
     tmp *= factor;
     return tmp;
   }
 
-  inline reducedTensor reducedTensor::operator*(std::complex< double > const &factor) const
+  inline Matrix Matrix::operator*(std::complex< double > const &factor) const
   {
-    reducedTensor tmp(*this);
+    Matrix tmp(*this);
     tmp *= factor;
     return tmp;
   }
 
-  inline void reducedTensor::operator*=(double const &factor)
+  inline void Matrix::operator*=(double const &factor)
   {
     std::transform(reinterpret_cast< double * > (d_data),
                    reinterpret_cast< double * > (d_data+16),
@@ -95,40 +95,40 @@ namespace QCD
                    bind2nd(std::multiplies< double >(), factor));
   }
 
-  inline void reducedTensor::operator*=(std::complex< double > const &factor)
+  inline void Matrix::operator*=(std::complex< double > const &factor)
   {
     std::transform(d_data, d_data+16, d_data,
                    bind2nd(std::multiplies< std::complex< double > >(), factor));
   }
 
-  inline std::complex< double > const &reducedTensor::operator()(Base::DiracIndex const Dirac_src,
+  inline std::complex< double > const &Matrix::operator()(Base::DiracIndex const Dirac_src,
                                                                  Base::DiracIndex const Dirac_snk) const
   {
     return d_data[Dirac_src + 4*Dirac_snk];
   }
 
-  inline std::ostream &operator<<(std::ostream &out, reducedTensor const &rTensor)
+  inline std::ostream &operator<<(std::ostream &out, Matrix const &mat)
   {
     out << std::scientific << std::setprecision(3) << std::showpos
-        << "[ " << rTensor.d_data[ 0].real() << "  " << rTensor.d_data[ 0].imag() << " * i   "
-                << rTensor.d_data[ 1].real() << "  " << rTensor.d_data[ 1].imag() << " * i   "
-                << rTensor.d_data[ 2].real() << "  " << rTensor.d_data[ 2].imag() << " * i   "
-                << rTensor.d_data[ 3].real() << "  " << rTensor.d_data[ 3].imag() << " * i  ]"
+        << "[ " << mat.d_data[ 0].real() << "  " << mat.d_data[ 0].imag() << " * i   "
+                << mat.d_data[ 1].real() << "  " << mat.d_data[ 1].imag() << " * i   "
+                << mat.d_data[ 2].real() << "  " << mat.d_data[ 2].imag() << " * i   "
+                << mat.d_data[ 3].real() << "  " << mat.d_data[ 3].imag() << " * i  ]"
                 << std::endl
-        << "[ " << rTensor.d_data[ 4].real() << "  " << rTensor.d_data[ 4].imag() << " * i   "
-                << rTensor.d_data[ 5].real() << "  " << rTensor.d_data[ 5].imag() << " * i   "
-                << rTensor.d_data[ 6].real() << "  " << rTensor.d_data[ 6].imag() << " * i   "
-                << rTensor.d_data[ 7].real() << "  " << rTensor.d_data[ 7].imag() << " * i  ]"
+        << "[ " << mat.d_data[ 4].real() << "  " << mat.d_data[ 4].imag() << " * i   "
+                << mat.d_data[ 5].real() << "  " << mat.d_data[ 5].imag() << " * i   "
+                << mat.d_data[ 6].real() << "  " << mat.d_data[ 6].imag() << " * i   "
+                << mat.d_data[ 7].real() << "  " << mat.d_data[ 7].imag() << " * i  ]"
                 << std::endl
-        << "[ " << rTensor.d_data[ 8].real() << "  " << rTensor.d_data[ 8].imag() << " * i   "
-                << rTensor.d_data[ 9].real() << "  " << rTensor.d_data[ 9].imag() << " * i   "
-                << rTensor.d_data[10].real() << "  " << rTensor.d_data[10].imag() << " * i   "
-                << rTensor.d_data[11].real() << "  " << rTensor.d_data[11].imag() << " * i  ]"
+        << "[ " << mat.d_data[ 8].real() << "  " << mat.d_data[ 8].imag() << " * i   "
+                << mat.d_data[ 9].real() << "  " << mat.d_data[ 9].imag() << " * i   "
+                << mat.d_data[10].real() << "  " << mat.d_data[10].imag() << " * i   "
+                << mat.d_data[11].real() << "  " << mat.d_data[11].imag() << " * i  ]"
                 << std::endl
-        << "[ " << rTensor.d_data[12].real() << "  " << rTensor.d_data[12].imag() << " * i   "
-                << rTensor.d_data[13].real() << "  " << rTensor.d_data[13].imag() << " * i   "
-                << rTensor.d_data[14].real() << "  " << rTensor.d_data[14].imag() << " * i   "
-                << rTensor.d_data[15].real() << "  " << rTensor.d_data[15].imag() << " * i  ]"
+        << "[ " << mat.d_data[12].real() << "  " << mat.d_data[12].imag() << " * i   "
+                << mat.d_data[13].real() << "  " << mat.d_data[13].imag() << " * i   "
+                << mat.d_data[14].real() << "  " << mat.d_data[14].imag() << " * i   "
+                << mat.d_data[15].real() << "  " << mat.d_data[15].imag() << " * i  ]"
                 << std::endl;
     return out;
   }

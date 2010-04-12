@@ -1,0 +1,20 @@
+namespace Dirac
+{
+
+  inline Matrix::Matrix()
+  {
+    std::fill(d_data, d_data + 16, std::complex< double >(0.0, 0.0));
+  }
+
+  inline Matrix::Matrix(std::complex< double > const& value)
+  {
+    std::fill_n(d_data, 16, value);
+  }
+
+  inline Matrix::Matrix(Matrix const &other)
+  {
+    std::copy(other.d_data, other.d_data + 16, d_data);
+  }
+
+}
+

@@ -1,0 +1,51 @@
+namespace QCD
+{
+
+  inline Spinor &Tensor::operator()(size_t const idx)
+  {
+    return *(reinterpret_cast< Spinor * > (d_data + idx*12));
+  }
+
+  inline Spinor const &Tensor::operator()(size_t const idx) const
+  {
+    return *(reinterpret_cast< Spinor const * > (d_data + idx*12));
+  }
+
+  inline Tensor::Tensor(std::complex< double > *data)
+  {
+    std::copy(data, data + 144, d_data);
+  }
+
+  inline std::complex< double > &Tensor::operator[](size_t const idx)
+  {
+    return d_data[idx];
+  }
+
+  inline std::complex< double > const &Tensor::operator[](size_t const idx) const
+  {
+    return d_data[idx];
+  }
+
+  inline std::complex< double > &Tensor::operator()(size_t dirSink, size_t colSink, size_t dirSource, size_t colSource)
+  {
+    return d_data[dirSink * 36 + colSink * 12 + dirSource * 3 + colSource];
+  }
+
+  inline std::complex< double > const &Tensor::operator()(size_t dirSink, size_t colSink, size_t dirSource, size_t colSource) const
+  {
+    return d_data[dirSink * 36 + colSink * 12 + dirSource * 3 + colSource];
+  }
+
+  inline void Tensor::operator*=(std::complex< double > const &factor)
+  {
+    std::transform(d_data, d_data + 144, d_data,
+                   std::bind2nd(std::multiplies< std::complex< double > >(), factor));
+  }
+
+
+  inline void Tensor::operator+=(Tensor const &other)
+  {
+    std::transform(d_data, d_data + 144, other.d_data, d_data,
+                   std::plus< std::complex< double > >());
+  }
+}

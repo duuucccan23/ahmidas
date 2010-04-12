@@ -55,14 +55,14 @@ namespace Core
       Propagator operator*(Dirac::Gamma< Index > const &gamma) const;
 
       // needed for meson contractions
-      Core::Field< QCD::reducedTensor > *operator*(Propagator const &other) const;
+      Core::Field< Dirac::Matrix > *operator*(Propagator const &other) const;
 
       // needed for baryon contractions (twopoint)
-      Core::Field< QCD::reducedTensor > *construct_baryon(Propagator const &no2, Propagator const &no3,
+      Core::Field< Dirac::Matrix > *construct_baryon(Propagator const &no2, Propagator const &no3,
                                                           Base::BaryonInterpolatingField const ipol) const;
 
       // needed for baryon contractions (threepoint)
-      std::vector< Core::Field< QCD::reducedTensor > * >
+      std::vector< Core::Field< Dirac::Matrix > * >
         construct_baryon_with_operator_insertion(Propagator const &no2, Propagator const &no3,
                                                  StochasticPropagator< 12 > const &phi_no1,
                                                  StochasticPropagator< 12 > const &phi_no2,
@@ -167,7 +167,7 @@ namespace Core
 
       StochasticPropagator< NComp > (StochasticPropagator< NComp > const &other);
 
-      Field< QCD::reducedTensor > *operator*(StochasticPropagator< NComp > const &other) const;
+      Field< Dirac::Matrix > *operator*(StochasticPropagator< NComp > const &other) const;
 
       Propagator operator*(StochasticSource< NComp > const &sSource) const;
 

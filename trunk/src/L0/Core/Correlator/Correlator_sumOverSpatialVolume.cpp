@@ -20,7 +20,7 @@ namespace Core
 //     size_t x4;
 //     for(x4=0; x4<T; x4++)
 //     {
-//       d_sumTimeslice[x4] = QCD::reducedTensor(std::complex< double >(0.0, 0.0));
+//       d_sumTimeslice[x4] = Dirac::Matrix(std::complex< double >(0.0, 0.0));
 //       for(x3=0; x3<L; x3++)
 //       {
 //       for(x2=0; x2<L; x2++)
@@ -47,7 +47,7 @@ namespace Core
     size_t x4, x1, x2, x3, localIndex;
     for(x4=0; x4<T; x4++)
     {
-      d_sumTimeslice[x4] = QCD::reducedTensor(std::complex< double >(0.0, 0.0));
+      d_sumTimeslice[x4] = Dirac::Matrix(std::complex< double >(0.0, 0.0));
       for(x3=0; x3<L; x3++)
       {
       for(x2=0; x2<L; x2++)

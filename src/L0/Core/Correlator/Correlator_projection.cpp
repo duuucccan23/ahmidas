@@ -1,15 +1,11 @@
 #include "Correlator.ih"
 
-#include <L0/Dirac/Gamma.h>
-
-Dirac::Gamma< 5 > gamma_5;
-Dirac::Gamma< 4 > gamma_0;
-
-
 // this has only effect on d_sumTimeslice (maybe this has to be changed in the future;
 void Core::Correlator::operator*=(Base::BaryonPropagatorProjector const projector)
 {
   assert(d_sumTimeslice_global != NULL);
+  Dirac::Gamma< 5 > gamma_5;
+  Dirac::Gamma< 4 > gamma_0;
   isolate();
   switch (projector)
   {
@@ -21,7 +17,7 @@ void Core::Correlator::operator*=(Base::BaryonPropagatorProjector const projecto
         QCD::reducedTensor second = gamma_5*d_sumTimeslice_global[t];
         //second *= gamma_5;
         second *= std::complex< double >(0, 1);
-        d_sumTimeslice_global[t] = (gamma_0)*d_sumTimeslice_global[t];
+        d_sumTimeslice_global[t] = gamma_0*d_sumTimeslice_global[t];
         d_sumTimeslice_global[t] += second;
         d_sumTimeslice_global[t] *= 0.5;
       }

@@ -2,7 +2,7 @@ namespace QCD
 {
 
   template< >
-  inline void Spinor::leftMultiply(Dirac::Unity)
+  inline void Spinor::leftMultiply(Dirac::Gamma< -1 >)
   {
     // nothing to do
   }

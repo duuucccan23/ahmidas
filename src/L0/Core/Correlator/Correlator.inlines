@@ -10,9 +10,9 @@ namespace Core
   }
 
 
-  inline Correlator::Correlator(size_t const L_, size_t const T_, Core::Field<QCD::reducedTensor>* data)
+  inline Correlator::Correlator(size_t const L_, size_t const T_, Core::Field<Dirac::Matrix>* data)
     : L(L_), T(T_), d_weave(new Base::Weave(L_,T_)), d_data(data),
-      d_sumTimeslice(new QCD::reducedTensor[T_]), d_sumTimeslice_global(new QCD::reducedTensor[T_]),
+      d_sumTimeslice(new Dirac::Matrix[T_]), d_sumTimeslice_global(new Dirac::Matrix[T_]),
       d_references(new size_t(1))
   {
   }
@@ -23,14 +23,14 @@ namespace Core
   }
 
 
-  inline QCD::reducedTensor &Correlator::operator[](size_t const t)
+  inline Dirac::Matrix &Correlator::operator[](size_t const t)
   {
     assert(t < T);
     return d_sumTimeslice_global[t];
   }
 
 
-  inline QCD::reducedTensor const &Correlator::operator[](size_t const t) const
+  inline Dirac::Matrix const &Correlator::operator[](size_t const t) const
   {
     assert(t < T);
     return d_sumTimeslice_global[t];
@@ -40,7 +40,7 @@ namespace Core
   inline void Correlator::operator*=(double const factor)
   {
     isolate();
-    Core::Field< QCD::reducedTensor >::iterator I = d_data->begin();
+    Core::Field< Dirac::Matrix >::iterator I = d_data->begin();
     while(I != d_data->end())
     {
       (*I) *= factor;
@@ -51,7 +51,7 @@ namespace Core
   inline void Correlator::operator*=(std::complex< double > const &factor)
   {
     isolate();
-    Core::Field< QCD::reducedTensor >::iterator I = d_data->begin();
+    Core::Field< Dirac::Matrix >::iterator I = d_data->begin();
     while(I != d_data->end())
     {
       (*I) *= factor;
@@ -63,8 +63,8 @@ namespace Core
   inline void Correlator::operator+=(Correlator const &other)
   {
     isolate();
-    Core::Field< QCD::reducedTensor >::iterator I = d_data->begin();
-    Core::Field< QCD::reducedTensor >::const_iterator J = other.d_data->begin();
+    Core::Field< Dirac::Matrix >::iterator I = d_data->begin();
+    Core::Field< Dirac::Matrix >::const_iterator J = other.d_data->begin();
     while(I != d_data->end())
     {
       (*I) += (*J);

@@ -1,0 +1,104 @@
+#ifndef __GUARD_DIRAC_MATRIX__
+#define __GUARD_DIRAC_MATRIX__
+
+#include <complex>
+#include <algorithm>
+#include <functional>
+
+#include <L0/Base/Base.h>
+#include <L0/Dirac/Gamma.h>
+// #include <L0/QCD/Tensor.h>
+
+namespace QCD
+{
+  class Tensor;
+}
+
+namespace Dirac
+{
+
+  class Matrix
+  {
+
+    std::complex< double > d_data[16];
+
+    public:
+
+      Matrix();
+      Matrix(Matrix const &other);
+      Matrix(std::complex< double > const &value);
+
+      Matrix(QCD::Tensor const &fullTensor, Base::ColourIndex const colour_src, Base::ColourIndex const colour_snk);
+
+
+      // important for contractions
+      Matrix(QCD::Tensor const &a, QCD::Tensor const &b);
+      Matrix(QCD::Tensor const &A, QCD::Tensor const &B, bool const colourDilutedSource);
+      Matrix(QCD::Tensor const &A, QCD::Tensor const &B, QCD::Tensor const &C, Base::BaryonInterpolatingField iPol);
+
+      std::complex< double > const &operator[](size_t const idx) const;
+      std::complex< double >       &operator[](size_t const idx);
+
+      std::complex< double > trace() const;
+
+      Matrix operator+(Matrix const &other) const;
+      Matrix operator-(Matrix const &other) const;
+
+      void operator+=(Matrix const &other);
+      void operator-=(Matrix const &other);
+
+//       Matrix &operator=(Matrix const &rhs);
+
+      template< size_t Index >
+      Matrix operator*(Gamma< Index > const &gamma) const;
+
+      template< size_t Index >
+      void operator*=(Gamma< Index > const &gamma);
+      template< size_t Index >
+      void left_multiply(Gamma< Index > const &gamma); //does the same
+
+      Matrix operator*(double const &factor) const;
+      Matrix operator*(std::complex< double > const &factor) const;
+
+      void operator*=(double const &factor);
+      void operator*=(std::complex< double > const &factor);
+
+      void operator*=(Matrix const &rhs);
+      Matrix operator*(Matrix const &rhs) const;
+
+      // this is just a simple multiplication of the kind (C)_ij = (A)_ij * (B)_ij (no sum!)
+      Matrix elementwise_product(Matrix const &other) const;
+
+      // returns array of 16 Matrix
+      void outer_product(Matrix const &other, Matrix* result) const;
+      void outer_product(Matrix const &other, std::complex< double >* result) const;
+
+      // needed for threepoints
+      void eq_sandwich_operator(Matrix const &first, Base::Operator const op, Matrix const &second);
+
+      std::complex< double > const &operator()(Base::DiracIndex const Dirac_src, Base::DiracIndex const Dirac_snk) const;
+
+      size_t size() const;
+
+      template< size_t Index >
+      friend Matrix operator*(Gamma< Index > const &gamma, Matrix const &mat);
+
+      friend std::ostream &operator<<(std::ostream &out, Matrix const &mat);
+
+  };
+
+  template< size_t Index >
+  Matrix operator*(Gamma< Index > const &gamma, Matrix const &mat);
+
+  std::ostream &operator<<(std::ostream &out, Matrix const &mat);
+
+}
+
+#include "Matrix/Matrix.inlines"
+#include "Matrix/Matrix.constructors.inlines"
+#include "Matrix/Matrix.operators.inlines"
+#include "Matrix/Matrix.gamma.inlines"
+
+
+
+#endif

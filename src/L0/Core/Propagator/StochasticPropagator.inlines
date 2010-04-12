@@ -36,19 +36,19 @@ namespace Core
   {}
 
   template< >
-  inline Field< QCD::reducedTensor > *StochasticPropagator< 4 >::operator*(StochasticPropagator< 4 > const &other) const
+  inline Field< Dirac::Matrix > *StochasticPropagator< 4 >::operator*(StochasticPropagator< 4 > const &other) const
   {
     assert (T()==other.T() && L()==other.L());
-    Field< QCD::reducedTensor > *field = new Field< QCD::reducedTensor > (L(), T());
+    Field< Dirac::Matrix > *field = new Field< Dirac::Matrix > (L(), T());
 
     Propagator::const_iterator Ia(begin());
     Propagator::const_iterator Ib(other.begin());
 
-    Field< QCD::reducedTensor >::iterator Ic(field->begin());
+    Field< Dirac::Matrix >::iterator Ic(field->begin());
 
     while(Ia != end())
     {
-      (*Ic) = QCD::reducedTensor((*Ia),(*Ib));
+      (*Ic) = Dirac::Matrix((*Ia),(*Ib));
       ++Ia;
       ++Ib;
       ++Ic;

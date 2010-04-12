@@ -63,6 +63,7 @@ int main(int argc, char **argv)
 
   Core::Correlator C2_P = Contract::proton_twopoint(*uProp, *uProp, *dProp, Base::proj_PARITY_PLUS_TM);
 
+  std::cout << C2_P << std::endl;
 
   std::cout << "\nreliable code gives this result:\n"
     << "0   1.16145514e-03  -7.64689531e-05\n"

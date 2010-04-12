@@ -1,10 +1,10 @@
-namespace QCD
+namespace Dirac
 {
 
   template< size_t Index >
-  inline reducedTensor reducedTensor::operator*(Dirac::Gamma< Index > const &gamma) const
+  inline Matrix Matrix::operator*(Gamma< Index > const &gamma) const
   {
-    reducedTensor tmp(*this);
+    Matrix tmp(*this);
     std::swap(*(tmp.d_data)   , *(tmp.d_data+gamma.perm(0)));
     std::swap(*(tmp.d_data+ 1), *(tmp.d_data+gamma.perm(1)));
     std::swap(*(tmp.d_data+ 2), *(tmp.d_data+gamma.perm(2)));
@@ -42,15 +42,15 @@ namespace QCD
 
 
   template< size_t Index >
-  inline void reducedTensor::left_multiply(Dirac::Gamma< Index > const &gamma)
+  inline void Matrix::left_multiply(Gamma< Index > const &gamma)
   {
     (*this)*=gamma;
   }
-  
+
 
   // NOTE: specialization could speed up this routine
   template< size_t Index >
-  inline void reducedTensor::operator*=(Dirac::Gamma< Index > const &gamma)
+  inline void Matrix::operator*=(Gamma< Index > const &gamma)
   {
     //std::complex<double> data[16);
     std::swap(*(d_data)   , *(d_data+gamma.perm(0)));
@@ -90,13 +90,13 @@ namespace QCD
   }
 
   template< size_t Index >
-  QCD::reducedTensor operator*(Dirac::Gamma< Index > const &gamma, reducedTensor const &rTensor)
+  Matrix operator*(Gamma< Index > const &gamma, Matrix const &mat)
   {
-    QCD::reducedTensor tmp;
-    std::copy(rTensor.d_data   , rTensor.d_data+ 4, tmp.d_data+4*gamma.perm(0));
-    std::copy(rTensor.d_data+ 4, rTensor.d_data+ 8, tmp.d_data+4*gamma.perm(1));
-    std::copy(rTensor.d_data+ 8, rTensor.d_data+12, tmp.d_data+4*gamma.perm(2));
-    std::copy(rTensor.d_data+12, rTensor.d_data+16, tmp.d_data+4*gamma.perm(3));
+    Matrix tmp;
+    std::copy(mat.d_data   , mat.d_data+ 4, tmp.d_data+4*gamma.perm(0));
+    std::copy(mat.d_data+ 4, mat.d_data+ 8, tmp.d_data+4*gamma.perm(1));
+    std::copy(mat.d_data+ 8, mat.d_data+12, tmp.d_data+4*gamma.perm(2));
+    std::copy(mat.d_data+12, mat.d_data+16, tmp.d_data+4*gamma.perm(3));
     std::transform(tmp.d_data   , tmp.d_data+ 4, tmp.d_data,
                    std::bind2nd(std::multiplies< std::complex< double > >(), gamma.sign(0)));
     std::transform(tmp.d_data+ 4, tmp.d_data+ 8, tmp.d_data+ 4,

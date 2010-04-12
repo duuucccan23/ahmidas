@@ -14,7 +14,7 @@ void Core::Correlator::operator*=(Base::BaryonPropagatorProjector const projecto
 
       for(size_t t=0; t<T; t++)
       {
-        QCD::reducedTensor second = gamma_5*d_sumTimeslice_global[t];
+        Dirac::Matrix second = gamma_5*d_sumTimeslice_global[t];
         //second *= gamma_5;
         second *= std::complex< double >(0, 1);
         d_sumTimeslice_global[t] = gamma_0*d_sumTimeslice_global[t];

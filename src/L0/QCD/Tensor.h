@@ -7,18 +7,17 @@
 #include <L0/Base/Base.h>
 #include <L0/Base/Random.h>
 #include <L0/Dirac/Gamma.h>
+#include <L0/Dirac/Matrix.h>
 #include <L0/QCD/Spinor.h>
-
 
 namespace QCD
 {
   class Tensor;
   class hcTensor;
-  class reducedTensor;
 
   std::complex< double > tr(Tensor const &tensor);
   std::complex< double > tr(hcTensor const &tensor);
-  std::complex< double > tr(reducedTensor const &rTensor);
+  std::complex< double > tr(Dirac::Matrix const &rTensor);
 
   enum TensorColourStride
   {
@@ -37,16 +36,21 @@ namespace QCD
     friend class Spinor;
 
     // Tensor without colour structure
-    friend class reducedTensor;
+    friend class Dirac::Matrix;
 
     std::complex< double > d_data[144];
+
+    // get entries for fixed color at source and sink
+    void getDiracMatrix(Dirac::Matrix &dMatrix,
+                        Base::ColourIndex const colour_src,
+                        Base::ColourIndex const colour_snk) const;
 
     public:
       Tensor();
       Tensor(Tensor const &other);
       Tensor(Spinor *data[12]);
       Tensor(std::complex< double > *data);
-      Tensor(reducedTensor const * const data[9]);
+      Tensor(Dirac::Matrix const * const data[9]);
       explicit Tensor(hcTensor const &other);
       Tensor &operator=(Tensor const &other);
       Tensor &operator=(hcTensor const &other);
@@ -87,7 +91,6 @@ namespace QCD
       void operator*=(std::complex< double > const &factor);
 
       void operator+=(Tensor const &other);
-
 
       Tensor &leftMultiply(Tensor const &other);
       Tensor &rightMultiply(Tensor const &other);
@@ -137,6 +140,10 @@ namespace QCD
       template< size_t Index >
       friend Tensor operator*(Dirac::Sigma< Index > const &gamma, Tensor const &tensor);
 
+      friend void getDiracMatrix(Dirac::Matrix &dMatrix, QCD::Tensor const &A, QCD::Tensor const &B);
+      friend void getDiracMatrix(Dirac::Matrix &dMatrix, Tensor const &A, QCD::Tensor const &B, bool const colourDilutedSource);
+      friend void getDiracMatrix(Dirac::Matrix &dMatrix, Tensor const &A, Tensor const &B, Tensor const &C, Base::BaryonInterpolatingField const iPol);
+
       friend void make_sequential(Tensor result[16], Tensor const &A, Tensor const &B);
   };
 
@@ -147,6 +154,9 @@ namespace QCD
   template< size_t Index >
   QCD::Tensor operator*(Dirac::Sigma< Index > const &gamma, Tensor const &tensor);
 
+  void getDiracMatrix(Dirac::Matrix &dMatrix, QCD::Tensor const &A, QCD::Tensor const &B);
+  void getDiracMatrix(Dirac::Matrix &dMatrix, Tensor const &A, QCD::Tensor const &B, bool const colourDilutedSource);
+  void getDiracMatrix(Dirac::Matrix &dMatrix, Tensor const &A, Tensor const &B, Tensor const &C, Base::BaryonInterpolatingField const iPol);
   void make_sequential(Tensor result[16], Tensor const &A, Tensor const &B);
 
 
@@ -170,98 +180,12 @@ namespace QCD
       size_t size() const;
   };
 
-  /* reduced tensor a.k.a. "Dirac matrix" */
-  class reducedTensor
-  {
-    friend class Tensor;
-
-    std::complex< double > d_data[16];
-
-    public:
-
-// old idea:
-//       // for mesons: colours are summed over with delta_ab
-//       template< size_t Index >
-//       reducedTensor(Tensor const &a, Tensor const &b, Dirac::Gamma< Index > const &Dirac_structure);
-//       // for baryons: colours are summed over with epsilon_abc (Dirac structure is assumed to involve b and c)
-//       template< size_t Index >
-//       reducedTensor(Tensor const &a, Tensor const &b, Tensor const &c, Dirac::Gamma< Index > const &Dirac_structure);
-
-      reducedTensor(Tensor const &fullTensor, Base::ColourIndex const colour_src, Base::ColourIndex const colour_snk);
-
-      reducedTensor();
-      reducedTensor(reducedTensor const &other);
-      reducedTensor(std::complex< double > const &value);
-
-      // important for contractions
-      reducedTensor(Tensor const &a, Tensor const &b);
-      reducedTensor(Tensor const &A, Tensor const &B, bool const colourDilutedSource);
-      reducedTensor(Tensor const &A, Tensor const &B, Tensor const &C, Base::BaryonInterpolatingField iPol);
-
-      std::complex< double > trace() const;
-
-      reducedTensor operator+(reducedTensor const &other) const;
-      reducedTensor operator-(reducedTensor const &other) const;
-
-      void operator+=(reducedTensor const &other);
-      void operator-=(reducedTensor const &other);
-
-//       reducedTensor &operator=(reducedTensor const &rhs);
-
-      template< size_t Index >
-      reducedTensor operator*(Dirac::Gamma< Index > const &gamma) const;
-
-      template< size_t Index >
-      void operator*=(Dirac::Gamma< Index > const &gamma);
-      template< size_t Index >
-      void left_multiply(Dirac::Gamma< Index > const &gamma); //does the same
-
-      reducedTensor operator*(double const &factor) const;
-      reducedTensor operator*(std::complex< double > const &factor) const;
-
-      void operator*=(double const &factor);
-      void operator*=(std::complex< double > const &factor);
-
-      void operator*=(reducedTensor const &rhs);
-      reducedTensor operator*(reducedTensor const &rhs) const;
-
-      // this is just a simple multiplication of the kind (C)_ij = (A)_ij * (B)_ij (no sum!)
-      reducedTensor elementwise_product(reducedTensor const &other) const;
-
-      // returns array of 16 reducedTensor
-      void outer_product(reducedTensor const &other, reducedTensor* result) const;
-      void outer_product(reducedTensor const &other, std::complex< double >* result) const;
-
-      // needed for threepoints
-      void eq_sandwich_operator(reducedTensor const &first, Base::Operator const op, reducedTensor const &second);
-
-      std::complex< double > const &operator()(Base::DiracIndex const Dirac_src, Base::DiracIndex const Dirac_snk) const;
-
-      size_t size() const;
-
-      template< size_t Index >
-      friend reducedTensor operator*(Dirac::Gamma< Index > const &gamma, reducedTensor const &rTensor);
-
-      friend std::ostream &operator<<(std::ostream &out, reducedTensor const &rTensor);
-
-      friend void make_sequential(Tensor result[16], Tensor const &A, Tensor const &B);
-  };
-
-  template< size_t Index >
-  QCD::reducedTensor operator*(Dirac::Gamma< Index > const &gamma, reducedTensor const &rTensor);
-
-  std::ostream &operator<<(std::ostream &out, reducedTensor const &rTensor);
-
 }
 
 #include "Tensor/Tensor.inlines"
+#include "Tensor/Tensor.operators.inlines"
 #include "Tensor/hcTensor.inlines"
 #include "Tensor/Tensor.gamma.inlines"
 #include "Tensor/Tensor.sigma.inlines"
-
-#include "Tensor/reducedTensor.inlines"
-#include "Tensor/reducedTensor.constructors.inlines"
-#include "Tensor/reducedTensor.operators.inlines"
-#include "Tensor/reducedTensor.gamma.inlines"
 
 #include "Tensor/Tensor.iterator.inlines"

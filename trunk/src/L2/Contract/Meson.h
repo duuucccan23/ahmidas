@@ -1,10 +1,7 @@
 #pragma once
 
-#include <cassert>
-#include <string>
 #include <vector>
 
-#include <L0/Base/Base.h>
 #include <L0/Dirac/Gamma.h>
 #include <L0/QCD/Tensor.h>
 #include <L0/Core/Propagator.h>
@@ -31,7 +28,7 @@ namespace Contract
   // gamma5*gamma0, gamma5*gamma1, gamma5*gamma2, gamma5*gamma3,
   // sigma01, sigma02, sigma03, sigma12, sigma13, sigma23
   std::vector< Core::Correlator > light_meson_twopoint_stochastic(Core::StochasticPropagator< 4 > const &psi1,
-                                                                         Core::StochasticPropagator< 4 > const &psi2);
+                                                                  Core::StochasticPropagator< 4 > const &psi2);
 }
 
 #include "Meson/Meson.inlines"

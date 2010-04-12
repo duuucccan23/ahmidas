@@ -22,7 +22,7 @@ int main(int argc, char **argv)
 
   std::cout << "test simplest pion contraction using point sources\n" << std::endl;
 
-  Dirac::Gamma5 gamma5;
+  Dirac::Gamma< 5 > gamma5;
 
   const size_t L = 4;
   const size_t T = 4;

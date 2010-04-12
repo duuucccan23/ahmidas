@@ -1,14 +1,8 @@
 #pragma once
 
-#include <algorithm>
-#include <numeric>
-#include <complex>
-#include <string>
-
 #include <L0/Base/Weave.h>
 #include <L0/Core/Field.h>
 #include <L0/QCD/Tensor.h>
-
 
 namespace Core
 {
@@ -53,7 +47,6 @@ namespace Core
       size_t getT() const;
       size_t getL() const;
       size_t size() const;
-
 
       friend std::ostream &operator<<(std::ostream &out, Correlator const &c);
 

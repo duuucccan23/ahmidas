@@ -1,12 +1,9 @@
 #pragma once
 
 #include <vector>
-#include <string>
-#include <L0/Base/Base.h>
 #include <L0/Dirac/Gamma.h>
 #include <L0/Core/Field.h>
 #include <L0/Core/Correlator.h>
-#include <L0/QCD/Spinor.h>
 #include <L0/QCD/Tensor.h>
 
 namespace Core
@@ -30,12 +27,10 @@ namespace Core
 
     static const size_t nDirac  = 2;
     static const size_t nColour = 2;
-
     static const size_t d_size = 144;
 
     protected:
-    Core::Field< QCD::Tensor > *d_components;
-
+      Core::Field< QCD::Tensor > *d_components;
 
     public:
 
@@ -180,20 +175,12 @@ namespace Core
 
 }
 
-
 #include "Propagator/Propagator.inlines"
 #include "Propagator/Propagator.baryon.inlines"
 #include "Propagator/StochasticPropagator.inlines"
 #include "Propagator/StochasticSource.inlines"
-
 #include "Propagator/Propagator.iterator.inlines"
 #include "Propagator/Propagator.const_iterator.inlines"
-
 #include "Propagator/Propagator.operators.inlines"
-
 #include "Propagator/Propagator_destroy.template"
 #include "Propagator/Propagator_isolate.template"
-
-
-
-

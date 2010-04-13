@@ -19,7 +19,7 @@
 #include <L2/Input/FileReader.h>
 
 // #define __MPI_ARCH__
-// #define __STOCHASTIC_TWOPOINT__
+#define __STOCHASTIC_TWOPOINT__
 
 int main(int argc, char **argv)
 {
@@ -152,9 +152,9 @@ int main(int argc, char **argv)
 
 #ifdef __STOCHASTIC_TWOPOINT__
 
-  Core::Propagator *dProp_stoch =  new Core::Propagator((stochasticSource->createStochasticPropagator_fixedSink(*stochastic_uProp, source_position)).revert());
+  Core::Propagator *dProp_stoch =  new Core::Propagator((stochasticSource->createStochasticPropagator_fixedSink(*stochastic_uProp, positions[1])).revert());
 
-  Core::Propagator *uProp_stoch =  new Core::Propagator((stochasticSource->createStochasticPropagator_fixedSink(*stochastic_dProp, source_position)).revert());
+  Core::Propagator *uProp_stoch =  new Core::Propagator((stochasticSource->createStochasticPropagator_fixedSink(*stochastic_dProp, positions[1])).revert());
 
 //   std::ofstream f("fake_propagator");
 //   f << *dProp_stoch << std::endl;

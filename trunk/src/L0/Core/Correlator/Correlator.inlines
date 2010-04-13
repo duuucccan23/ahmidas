@@ -41,6 +41,11 @@ namespace Core
       (*I) *= factor;
       ++I;
     }
+    for (size_t t=0; t<T(); t++)
+    {
+        d_sumTimeslice[t]        *= factor;
+        d_sumTimeslice_global[t] *= factor;
+    }
   }
 
   inline void Correlator::operator*=(std::complex< double > const &factor)
@@ -51,6 +56,11 @@ namespace Core
     {
       (*I) *= factor;
       ++I;
+    }
+    for (size_t t=0; t<T(); t++)
+    {
+        d_sumTimeslice[t]        *= factor;
+        d_sumTimeslice_global[t] *= factor;
     }
   }
 
@@ -64,6 +74,11 @@ namespace Core
       (*I) += (*J);
       ++I;
       ++J;
+    }
+    for (size_t t=0; t<T(); t++)
+    {
+        d_sumTimeslice[t]        += other.d_sumTimeslice[t];
+        d_sumTimeslice_global[t] += other.d_sumTimeslice_global[t];
     }
   }
 

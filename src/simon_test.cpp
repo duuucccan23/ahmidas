@@ -173,7 +173,7 @@ int main(int argc, char **argv)
 
   std::cout << "\nstandard proton twopoint:\n" <<std::endl;
   std::ofstream fout("p2p.dat");
-  for (size_t t=0; t<C2_P.getT(); t++)
+  for (size_t t=0; t<C2_P.T(); t++)
   {
     fout      << std::scientific << std::setprecision(8) << std::showpos;
     std::cout << std::scientific << std::setprecision(8) << std::showpos;
@@ -183,19 +183,19 @@ int main(int argc, char **argv)
   }
 
   std::cout << "\nproton twopoint using stochastic d line:\n" <<std::endl;
-  for (size_t t=0; t<C2_P_stoch_d.getT(); t++)
+  for (size_t t=0; t<C2_P_stoch_d.T(); t++)
   {
     if(abs(tr(C2_P_stoch_d[t])) > 1.e-100)
      std::cout << t << "  " << (tr(C2_P_stoch_d[t])).real() << "  " << (tr(C2_P_stoch_d[t])).imag() << std::endl;
   }
   std::cout << "\nproton twopoint using stochastic u line (1):\n" <<std::endl;
-  for (size_t t=0; t<C2_P_stoch_u1.getT(); t++)
+  for (size_t t=0; t<C2_P_stoch_u1.T(); t++)
   {
     if(abs(tr(C2_P_stoch_u1[t])) > 1.e-100)
       std::cout << t << "  " << (tr(C2_P_stoch_u1[t])).real() << "  " << (tr(C2_P_stoch_u1[t])).imag() << std::endl;
   }
   std::cout << "\nproton twopoint using stochastic u line (2):\n" <<std::endl;
-  for (size_t t=0; t<C2_P_stoch_u2.getT(); t++)
+  for (size_t t=0; t<C2_P_stoch_u2.T(); t++)
   {
     if(abs(tr(C2_P_stoch_u2[t])) > 1.e-100)
       std::cout << t << "  " << (tr(C2_P_stoch_u2[t])).real() << "  " << (tr(C2_P_stoch_u2[t])).imag() << std::endl;
@@ -216,13 +216,13 @@ int main(int argc, char **argv)
                                                                      my_operators, Base::proj_PARITY_PLUS_TM);
   std::cout << "\nproton threepoint:\n" <<std::endl;
   std::cout << "\n d_bar*Op*d" <<std::endl;
-  for (size_t t=0; t<p3p[0].getT(); t++)
+  for (size_t t=0; t<p3p[0].T(); t++)
   {
    // if(abs(tr((p3p[0])[t])) > 1.e-100)
       std::cout << t << "  " << (tr((p3p[0])[t])).real() << "  " << (tr((p3p[0])[t])).imag() << std::endl;
   }
   std::cout << "\n u_bar*Op*u" <<std::endl;
-  for (size_t t=0; t<p3p[1].getT(); t++)
+  for (size_t t=0; t<p3p[1].T(); t++)
   {
     //if(abs(tr((p3p[1])[t])) > 1.e-100)
       std::cout << t << "  " << (tr((p3p[1])[t])).real() << "  " << (tr((p3p[1])[t])).imag() << std::endl;

@@ -1,7 +1,5 @@
 #include "Tool.ih"
 
-#include <fstream>
-
 // print correlation functions in a quasi-standard ETMC format
 void Tool::printLightMesonCorrelator(std::vector< Core::Correlator > const &correlator, std::string const filename)
 {
@@ -24,9 +22,9 @@ void Tool::printLightMesonCorrelator(std::vector< Core::Correlator > const &corr
     exit(1);
   }
 
-  size_t T = correlator[0].getT();
-  size_t L = correlator[0].getL();
-  double convention_factor = 1.0/double(L*L*L);
+  size_t T = correlator[0].T();
+  size_t L = correlator[0].L();
+  double convention_factor = 1.0/double(L * L * L);
   
   std::complex< double > complex_factor;
 

@@ -12,7 +12,7 @@ void Core::Correlator::operator*=(Base::BaryonPropagatorProjector const projecto
     case Base::proj_PARITY_PLUS_TM:
       // projector is gamma0 + i*gamma5
 
-      for(size_t t=0; t<T; t++)
+      for(size_t t=0; t<T(); t++)
       {
         Dirac::Matrix second = gamma_5*d_sumTimeslice_global[t];
         //second *= gamma_5;

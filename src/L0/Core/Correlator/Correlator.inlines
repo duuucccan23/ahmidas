@@ -1,18 +1,16 @@
 namespace Core
 {
-
   inline Correlator::Correlator(Correlator const &other)
-    : L(other.L), T(other.T), d_weave(other.d_weave), d_data(other.d_data),
+    : d_weave(other.d_weave), d_data(other.d_data),
       d_sumTimeslice(other.d_sumTimeslice), d_sumTimeslice_global(other.d_sumTimeslice_global),
       d_references(other.d_references)
   {
     *d_references += 1;
   }
 
-
-  inline Correlator::Correlator(size_t const L_, size_t const T_, Core::Field<Dirac::Matrix>* data)
-    : L(L_), T(T_), d_weave(new Base::Weave(L_,T_)), d_data(data),
-      d_sumTimeslice(new Dirac::Matrix[T_]), d_sumTimeslice_global(new Dirac::Matrix[T_]),
+  inline Correlator::Correlator(size_t const L, size_t const T, Core::Field<Dirac::Matrix>* data)
+    : d_weave(new Base::Weave(L, T)), d_data(data),
+      d_sumTimeslice(new Dirac::Matrix[T]), d_sumTimeslice_global(new Dirac::Matrix[T]),
       d_references(new size_t(1))
   {
   }
@@ -22,20 +20,17 @@ namespace Core
     destroy();
   }
 
-
   inline Dirac::Matrix &Correlator::operator[](size_t const t)
   {
-    assert(t < T);
+    assert(t < T());
     return d_sumTimeslice_global[t];
   }
-
 
   inline Dirac::Matrix const &Correlator::operator[](size_t const t) const
   {
-    assert(t < T);
+    assert(t < T());
     return d_sumTimeslice_global[t];
   }
-
 
   inline void Correlator::operator*=(double const factor)
   {
@@ -59,7 +54,6 @@ namespace Core
     }
   }
 
-
   inline void Correlator::operator+=(Correlator const &other)
   {
     isolate();
@@ -73,21 +67,20 @@ namespace Core
     }
   }
 
-
   inline std::complex< double > Correlator::getTrSum(size_t const timeslice) const
   {
-    assert(timeslice < T);
+    assert(timeslice < T());
     return d_sumTimeslice_global[timeslice].trace();
   }
 
-  inline size_t Correlator::getT() const
+  inline size_t Correlator::T() const
   {
-    return T;
+    return d_weave->T();
   }
 
-  inline size_t Correlator::getL() const
+  inline size_t Correlator::L() const
   {
-    return L;
+    return d_weave->L();
   }
 
   inline size_t Correlator::size() const
@@ -99,24 +92,4 @@ namespace Core
   {
     return d_weave->isRoot();
   }
-  
-  
-  inline std::ostream &operator<<(std::ostream &out, Correlator const &c)
-  {
-    for (size_t t=0; t<c.getT(); t++)
-    {
-      // this is the way formatted output works in C++
-      out.width(3);
-      out << t << "  ";
-      out.width(20);
-      // since the Correlator stores complex numbers, we can access the real and imaginary parts using
-      // the complex class member functions real() and imag()
-      out << std::fixed << std::setprecision(10) << std::showpos << (c[t]).trace().real() << "  ";
-      out.width(20);
-      out << std::fixed << std::setprecision(10) << std::showpos << (c[t]).trace().imag() << std::endl;
-    }
-    return out;
-  }
-  
-
 }

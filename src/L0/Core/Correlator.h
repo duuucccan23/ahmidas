@@ -12,9 +12,7 @@ namespace Core
   {
 
     friend class Weave;
-
-    size_t T;
-    size_t L;
+    
     Base::Weave *d_weave;
     size_t *d_references;
     Field < Dirac::Matrix > *d_data;
@@ -25,7 +23,7 @@ namespace Core
 
     public:
 
-      Correlator(size_t const L_, size_t const T_, Field < Dirac::Matrix > *d_data);
+      Correlator(size_t const L, size_t const T, Field < Dirac::Matrix > *d_data);
       Correlator(Correlator const &other);
 
       ~Correlator();
@@ -45,8 +43,8 @@ namespace Core
 
       bool isRoot() const;
 
-      size_t getT() const;
-      size_t getL() const;
+      size_t T() const;
+      size_t L() const;
       size_t size() const;
 
       friend std::ostream &operator<<(std::ostream &out, Correlator const &c);
@@ -57,7 +55,6 @@ namespace Core
   };
 
   std::ostream &operator<<(std::ostream &out, Correlator const &c);
-
 
 }
 

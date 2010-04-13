@@ -9,7 +9,7 @@ namespace Core
     std::complex< double > phase;
     long idx_T_new;
 
-    std::cout << "Changing boundary conditions of propagator: uniform to fixed.\n";
+    std::cout << "Changing boundary conditions of propagator: uniform to fixed....";
     assert(timesliceSource < T());
     assert(timesliceBoundary < T());
     isolate();

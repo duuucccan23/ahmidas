@@ -1,4 +1,6 @@
-inline void Core::Correlator::isolate()
+#include "Correlator.ih"
+
+void Core::Correlator::isolate()
 {
   if (*d_references == 1)
     return;

@@ -1,0 +1,19 @@
+\documentclass[a4paper,10pt]{article}
+\begin{document}
+\section{Include guards}
+The most standard way of preventing repetive inclusion of header files is to use include guards in a preprocessor directive, i.e.:\\
+\verb|#ifndef MY_INCLUDE_GUARD_H|\\
+\verb|#define MY_INCLUDE_GUARD_H|\\
+\verb|source code|\\
+\verb|#endif|\\
+Since we are then manually building a symbol table, this is error prone, and very tedious. We therefore use the following construction:\\
+\verb|#pragma once|\\
+in header files.
+
+While this is not in the standard, it is widely supported, and is intended to remain supported.
+
+The intel compiler collection ICC gives warnings about deprecation, but their own tech support acknowledges that these can be safely ignored.\\
+http://software.intel.com/en-us/articles/cdiag1782/
+\section{Magic numbers}
+We try not to have magic numbers in the code. Magic numbers commonly appear in lengths of arrays as the result of a multiplication or addition of some known constants. In these cases, to improve the legibility of the code, we aim to have the actual multiplication in the array definition, in order to show where that number comes from. In the cases where magic numbers cannot be avoided, use an \verb|enum| and document it well.
+\end{document}

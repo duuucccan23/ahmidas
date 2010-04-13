@@ -59,6 +59,3 @@ namespace Core
 }
 
 #include "Correlator/Correlator.inlines"
-
-#include "Correlator/Correlator_destroy.template"
-#include "Correlator/Correlator_isolate.template"

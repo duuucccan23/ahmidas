@@ -1,5 +1,4 @@
-#ifndef __GUARD_FILE_READER__
-#define __GUARD_FILE_READER__
+#pragma once
 
 #include <cstdlib>
 #include <iostream>
@@ -86,5 +85,3 @@ namespace Input
 }
 
 #include "FileReader/FileReader.inlines"
-
-#endif

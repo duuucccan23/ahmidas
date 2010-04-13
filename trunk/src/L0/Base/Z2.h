@@ -1,5 +1,4 @@
-#ifndef GUARD_BASE_Z2_h
-#define GUARD_BASE_Z2_h
+#pragma once
 
 #include <stdint.h>
 #include <iostream>
@@ -34,5 +33,3 @@ namespace Base
 }
 
 #include "Z2/Z2.inlines"
-
-#endif

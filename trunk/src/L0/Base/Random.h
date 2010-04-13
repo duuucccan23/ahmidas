@@ -1,5 +1,4 @@
-#ifndef GUARD_BASE_RANDOM_H
-#define GUARD_BASE_RANDOM_H
+#pragma once
 
 #include <cstdlib>
 
@@ -17,5 +16,3 @@ namespace Base
     double Z2();
   }
 }
-
-#endif

@@ -1,5 +1,4 @@
-#ifndef __GUARD_PARSER__
-#define __GUARD_PARSER__
+#pragma once
 
 #include <iostream>
 #include <string>
@@ -39,5 +38,3 @@ namespace Input
 }
 
 #include "Parser/Parser.inlines"
-
-#endif

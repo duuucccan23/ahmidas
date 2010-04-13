@@ -1,5 +1,4 @@
-#ifndef GUARD_BASE_IO_LIME_WRITER_H
-#define GUARD_BASE_IO_LIME_WRITER_H
+#pragma once
 
 #include <fstream>
 #include <string>
@@ -66,5 +65,3 @@ namespace Base
 }
 #include "Writer/Writer.inlines"
 #include "Writer/Writer_write.template"
-
-#endif

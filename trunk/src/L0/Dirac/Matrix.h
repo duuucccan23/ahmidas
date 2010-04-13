@@ -1,5 +1,4 @@
-#ifndef __GUARD_DIRAC_MATRIX__
-#define __GUARD_DIRAC_MATRIX__
+#pragma once
 
 #include <complex>
 #include <algorithm>
@@ -7,12 +6,7 @@
 
 #include <L0/Base/Base.h>
 #include <L0/Dirac/Gamma.h>
-// #include <L0/QCD/Tensor.h>
 
-namespace QCD
-{
-  class Tensor;
-}
 
 namespace Dirac
 {
@@ -27,14 +21,6 @@ namespace Dirac
       Matrix();
       Matrix(Matrix const &other);
       Matrix(std::complex< double > const &value);
-
-      Matrix(QCD::Tensor const &fullTensor, Base::ColourIndex const colour_src, Base::ColourIndex const colour_snk);
-
-
-      // important for contractions
-      Matrix(QCD::Tensor const &a, QCD::Tensor const &b);
-      Matrix(QCD::Tensor const &A, QCD::Tensor const &B, bool const colourDilutedSource);
-      Matrix(QCD::Tensor const &A, QCD::Tensor const &B, QCD::Tensor const &C, Base::BaryonInterpolatingField iPol);
 
       std::complex< double > const &operator[](size_t const idx) const;
       std::complex< double >       &operator[](size_t const idx);
@@ -98,7 +84,3 @@ namespace Dirac
 #include "Matrix/Matrix.constructors.inlines"
 #include "Matrix/Matrix.operators.inlines"
 #include "Matrix/Matrix.gamma.inlines"
-
-
-
-#endif

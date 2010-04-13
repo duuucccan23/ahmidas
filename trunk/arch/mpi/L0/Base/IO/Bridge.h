@@ -1,5 +1,4 @@
-#ifndef GUARD_BASE_IO_BRIDGE_H
-#define GUARD_BASE_IO_BRIDGE_H
+#pragma once
 
 #include <L0/Core/Field.h>
 namespace Base
@@ -23,4 +22,3 @@ namespace Base
 }
 #include "Bridge/Bridge_loadDataFromIO.template"
 
-#endif

@@ -43,9 +43,3 @@ TARGET_LINK_LIBRARIES(main Base Core IO Contract Input)
 
 ADD_EXECUTABLE(simon_test src/simon_test.cpp)
 TARGET_LINK_LIBRARIES(simon_test SU3 QCD IO Base Core Dirac Weave Contract Input)
-
-IF(USE_MPI)
-ADD_EXECUTABLE(para_test src/para_test.cpp)
-TARGET_LINK_LIBRARIES(para_test SU3 QCD IO Base Core Dirac Weave Contract)
-ENDIF(USE_MPI)
-

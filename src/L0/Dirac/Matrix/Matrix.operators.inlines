@@ -89,10 +89,8 @@ namespace Dirac
 
   inline void Matrix::operator*=(double const &factor)
   {
-    std::transform(reinterpret_cast< double * > (d_data),
-                   reinterpret_cast< double * > (d_data+16),
-                   reinterpret_cast< double * > (d_data),
-                   bind2nd(std::multiplies< double >(), factor));
+    std::transform(d_data, d_data+16, d_data,
+                   bind2nd(std::multiplies< std::complex< double > >(), std::complex< double >(factor, 0)));
   }
 
   inline void Matrix::operator*=(std::complex< double > const &factor)

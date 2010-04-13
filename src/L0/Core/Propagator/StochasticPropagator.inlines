@@ -48,7 +48,7 @@ namespace Core
 
     while(Ia != end())
     {
-      (*Ic) = Dirac::Matrix((*Ia),(*Ib));
+      QCD::getDiracMatrix((*Ic), (*Ia),(*Ib));
       ++Ia;
       ++Ib;
       ++Ic;

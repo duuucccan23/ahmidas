@@ -7,7 +7,6 @@ namespace Dirac
     std::complex< double > const I = std::complex< double >(0, 1);
   }
 
-
   // identity
   template< >
   size_t const Gamma< -1 >::s_perm[4] = {0, 1, 2, 3};

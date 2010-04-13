@@ -44,20 +44,16 @@ int main(int argc, char **argv)
   }
 
   Core::Propagator *uProp = new Core::Propagator(L, T);
-
   Tool::IO::load(uProp, propfilesU, Tool::IO::fileSCIDAC);
-
-  std::cout << "u quark propagator successfully loaded\n" << std::endl;
+  std::cout << "u quark propagator successfully loaded\n";
 
   Core::Propagator *dProp = new Core::Propagator(L, T);
-
   Tool::IO::load(dProp, propfilesD, Tool::IO::fileSCIDAC);
-
-  std::cout << "d quark propagator successfully loaded\n" << std::endl;
+  std::cout << "d quark propagator successfully loaded\n";
 
 
   size_t timeslice_source(0);
-  size_t timeslice_boundary(T-1);
+  size_t timeslice_boundary(T - 1);
   uProp->changeBoundaryConditions_uniformToFixed(timeslice_source, timeslice_boundary);
   dProp->changeBoundaryConditions_uniformToFixed(timeslice_source, timeslice_boundary);
 
@@ -65,12 +61,12 @@ int main(int argc, char **argv)
 
   std::cout << C2_P << std::endl;
 
-  std::cout << "\nreliable code gives this result:\n"
-    << "0   1.16145514e-03  -7.64689531e-05\n"
-    << "1   1.37746719e-03  -1.02786839e-05\n"
-    << "2   4.29020380e-05   3.89420319e-08\n"
-    << "3   1.34970449e-03   1.41088319e-05"
-    << std::endl;
+  std::cout << "\nWell tested code gives the following result:\n"
+              << "T        real part   imaginary part\n"
+              << "0  +1.16145514e-03  -7.64689531e-05\n"
+              << "1  +1.37746719e-03  -1.02786839e-05\n"
+              << "2  +4.29020380e-05  +3.89420319e-08\n"
+              << "3  +1.34970449e-03  +1.41088319e-05\n";
 
   double tolerance = 1.e-11;
 

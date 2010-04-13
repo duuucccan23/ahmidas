@@ -1,4 +1,6 @@
-inline void Core::Correlator::destroy()
+#include "Correlator.ih"
+
+void Core::Correlator::destroy()
 {
   assert(*d_references >= 1);
   *d_references -= 1;

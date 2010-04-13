@@ -1,5 +1,4 @@
-#ifndef GUARD_BASE_RANLUX_H
-#define GUARD_BASE_RANLUX_H
+#pragma once
 
 #include <cstdlib>
 
@@ -32,5 +31,3 @@ namespace Base
 }
 
 #include "Ranlux/Ranlux.inlines"
-
-#endif

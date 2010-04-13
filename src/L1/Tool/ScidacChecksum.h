@@ -1,5 +1,4 @@
-#ifndef GUARD_BASE_SCIDACCHECKSUM_H
-#define GUARD_BASE_SCIDACCHECKSUM_H
+#pragma once
 
 #include <L0/Core/Field.h>
 
@@ -65,5 +64,3 @@ namespace Tool
 #include "ScidacChecksum/ScidacChecksum_crc32_a.template"
 #include "ScidacChecksum/ScidacChecksum_crc32_b.template"
 #include "ScidacChecksum/ScidacChecksum_calculate.template"
-
-#endif

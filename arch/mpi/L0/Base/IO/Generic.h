@@ -1,5 +1,4 @@
-#ifndef GUARD_BASE_IO_GENERIC_H
-#define GUARD_BASE_IO_GENERIC_H
+#pragma once
 
 #include <fstream>
 #include <string>
@@ -23,5 +22,3 @@ namespace Base
   }
 }
 #include "Generic/Generic.inlines"
-
-#endif

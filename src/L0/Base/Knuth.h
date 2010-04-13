@@ -1,5 +1,4 @@
-#ifndef GUARD_BASE_KNUTH_H
-#define GUARD_BASE_KNUTH_H
+#pragma once
 
 #include <cstdlib>
 
@@ -30,5 +29,3 @@ namespace Base
 }
 
 #include "Knuth/Knuth.inlines"
-
-#endif

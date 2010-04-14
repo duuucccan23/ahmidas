@@ -2,7 +2,7 @@
 <ahmidas>
   <params>
     <L> 4 </L>
-    <T> 8 </T>
+    <T> 4 </T>
     <!-- position of point source -->
     <position>2 0 3 1</position>
     <kappa> 0.15 </kappa>
@@ -11,7 +11,7 @@
   <files>
     <file>
       <type>propagator</type>
-      <directory>../../test</directory>
+      <directory>../test</directory>
       <filenameBase>source4x4_d.</filenameBase>
       <filenameEnding>.inverted</filenameEnding>
       <firstIndex>0</firstIndex>
@@ -21,7 +21,7 @@
     <file>
       <type>propagator</type>
       <!-- here we have a trailing slash in directory string, FileReader has to handel that -->
-      <directory>../../test/</directory>
+      <directory>../test/</directory>
       <filenameBase>source4x4_u.</filenameBase>
       <filenameEnding>.inverted</filenameEnding>
       <firstIndex>0</firstIndex>

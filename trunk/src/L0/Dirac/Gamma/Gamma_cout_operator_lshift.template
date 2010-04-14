@@ -1,0 +1,14 @@
+template < size_t Index >
+std::ostream &Dirac::operator<<(std::ostream &out, Dirac::Gamma< Index > const &gam)
+{
+  std::complex< double > zero(0,0);
+  out << std::showpos;
+  for(size_t row = 0; row < 4; row++)
+  {
+    for(size_t col = 0; col < 4; col++)
+      out << (col == gam.perm(row) ? gam.sign(row) : zero) << " ";
+    out << std::endl;
+  }
+  out << std::endl;
+  return out;
+}

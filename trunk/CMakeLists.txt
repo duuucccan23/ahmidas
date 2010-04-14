@@ -22,7 +22,6 @@ IF(USE_MPI)
 SET(MPI_COMPILE_FLAGS "-O3 -pg -g -Wall")
 ENDIF(USE_MPI)
 
-
 IF(USE_SCALAR)
 INCLUDE_DIRECTORIES(BEFORE SYSTEM arch/scalar)
 ADD_SUBDIRECTORY(arch/scalar)
@@ -39,7 +38,7 @@ ADD_SUBDIRECTORY(test)
 ADD_SUBDIRECTORY(example)
 
 ADD_EXECUTABLE(main src/main.cpp)
-TARGET_LINK_LIBRARIES(main Base Core IO Contract Input)
+TARGET_LINK_LIBRARIES(main Dirac)
 
 ADD_EXECUTABLE(simon_test src/simon_test.cpp)
 TARGET_LINK_LIBRARIES(simon_test SU3 QCD IO Base Core Dirac Weave Contract Input)

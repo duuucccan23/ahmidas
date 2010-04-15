@@ -343,7 +343,7 @@ inline void Tensor::left_multiply_proton()
 //   template< >
 //   size_t const Gamma< 245 >::s_perm[4] = {1, 0, 3, 2};
 //   template< >
-//   std::complex< double > const Gamma< 54 >::s_sign[4] = {1, -1, 1, -1};
+//   std::complex< double > const Gamma< 245 >::s_sign[4] = {1, -1, 1, -1};
 
     std::swap_ranges(d_data,      d_data +  36, d_data +  36);
     std::swap_ranges(d_data + 72, d_data + 108, d_data + 108);

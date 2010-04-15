@@ -93,4 +93,66 @@ namespace Contract
     return allthreepoints;
   }
 
+
+  Core::Correlator proton_threepoint_d(Core:: Propagator const * const bw_prop, Core:: Propagator const &fw_prop, Base::Operator op)
+  {
+
+    /* under construction */
+    assert(false);
+    assert(bw_prop[0].L() == fw_prop.L() && bw_prop[0].T() == fw_prop.T());
+
+    Core::Propagator::const_iterator I_bw[16] = {
+      bw_prop[ 0].begin(), bw_prop[ 1].begin(), bw_prop[ 2].begin(), bw_prop[ 3].begin(),
+      bw_prop[ 4].begin(), bw_prop[ 5].begin(), bw_prop[ 6].begin(), bw_prop[ 7].begin(),
+      bw_prop[ 8].begin(), bw_prop[ 9].begin(), bw_prop[10].begin(), bw_prop[11].begin(),
+      bw_prop[12].begin(), bw_prop[13].begin(), bw_prop[14].begin(), bw_prop[15].begin()};
+
+    Core::Propagator::const_iterator I_fw(fw_prop.begin());
+
+    Dirac::Gamma< 5 > gamma5;
+
+    //QCD::Tensor tmp[16];
+
+    Core::Propagator fw_tmp(fw_prop.L(), fw_prop.T());
+    Core::Propagator bw_tmp(fw_prop.L(), fw_prop.T());
+
+    Core::Propagator::iterator I_fw_tmp(fw_tmp.begin());
+    Core::Propagator::iterator I_bw_tmp(bw_tmp.begin());
+
+    while (I_fw != fw_prop.end())
+    {
+
+      (*I_fw_tmp) = (*I_fw);
+      (*I_fw_tmp).left_multiply_proton();
+
+      switch (op)
+      {
+        case Base::op_GAMMA_4:
+          break;
+        default:
+        std::cerr << "Error in "
+                  << "std::vector< Core::Field< Dirac::Matrix > * > construct_proton_with_operator_insertion(...):\n"
+                  << "Operator with index " << op << " not implemented yet!" << std::endl;
+      }
+
+      for (size_t iDirac=0; iDirac<16; iDirac++)
+      {
+        //*(I_bw[iDirac]) = gamma5 * (*I_bw[iDirac]);
+        ++I_bw[iDirac];
+        // now here  we have to sandwich operator which kills two of the indices.
+      }
+
+      (*I_bw_tmp) *= gamma5;
+      ++I_fw;
+      ++I_fw_tmp;
+      ++I_bw_tmp;
+    }
+
+    Core::Correlator p3p(fw_prop.L(),fw_prop.T(), bw_tmp*fw_tmp);
+
+    p3p.sumOverSpatialVolume();
+
+    return p3p;
+  }
+
 }

@@ -14,7 +14,7 @@ int main(int argc, char **argv)
   size_t L = 0;
   size_t T = 0;
 
-  Input::FileReader reader("../../test/input.xml");
+  Input::FileReader reader("../../test/read_input_file_input.xml");
 
   std::map< std::string, double > floats;
   std::vector< size_t * > positions;

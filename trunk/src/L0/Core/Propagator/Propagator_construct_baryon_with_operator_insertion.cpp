@@ -119,7 +119,7 @@ namespace Core
         QCD::Tensor S_u_xf(S_u[localIndex]);
 
         QCD::Tensor tmp_d[16];
-        QCD::make_sequential(tmp_d, S_u_xf, S_u_xf);
+        QCD::make_sequential_d(tmp_d, S_u_xf, S_u_xf);
 
         for (size_t idx=0; idx<16; idx++)
         {

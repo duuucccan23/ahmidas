@@ -11,6 +11,15 @@
 namespace Dirac
 {
 
+  // outer_product returns essentially 16 Matrices, 
+  // but the index order has to be defined
+  // (Result[a,4*b])[c,4*d] = ?
+  enum OuterProductIndexOrder
+  {
+    order_OUTER_FIXED, // A_ac*B_db
+    order_FIRST_FIXED  // A_ab*B_cd
+  };
+
   class Matrix
   {
 
@@ -52,12 +61,14 @@ namespace Dirac
       void operator*=(Matrix const &rhs);
       Matrix operator*(Matrix const &rhs) const;
 
+      void transpose();
+
       // this is just a simple multiplication of the kind (C)_ij = (A)_ij * (B)_ij (no sum!)
       Matrix elementwise_product(Matrix const &other) const;
 
-      // returns array of 16 Matrix
-      void outer_product(Matrix const &other, Matrix* result) const;
-      void outer_product(Matrix const &other, std::complex< double >* result) const;
+      // returns array of 16 Matrices
+      // void outer_product(Matrix const &other, Matrix* result) const;
+      void outer_product(Matrix const &other, std::complex< double > * const result, OuterProductIndexOrder const idxOrd = order_FIRST_FIXED) const;
 
       // needed for threepoints
       void eq_sandwich_operator(Matrix const &first, Base::Operator const op, Matrix const &second);

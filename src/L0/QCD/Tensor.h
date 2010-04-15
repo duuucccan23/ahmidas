@@ -144,7 +144,8 @@ namespace QCD
       friend void getDiracMatrix(Dirac::Matrix &dMatrix, Tensor const &A, QCD::Tensor const &B, bool const colourDilutedSource);
       friend void getDiracMatrix(Dirac::Matrix &dMatrix, Tensor const &A, Tensor const &B, Tensor const &C, Base::BaryonInterpolatingField const iPol);
 
-      friend void make_sequential(Tensor result[16], Tensor const &A, Tensor const &B);
+      friend void make_sequential_d(Tensor result[16], Tensor const &A, Tensor const &B);
+      friend void make_sequential_u(Tensor result[16], Tensor const &A, Tensor const &B);
   };
 
   std::ostream &operator<<(std::ostream &out, Tensor const &tensor);
@@ -157,8 +158,8 @@ namespace QCD
   void getDiracMatrix(Dirac::Matrix &dMatrix, QCD::Tensor const &A, QCD::Tensor const &B);
   void getDiracMatrix(Dirac::Matrix &dMatrix, Tensor const &A, QCD::Tensor const &B, bool const colourDilutedSource);
   void getDiracMatrix(Dirac::Matrix &dMatrix, Tensor const &A, Tensor const &B, Tensor const &C, Base::BaryonInterpolatingField const iPol);
-  void make_sequential(Tensor result[16], Tensor const &A, Tensor const &B);
-
+  void make_sequential_d(Tensor result[16], Tensor const &A, Tensor const &B);
+  void make_sequential_u(Tensor result[16], Tensor const &A, Tensor const &B);
 
   class hcTensor
   {

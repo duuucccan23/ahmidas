@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!-- this input file is meant to be for the read_input_file test! -->
+<!-- don't touch it unless you change the test as well! -->
+<ahmidas>
+  <params>
+    <L> 4 </L>
+    <T> 8 </T>
+    <!-- position of point source -->
+    <position>2 0 3 1</position>
+    <kappa> 0.15 </kappa>
+    <mu> 0.01 </mu>
+  </params>
+  <files>
+    <file>
+      <type>propagator</type>
+      <directory>../../test</directory>
+      <filenameBase>source4x4_d.</filenameBase>
+      <filenameEnding>.inverted</filenameEnding>
+      <firstIndex>0</firstIndex>
+      <lastIndex>11</lastIndex>
+      <indexWidth>2</indexWidth>
+    </file>
+    <file>
+      <type>propagator</type>
+      <!-- here we have a trailing slash in directory string, FileReader has to handle that -->
+      <directory>../../test/</directory>
+      <filenameBase>source4x4_u.</filenameBase>
+      <filenameEnding>.inverted</filenameEnding>
+      <firstIndex>0</firstIndex>
+      <lastIndex>11</lastIndex>
+      <indexWidth>2</indexWidth>
+    </file>
+    <file>
+      <type>source</type>
+      <directory>../../test</directory>
+      <filenameBase>source4x4.</filenameBase>
+      <firstIndex>0</firstIndex>
+      <lastIndex>11</lastIndex>
+      <indexWidth>2</indexWidth>
+    </file>
+  </files>
+</ahmidas>

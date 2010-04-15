@@ -68,7 +68,7 @@ namespace Dirac
 
       // returns array of 16 Matrices
       // void outer_product(Matrix const &other, Matrix* result) const;
-      void outer_product(Matrix const &other, std::complex< double > * const result, OuterProductIndexOrder const idxOrd = order_FIRST_FIXED) const;
+      void outer_product(Matrix const &other, std::complex< double > * const result, OuterProductIndexOrder const idxOrd) const;
 
       // needed for threepoints
       void eq_sandwich_operator(Matrix const &first, Base::Operator const op, Matrix const &second);

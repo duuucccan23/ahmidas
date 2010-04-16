@@ -52,6 +52,12 @@ namespace Core
     return (*d_components)[localIndex];
   }
 
+  inline QCD::Tensor &Propagator::operator[](size_t const localIndex)
+  {
+    isolate();
+    return (*d_components)[localIndex];
+  }
+
 
   inline Propagator &Propagator::revert()
   {

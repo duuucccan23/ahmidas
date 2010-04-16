@@ -12,7 +12,7 @@ namespace Core
   {
 
     friend class Weave;
-    
+
     Base::Weave *d_weave;
     size_t *d_references;
     Field < Dirac::Matrix > *d_data;

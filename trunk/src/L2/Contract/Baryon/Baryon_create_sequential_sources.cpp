@@ -8,37 +8,38 @@ namespace Contract
 //                              BaryonPropagatorProjector const projSrc, BaryonPropagatorProjector const projSnk);
 
   void create_sequential_source_proton_d(Core:: Propagator * const seqSrc,
-                                    Core::Propagator const &u1, Core::Propagator const &u2)
+                                    Core::Propagator const &u1, Core::Propagator const &u2, size_t const t_snk)
   {
 
     assert(u1.L() == u2.L() && u1.T() == u2.T() && seqSrc[0].L() == u1.L() && seqSrc[0].T() == u1.T());
 
-    Core::Propagator::iterator I[16] = {
-      seqSrc[ 0].begin(), seqSrc[ 1].begin(), seqSrc[ 2].begin(), seqSrc[ 3].begin(),
-      seqSrc[ 4].begin(), seqSrc[ 5].begin(), seqSrc[ 6].begin(), seqSrc[ 7].begin(),
-      seqSrc[ 8].begin(), seqSrc[ 9].begin(), seqSrc[10].begin(), seqSrc[11].begin(),
-      seqSrc[12].begin(), seqSrc[13].begin(), seqSrc[14].begin(), seqSrc[15].begin()};
-
-    Core::Propagator::const_iterator I_u1(u1.begin());
-    Core::Propagator::const_iterator I_u2(u2.begin());
+    Base::Weave weave(u1.L(), u1.T());
 
     Dirac::Gamma< 5 > gamma5;
-
     QCD::Tensor tmp[16];
 
-    while (I_u1 != u1.end())
+    size_t localIndex;
+    for(size_t idx_Z = 0; idx_Z < u1.L(); idx_Z++)
     {
-      QCD::make_sequential_d(tmp, *I_u1, *I_u2);
-      for (size_t iDirac=0; iDirac<16; iDirac++)
+      for(size_t idx_Y = 0; idx_Y < u1.L(); idx_Y++)
       {
-        *(I[iDirac]) = tmp[iDirac];
-        *(I[iDirac]) *= gamma5;
-        (*(I[iDirac])).right_multiply_proton();
-        ++I[iDirac];
-      }
+        for(size_t idx_X = 0; idx_X < u1.L(); idx_X++)
+        {
+          localIndex = weave.globalCoordToLocalIndex(idx_X, idx_Y, idx_Z, t_snk);
+          /* globalCoordToLocalIndex returns local volume if local data is not available on this cpu */
+          if (localIndex == weave.localVolume())
+            continue;
 
-      ++I_u1;
-      ++I_u2;
+          QCD::make_sequential_d(tmp, u1[localIndex], u2[localIndex]);
+          for (size_t iDirac=0; iDirac<16; iDirac++)
+          {
+            (seqSrc[iDirac])[localIndex] = tmp[iDirac];
+            (seqSrc[iDirac])[localIndex].conjugate();
+            (seqSrc[iDirac])[localIndex] *= gamma5;
+            (seqSrc[iDirac])[localIndex].right_multiply_proton();
+          }
+        }
+      }
     }
   }
 

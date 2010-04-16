@@ -1,6 +1,8 @@
 #pragma once
 
 #include <vector>
+#include <L0/QCD/Gauge.h>
+#include <L0/Core/Field.h>
 #include <L0/Core/Propagator.h>
 #include <L0/Core/Correlator.h>
 
@@ -11,11 +13,24 @@ namespace Contract
                                    Base::BaryonPropagatorProjector const projector);
 
 
-  void create_sequential_source_proton_d(Core:: Propagator * const seqSrc, Core::Propagator const &u1, Core::Propagator const &u2);
+  void create_sequential_source_proton_d(Core:: Propagator * const seqSrc,
+                                         Core::Propagator const &u1, Core::Propagator const &u2, size_t const t_snk);
+
+  // the proton three point with a stochastic (estimate of an) all-to-all propagator at the proton sink.
+  // this is a mess concerning performance since it scales vith 4-Volume^2, but provides a good cross-check
+  // the gauge field is sometimes not needed, in this case NULL can be passed;
+  std::vector< Core::Correlator > proton_threepoint_naive(Core::Propagator const &u1, Core::Propagator const &u2,
+                                                          Core::Propagator const &d,
+                                                          Core::StochasticPropagator<12> const &u_stoch_at_sink,
+                                                          Core::StochasticPropagator<12> const &d_stoch_at_sink,
+                                                          Core::StochasticSource<12> const &xi_at_sink,
+                                                          Core::Field < QCD::Gauge > const * const gauge_field,
+                                                          std::vector< Base::Operator > const &ops,
+                                                          size_t const t_src, size_t const t_snk);
 
   Core::Correlator proton_threepoint_d(Core:: Propagator const * const bw_prop, Core:: Propagator const &fw_prop, Base::Operator op);
 
-  Core::Correlator proton_threepoint_u(Core:: Propagator * const bw_prop, Core:: Propagator * const fw_prop, Base::BaryonPropagatorProjector const projSrc, Base::BaryonPropagatorProjector const projSnk);
+  Core::Correlator proton_threepoint_u(Core:: Propagator const * const bw_prop, Core:: Propagator const &fw_prop, Base::Operator op);
 
   std::vector< Core::Correlator > proton_threepoint_stochastic(Core::Propagator const &u,
                                                 Core::Propagator const &d,

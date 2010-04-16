@@ -46,6 +46,7 @@ namespace Core
       QCD::Tensor operator()(size_t const* sinkSite) const;
 
       // unsafe access of Field elements
+      QCD::Tensor       &operator[](size_t const localIndex);
       QCD::Tensor const &operator[](size_t const localIndex) const;
 
       template< size_t Index >
@@ -71,6 +72,7 @@ namespace Core
                                                  Base::BaryonInterpolatingField const ipol,
                                                  std::vector< Base::Operator > const &ops,
                                                  size_t const t_src, size_t const t_snk) const;
+
 
       /*
           Revert Propagator using gamma5 hermeticity trick:

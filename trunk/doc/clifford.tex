@@ -1,0 +1,103 @@
+\documentclass[a4paper,10pt]{article}
+\usepackage[utf8x]{inputenc}
+
+%opening
+\title{The trouble with Clifford algebras}
+\author{Albert Deuzeman \and Siebren Reker}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+The implementation of Clifford algebras in Ahmidas we have right now is efficient,
+but prevents us from using some very useful constructions. Looping over all gamma
+structures, in particular, is a problem. I here explain why we chose the current 
+construction and propose a work around for looping over gammas we came up with. 
+\end{abstract}
+
+\section{Current implementation}
+
+A glance at the current Dirac::Gamma and Dirac::Sigma template class definitions seems to
+tell us we didn't implement them yet. This isn't quite true, but the details are hidden
+elsewhere in the code. These Clifford algebra elements multiply spinors, so functions their
+application are defined for QCD::Spinor. Multiplication with a Dirac namespace object is there 
+translated into permutations and sign changes within the QCD::Spinor object. This is done 
+because we want to exploit the fact that the Clifford algebra elements are sparse. The actual
+structure of the different matrices, which is provided in the documentation as well, is stored
+in two static arrays per gamma matrix. They only contain the relevant permutations and signs.
+
+The reason the Dirac matrices are all specialized templates, is that we want the compiler to deal 
+with selecting the correct function for each matrix multiplication, minimizing overhead. Because
+all of the required information is stored in the type of the object, there is no need for any
+of the elements defined in the Dirac namespace to carry around blocks of data. The classes have
+no memory footprint of their own and most compilers will optimize them away completely, even if
+we declare and pass them on as arguments freely.
+
+This implementation is efficient, but the choice to make every element of the Clifford algebra its 
+own (template) class prevents us from grouping all matrices into a single data structure. Most 
+functions can be made to accept all of the matrices by defining a template argument, but that won't 
+work for structures like std::vector. Or, for that matter, static C-style arrays. While we realized
+this consequence early on, there was no obvious solution. Templates are resolved compile time,
+while loops are run time structures. We would need runtime resolution of the types to be able
+to loop over all possible matrices in a product.
+
+\section{Proposed extension}
+
+As a matter of fact, C++ provides exactly the syntax needed for this type of construction: It is
+nothing but dynamic inheritance. Because this simply exists, there will be no other good workarounds
+available -- it's simply a matter of good language design to not implement two forms of syntax
+doing exactly the same. Syntactically, there is no problem in defining an abstract base class
+Clifford. It should contain virtual functions for each of the operations any Clifford algebra
+element should be able to do, such as multiplying a vector. For each of the individual cases those 
+would be implemented in pretty much the same way as they are now. Looping over all Dirac structures
+could then be done by filling an std::vector of class Clifford with derived instances, then calling
+the virtual functions for each of them in sequence.
+
+This setup is very common for things like menus in GUI design. But it involves the runtime resolution
+of pointers to functions using the vtable. Folklore has it that this implies a big overhead. Whether
+that is true is something we should probably investigate -- it isn't completely obvious from what
+can be found on the web\footnote{http://www.eventhelix.com/RealTimeMantra/basics/ComparingCPPAndCPerformance2.htm}.
+Note that we should not worry about constructors and destructors too much for these objects. It is
+hard to imagine those operations happening more than a hundred times or so per invocation of the code,
+and in that case we can't be losing more than a fraction of a second on the whole. The penalty is in 
+repeatedly, \emph{i.e.} up to a million times potentially, calling one of the methods. This will happen
+when a multiplication is done on a whole lattice.
+
+We propose to safeguard against the latter situation, by building in an additional layer. When a
+Clifford algebra element multiplies a lattice, we don't do this by blindly applying it to each of
+the elements in sequence. Instead, we write an ordinary function taking the aforementioned arrays
+as arguments and delegate the operation to it. This way, we can gain all the advantages of using
+the C++ inheritance system, without paying too much for it in terms of performance. In practical 
+terms, we want to define a Clifford base class. It will provide an interface for all elements in the 
+algebra, which currently include gamma, sigma and identity matrices. Each of the latter could remain 
+a template class, but they should inherit Clifford, too. 
+
+Note that, in this way, we could still \emph{not} construct all gamma combinations by looping over them. 
+The additional problem there is that we would have to define some way to enumerate these classes. Just 
+labeling them with integers, the approach of the original contraction code, is extremely ugly, in our humble 
+opinion. The user shouldn't have to guess that Gamma(9), or whatever the syntax we'd choose, happens to be
+$\gamma^1\gamma^5$. An enum would in principle allow us to write Gamma(g1g5) instead, but we're not allowed to 
+loop over an enum either.
+
+We could, instead, provide a containing the full algebra, with a proper interface. Let's call this Clifford::Algebra
+for now and say that we could access its elements through a syntax like Clifford::Algebra.gamma(15) and 
+Clifford::Algebra.sigma(12). This class could now provide a simple forward iterator, allowing one to loop over
+the elements using a for(iter = begin(); iter != end(); ++iter) loop. Upon dereferencing, the iterator would
+produce an instance of Clifford, the virtual functions of which can then be used for calculations.
+
+It is our hope that we can, in this way, allow for a flexible use of Dirac structure in contraction codes,
+the need for which is certainly there. At the same time, there would be no confusing mess of magic indices into
+the algebra or horribly slow matrix multiplications. In fact, by providing a more abstract way of approaching
+the Clifford algebra, we can create a very natural way of selecting a different gamma convention. All we would
+need is an additional argument to the algebra constructor, that can default to our preferred ETMC convention.
+
+Finally, we'd like to quote a remark we read on the website given in the footnote.
+\begin{quote}
+ In our experience we have found that poorly designed and excessive use of constructors and destructors 
+ reduces performance much more than virtual function calls
+\end{quote}
+Let's be careful about our performance, but focus on getting the interface just right. Chances are we're
+going to be sitting on pretty performant code in the end.
+
+\end{document}

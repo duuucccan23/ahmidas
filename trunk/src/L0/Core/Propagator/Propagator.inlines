@@ -33,12 +33,12 @@ namespace Core
 
     size_t rank = weave.rank(sinkSite);
 
-    size_t localIndex = weave.globalCoordToLocalIndex(sinkSite[Base::idx_X],
-                                                      sinkSite[Base::idx_Y],
-                                                      sinkSite[Base::idx_Z],
-                                                      sinkSite[Base::idx_T]);
     if (rank == weave.rank())
     {
+      size_t localIndex = weave.globalCoordToLocalIndex(sinkSite[Base::idx_X],
+                                                        sinkSite[Base::idx_Y],
+                                                        sinkSite[Base::idx_Z],
+                                                        sinkSite[Base::idx_T]);
       tensor = QCD::Tensor((*d_components)[localIndex]);
     }
 

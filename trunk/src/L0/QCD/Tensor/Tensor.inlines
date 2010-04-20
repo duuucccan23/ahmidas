@@ -68,7 +68,7 @@ namespace QCD
   }
 
 
-  inline void Tensor::rightMultiplySpinColorDilutedConj(Tensor const& xi)
+  inline void Tensor::leftMultiplySpinColorDilutedConj(Tensor const& xi)
   {
     std::transform(d_data      , d_data +  12, d_data,
                     std::bind1st(std::multiplies< std::complex< double > >(), conj(xi.d_data[  0])));
@@ -95,15 +95,6 @@ namespace QCD
     std::transform(d_data + 132, d_data + 144, d_data + 132,
                     std::bind1st(std::multiplies< std::complex< double > >(), conj(xi.d_data[143])));
   }
-
-
-
-
-
-
-
-
-
 
 
 

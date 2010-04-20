@@ -63,13 +63,14 @@ namespace Contract
 
       Dirac::Matrix dd_tmp, uu_tmp;
 
+      size_t count(0);
+
       //y-dependent loop
       while(It_dd != field_dd->end())
       {
         // note that *It_dd is initialized to zero by default thanks to the default constructor
-        // std::cout << *It_dd << std::endl;
-        
-        // this part is only summed over sink timeslice (here one could insert momentum ...)
+
+        // this part is only summed over sink timeslice (here one could in principle insert momentum ...)
         for(size_t idx_X=0; idx_X<L; idx_X++)
         {
           pos_snk[Base::idx_X] = idx_X;
@@ -86,15 +87,27 @@ namespace Contract
               QCD::Tensor const xi_d_snk(xi_u_snk);
 
               QCD::Tensor const tmp_d_from_source(*It_d);
-              QCD::Tensor const tmp_u_from_source(*It_u1);;
+              QCD::Tensor const tmp_u_from_source(*It_u1);
+//               if (count == 65 && idx_X+idx_Y+idx_Z == 0)
+//               {
+//                   std::cout << tmp_d_from_source << std::endl;
+//               }
               // note: flavour change introduced by hermiticity trick in twisted mass
               // has already been accounted for in declaration of iterators, see above!
 
               QCD::Tensor tmp_d_from_sink(*It_phi_d);
               QCD::Tensor tmp_u_from_sink(*It_phi_u);
 
-              tmp_d_from_sink.rightMultiplySpinColorDilutedConj(xi_d_snk);  // Actually, is this correct?!
-              tmp_u_from_sink.rightMultiplySpinColorDilutedConj(xi_u_snk);
+              tmp_d_from_sink.leftMultiplySpinColorDilutedConj(xi_d_snk);
+              tmp_u_from_sink.leftMultiplySpinColorDilutedConj(xi_u_snk);
+
+
+              // note that the following would do the same but more inefficiently,
+              // since dilution is not accounted for:
+              //  xi_d_snk.conjugate();
+              //  xi_u_snk.conjugate();
+              //  tmp_d_from_sink.leftMultiply(xi_d_snk);
+              //  tmp_u_from_sink.leftMultiply(xi_u_snk);
 
 
 //               if (idx_X==1 && idx_Y==2 && idx_Z==3)
@@ -105,11 +118,13 @@ namespace Contract
 //                 exit(1);
 //               }
 
+              // important note: QCD::Tensor::dagger() does not change the QCD::Tensor it is applied to but returns a QCD::hcTensor
+
               // apply gamma5 hermiticity trick
-              tmp_d_from_sink.dagger();
+              tmp_d_from_sink = QCD::Tensor(tmp_d_from_sink.dagger());
               tmp_d_from_sink.rightMultiply(gamma5);
               tmp_d_from_sink *= gamma5;
-              tmp_u_from_sink.dagger();
+              tmp_u_from_sink = QCD::Tensor(tmp_d_from_sink.dagger());
               tmp_u_from_sink.rightMultiply(gamma5);
               tmp_u_from_sink *= gamma5;
 
@@ -128,12 +143,22 @@ namespace Contract
 //                 S_u2_xf= u2(pos_snk);
 
               // now the twopoint routine should do the job ...
+              // getDiracMatrix_alternative(dd_tmp, S_u1_xf, tmp_d_from_sink, S_u1_xf, Base::bar_PROTON);
               getDiracMatrix(dd_tmp, S_u1_xf, tmp_d_from_sink, S_u1_xf, Base::bar_PROTON);
               (*It_dd) += dd_tmp;
+//               getDiracMatrix_alternative(uu_tmp, S_u1_xf, S_d_xf, tmp_u_from_sink, Base::bar_PROTON);
+//               (*It_uu) += uu_tmp;
+//               getDiracMatrix_alternative(uu_tmp, tmp_u_from_sink, S_d_xf, S_u1_xf, Base::bar_PROTON);
+//               (*It_uu) += uu_tmp;
               getDiracMatrix(uu_tmp, S_u1_xf, S_d_xf, tmp_u_from_sink, Base::bar_PROTON);
               (*It_uu) += uu_tmp;
               getDiracMatrix(uu_tmp, tmp_u_from_sink, S_d_xf, S_u1_xf, Base::bar_PROTON);
               (*It_uu) += uu_tmp;
+
+//               //should better be equal to the twopoint:
+//               getDiracMatrix(uu_tmp, *It_u1, *It_d, *It_u1, Base::bar_PROTON);
+//               uu_tmp *= 1.0/double(L*L*L);
+//               (*It_uu) += uu_tmp;
             }
           }
         }
@@ -145,6 +170,7 @@ namespace Contract
         ++It_phi_d;
         ++It_dd;
         ++It_uu;
+        ++count;
       }
 
       Core::Correlator tp_dd(u1.L(), u1.T(), field_dd);

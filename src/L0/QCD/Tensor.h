@@ -81,8 +81,8 @@ namespace QCD
 
       // this is not a multiplication in the sense of the others
       // assumption: xi is diagonal (i.e. spin & color diluted)
-      // multiplies diagonal elements of xi to corresponding sink entries of *this
-      void rightMultiplySpinColorDilutedConj(Tensor const& xi);
+      // multiplies diagonal elements of xi to corresponding source entries of *this
+      void leftMultiplySpinColorDilutedConj(Tensor const& xi);
 
 
       template< size_t Index >
@@ -149,9 +149,10 @@ namespace QCD
       template< size_t Index >
       friend Tensor operator*(Dirac::Sigma< Index > const &gamma, Tensor const &tensor);
 
-      friend void getDiracMatrix(Dirac::Matrix &dMatrix, QCD::Tensor const &A, QCD::Tensor const &B);
-      friend void getDiracMatrix(Dirac::Matrix &dMatrix, Tensor const &A, QCD::Tensor const &B, bool const colourDilutedSource);
+      friend void getDiracMatrix(Dirac::Matrix &dMatrix, Tensor const &A, Tensor const &B);
+      friend void getDiracMatrix(Dirac::Matrix &dMatrix, Tensor const &A, Tensor const &B, bool const colourDilutedSource);
       friend void getDiracMatrix(Dirac::Matrix &dMatrix, Tensor const &A, Tensor const &B, Tensor const &C, Base::BaryonInterpolatingField const iPol);
+      friend void getDiracMatrix_alternative(Dirac::Matrix &dMatrix, Tensor const &A, Tensor const &B, Tensor const &C, Base::BaryonInterpolatingField const iPol);
 
       friend void make_sequential_d(Tensor result[16], Tensor const &A, Tensor const &B);
       friend void make_sequential_u(Tensor result[16], Tensor const &A, Tensor const &B);
@@ -164,9 +165,13 @@ namespace QCD
   template< size_t Index >
   QCD::Tensor operator*(Dirac::Sigma< Index > const &gamma, Tensor const &tensor);
 
-  void getDiracMatrix(Dirac::Matrix &dMatrix, QCD::Tensor const &A, QCD::Tensor const &B);
-  void getDiracMatrix(Dirac::Matrix &dMatrix, Tensor const &A, QCD::Tensor const &B, bool const colourDilutedSource);
+  void getDiracMatrix(Dirac::Matrix &dMatrix, Tensor const &A, Tensor const &B);
+  void getDiracMatrix(Dirac::Matrix &dMatrix, Tensor const &A, Tensor const &B, bool const colourDilutedSource);
   void getDiracMatrix(Dirac::Matrix &dMatrix, Tensor const &A, Tensor const &B, Tensor const &C, Base::BaryonInterpolatingField const iPol);
+  // alternative version, gives the same result as function above if Tensors A and C are equal
+  // note: one should worry about the correct convention here. Still, both functions give the same result for a proton tow point,
+  // provided that A and C are equal (i.e. we use the same propagators for both u)
+  void getDiracMatrix_alternative(Dirac::Matrix &dMatrix, Tensor const &A, Tensor const &B, Tensor const &C, Base::BaryonInterpolatingField const iPol);
   void make_sequential_d(Tensor result[16], Tensor const &A, Tensor const &B);
   void make_sequential_u(Tensor result[16], Tensor const &A, Tensor const &B);
 

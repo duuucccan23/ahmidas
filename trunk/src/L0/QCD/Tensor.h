@@ -77,6 +77,15 @@ namespace QCD
           in the near future.
       */
       template< size_t Index >
+      void rightMultiply(Dirac::Gamma< Index > const &gamma);
+
+      // this is not a multiplication in the sense of the others
+      // assumption: xi is diagonal (i.e. spin & color diluted)
+      // multiplies diagonal elements of xi to corresponding sink entries of *this
+      void rightMultiplySpinColorDilutedConj(Tensor const& xi);
+
+
+      template< size_t Index >
       Tensor operator*(Dirac::Gamma< Index > const &gamma) const;
 
       template< size_t Index >

@@ -110,5 +110,13 @@ namespace QCD
     return Tensor(tensor);
   }
 
+  template< size_t Index >
+  inline void QCD::Tensor::rightMultiply(Dirac::Gamma< Index > const &gamma)
+  {
+    for(size_t Idx=0; Idx<12; Idx++)
+    {
+      ((*this)(Idx)).leftMultiply(gamma);
+    }
+  }
 
 }

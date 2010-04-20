@@ -68,6 +68,45 @@ namespace QCD
   }
 
 
+  inline void Tensor::rightMultiplySpinColorDilutedConj(Tensor const& xi)
+  {
+    std::transform(d_data      , d_data +  12, d_data,
+                    std::bind1st(std::multiplies< std::complex< double > >(), conj(xi.d_data[  0])));
+    std::transform(d_data +  12, d_data +  24, d_data +  12,
+                    std::bind1st(std::multiplies< std::complex< double > >(), conj(xi.d_data[ 13])));
+    std::transform(d_data +  24, d_data +  36, d_data +  24,
+                    std::bind1st(std::multiplies< std::complex< double > >(), conj(xi.d_data[ 26])));
+    std::transform(d_data +  36, d_data +  48, d_data +  36,
+                    std::bind1st(std::multiplies< std::complex< double > >(), conj(xi.d_data[ 39])));
+    std::transform(d_data +  48, d_data +  60, d_data +  48,
+                    std::bind1st(std::multiplies< std::complex< double > >(), conj(xi.d_data[ 52])));
+    std::transform(d_data +  60, d_data +  72, d_data +  60,
+                    std::bind1st(std::multiplies< std::complex< double > >(), conj(xi.d_data[ 65])));
+    std::transform(d_data +  72, d_data +  84, d_data +  72,
+                    std::bind1st(std::multiplies< std::complex< double > >(), conj(xi.d_data[ 78])));
+    std::transform(d_data +  84, d_data +  96, d_data +  84,
+                    std::bind1st(std::multiplies< std::complex< double > >(), conj(xi.d_data[ 91])));
+    std::transform(d_data +  96, d_data + 108, d_data +  96,
+                    std::bind1st(std::multiplies< std::complex< double > >(), conj(xi.d_data[104])));
+    std::transform(d_data + 108, d_data + 120, d_data + 108,
+                    std::bind1st(std::multiplies< std::complex< double > >(), conj(xi.d_data[117])));
+    std::transform(d_data + 120, d_data + 132, d_data + 120,
+                    std::bind1st(std::multiplies< std::complex< double > >(), conj(xi.d_data[130])));
+    std::transform(d_data + 132, d_data + 144, d_data + 132,
+                    std::bind1st(std::multiplies< std::complex< double > >(), conj(xi.d_data[143])));
+  }
+
+
+
+
+
+
+
+
+
+
+
+
   inline hcTensor Tensor::dagger() const
   {
     return hcTensor(*this);

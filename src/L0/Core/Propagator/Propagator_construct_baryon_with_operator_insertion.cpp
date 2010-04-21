@@ -70,8 +70,8 @@ namespace Core
 
       Propagator::const_iterator It_u(S_u.begin());
       Propagator::const_iterator It_d(S_d.begin());
-      Propagator::const_iterator It_phi_u(phi_u.begin());
-      Propagator::const_iterator It_phi_d(phi_d.begin());
+      Propagator::const_iterator It_phi_u(phi_d.begin());
+      Propagator::const_iterator It_phi_d(phi_u.begin());
       Propagator::const_iterator It_xi(xi.begin());
 
 //       size_t count(0);
@@ -89,11 +89,6 @@ namespace Core
                   << "Operator with index " << ops[opNo] << " not implemented yet!" << std::endl;
       }
 
-     // ***************************************************************
-     // ***************************************************************
-     // trace part is still missing !!! (so is the u_bar*Op*u) ********
-     // ***************************************************************
-     // ***************************************************************
 
       QCD::Tensor dd_part2_local[16];
 
@@ -110,19 +105,22 @@ namespace Core
         if (localIndex == weave.localVolume())
           continue;
 
-        QCD::Tensor xi_u_snk(xi[localIndex]*gamma5);
+        // actually we leave a transposeFull() here since xi is diagonal
+        QCD::Tensor const xi_u_snk(xi[localIndex]*gamma5);
         QCD::Tensor xi_d_snk(xi_u_snk);
 
-        xi_d_snk.right_multiply_proton();
+        xi_d_snk.left_multiply_proton();
 
-        QCD::Tensor S_d_xf(S_d[localIndex]);
-        QCD::Tensor S_u_xf(S_u[localIndex]);
+        QCD::Tensor const S_d_xf(S_d[localIndex]);
+        QCD::Tensor const S_u_xf(S_u[localIndex]);
 
         QCD::Tensor tmp_d[16];
         QCD::make_sequential_d(tmp_d, S_u_xf, S_u_xf);
 
         for (size_t idx=0; idx<16; idx++)
         {
+          assert(0);
+          // this is wrong! we have to multiply to the sink indices which are not so easy to determine
           tmp_d[idx].rightMultiply(xi_d_snk);
           dd_part2_local[idx] += tmp_d[idx];
         }
@@ -133,6 +131,41 @@ namespace Core
       QCD::Tensor dd_part2[16];
       weave.allReduce(dd_part2_local, dd_part2, 16);
 
+      std::complex<double> const I (0, 1);
+
+
+// projection by hand - just a try
+// with gamma0 + i*gamma5
+
+      QCD::Tensor dd_part2_projected_trace(dd_part2[0]);
+      dd_part2_projected_trace *= I;
+      QCD::Tensor tmp_dd_part2(dd_part2[ 5]);
+      tmp_dd_part2 *= I;
+      dd_part2_projected_trace += tmp_dd_part2;
+      tmp_dd_part2 = dd_part2[10];
+      tmp_dd_part2 *= -I;
+      dd_part2_projected_trace += tmp_dd_part2;
+      tmp_dd_part2 = dd_part2[15];
+      tmp_dd_part2 *= -I;
+      dd_part2_projected_trace += tmp_dd_part2;
+
+      tmp_dd_part2 = dd_part2[ 2];
+      tmp_dd_part2 *= -1.0;
+      dd_part2_projected_trace += tmp_dd_part2;
+      tmp_dd_part2 = dd_part2[ 7];
+      dd_part2_projected_trace *= -1.0;
+      dd_part2_projected_trace += tmp_dd_part2;
+      tmp_dd_part2 = dd_part2[ 8];
+      dd_part2_projected_trace *= -1.0;
+      dd_part2_projected_trace += tmp_dd_part2;
+      tmp_dd_part2 = dd_part2[13];
+      dd_part2_projected_trace *= -1.0;
+      dd_part2_projected_trace += tmp_dd_part2;
+
+
+      dd_part2_projected_trace *= 0.5;
+
+
 
       //y-dependent loop
       while(It_dd != field_dd->end())
@@ -140,9 +173,9 @@ namespace Core
 
         //for spin & color diluted sources left and right multiplication is the same since they're diagonal
 
-        QCD::Tensor phi_d_y(gamma5 * (*It_phi_u));
+        QCD::Tensor phi_d_y(gamma5 * (*It_phi_d));
         phi_d_y.conjugate();
-        QCD::Tensor phi_u_y(gamma5 * (*It_phi_d));
+        QCD::Tensor phi_u_y(gamma5 * (*It_phi_u));
         phi_u_y.conjugate();
         QCD::Tensor xi_snk((*It_xi)*gamma5);
 
@@ -150,15 +183,11 @@ namespace Core
 //         QCD::Tensor S_u_y(*It_u);
 
         QCD::Tensor tmp(gamma0*S_d_y);
+        tmp.right_multiply_proton(); // left_multiply has been applied to Xi
+
         tmp.rightMultiply(phi_d_y);
-        tmp.left_multiply_proton(); // right_multiply has been applied to Xi
 
-
-
-        QCD::getDiracMatrix(*It_dd, tmp, dd_part2[ 0]);
-//         (*It_dd)  +=  Dirac::Matrix(tmp, dd_part2[ 5]);
-//         (*It_dd)  +=  Dirac::Matrix(tmp, dd_part2[10]);
-//         (*It_dd)  +=  Dirac::Matrix(tmp, dd_part2[15]);
+        QCD::getDiracMatrix((*It_dd), tmp, dd_part2_projected_trace);
 
         ++It_u;
         ++It_d;

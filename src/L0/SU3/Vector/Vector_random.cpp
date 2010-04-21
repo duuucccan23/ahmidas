@@ -1,8 +1,8 @@
 #include "Vector.ih"
 
-inline SU3::Vector SU3::Vector::random()
+SU3::Vector SU3::Vector::random()
 {
-  Vector result;
+  GeneralVector< 1 > result;
   result.setToRandom();
   return result;
 }

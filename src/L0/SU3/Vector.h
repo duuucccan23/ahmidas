@@ -1,46 +1,45 @@
 #pragma once
 
-#include <L0/SU3/Matrix.h>
-
-#include <complex>
+#include <L0/SU3/GeneralVector.h>
 
 namespace SU3
 {
-  class Vector
+  template <>
+  class GeneralVector< 1 >
   {
     std::complex< double > d_data[3];
 
     // Some useful constant matrices
-    static const Vector s_zero;
+    static const GeneralVector< 1 > s_zero;
 
     public:
-      Vector();
-      Vector(double const *data);
-      Vector(std::complex< double > const *data);
-      Vector(Vector const &other);
-      Vector &operator=(Vector const &other);
+      GeneralVector();
+      GeneralVector(double const *data);
+      GeneralVector(std::complex< double > const *data);
+      GeneralVector(GeneralVector< 1 > const &other);
+      GeneralVector &operator=(GeneralVector< 1 > const &other);
 
       void setToRandom();
       void setToZero();
 
-      static Vector        random();
-      static Vector const &zero();
+      static GeneralVector< 1 >        random();
+      static GeneralVector< 1 > const &zero();
 
-      ~Vector();
+      ~GeneralVector();
 
-      friend std::ostream &operator<<(std::ostream &out, Vector const &vec);
-
-      template< typename T >
-      Vector &operator+=(T const &rhand);
+      friend std::ostream &operator<<(std::ostream &out, GeneralVector< 1 > const &vec);
 
       template< typename T >
-      Vector &operator-=(T const &rhand);
+      GeneralVector< 1 > &operator+=(T const &rhand);
 
       template< typename T >
-      Vector &operator*=(T const &rhand);
+      GeneralVector< 1 > &operator-=(T const &rhand);
 
       template< typename T >
-      Vector &operator/=(T const &rhand);
+      GeneralVector< 1 > &operator*=(T const &rhand);
+
+      template< typename T >
+      GeneralVector< 1 > &operator/=(T const &rhand);
 
       void leftMultiply(Matrix const &mat);
       void leftMultiply(hcMatrix const &mat);
@@ -50,7 +49,9 @@ namespace SU3
 
       size_t size() const;
   };
-
+  
+  typedef class GeneralVector< 1 > Vector;
+  
   std::complex< double > innerProduct(Vector const &left, Vector const &right);
 }
 

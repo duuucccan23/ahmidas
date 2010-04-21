@@ -41,7 +41,7 @@ void Tool::IO::loadScidac(Core::Field< Element > *field, std::string const &file
 
   Lime::Reader reader(filename);
 
-  Scidacinfo *info;
+  Scidacinfo *info = 0;
 
   // since this is causing problems in massive parallelization, the following block is
   // processed serially

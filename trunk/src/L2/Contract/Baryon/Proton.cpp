@@ -64,26 +64,26 @@ namespace Contract
 
     std::vector< Core::Correlator > allthreepoints;
 
-    std::cout << "\nFull proton two point function:\n" << std::endl;
+//     std::cout << "\nFull proton three point function:\n" << std::endl;
     for (size_t opIdx=0; opIdx<my_operators.size(); opIdx++)
     {
       Core::Correlator threepoint_UU(u.L(), u.T(), threepoint[2*opIdx  ]);
       Core::Correlator threepoint_DD(u.L(), u.T(), threepoint[2*opIdx+1]);
       threepoint_UU.sumOverSpatialVolume();
       threepoint_DD.sumOverSpatialVolume();
-      std::cout << "\n u_bar * operator * u  (operator no: " << my_operators[opIdx] << ")\n" << std::endl;
-      for (size_t t=0; t<u.T(); t++)
-      {
-        std::cout << "t = " << t << std::endl;
-        std::cout << threepoint_UU[t] << std::endl;
-      }
-      std::cout << "\n d_bar * operator * d  (operator no: " << my_operators[opIdx] << ")\n" << std::endl;
-      for (size_t t=0; t<u.T(); t++)
-      {
-        std::cout << "t = " << t << std::endl;
-        std::cout << threepoint_DD[t] << std::endl;
-      }
-      std::cout << std::endl;
+//       std::cout << "\n u_bar * operator * u  (operator no: " << my_operators[opIdx] << ")\n" << std::endl;
+//       for (size_t t=0; t<u.T(); t++)
+//       {
+//         std::cout << "t = " << t << std::endl;
+//         std::cout << threepoint_UU[t] << std::endl;
+//       }
+//       std::cout << "\n d_bar * operator * d  (operator no: " << my_operators[opIdx] << ")\n" << std::endl;
+//       for (size_t t=0; t<u.T(); t++)
+//       {
+//         std::cout << "t = " << t << std::endl;
+//         std::cout << threepoint_DD[t] << std::endl;
+//       }
+//       std::cout << std::endl;
       threepoint_UU *= my_projector;
       threepoint_DD *= my_projector;
       allthreepoints.push_back(threepoint_UU);

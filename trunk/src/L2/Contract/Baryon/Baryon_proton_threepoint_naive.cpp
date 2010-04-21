@@ -4,7 +4,7 @@
 
 namespace Contract
 {
-  std::vector< Core::Correlator > proton_threepoint_naive(Core::Propagator const &u1, Core::Propagator const &u2,
+  std::vector< Core::Correlator > proton_threepoint_stochastic_naive(Core::Propagator const &u,
                                                           Core::Propagator const &d,
                                                           Core::StochasticPropagator<12> const &u_stoch_at_sink,
                                                           Core::StochasticPropagator<12> const &d_stoch_at_sink,
@@ -13,7 +13,7 @@ namespace Contract
                                                           std::vector< Base::Operator > const &ops,
                                                           size_t const t_src, size_t const t_snk)
   {
-    assert(u1.L() == d.L() && u1.T() == d.T() && u2.L() == d.L() && u2.T() == d.T());
+    assert(u.L() == d.L() && u.T() == d.T());
     if(gauge_field != NULL)
       assert(gauge_field->L() == d.L() && gauge_field->T() == d.T());
 
@@ -41,8 +41,7 @@ namespace Contract
       Core::Field< Dirac::Matrix >::iterator It_dd(field_dd->begin());
       Core::Field< Dirac::Matrix >::iterator It_uu(field_uu->begin());
 
-      Core::Propagator::const_iterator It_u1(u1.begin());
-      //Core::Propagator::const_iterator It_u2(u1.begin());
+      Core::Propagator::const_iterator It_u(u.begin());
       Core::Propagator::const_iterator It_d(d.begin());
       Core::Propagator::const_iterator It_phi_d(u_stoch_at_sink.begin());
       Core::Propagator::const_iterator It_phi_u(d_stoch_at_sink.begin());
@@ -81,13 +80,10 @@ namespace Contract
             {
               pos_snk[Base::idx_Z] = idx_Z;
 
-              QCD::Tensor const xi_u_snk(xi_at_sink(pos_snk));
-              //xi_u_snk *= gamma5;
-              //xi_u_snk.transposeFull(); // this is only necessary if something is diluted
-              QCD::Tensor const xi_d_snk(xi_u_snk);
+              QCD::Tensor const xi_snk(xi_at_sink(pos_snk));
 
               QCD::Tensor const tmp_d_from_source(*It_d);
-              QCD::Tensor const tmp_u_from_source(*It_u1);
+              QCD::Tensor const tmp_u_from_source(*It_u);
 //               if (count == 65 && idx_X+idx_Y+idx_Z == 0)
 //               {
 //                   std::cout << tmp_d_from_source << std::endl;
@@ -98,8 +94,8 @@ namespace Contract
               QCD::Tensor tmp_d_from_sink(*It_phi_d);
               QCD::Tensor tmp_u_from_sink(*It_phi_u);
 
-              tmp_d_from_sink.leftMultiplySpinColorDilutedConj(xi_d_snk);
-              tmp_u_from_sink.leftMultiplySpinColorDilutedConj(xi_u_snk);
+              tmp_d_from_sink.leftMultiplySpinColorDilutedConj(xi_snk);
+              tmp_u_from_sink.leftMultiplySpinColorDilutedConj(xi_snk);
 
 
               // note that the following would do the same but more inefficiently,
@@ -124,7 +120,7 @@ namespace Contract
               tmp_d_from_sink = QCD::Tensor(tmp_d_from_sink.dagger());
               tmp_d_from_sink.rightMultiply(gamma5);
               tmp_d_from_sink *= gamma5;
-              tmp_u_from_sink = QCD::Tensor(tmp_d_from_sink.dagger());
+              tmp_u_from_sink = QCD::Tensor(tmp_u_from_sink.dagger());
               tmp_u_from_sink.rightMultiply(gamma5);
               tmp_u_from_sink *= gamma5;
 
@@ -135,36 +131,21 @@ namespace Contract
               tmp_u_from_sink.leftMultiply(tmp_u_from_source);
 
               QCD::Tensor S_d_xf(d(pos_snk));
-              QCD::Tensor S_u1_xf(u1(pos_snk));
-//               QCD::Tensor S_u2_xf;
-//               if(&u2 == &u1)
-//                 S_u2_xf = S_u1_xf;
-//               else
-//                 S_u2_xf= u2(pos_snk);
+              QCD::Tensor S_u_xf(u(pos_snk));
 
               // now the twopoint routine should do the job ...
-              // getDiracMatrix_alternative(dd_tmp, S_u1_xf, tmp_d_from_sink, S_u1_xf, Base::bar_PROTON);
-              getDiracMatrix(dd_tmp, S_u1_xf, tmp_d_from_sink, S_u1_xf, Base::bar_PROTON);
+              getDiracMatrix(dd_tmp, S_u_xf, tmp_d_from_sink, S_u_xf, Base::bar_PROTON);
               (*It_dd) += dd_tmp;
-//               getDiracMatrix_alternative(uu_tmp, S_u1_xf, S_d_xf, tmp_u_from_sink, Base::bar_PROTON);
-//               (*It_uu) += uu_tmp;
-//               getDiracMatrix_alternative(uu_tmp, tmp_u_from_sink, S_d_xf, S_u1_xf, Base::bar_PROTON);
-//               (*It_uu) += uu_tmp;
-              getDiracMatrix(uu_tmp, S_u1_xf, S_d_xf, tmp_u_from_sink, Base::bar_PROTON);
+              getDiracMatrix(uu_tmp, S_u_xf, S_d_xf, tmp_u_from_sink, Base::bar_PROTON);
               (*It_uu) += uu_tmp;
-              getDiracMatrix(uu_tmp, tmp_u_from_sink, S_d_xf, S_u1_xf, Base::bar_PROTON);
+              getDiracMatrix(uu_tmp, tmp_u_from_sink, S_d_xf, S_u_xf, Base::bar_PROTON);
               (*It_uu) += uu_tmp;
 
-//               //should better be equal to the twopoint:
-//               getDiracMatrix(uu_tmp, *It_u1, *It_d, *It_u1, Base::bar_PROTON);
-//               uu_tmp *= 1.0/double(L*L*L);
-//               (*It_uu) += uu_tmp;
             }
           }
         }
 
-        ++It_u1;
-        //++It_u2;
+        ++It_u;
         ++It_d;
         ++It_phi_u;
         ++It_phi_d;
@@ -173,8 +154,8 @@ namespace Contract
         ++count;
       }
 
-      Core::Correlator tp_dd(u1.L(), u1.T(), field_dd);
-      Core::Correlator tp_uu(u1.L(), u1.T(), field_uu);
+      Core::Correlator tp_dd(u.L(), u.T(), field_dd);
+      Core::Correlator tp_uu(u.L(), u.T(), field_uu);
       tp_dd.sumOverSpatialVolume();
       tp_uu.sumOverSpatialVolume();
       threepoints_all.push_back(tp_dd);

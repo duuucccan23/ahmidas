@@ -102,24 +102,24 @@ int main(int argc, char **argv)
 
 //   std::cout << Contract::proton_twopoint(uProp, uProp, dProp, Base::proj_PARITY_PLUS_TM) << std::endl;
 
-  std::vector< Core::Correlator > p3p = Contract::proton_threepoint_naive(uProp, uProp, dProp,
+  std::vector< Core::Correlator > p3p = Contract::proton_threepoint_stochastic_naive(uProp, dProp,
                                                           stochastic_uProp, stochastic_dProp, stochasticSource,
                                                           NULL, //no gauge field at the moment
                                                           my_operators,
                                                           timeslice_source, timeslice_sink);
 
-// 
-//   std::vector< Core::Correlator > p3p = Contract::proton_threepoint_stochastic(*uProp, *dProp,
-//                                                                      *stochastic_uProp, *stochastic_dProp,
-//                                                                      *stochasticSource,
-//                                                                      timeslice_source, timeslice_stochSource,
-//                                                                      my_operators, Base::proj_PARITY_PLUS_TM);
 
-  for (size_t t=0; t<p3p[0].T(); t++)
-  {
-    if(abs(tr((p3p[0])[t])) > 1.e-100)
-      std::cout << "t = " << t  << "\n" << (p3p[0])[t] << std::endl;
-  }
+  std::vector< Core::Correlator > p3p_stoch = Contract::proton_threepoint_stochastic(uProp, dProp,
+                                                                     stochastic_uProp, stochastic_dProp,
+                                                                     stochasticSource,
+                                                                     timeslice_source, timeslice_stochSource,
+                                                                     my_operators, Base::proj_PARITY_PLUS_TM);
+
+//   for (size_t t=0; t<p3p[0].T(); t++)
+//   {
+//     if(abs(tr((p3p[0])[t])) > 1.e-100)
+//       std::cout << "t = " << t  << "\n" << (p3p[0])[t] << std::endl;
+//   }
 
 
   p3p[0] *= Base::proj_PARITY_PLUS_TM;
@@ -128,12 +128,12 @@ int main(int argc, char **argv)
 
   std::cout.precision(8);
 
-  std::cout << "\nproton threepoint:\n" <<std::endl;
+  std::cout << "\nproton threepoint (naive):\n" <<std::endl;
   std::cout << "\n d_bar*Op*d" <<std::endl;
   for (size_t t=0; t<p3p[0].T(); t++)
   {
     if(abs(tr((p3p[0])[t])) > 1.e-100)
-      std::cout << t << "  " << (tr((p3p[0])[t])).real() << "  " << (tr((p3p[0])[t])).imag() << "  " << abs(tr((p3p[0])[t])) << std::endl;
+      std::cout << t << "  " << (tr((p3p[0])[t])).real() << "  " << (tr((p3p[0])[t])).imag() << std::endl;
   }
   std::cout << "\n u_bar*Op*u" <<std::endl;
   for (size_t t=0; t<p3p[1].T(); t++)
@@ -141,6 +141,18 @@ int main(int argc, char **argv)
     if(abs(tr((p3p[1])[t])) > 1.e-100)
       std::cout << t << "  " << (tr((p3p[1])[t])).real() << "  " << (tr((p3p[1])[t])).imag() << std::endl;
   }
+
+  p3p.clear();
+
+  std::cout << "\nproton threepoint (stochastic):\n" <<std::endl;
+  std::cout << "\n d_bar*Op*d" <<std::endl;
+  for (size_t t=0; t<p3p_stoch[0].T(); t++)
+  {
+    if(abs(tr((p3p_stoch[0])[t])) > 1.e-100)
+      std::cout << t << "  " << (tr((p3p_stoch[0])[t])).real() << "  " << (tr((p3p_stoch[0])[t])).imag() << std::endl;
+  }
+
+  p3p_stoch.clear();
 
 
 //   std::cout << "\nthat is supposed to be the result:\n"

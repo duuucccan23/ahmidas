@@ -19,7 +19,7 @@ namespace Contract
   // the proton three point with a stochastic (estimate of an) all-to-all propagator at the proton sink.
   // this is a mess concerning performance since it scales vith 4-Volume^2, but provides a good cross-check
   // the gauge field is sometimes not needed, in this case NULL can be passed;
-  std::vector< Core::Correlator > proton_threepoint_naive(Core::Propagator const &u1, Core::Propagator const &u2,
+  std::vector< Core::Correlator > proton_threepoint_stochastic_naive(Core::Propagator const &u,
                                                           Core::Propagator const &d,
                                                           Core::StochasticPropagator<12> const &u_stoch_at_sink,
                                                           Core::StochasticPropagator<12> const &d_stoch_at_sink,

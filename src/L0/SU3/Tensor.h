@@ -7,7 +7,7 @@
 namespace SU3
 {
   template< size_t Dim >
-  class GeneralVector
+  class Tensor
   {
   };
 }

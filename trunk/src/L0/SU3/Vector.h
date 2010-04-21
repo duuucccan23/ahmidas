@@ -1,45 +1,45 @@
 #pragma once
 
-#include <L0/SU3/GeneralVector.h>
+#include <L0/SU3/Tensor.h>
 
 namespace SU3
 {
   template <>
-  class GeneralVector< 1 >
+  class Tensor< 1 >
   {
     std::complex< double > d_data[3];
 
     // Some useful constant matrices
-    static const GeneralVector< 1 > s_zero;
+    static const Tensor< 1 > s_zero;
 
     public:
-      GeneralVector();
-      GeneralVector(double const *data);
-      GeneralVector(std::complex< double > const *data);
-      GeneralVector(GeneralVector< 1 > const &other);
-      GeneralVector &operator=(GeneralVector< 1 > const &other);
+      Tensor();
+      Tensor(double const *data);
+      Tensor(std::complex< double > const *data);
+      Tensor(Tensor< 1 > const &other);
+      Tensor &operator=(Tensor< 1 > const &other);
 
       void setToRandom();
       void setToZero();
 
-      static GeneralVector< 1 >        random();
-      static GeneralVector< 1 > const &zero();
+      static Tensor< 1 >        random();
+      static Tensor< 1 > const &zero();
 
-      ~GeneralVector();
+      ~Tensor();
 
-      friend std::ostream &operator<<(std::ostream &out, GeneralVector< 1 > const &vec);
-
-      template< typename T >
-      GeneralVector< 1 > &operator+=(T const &rhand);
+      friend std::ostream &operator<<(std::ostream &out, Tensor< 1 > const &vec);
 
       template< typename T >
-      GeneralVector< 1 > &operator-=(T const &rhand);
+      Tensor< 1 > &operator+=(T const &rhand);
 
       template< typename T >
-      GeneralVector< 1 > &operator*=(T const &rhand);
+      Tensor< 1 > &operator-=(T const &rhand);
 
       template< typename T >
-      GeneralVector< 1 > &operator/=(T const &rhand);
+      Tensor< 1 > &operator*=(T const &rhand);
+
+      template< typename T >
+      Tensor< 1 > &operator/=(T const &rhand);
 
       void leftMultiply(Matrix const &mat);
       void leftMultiply(hcMatrix const &mat);
@@ -50,7 +50,7 @@ namespace SU3
       size_t size() const;
   };
   
-  typedef class GeneralVector< 1 > Vector;
+  typedef class Tensor< 1 > Vector;
   
   std::complex< double > innerProduct(Vector const &left, Vector const &right);
 }

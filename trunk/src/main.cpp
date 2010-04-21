@@ -1,4 +1,5 @@
 #include <L0/Dirac/Gamma.h>
+#include <L0/SU3/Vector.h>
 #include <iostream>
 
 int main(int argc, char **argv)
@@ -31,5 +32,9 @@ int main(int argc, char **argv)
   std::cout << "Gamma< 52 >\n" << g52;
   std::cout << "Gamma< 53 >\n" << g53;
   std::cout << "Gamma< 54 >\n" << g54;
+  
+  SU3::Vector test = SU3::Vector::random();
+  std::cout << test << std::endl;
+  
   return 0;
 }

@@ -1,24 +1,24 @@
 namespace SU3
 {
-  inline Vector::GeneralVector()
+  inline Vector::Tensor()
   {}
 
-  inline Vector::GeneralVector(double const *data)
+  inline Vector::Tensor(double const *data)
   {
     std::copy(data, data + 6, reinterpret_cast< double* >(d_data));
   }
 
-  inline Vector::GeneralVector(std::complex< double > const *data)
+  inline Vector::Tensor(std::complex< double > const *data)
   {
     std::copy(data, data + 3, d_data);
   }
 
-  inline Vector::GeneralVector(Vector const &other)
+  inline Vector::Tensor(Vector const &other)
   {
     std::copy(other.d_data, other.d_data + 3, d_data);
   }
   
-  inline Vector::~GeneralVector()
+  inline Vector::~Tensor()
   {}
   
   inline Vector &Vector::operator=(Vector const &other)

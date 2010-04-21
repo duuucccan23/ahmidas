@@ -2,7 +2,7 @@
 
 SU3::Vector SU3::Vector::random()
 {
-  GeneralVector< 1 > result;
+  SU3::Vector result;
   result.setToRandom();
   return result;
 }

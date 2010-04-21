@@ -10,4 +10,4 @@ namespace
   };
 }
 
-SU3::GeneralVector< 1 > const SU3::GeneralVector< 1 >::s_zero(::zero);
+SU3::Tensor< 1 > const SU3::Tensor< 1 >::s_zero(::zero);

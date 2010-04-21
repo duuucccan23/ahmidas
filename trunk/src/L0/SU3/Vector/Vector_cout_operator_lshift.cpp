@@ -1,6 +1,6 @@
 #include "Vector.ih"
 
-std::ostream &SU3::operator<<(std::ostream &out, SU3::Vector const &vec)
+std::ostream &SU3::operator<<(std::ostream &out, SU3::GeneralVector< 1 > const &vec)
 {
   out << std::scientific << std::setprecision(2) << std::showpos
       << "[ " << vec[0].real() << "  " << vec[0].imag() << " * i   "

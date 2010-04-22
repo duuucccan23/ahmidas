@@ -1,110 +1,107 @@
-namespace Core
+inline Correlator::Correlator(Correlator const &other)
+  : d_weave(other.d_weave), d_data(other.d_data),
+    d_sumTimeslice(other.d_sumTimeslice), d_sumTimeslice_global(other.d_sumTimeslice_global),
+    d_references(other.d_references)
 {
-  inline Correlator::Correlator(Correlator const &other)
-    : d_weave(other.d_weave), d_data(other.d_data),
-      d_sumTimeslice(other.d_sumTimeslice), d_sumTimeslice_global(other.d_sumTimeslice_global),
-      d_references(other.d_references)
-  {
-    *d_references += 1;
-  }
+  *d_references += 1;
+}
 
-  inline Correlator::Correlator(size_t const L, size_t const T, Core::Field<Dirac::Matrix>* data)
-    : d_weave(new Base::Weave(L, T)), d_data(data),
-      d_sumTimeslice(new Dirac::Matrix[T]), d_sumTimeslice_global(new Dirac::Matrix[T]),
-      d_references(new size_t(1))
-  {
-  }
+inline Correlator::Correlator(size_t const L, size_t const T, Core::Field<Dirac::Matrix>* data)
+  : d_weave(new Base::Weave(L, T)), d_data(data),
+    d_sumTimeslice(new Dirac::Matrix[T]), d_sumTimeslice_global(new Dirac::Matrix[T]),
+    d_references(new size_t(1))
+{
+}
 
-  inline Correlator::~Correlator()
-  {
-    destroy();
-  }
+inline Correlator::~Correlator()
+{
+  destroy();
+}
 
-  inline Dirac::Matrix &Correlator::operator[](size_t const t)
-  {
-    assert(t < T());
-    return d_sumTimeslice_global[t];
-  }
+inline Dirac::Matrix &Correlator::operator[](size_t const t)
+{
+  assert(t < T());
+  return d_sumTimeslice_global[t];
+}
 
-  inline Dirac::Matrix const &Correlator::operator[](size_t const t) const
-  {
-    assert(t < T());
-    return d_sumTimeslice_global[t];
-  }
+inline Dirac::Matrix const &Correlator::operator[](size_t const t) const
+{
+  assert(t < T());
+  return d_sumTimeslice_global[t];
+}
 
-  inline void Correlator::operator*=(double const factor)
+inline void Correlator::operator*=(double const factor)
+{
+  isolate();
+  Core::Field< Dirac::Matrix >::iterator I = d_data->begin();
+  while(I != d_data->end())
   {
-    isolate();
-    Core::Field< Dirac::Matrix >::iterator I = d_data->begin();
-    while(I != d_data->end())
-    {
-      (*I) *= factor;
-      ++I;
-    }
-    for (size_t t=0; t<T(); t++)
-    {
-        d_sumTimeslice[t]        *= factor;
-        d_sumTimeslice_global[t] *= factor;
-    }
+    (*I) *= factor;
+    ++I;
   }
+  for (size_t t=0; t<T(); t++)
+  {
+      d_sumTimeslice[t]        *= factor;
+      d_sumTimeslice_global[t] *= factor;
+  }
+}
 
-  inline void Correlator::operator*=(std::complex< double > const &factor)
+inline void Correlator::operator*=(std::complex< double > const &factor)
+{
+  isolate();
+  Core::Field< Dirac::Matrix >::iterator I = d_data->begin();
+  while(I != d_data->end())
   {
-    isolate();
-    Core::Field< Dirac::Matrix >::iterator I = d_data->begin();
-    while(I != d_data->end())
-    {
-      (*I) *= factor;
-      ++I;
-    }
-    for (size_t t=0; t<T(); t++)
-    {
-        d_sumTimeslice[t]        *= factor;
-        d_sumTimeslice_global[t] *= factor;
-    }
+    (*I) *= factor;
+    ++I;
   }
+  for (size_t t=0; t<T(); t++)
+  {
+      d_sumTimeslice[t]        *= factor;
+      d_sumTimeslice_global[t] *= factor;
+  }
+}
 
-  inline void Correlator::operator+=(Correlator const &other)
+inline void Correlator::operator+=(Correlator const &other)
+{
+  isolate();
+  Core::Field< Dirac::Matrix >::iterator I = d_data->begin();
+  Core::Field< Dirac::Matrix >::const_iterator J = other.d_data->begin();
+  while(I != d_data->end())
   {
-    isolate();
-    Core::Field< Dirac::Matrix >::iterator I = d_data->begin();
-    Core::Field< Dirac::Matrix >::const_iterator J = other.d_data->begin();
-    while(I != d_data->end())
-    {
-      (*I) += (*J);
-      ++I;
-      ++J;
-    }
-    for (size_t t=0; t<T(); t++)
-    {
-        d_sumTimeslice[t]        += other.d_sumTimeslice[t];
-        d_sumTimeslice_global[t] += other.d_sumTimeslice_global[t];
-    }
+    (*I) += (*J);
+    ++I;
+    ++J;
   }
+  for (size_t t=0; t<T(); t++)
+  {
+      d_sumTimeslice[t]        += other.d_sumTimeslice[t];
+      d_sumTimeslice_global[t] += other.d_sumTimeslice_global[t];
+  }
+}
 
-  inline std::complex< double > Correlator::getTrSum(size_t const timeslice) const
-  {
-    assert(timeslice < T());
-    return d_sumTimeslice_global[timeslice].trace();
-  }
+inline std::complex< double > Correlator::getTrSum(size_t const timeslice) const
+{
+  assert(timeslice < T());
+  return d_sumTimeslice_global[timeslice].trace();
+}
 
-  inline size_t Correlator::T() const
-  {
-    return d_weave->T();
-  }
+inline size_t Correlator::T() const
+{
+  return d_weave->T();
+}
 
-  inline size_t Correlator::L() const
-  {
-    return d_weave->L();
-  }
+inline size_t Correlator::L() const
+{
+  return d_weave->L();
+}
 
-  inline size_t Correlator::size() const
-  {
-    return d_weave->localSize(Base::idx_T);
-  }
+inline size_t Correlator::size() const
+{
+  return d_weave->localSize(Base::idx_T);
+}
 
-  inline bool Correlator::isRoot() const
-  {
-    return d_weave->isRoot();
-  }
+inline bool Correlator::isRoot() const
+{
+  return d_weave->isRoot();
 }

@@ -1,8 +1,10 @@
+#include "Propagator.ih"
+
 namespace Core
 {
 
-  inline Field< Dirac::Matrix > *Propagator::construct_baryon(Propagator const &no2, Propagator const &no3,
-                                                              Base::BaryonInterpolatingField const ipol) const
+  Field< Dirac::Matrix > *Propagator::construct_baryon(Propagator const &no2, Propagator const &no3,
+                                                       Base::BaryonInterpolatingField const ipol) const
   {
     assert (T()==no2.T() && L()==no2.L() && T()==no3.T() && L()==no3.L());
 

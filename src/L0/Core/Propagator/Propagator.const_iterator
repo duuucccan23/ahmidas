@@ -5,7 +5,7 @@
   for iteration over colour and Dirac indices at a particular lattice site,
   the QCD::Tensor::const_iterator is responsible  */
 
-class const_iterator : public Core::Field< QCD::Tensor >::const_iterator
+class const_iterator : public Field< QCD::Tensor >::const_iterator
 {
   friend class Propagator;
 

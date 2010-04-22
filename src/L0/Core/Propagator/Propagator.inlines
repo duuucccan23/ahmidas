@@ -1,221 +1,110 @@
-namespace Core
+inline Propagator::Propagator(size_t L, size_t T, bool alloc)
+  : d_references(new size_t(1))
 {
+  if(alloc)
+    d_components = new Field< QCD::Tensor >(L, T);
+}
 
+inline Propagator::Propagator(Propagator const &other)
+  : d_references(other.d_references),
+    d_components(other.d_components)
+{
+  *d_references += 1;
+}
 
-  inline Propagator::Propagator(size_t L, size_t T, bool alloc)
-    : d_references(new size_t(1))
+inline Propagator::~Propagator()
+{
+  destroy();
+}
+
+inline void Propagator::destroy()
+{
+  *d_references -= 1;
+  if (*d_references == 0)
   {
-
-    if(alloc)
-    {
-      d_components = new Field< QCD::Tensor >(L, T);
-    }
+    delete d_references;
+    delete d_components;
   }
+}
 
+inline QCD::Tensor const &Propagator::operator[](size_t const localIndex) const
+{
+  return (*d_components)[localIndex];
+}
 
-  inline Propagator::Propagator(Propagator const &other)
-    : d_references(other.d_references),
-      d_components(other.d_components)
+inline QCD::Tensor &Propagator::operator[](size_t const localIndex)
+{
+  isolate();
+  return (*d_components)[localIndex];
+}
+
+inline Propagator &Propagator::dagger()
+{
+  isolate();
+  Propagator::iterator it = begin();
+  while(it != end())
   {
-    *d_references += 1;
+    (*it) = QCD::Tensor((*it).dagger());
+    ++it;
   }
+  return *this;
+}
 
-
-  inline Propagator::~Propagator()
+inline void Propagator::setToRandom()
+{
+  isolate();
+  Propagator::iterator it = begin();
+  while(it != end())
   {
-    destroy();
+    (*it).setToRandom();
+    ++it;
   }
+}
 
-  inline QCD::Tensor Propagator::operator()(size_t const * sinkSite) const
+inline Propagator::iterator Propagator::begin()
+{
+  isolate();
+  return iterator(*this, 0);
+}
+
+inline Propagator::const_iterator Propagator::begin() const
+{
+  return const_iterator(*this, 0);
+}
+
+inline Propagator::iterator Propagator::end()
+{
+  isolate();
+  return iterator(*this, d_components->size());
+}
+
+inline Propagator::const_iterator Propagator::end() const
+{
+  return const_iterator(*this, d_components->size());
+}
+
+inline size_t const Propagator::size() const
+{
+  return d_size;
+}
+
+inline size_t const Propagator::L() const
+{
+  return d_components->L();
+}
+
+inline size_t const Propagator::T() const
+{
+  return d_components->T();
+}
+
+inline std::ostream &operator<<(std::ostream &out, Propagator const &p)
+{
+  Propagator::const_iterator I(p.begin());
+  while (I != p.end())
   {
-    Base::Weave weave(L(), T());
-    QCD::Tensor tensor;
-
-    size_t rank = weave.rank(sinkSite);
-
-    if (rank == weave.rank())
-    {
-      size_t localIndex = weave.globalCoordToLocalIndex(sinkSite[Base::idx_X],
-                                                        sinkSite[Base::idx_Y],
-                                                        sinkSite[Base::idx_Z],
-                                                        sinkSite[Base::idx_T]);
-      tensor = QCD::Tensor((*d_components)[localIndex]);
-    }
-
-    weave.broadcast(&tensor, 1, rank);
-
-    return tensor;
+    out << (*I) << std::endl;
+    ++I;
   }
-
-  inline QCD::Tensor const &Propagator::operator[](size_t const localIndex) const
-  {
-    return (*d_components)[localIndex];
-  }
-
-  inline QCD::Tensor &Propagator::operator[](size_t const localIndex)
-  {
-    isolate();
-    return (*d_components)[localIndex];
-  }
-
-
-  inline Propagator &Propagator::revert()
-  {
-    Dirac::Gamma<5> gamma5 = Dirac::Gamma<5>();
-    isolate();
-    Propagator::iterator it = begin();
-    while(it != end())
-    {
-      QCD::Tensor tmp((*it).dagger());
-      tmp *= gamma5;
-      (*it) = gamma5*tmp;
-      ++it;
-    }
-    return *this;
-  }
-
-  inline Propagator &Propagator::dagger()
-  {
-    isolate();
-    Propagator::iterator it = begin();
-    while(it != end())
-    {
-      (*it) = QCD::Tensor((*it).dagger());
-      ++it;
-    }
-    return *this;
-  }
-
-  inline double Propagator::diff(Propagator const& other) const
-  {
-    if (d_components == other.d_components)
-      return 0.0;
-    if (L() != other.L() || T() != other.T())
-      return -1.0;
-
-    double diff(0.0);
-
-    Propagator::const_iterator it1 = begin();
-    Propagator::const_iterator it2 = other.begin();
-
-    while(it1 != end())
-    {
-      diff += abs((*it1).diff(*it2));
-      ++it2;
-      ++it1;
-    }
-    diff /= (double(d_components->volume())*double(size()));
-    return diff;
-  }
-
-  inline void Propagator::setToRandom()
-  {
-    isolate();
-    Propagator::iterator it = begin();
-    while(it != end())
-    {
-      (*it).setToRandom();
-      ++it;
-    }
-  }
-
-  inline Propagator &Propagator::shift(Base::SpaceTimeIndex const idx, Base::Direction const dir, int const times)
-  {
-    if (times == 0)
-      return *this;
-
-    Base::Direction my_dir(dir);
-    if(times < 0)
-    {
-      switch (dir)
-      {
-        case Base::dir_UP:
-          my_dir = Base::dir_DOWN;
-          break;
-        case Base::dir_DOWN:
-          my_dir = Base::dir_UP;
-          break;
-        default:
-          std::cerr << "Base::Direction not known in "
-                    << "Propagator &Propagator::shift(Base::SpaceTimeIndex, Base::Direction , int)\n"
-                    << "Aborting..."
-                    << std::endl;
-          exit(1);
-       }
-    }
-
-    size_t my_times = size_t(abs(times)) % T();
-    // make use of periodic boundary conditions to save time
-    if (my_times > T()/2)
-    {
-      my_times = T()-my_times;
-      switch (dir)
-      {
-        case Base::dir_UP:
-          my_dir = Base::dir_DOWN;
-          break;
-        case Base::dir_DOWN:
-          my_dir = Base::dir_UP;
-          break;
-        default:
-          std::cerr << "Base::Direction not known in "
-                    << "Propagator &Propagator::shift(Base::SpaceTimeIndex, Base::Direction , int)\n"
-                    << "Aborting..."
-                    << std::endl;
-          exit(1);
-       }
-    }
-    for (size_t I=0; I<my_times; I++)
-      d_components->shift(idx, my_dir);
-    return *this;
-  }
-
-  inline Propagator::iterator Propagator::begin()
-  {
-    isolate();
-    return iterator(*this, 0);
-  }
-
-  inline Propagator::const_iterator Propagator::begin() const
-  {
-    return const_iterator(*this, 0);
-  }
-
-  inline Propagator::iterator Propagator::end()
-  {
-    isolate();
-    return iterator(*this, d_components->size());
-  }
-
-  inline Propagator::const_iterator Propagator::end() const
-  {
-    return const_iterator(*this, d_components->size());
-  }
-
-  inline size_t const Propagator::size() const
-  {
-    return d_size;
-  }
-
-  inline size_t const Propagator::L() const
-  {
-    return d_components->L();
-  }
-
-  inline size_t const Propagator::T() const
-  {
-    return d_components->T();
-  }
-
-  inline std::ostream &operator<<(std::ostream &out, Propagator const &p)
-  {
-    Propagator::const_iterator I(p.begin());
-    while (I != p.end())
-    {
-      out << (*I) << std::endl;
-      ++I;
-    }
-    return out;
-  }
-
+  return out;
 }

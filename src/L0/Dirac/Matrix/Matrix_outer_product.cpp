@@ -3,43 +3,6 @@
 namespace Dirac
 {
 
-//   void Matrix::outer_product(Matrix const &other, Matrix* result) const
-//   {
-//     std::transform(d_data, d_data + 16, (*(result     )).d_data,
-//                    std::bind1st(std::multiplies< std::complex< double > >(), *(other.d_data     )));
-//     std::transform(d_data, d_data + 16, (*(result +  1)).d_data,
-//                    std::bind1st(std::multiplies< std::complex< double > >(), *(other.d_data +  1)));
-//     std::transform(d_data, d_data + 16, (*(result +  2)).d_data,
-//                    std::bind1st(std::multiplies< std::complex< double > >(), *(other.d_data +  2)));
-//     std::transform(d_data, d_data + 16, (*(result +  3)).d_data,
-//                    std::bind1st(std::multiplies< std::complex< double > >(), *(other.d_data +  3)));
-//     std::transform(d_data, d_data + 16, (*(result +  4)).d_data,
-//                    std::bind1st(std::multiplies< std::complex< double > >(), *(other.d_data +  4)));
-//     std::transform(d_data, d_data + 16, (*(result +  5)).d_data,
-//                    std::bind1st(std::multiplies< std::complex< double > >(), *(other.d_data +  5)));
-//     std::transform(d_data, d_data + 16, (*(result +  6)).d_data,
-//                    std::bind1st(std::multiplies< std::complex< double > >(), *(other.d_data +  6)));
-//     std::transform(d_data, d_data + 16, (*(result +  7)).d_data,
-//                    std::bind1st(std::multiplies< std::complex< double > >(), *(other.d_data +  7)));
-//     std::transform(d_data, d_data + 16, (*(result +  8)).d_data,
-//                    std::bind1st(std::multiplies< std::complex< double > >(), *(other.d_data +  8)));
-//     std::transform(d_data, d_data + 16, (*(result +  9)).d_data,
-//                    std::bind1st(std::multiplies< std::complex< double > >(), *(other.d_data +  9)));
-//     std::transform(d_data, d_data + 16, (*(result + 10)).d_data,
-//                    std::bind1st(std::multiplies< std::complex< double > >(), *(other.d_data + 10)));
-//     std::transform(d_data, d_data + 16, (*(result + 11)).d_data,
-//                    std::bind1st(std::multiplies< std::complex< double > >(), *(other.d_data + 11)));
-//     std::transform(d_data, d_data + 16, (*(result + 12)).d_data,
-//                    std::bind1st(std::multiplies< std::complex< double > >(), *(other.d_data + 12)));
-//     std::transform(d_data, d_data + 16, (*(result + 13)).d_data,
-//                    std::bind1st(std::multiplies< std::complex< double > >(), *(other.d_data + 13)));
-//     std::transform(d_data, d_data + 16, (*(result + 14)).d_data,
-//                    std::bind1st(std::multiplies< std::complex< double > >(), *(other.d_data + 14)));
-//     std::transform(d_data, d_data + 16, (*(result + 15)).d_data,
-//                    std::bind1st(std::multiplies< std::complex< double > >(), *(other.d_data + 15)));
-//   }
-
-
   void Matrix::outer_product(Matrix const &other, std::complex< double > * const result, OuterProductIndexOrder const idxOrd) const
   {
     switch (idxOrd)

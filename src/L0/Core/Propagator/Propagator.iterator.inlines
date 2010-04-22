@@ -1,88 +1,80 @@
-namespace Core
+/* private constructor */
+
+inline Propagator::iterator::iterator(Propagator &target,  size_t const idx)
+  : Field< QCD::Tensor >::iterator(*(target.d_components), idx), d_target(target)
+{}
+
+/* copy constructor */
+
+inline Propagator::iterator::iterator(Propagator::iterator const &other)
+  : Field< QCD::Tensor >::iterator(*(other.d_target.d_components), other.d_idx), d_target(other.d_target)
+{}
+
+/* comparison operators */
+
+inline bool Propagator::iterator::operator==(Propagator::iterator const &other) const
 {
+  return    (dynamic_cast< Field< QCD::Tensor >::iterator const & >(*this) ==
+              dynamic_cast< Field< QCD::Tensor >::iterator const & >(other))
+          && (&d_target == &other.d_target);
+}
 
-  /* private constructor */
+inline bool Propagator::iterator::operator!=(Propagator::iterator const &other) const
+{
+  return    (dynamic_cast< Field< QCD::Tensor >::iterator const & >(*this) !=
+              dynamic_cast< Field< QCD::Tensor >::iterator const & >(other))
+          || (&d_target != &other.d_target);
+}
 
-  inline Propagator::iterator::iterator(Core::Propagator &target,  size_t const idx)
-    : Core::Field< QCD::Tensor >::iterator(*(target.d_components), idx), d_target(target)
-  {}
+/* access field components */
 
+inline QCD::Tensor &Propagator::iterator::operator*()
+{
+  return *(dynamic_cast< Field< QCD::Tensor >::iterator & >(*this));
+}
 
-  /* copy constructor */
-
-  inline Propagator::iterator::iterator(Propagator::iterator const &other)
-    : Core::Field< QCD::Tensor >::iterator(*(other.d_target.d_components), other.d_idx), d_target(other.d_target)
-  {}
-
-
-  /* comparison operators */
-
-  inline bool Propagator::iterator::operator==(Propagator::iterator const &other) const
-  {
-    return    (dynamic_cast< Core::Field< QCD::Tensor >::iterator const & >(*this) ==
-               dynamic_cast< Core::Field< QCD::Tensor >::iterator const & >(other))
-           && (&d_target == &other.d_target);
-  }
-
-
-  inline bool Propagator::iterator::operator!=(Propagator::iterator const &other) const
-  {
-    return    (dynamic_cast< Core::Field< QCD::Tensor >::iterator const & >(*this) !=
-               dynamic_cast< Core::Field< QCD::Tensor >::iterator const & >(other))
-           || (&d_target != &other.d_target);
-  }
+inline QCD::Tensor *Propagator::iterator::operator->()
+{
+  return &(*(dynamic_cast< Field< QCD::Tensor >::iterator & >(*this)));
+}
 
 
-  /* access field components */
+/* access field components  - "const" version */
 
-  inline QCD::Tensor &Propagator::iterator::operator*()
-  {
-    return *(dynamic_cast< Core::Field< QCD::Tensor >::iterator & >(*this));
-  }
+inline QCD::Tensor const &Propagator::iterator::operator*() const
+{
+  return *(dynamic_cast< Field< QCD::Tensor >::iterator const & >(*this));
+}
 
-  inline QCD::Tensor *Propagator::iterator::operator->()
-  {
-    return &(*(dynamic_cast< Core::Field< QCD::Tensor >::iterator & >(*this)));
-  }
-
-
-  /* access field components  - "const" version */
-
-  inline QCD::Tensor const &Propagator::iterator::operator*() const
-  {
-    return *(dynamic_cast< Core::Field< QCD::Tensor >::iterator const & >(*this));
-  }
-
-  inline QCD::Tensor const *Propagator::iterator::operator->() const
-  {
-    return &(*(dynamic_cast< Core::Field< QCD::Tensor >::iterator const & >(*this)));
-  }
+inline QCD::Tensor const *Propagator::iterator::operator->() const
+{
+  return &(*(dynamic_cast< Field< QCD::Tensor >::iterator const & >(*this)));
+}
 
 
-  /* increment & decrement (prefix and postfix versions)*/
+/* increment & decrement (prefix and postfix versions)*/
 
-  inline Propagator::iterator &Propagator::iterator::operator++()
-  {
-    ++(dynamic_cast< Core::Field< QCD::Tensor >::iterator & >(*this));
-    return *this;
-  }
+inline Propagator::iterator &Propagator::iterator::operator++()
+{
+  ++(dynamic_cast< Field< QCD::Tensor >::iterator & >(*this));
+  return *this;
+}
 
-  inline Propagator::iterator Propagator::iterator::operator++(int)
-  {
-    (dynamic_cast< Core::Field< QCD::Tensor >::iterator & >(*this))++;
-    return *this;
-  }
+inline Propagator::iterator Propagator::iterator::operator++(int)
+{
+  (dynamic_cast< Field< QCD::Tensor >::iterator & >(*this))++;
+  return *this;
+}
 
 
-  inline Propagator::iterator &Propagator::iterator::operator--()
-  {
-    --(dynamic_cast< Core::Field< QCD::Tensor >::iterator & >(*this));
-    return *this;
-  }
+inline Propagator::iterator &Propagator::iterator::operator--()
+{
+  --(dynamic_cast< Field< QCD::Tensor >::iterator & >(*this));
+  return *this;
+}
 
-  inline Propagator::iterator Propagator::iterator::operator--(int)
-  {
-    (dynamic_cast< Core::Field< QCD::Tensor >::iterator & >(*this))--;
-    return *this;
-  }
+inline Propagator::iterator Propagator::iterator::operator--(int)
+{
+  (dynamic_cast< Field< QCD::Tensor >::iterator & >(*this))--;
+  return *this;
 }

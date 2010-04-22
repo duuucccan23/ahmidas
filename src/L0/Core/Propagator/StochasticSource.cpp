@@ -2,7 +2,7 @@
 
 namespace Core
 {
-  template<  >
+  template<>
   Propagator StochasticSource< 4 >::operator*(StochasticPropagator< 4 > const &sPropagator) const
   {
 
@@ -33,8 +33,7 @@ namespace Core
     return tmp;
   }
 
-
-  template< >
+  template<>
   Propagator StochasticSource< 12 >::createStochasticPropagator_fixedSink(StochasticPropagator< 12 > const &sPropagator, size_t const *sink) const
   {
     assert (dynamic_cast< Propagator const *>(this)->T()==sPropagator.T() &&
@@ -77,9 +76,8 @@ namespace Core
     }
     return tmp;
   }
-
-
-  template< >
+  
+  template<>
   Propagator StochasticSource< 1 >::createStochasticPropagator_fixedSink(StochasticPropagator< 1 > const &sPropagator, size_t const *sink) const
   {
     QCD::Tensor phi_sink(sPropagator(sink));

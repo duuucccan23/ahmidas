@@ -49,9 +49,9 @@ namespace SU3
 
       size_t size() const;
   };
-  
+
   typedef class Tensor< 1 > Vector;
-  
+
   std::complex< double > innerProduct(Vector const &left, Vector const &right);
 }
 

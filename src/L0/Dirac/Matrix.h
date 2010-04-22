@@ -10,7 +10,6 @@
 
 namespace Dirac
 {
-
   // outer_product returns essentially 16 Matrices, 
   // but the index order has to be defined
   // (Result[a,4*b])[c,4*d] = ?
@@ -89,9 +88,9 @@ namespace Dirac
 
   std::ostream &operator<<(std::ostream &out, Matrix const &mat);
 
+  #include "Matrix/Matrix.inlines"
+  #include "Matrix/Matrix.constructors.inlines"
+  #include "Matrix/Matrix.operators.inlines"
+  #include "Matrix/Matrix.gamma.inlines"
+  #include "Matrix/Matrix_operator.gamma.templates"
 }
-
-#include "Matrix/Matrix.inlines"
-#include "Matrix/Matrix.constructors.inlines"
-#include "Matrix/Matrix.operators.inlines"
-#include "Matrix/Matrix.gamma.inlines"

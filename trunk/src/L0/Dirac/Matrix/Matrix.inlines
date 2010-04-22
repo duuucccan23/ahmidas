@@ -1,74 +1,64 @@
-#include <iostream>
-#include <iomanip>
-
-namespace Dirac
+inline std::complex< double > const &Matrix::operator[](size_t const idx) const
 {
+  return *(d_data + idx);
+}
+
+inline std::complex< double > &Matrix::operator[](size_t const idx)
+{
+  return *(d_data + idx);
+}
+
+inline void Matrix::transpose()
+{
+  std::swap(d_data[ 1], d_data[ 4]);
+  std::swap(d_data[ 2], d_data[ 8]);
+  std::swap(d_data[ 3], d_data[12]);
+  std::swap(d_data[ 6], d_data[ 9]);
+  std::swap(d_data[ 7], d_data[13]);
+  std::swap(d_data[11], d_data[14]);
+}
+
+inline std::complex< double > tr(Matrix const &mat)
+{
+  return mat.trace();
+}
+
+inline std::complex< double > Matrix::trace() const
+{
+  return d_data[0] + d_data[5] + d_data[10] + d_data[15];
+}
+
+inline size_t Matrix::size() const
+{
+  return 16;
+}
+
+inline Matrix Matrix::elementwise_product(Matrix const &other) const
+{
+  Matrix result;
+  std::transform(d_data, d_data + 16, other.d_data, result.d_data, std::multiplies< std::complex< double > >());
+
+  return result;
+}
 
 
-  inline std::complex< double > const &Matrix::operator[](size_t const idx) const
+
+inline void Matrix::eq_sandwich_operator(Matrix const &first, Base::Operator const op,
+                                                Matrix const &second)
+{
+  std::copy(first.d_data, first.d_data + 16, d_data);
+  switch (op)
   {
-    return *(d_data + idx);
+    case Base::op_GAMMA_4:
+      Gamma< 4 > gamma4;
+      (*this) *= gamma4;
+      (*this) *= second;
+      break;
+    default:
+      std::cerr << "unknown Base::Operator field in "
+                << "void Matrix::eq_sandwich_operator(...)!"
+                << std::endl;
+      std::cerr << "Aborting..." << std::endl;
+      exit(1);
   }
-
-  inline std::complex< double > &Matrix::operator[](size_t const idx)
-  {
-    return *(d_data + idx);
-  }
-
-  inline void Matrix::transpose()
-  {
-    std::swap(d_data[ 1], d_data[ 4]);
-    std::swap(d_data[ 2], d_data[ 8]);
-    std::swap(d_data[ 3], d_data[12]);
-    std::swap(d_data[ 6], d_data[ 9]);
-    std::swap(d_data[ 7], d_data[13]);
-    std::swap(d_data[11], d_data[14]);
-  }
-
-
-  inline std::complex< double > tr(Matrix const &mat)
-  {
-    return mat.trace();
-  }
-
-  inline std::complex< double > Matrix::trace() const
-  {
-    return d_data[0] + d_data[5] + d_data[10] + d_data[15];
-  }
-
-  inline size_t Matrix::size() const
-  {
-    return 16;
-  }
-
-  inline Matrix Matrix::elementwise_product(Matrix const &other) const
-  {
-    Matrix result;
-    std::transform(d_data, d_data + 16, other.d_data, result.d_data, std::multiplies< std::complex< double > >());
-
-    return result;
-  }
-
-
-
-  inline void Matrix::eq_sandwich_operator(Matrix const &first, Base::Operator const op,
-                                                  Matrix const &second)
-  {
-    std::copy(first.d_data, first.d_data + 16, d_data);
-    switch (op)
-    {
-      case Base::op_GAMMA_4:
-        Gamma< 4 > gamma4;
-        (*this) *= gamma4;
-        (*this) *= second;
-        break;
-      default:
-        std::cerr << "unknown Base::Operator field in "
-                  << "void Matrix::eq_sandwich_operator(...)!"
-                  << std::endl;
-        std::cerr << "Aborting..." << std::endl;
-        exit(1);
-    }
-  }
-
 }

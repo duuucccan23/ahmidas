@@ -175,14 +175,11 @@ namespace Core
 
   };
 
-}
+  #include "Propagator/Propagator.inlines"
+  #include "Propagator/StochasticPropagator.inlines"
+  #include "Propagator/StochasticSource.inlines"
+  #include "Propagator/Propagator.iterator.inlines"
+  #include "Propagator/Propagator.const_iterator.inlines"
+  #include "Propagator/Propagator.operators.inlines"
 
-#include "Propagator/Propagator.inlines"
-#include "Propagator/Propagator.baryon.inlines"
-#include "Propagator/StochasticPropagator.inlines"
-#include "Propagator/StochasticSource.inlines"
-#include "Propagator/Propagator.iterator.inlines"
-#include "Propagator/Propagator.const_iterator.inlines"
-#include "Propagator/Propagator.operators.inlines"
-#include "Propagator/Propagator_destroy.template"
-#include "Propagator/Propagator_isolate.template"
+}

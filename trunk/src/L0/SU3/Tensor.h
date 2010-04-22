@@ -1,8 +1,7 @@
 #pragma once
 
-#include <L0/SU3/Matrix.h>
-
 #include <complex>
+#include <L0/SU3/Matrix.h>
 
 namespace SU3
 {

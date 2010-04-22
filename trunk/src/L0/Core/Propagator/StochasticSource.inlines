@@ -1,50 +1,28 @@
-#include "Propagator.ih"
+template< size_t NComp >
+inline StochasticSource< NComp >::StochasticSource(size_t const L, size_t const T)
+  : Propagator(L, T)
+{}
 
-namespace Core
+template< size_t NComp >
+inline StochasticSource< NComp >::StochasticSource(size_t const L, size_t const T,
+                                  Base::SourcePolarization const pol, Base::SourceColorState const col)
+  : Propagator(L, T)
 {
-
-  template< size_t NComp >
-  inline StochasticSource< NComp >::StochasticSource(size_t const L, size_t const T)
-    : Propagator(L, T)
-  {}
-
-  template< size_t NComp >
-  inline StochasticSource< NComp >::StochasticSource(size_t const L, size_t const T,
-                                    Base::SourcePolarization const pol, Base::SourceColorState const col)
-    : Propagator(L, T)
+  Propagator::iterator I = begin();
+  while (I != end())
   {
-    Propagator::iterator I = begin();
-    while (I != end())
-    {
-      (*I).setToRandom_Z4(pol, col);
-      ++I;
-    }
+    (*I).setToRandom_Z4(pol, col);
+    ++I;
   }
-
-
-
-  template< size_t NComp >
-  inline StochasticSource< NComp >::StochasticSource(Propagator const &base) : Propagator(base)
-  {
-    // maybe we should do some check here (e.g. zero entries at correct positions?)
-  }
-
-  template< size_t NComp >
-  inline StochasticSource< NComp >::StochasticSource(StochasticSource< NComp > const &other)
-    : Propagator(dynamic_cast< Propagator const &>(other))
-  {}
-
-
-//   template< size_t NComp >
-//   void inline StochasticSource< NComp >::conjugate()
-//   {
-//     Propagator::iterator I(begin());
-//     while(I != end())
-//     {
-//       std::transform(&((*I)[0]), &((*I)[0]) + 144, &((*I)[0]), std::mem_fun_ref(&std::complex< double >::conj< double >()));
-//       ++I;
-//     }
-//   }
-
-
 }
+
+template< size_t NComp >
+inline StochasticSource< NComp >::StochasticSource(Propagator const &base) : Propagator(base)
+{
+  // maybe we should do some check here (e.g. zero entries at correct positions?)
+}
+
+template< size_t NComp >
+inline StochasticSource< NComp >::StochasticSource(StochasticSource< NComp > const &other)
+  : Propagator(dynamic_cast< Propagator const &>(other))
+{}

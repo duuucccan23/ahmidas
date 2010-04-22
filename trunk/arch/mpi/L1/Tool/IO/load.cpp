@@ -301,5 +301,6 @@ namespace Tool
   }
 }
 
-#include "loadScidac.template"
+#include "loadScidac_a.template"
+#include "loadScidac_b.template"
 

@@ -55,7 +55,5 @@ namespace Core
   };
 
   std::ostream &operator<<(std::ostream &out, Correlator const &c);
-
+  #include "Correlator/Correlator.inlines"
 }
-
-#include "Correlator/Correlator.inlines"

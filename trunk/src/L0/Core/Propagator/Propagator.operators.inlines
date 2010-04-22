@@ -1,80 +1,34 @@
-namespace Core
+template< size_t Index >
+void Propagator::operator*=(Dirac::Gamma< Index > const &gamma)
 {
-
-
-//   inline Propagator &Propagator::operator=(Propagator const &rhs)
-//   {
-//     if (this != &rhs)
-//     {
-//       destroy();
-//       d_references   = rhs.d_references;
-//       d_components   = rhs.d_components;
-//       colour_strides = rhs.colour_strides;
-//       dirac_strides  = rhs.dirac_strides;
-//       *d_references += 1;
-//     }
-//     isolate();
-//     return *this;
-//   }
-
-  template< size_t Index >
-  inline void Propagator::operator*=(Dirac::Gamma< Index > const &gamma)
+  isolate();
+  Propagator::iterator I(begin());
+  while(I!=end())
   {
-    isolate();
-    Propagator::iterator I(begin());
-    while(I!=end())
-    {
-      (*I) *= gamma;
-      ++I;
-    }
+    (*I) *= gamma;
+    ++I;
   }
+}
 
-  template< size_t Index >
-  inline Propagator Propagator::operator*(Dirac::Gamma< Index > const &gamma) const
+template< size_t Index >
+Propagator operator*(Dirac::Gamma< Index > const &gamma, Propagator const &p)
+{
+  Propagator tmp(p.L(), p.T());
+  Propagator::const_iterator before(p.begin());
+  Propagator::iterator after(tmp.begin());
+  while(before != p.end())
   {
-    Propagator tmp(*this);
-    tmp*=gamma;
-    return tmp;
+    (*after) = gamma*(*before);
+    ++before;
+    ++after;
   }
+  return tmp;
+}
 
-  template< size_t Index >
-  Propagator operator*(Dirac::Gamma< Index > const &gamma, Propagator const &p)
-  {
-    Propagator tmp(p.L(), p.T());
-    Propagator::const_iterator before(p.begin());
-    Propagator::iterator after(tmp.begin());
-    while(before != p.end())
-    {
-      (*after) = gamma*(*before);
-      ++before;
-      ++after;
-    }
-    return tmp;
-  }
-
-
-  inline Field< Dirac::Matrix > *Propagator::operator*(Propagator const &other) const
-  {
-    assert (T()==other.T() && L()==other.L());
-
-    Field< Dirac::Matrix > *field = new Field< Dirac::Matrix > (L(), T());
-
-    Propagator::const_iterator Ia(begin());
-    Propagator::const_iterator Ib(other.begin());
-
-    Field< Dirac::Matrix >::iterator Ic(field->begin());
-
-    while(Ia != end())
-    {
-      QCD::getDiracMatrix((*Ic), (*Ia),(*Ib));
-      ++Ia;
-      ++Ib;
-      ++Ic;
-    }
-    assert(Ia==end());
-    assert(Ib==other.end());
-    assert(Ic==field->end());
-    return field;
-  }
-
+template< size_t Index >
+inline Propagator Propagator::operator*(Dirac::Gamma< Index > const &gamma) const
+{
+  Propagator tmp(*this);
+  tmp*=gamma;
+  return tmp;
 }

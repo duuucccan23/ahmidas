@@ -15,8 +15,11 @@ namespace Dirac
   // (Result[a,4*b])[c,4*d] = ?
   enum OuterProductIndexOrder
   {
-    order_OUTER_FIXED, // A_ac*B_db
-    order_FIRST_FIXED  // A_ab*B_cd
+    order_OUTER_FIXED,        // A_ac*B_db
+    order_FIRST_FIXED,        // A_ab*B_cd
+    order_FIRST_OUTER_DELTA,  // delta_ad*[A*B]_cb
+    order_SECOND_OUTER_DELTA, // delta_bc*[A*B]_ad
+    order_BOTH_OUTER_DELTA    // delta_ad*delta_bc*tr[A*B]
   };
 
   class Matrix
@@ -65,11 +68,13 @@ namespace Dirac
       // this is just a simple multiplication of the kind (C)_ij = (A)_ij * (B)_ij (no sum!)
       Matrix elementwise_product(Matrix const &other) const;
 
-      // returns array of 16 Matrices
+      // returns array of 16 Matrices in result
       // void outer_product(Matrix const &other, Matrix* result) const;
       void outer_product(Matrix const &other, std::complex< double > * const result, OuterProductIndexOrder const idxOrd) const;
-      void outer_product(Matrix const &other, Matrix  &result, OuterProductIndexOrder const idxOrd,
-      Base::DiracIndex sourceIndex, Base::DiracIndex sinkIndex ) const;
+
+      // returns the data of a Dirac::Matrix in result. source and sink index are fixed
+      void outer_product(Matrix const &other, std::complex< double > * const result, OuterProductIndexOrder const idxOrd,
+                         Base::DiracIndex sourceIndex, Base::DiracIndex sinkIndex ) const;
 
       // needed for threepoints
       void eq_sandwich_operator(Matrix const &first, Base::Operator const op, Matrix const &second);

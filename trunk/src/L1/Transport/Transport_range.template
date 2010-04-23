@@ -1,9 +1,9 @@
-template< size_t L, size_t T >
-Core::Field< QCD::Spinor, L, T > Transport::range(Core::Field< QCD::Spinor, L, T > const &spinor,
-                                                  Core::Field< QCD::Gauge, L, T > const &gauge,
+
+Core::Field< QCD::Spinor > Transport::range(Core::Field< QCD::Spinor > const &spinor,
+                                                  Core::Field< QCD::Gauge > const &gauge,
                                                   Base::SpaceTimeIndex idx, Base::Direction dir, size_t steps)
 {
-  Core::Field< QCD::Spinor, L, T > result(spinor);
+  Core::Field< QCD::Spinor > result(spinor);
   if (dir == Base::dir_DOWN)
   {
     for (size_t ctr = 0; ctr < steps; ++ctr)

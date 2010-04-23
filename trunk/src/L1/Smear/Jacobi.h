@@ -1,6 +1,5 @@
 #pragma once
 
-#include <L0/Core/Buffer.h>
 #include <L0/Core/Field.h>
 #include <L0/Core/Component.h>
 #include <L0/QCD/Gauge.h>
@@ -17,18 +16,14 @@ namespace Smear
     public:
       Jacobi(double kappa);
 
-      template< size_t L, size_t T >
-      void smear(Core::Field< QCD::Spinor, L, T > *spinorField, Core::Field< QCD::Gauge, L, T > &gaugeField) const;
+      void smear(Core::Field< QCD::Spinor > *spinorField, Core::Field< QCD::Gauge > &gaugeField) const;
 
-      template< size_t L, size_t T >
-      void smear(Core::Field< QCD::Spinor, L, T > *spinorField, Core::Field< QCD::Gauge, L, T > &gaugeField, size_t iterations) const;
+      void smear(Core::Field< QCD::Spinor > *spinorField, Core::Field< QCD::Gauge > &gaugeField, size_t iterations) const;
 
-      template< size_t L, size_t T >
-      void smear(Source::Point< L, T > *source, Core::Field< QCD::Gauge, L, T > &gaugeField, Base::ColourIndex, Base::DiracIndex) const;
-
-      template< size_t L, size_t T >
-      void smear(Source::Point< L, T > *source, Core::Field< QCD::Gauge, L, T > &gaugeField,
-                 Base::ColourIndex, Base::DiracIndex, size_t iterations) const;
+//       void smear(Source::Point< L, T > *source, Core::Field< QCD::Gauge > &gaugeField, Base::ColourIndex, Base::DiracIndex) const;
+// 
+//       void smear(Source::Point< L, T > *source, Core::Field< QCD::Gauge > &gaugeField,
+//                  Base::ColourIndex, Base::DiracIndex, size_t iterations) const;
 
   };
 }

@@ -51,7 +51,6 @@ namespace Core
 
     Component< Element, Atom > const &d_parent;
 
-
     public:
       hcComponent(Component< Element, Atom > const &parent);
       Component< Element, Atom > const &dagger() const; //NOTE We wanted to move this

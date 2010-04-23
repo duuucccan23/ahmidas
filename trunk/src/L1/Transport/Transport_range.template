@@ -1,6 +1,6 @@
 
 Core::Field< QCD::Spinor > Transport::range(Core::Field< QCD::Spinor > const &spinor,
-                                                  Core::Field< QCD::Gauge > const &gauge,
+                                                  Core::Field< QCD::Gauge > &gauge,
                                                   Base::SpaceTimeIndex idx, Base::Direction dir, size_t steps)
 {
   Core::Field< QCD::Spinor > result(spinor);
@@ -9,14 +9,14 @@ Core::Field< QCD::Spinor > Transport::range(Core::Field< QCD::Spinor > const &sp
     for (size_t ctr = 0; ctr < steps; ++ctr)
     {
       result.shift(idx, dir);
-      result.leftMultiply(gauge.component(idx));
+      result.leftMultiply(gauge.component< SU3::Matrix >(idx));
     }
   }
   else
   {
     for (size_t ctr = 0; ctr < steps; ++ctr)
     {
-      result.leftMultiply(gauge.component(idx).dagger());
+      result.leftMultiply(gauge.component< SU3::Matrix >(idx).dagger());
       result.shift(idx, dir);
     }
   }

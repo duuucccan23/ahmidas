@@ -9,7 +9,12 @@ namespace QCD
   void make_sequential_d(Tensor &result, Tensor const &U1, Tensor const &U2, Base::BaryonPropagatorProjector const projector)
   {
 
-    std::vector< size_t > alpha_f_perms;
+    std::vector< Base::DiracIndex > alpha_f_std;
+    alpha_f_std.push_back(Base::gam_1);
+    alpha_f_std.push_back(Base::gam_2);
+    alpha_f_std.push_back(Base::gam_3);
+    alpha_f_std.push_back(Base::gam_4);
+    std::vector< Base::DiracIndex > alpha_f_perms;
     alpha_f_perms.reserve(8);
     std::vector< std::complex< double > > alpha_f_factors;
     alpha_f_factors.reserve(8);
@@ -23,26 +28,28 @@ namespace QCD
     switch (projector)
     {
       case Base::proj_PARITY_PLUS_TM:
-        alpha_f_perms.push_back(2);
+        alpha_f_perms.push_back(Base::gam_3);
         alpha_f_factors.push_back(0.5*COMPLEX_M_1);
-        alpha_f_perms.push_back(3);
+        alpha_f_perms.push_back(Base::gam_4);
         alpha_f_factors.push_back(0.5*COMPLEX_M_1);
-        alpha_f_perms.push_back(0);
+        alpha_f_perms.push_back(Base::gam_1);
         alpha_f_factors.push_back(0.5*COMPLEX_M_1);
-        alpha_f_perms.push_back(1);
+        alpha_f_perms.push_back(Base::gam_2);
         alpha_f_factors.push_back(0.5*COMPLEX_M_1);
-        alpha_f_perms.push_back(0);
+        alpha_f_perms.push_back(Base::gam_1);
         alpha_f_factors.push_back(0.5*COMPLEX_P_I);
-        alpha_f_perms.push_back(1);
+        alpha_f_perms.push_back(Base::gam_2);
         alpha_f_factors.push_back(0.5*COMPLEX_P_I);
-        alpha_f_perms.push_back(2);
+        alpha_f_perms.push_back(Base::gam_3);
         alpha_f_factors.push_back(0.5*COMPLEX_M_I);
-        alpha_f_perms.push_back(3);
+        alpha_f_perms.push_back(Base::gam_4);
         alpha_f_factors.push_back(0.5*COMPLEX_M_I);
       break;
       default:
       std::cerr << "Unknown projector in QCD::make_sequential_d() " << std::endl;
     }
+
+    std::fill_n(result.d_data, result.size(), COMPLEX_0);
 
     /* under construction */
     Dirac::Matrix rrU1;
@@ -84,399 +91,388 @@ namespace QCD
     U2.getDiracMatrix(brU2, Base::col_RED,   Base::col_BLUE);
     U2.getDiracMatrix(bbU2, Base::col_BLUE,  Base::col_BLUE);
     U2.getDiracMatrix(bgU2, Base::col_GREEN, Base::col_BLUE);
-// 
-//     size_t const n_complex = 16*16;
-// 
-//     std::complex< double > tmp[n_complex];
-// 
-//     std::complex< double > zero(0, 0);
-// 
-//     //Dirac::Matrix *tmpTensors = reinterpret_cast< Dirac::Matrix* >(tmp);
-// 
-//     std::complex< double > *tmpTensors = tmp;
-// 
-//     std::complex< double > rrC[n_complex];
-//     std::fill_n(rrC, n_complex, zero);
-//     ggU1.outer_product(bbU2, tmpTensors, Dirac::order_FIRST_FIXED);
-//     std::transform(tmp, tmp + n_complex, rrC, rrC, std::plus< std::complex< double> >());
-//     gbU1.outer_product(bgU2, tmpTensors, Dirac::order_FIRST_FIXED);
-//     std::transform(tmp, tmp + n_complex, rrC, rrC, std::minus< std::complex< double> >());
-//     bgU1.outer_product(gbU2, tmpTensors, Dirac::order_FIRST_FIXED);
-//     std::transform(tmp, tmp + n_complex, rrC, rrC, std::minus< std::complex< double> >());
-//     bbU1.outer_product(ggU2, tmpTensors, Dirac::order_FIRST_FIXED);
-//     std::transform(tmp, tmp + n_complex, rrC, rrC, std::plus< std::complex< double> >());
-//     ggU1.outer_product(bbU2, tmpTensors, Dirac::order_OUTER_FIXED);
-//     std::transform(tmp, tmp + n_complex, rrC, rrC, std::plus< std::complex< double> >());
-//     gbU1.outer_product(bgU2, tmpTensors, Dirac::order_OUTER_FIXED);
-//     std::transform(tmp, tmp + n_complex, rrC, rrC, std::minus< std::complex< double> >());
-//     bgU1.outer_product(gbU2, tmpTensors, Dirac::order_OUTER_FIXED);
-//     std::transform(tmp, tmp + n_complex, rrC, rrC, std::minus< std::complex< double> >());
-//     bbU1.outer_product(ggU2, tmpTensors, Dirac::order_OUTER_FIXED);
-//     std::transform(tmp, tmp + n_complex, rrC, rrC, std::plus< std::complex< double> >());
-// 
-// 
-//     std::complex< double > rgC[n_complex];
-//     std::fill_n(rgC, n_complex, zero);
-//     gbU1.outer_product(brU2, tmpTensors, Dirac::order_FIRST_FIXED);
-//     std::transform(tmp, tmp + n_complex, rgC, rgC, std::plus< std::complex< double> >());
-//     grU1.outer_product(bbU2, tmpTensors, Dirac::order_FIRST_FIXED);
-//     std::transform(tmp, tmp + n_complex, rgC, rgC, std::minus< std::complex< double> >());
-//     bbU1.outer_product(grU2, tmpTensors, Dirac::order_FIRST_FIXED);
-//     std::transform(tmp, tmp + n_complex, rgC, rgC, std::minus< std::complex< double> >());
-//     brU1.outer_product(gbU2, tmpTensors, Dirac::order_FIRST_FIXED);
-//     std::transform(tmp, tmp + n_complex, rgC, rgC, std::plus< std::complex< double> >());
-//     gbU1.outer_product(brU2, tmpTensors, Dirac::order_OUTER_FIXED);
-//     std::transform(tmp, tmp + n_complex, rgC, rgC, std::plus< std::complex< double> >());
-//     grU1.outer_product(bbU2, tmpTensors, Dirac::order_OUTER_FIXED);
-//     std::transform(tmp, tmp + n_complex, rgC, rgC, std::minus< std::complex< double> >());
-//     bbU1.outer_product(grU2, tmpTensors, Dirac::order_OUTER_FIXED);
-//     std::transform(tmp, tmp + n_complex, rgC, rgC, std::minus< std::complex< double> >());
-//     brU1.outer_product(gbU2, tmpTensors, Dirac::order_OUTER_FIXED);
-//     std::transform(tmp, tmp + n_complex, rgC, rgC, std::plus< std::complex< double> >());
-// 
-//     std::complex< double > rbC[n_complex];
-//     std::fill_n(rbC, n_complex, zero);
-//     grU1.outer_product(bgU2, tmpTensors, Dirac::order_FIRST_FIXED);
-//     std::transform(tmp, tmp + n_complex, rbC, rbC, std::plus< std::complex< double> >());
-//     ggU1.outer_product(brU2, tmpTensors, Dirac::order_FIRST_FIXED);
-//     std::transform(tmp, tmp + n_complex, rbC, rbC, std::minus< std::complex< double> >());
-//     brU1.outer_product(ggU2, tmpTensors, Dirac::order_FIRST_FIXED);
-//     std::transform(tmp, tmp + n_complex, rbC, rbC, std::minus< std::complex< double> >());
-//     bgU1.outer_product(grU2, tmpTensors, Dirac::order_FIRST_FIXED);
-//     std::transform(tmp, tmp + n_complex, rbC, rbC, std::plus< std::complex< double> >());
-//     grU1.outer_product(bgU2, tmpTensors, Dirac::order_OUTER_FIXED);
-//     std::transform(tmp, tmp + n_complex, rbC, rbC, std::plus< std::complex< double> >());
-//     ggU1.outer_product(brU2, tmpTensors, Dirac::order_OUTER_FIXED);
-//     std::transform(tmp, tmp + n_complex, rbC, rbC, std::minus< std::complex< double> >());
-//     brU1.outer_product(ggU2, tmpTensors, Dirac::order_OUTER_FIXED);
-//     std::transform(tmp, tmp + n_complex, rbC, rbC, std::minus< std::complex< double> >());
-//     bgU1.outer_product(grU2, tmpTensors, Dirac::order_OUTER_FIXED);
-//     std::transform(tmp, tmp + n_complex, rbC, rbC, std::plus< std::complex< double> >());
-// 
-//     /* ----------------------- */
-// 
-//     std::complex< double > grC[n_complex];
-//     std::fill_n(grC, n_complex, zero);
-//     rbU1.outer_product(bgU2, tmpTensors, Dirac::order_FIRST_FIXED);
-//     std::transform(tmp, tmp + n_complex, grC, grC, std::plus< std::complex< double> >());
-//     rgU1.outer_product(bbU2, tmpTensors, Dirac::order_FIRST_FIXED);
-//     std::transform(tmp, tmp + n_complex, grC, grC, std::minus< std::complex< double> >());
-//     bbU1.outer_product(rgU2, tmpTensors, Dirac::order_FIRST_FIXED);
-//     std::transform(tmp, tmp + n_complex, grC, grC, std::minus< std::complex< double> >());
-//     bgU1.outer_product(rbU2, tmpTensors, Dirac::order_FIRST_FIXED);
-//     std::transform(tmp, tmp + n_complex, grC, grC, std::plus< std::complex< double> >());
-//     rbU1.outer_product(bgU2, tmpTensors, Dirac::order_OUTER_FIXED);
-//     std::transform(tmp, tmp + n_complex, grC, grC, std::plus< std::complex< double> >());
-//     rgU1.outer_product(bbU2, tmpTensors, Dirac::order_OUTER_FIXED);
-//     std::transform(tmp, tmp + n_complex, grC, grC, std::minus< std::complex< double> >());
-//     bbU1.outer_product(rgU2, tmpTensors, Dirac::order_OUTER_FIXED);
-//     std::transform(tmp, tmp + n_complex, grC, grC, std::minus< std::complex< double> >());
-//     bgU1.outer_product(rbU2, tmpTensors, Dirac::order_OUTER_FIXED);
-//     std::transform(tmp, tmp + n_complex, grC, grC, std::plus< std::complex< double> >());
-// 
-//     std::complex< double > ggC[n_complex];
-//     std::fill_n(ggC, n_complex, zero);
-//     rrU1.outer_product(bbU2, tmpTensors, Dirac::order_FIRST_FIXED);
-//     std::transform(tmp, tmp + n_complex, ggC, ggC, std::plus< std::complex< double> >());
-//     rbU1.outer_product(brU2, tmpTensors, Dirac::order_FIRST_FIXED);
-//     std::transform(tmp, tmp + n_complex, ggC, ggC, std::minus< std::complex< double> >());
-//     brU1.outer_product(rbU2, tmpTensors, Dirac::order_FIRST_FIXED);
-//     std::transform(tmp, tmp + n_complex, ggC, ggC, std::minus< std::complex< double> >());
-//     bbU1.outer_product(rrU2, tmpTensors, Dirac::order_FIRST_FIXED);
-//     std::transform(tmp, tmp + n_complex, ggC, ggC, std::plus< std::complex< double> >());
-//     rrU1.outer_product(bbU2, tmpTensors, Dirac::order_OUTER_FIXED);
-//     std::transform(tmp, tmp + n_complex, ggC, ggC, std::plus< std::complex< double> >());
-//     rbU1.outer_product(brU2, tmpTensors, Dirac::order_OUTER_FIXED);
-//     std::transform(tmp, tmp + n_complex, ggC, ggC, std::minus< std::complex< double> >());
-//     brU1.outer_product(rbU2, tmpTensors, Dirac::order_OUTER_FIXED);
-//     std::transform(tmp, tmp + n_complex, ggC, ggC, std::minus< std::complex< double> >());
-//     bbU1.outer_product(rrU2, tmpTensors, Dirac::order_OUTER_FIXED);
-//     std::transform(tmp, tmp + n_complex, ggC, ggC, std::plus< std::complex< double> >());
-// 
-//     std::complex< double > gbC[n_complex];
-//     std::fill_n(gbC, n_complex, zero);
-//     rgU1.outer_product(brU2, tmpTensors, Dirac::order_FIRST_FIXED);
-//     std::transform(tmp, tmp + n_complex, gbC, gbC, std::plus< std::complex< double> >());
-//     rrU1.outer_product(bgU2, tmpTensors, Dirac::order_FIRST_FIXED);
-//     std::transform(tmp, tmp + n_complex, gbC, gbC, std::minus< std::complex< double> >());
-//     bgU1.outer_product(rrU2, tmpTensors, Dirac::order_FIRST_FIXED);
-//     std::transform(tmp, tmp + n_complex, gbC, gbC, std::minus< std::complex< double> >());
-//     brU1.outer_product(rgU2, tmpTensors, Dirac::order_FIRST_FIXED);
-//     std::transform(tmp, tmp + n_complex, gbC, gbC, std::plus< std::complex< double> >());
-//     rgU1.outer_product(brU2, tmpTensors, Dirac::order_OUTER_FIXED);
-//     std::transform(tmp, tmp + n_complex, gbC, gbC, std::plus< std::complex< double> >());
-//     rrU1.outer_product(bgU2, tmpTensors, Dirac::order_OUTER_FIXED);
-//     std::transform(tmp, tmp + n_complex, gbC, gbC, std::minus< std::complex< double> >());
-//     bgU1.outer_product(rrU2, tmpTensors, Dirac::order_OUTER_FIXED);
-//     std::transform(tmp, tmp + n_complex, gbC, gbC, std::minus< std::complex< double> >());
-//     brU1.outer_product(rgU2, tmpTensors, Dirac::order_OUTER_FIXED);
-//     std::transform(tmp, tmp + n_complex, gbC, gbC, std::plus< std::complex< double> >());
-// 
-//     /* ----------------------- */
-// 
-//     std::complex< double > brC[n_complex];
-//     std::fill_n(brC, n_complex, zero);
-//     rgU1.outer_product(gbU2, tmpTensors, Dirac::order_FIRST_FIXED);
-//     std::transform(tmp, tmp + n_complex, brC, brC, std::plus< std::complex< double> >());
-//     rbU1.outer_product(ggU2, tmpTensors, Dirac::order_FIRST_FIXED);
-//     std::transform(tmp, tmp + n_complex, brC, brC, std::minus< std::complex< double> >());
-//     ggU1.outer_product(rbU2, tmpTensors, Dirac::order_FIRST_FIXED);
-//     std::transform(tmp, tmp + n_complex, brC, brC, std::minus< std::complex< double> >());
-//     gbU1.outer_product(rgU2, tmpTensors, Dirac::order_FIRST_FIXED);
-//     std::transform(tmp, tmp + n_complex, brC, brC, std::plus< std::complex< double> >());
-//     rgU1.outer_product(gbU2, tmpTensors, Dirac::order_OUTER_FIXED);
-//     std::transform(tmp, tmp + n_complex, brC, brC, std::plus< std::complex< double> >());
-//     rbU1.outer_product(ggU2, tmpTensors, Dirac::order_OUTER_FIXED);
-//     std::transform(tmp, tmp + n_complex, brC, brC, std::minus< std::complex< double> >());
-//     ggU1.outer_product(rbU2, tmpTensors, Dirac::order_OUTER_FIXED);
-//     std::transform(tmp, tmp + n_complex, brC, brC, std::minus< std::complex< double> >());
-//     gbU1.outer_product(rgU2, tmpTensors, Dirac::order_OUTER_FIXED);
-//     std::transform(tmp, tmp + n_complex, brC, brC, std::plus< std::complex< double> >());
-// 
-//     std::complex< double > bgC[n_complex];
-//     std::fill_n(bgC, n_complex, zero);
-//     rbU1.outer_product(grU2, tmpTensors, Dirac::order_FIRST_FIXED);
-//     std::transform(tmp, tmp + n_complex, bgC, bgC, std::plus< std::complex< double> >());
-//     rrU1.outer_product(gbU2, tmpTensors, Dirac::order_FIRST_FIXED);
-//     std::transform(tmp, tmp + n_complex, bgC, bgC, std::minus< std::complex< double> >());
-//     gbU1.outer_product(rrU2, tmpTensors, Dirac::order_FIRST_FIXED);
-//     std::transform(tmp, tmp + n_complex, bgC, bgC, std::minus< std::complex< double> >());
-//     grU1.outer_product(rbU2, tmpTensors, Dirac::order_FIRST_FIXED);
-//     std::transform(tmp, tmp + n_complex, bgC, bgC, std::plus< std::complex< double> >());
-//     rbU1.outer_product(grU2, tmpTensors, Dirac::order_OUTER_FIXED);
-//     std::transform(tmp, tmp + n_complex, bgC, bgC, std::plus< std::complex< double> >());
-//     rrU1.outer_product(gbU2, tmpTensors, Dirac::order_OUTER_FIXED);
-//     std::transform(tmp, tmp + n_complex, bgC, bgC, std::minus< std::complex< double> >());
-//     gbU1.outer_product(rrU2, tmpTensors, Dirac::order_OUTER_FIXED);
-//     std::transform(tmp, tmp + n_complex, bgC, bgC, std::minus< std::complex< double> >());
-//     grU1.outer_product(rbU2, tmpTensors, Dirac::order_OUTER_FIXED);
-//     std::transform(tmp, tmp + n_complex, bgC, bgC, std::plus< std::complex< double> >());
-// 
-//     std::complex< double > bbC[n_complex];
-//     std::fill_n(bbC, n_complex, zero);
-//     rrU1.outer_product(ggU2, tmpTensors, Dirac::order_FIRST_FIXED);
-//     std::transform(tmp, tmp + n_complex, bbC, bbC, std::plus< std::complex< double> >());
-//     rgU1.outer_product(grU2, tmpTensors, Dirac::order_FIRST_FIXED);
-//     std::transform(tmp, tmp + n_complex, bbC, bbC, std::minus< std::complex< double> >());
-//     grU1.outer_product(rgU2, tmpTensors, Dirac::order_FIRST_FIXED);
-//     std::transform(tmp, tmp + n_complex, bbC, bbC, std::minus< std::complex< double> >());
-//     ggU1.outer_product(rrU2, tmpTensors, Dirac::order_FIRST_FIXED);
-//     std::transform(tmp, tmp + n_complex, bbC, bbC, std::plus< std::complex< double> >());
-//     rrU1.outer_product(ggU2, tmpTensors, Dirac::order_OUTER_FIXED);
-//     std::transform(tmp, tmp + n_complex, bbC, bbC, std::plus< std::complex< double> >());
-//     rgU1.outer_product(grU2, tmpTensors, Dirac::order_OUTER_FIXED);
-//     std::transform(tmp, tmp + n_complex, bbC, bbC, std::minus< std::complex< double> >());
-//     grU1.outer_product(rgU2, tmpTensors, Dirac::order_OUTER_FIXED);
-//     std::transform(tmp, tmp + n_complex, bbC, bbC, std::minus< std::complex< double> >());
-//     ggU1.outer_product(rrU2, tmpTensors, Dirac::order_OUTER_FIXED);
-//     std::transform(tmp, tmp + n_complex, bbC, bbC, std::plus< std::complex< double> >());
-// 
-// //     for (size_t iDirac=0; iDirac<16*16; iDirac++)
-// //     {
-// //       if (iDirac % 16 == 0)
-// //         std::cout << std::endl;
-// //       std::cout << tmp[iDirac] << " ";
-// //     }
-// //     std::cout << std::endl;
-// 
-//     /* --------------------------------------------- */
-// 
-//     // the following part takes 9 Dirac::Matrixes and translates them to a Tensor for each od the 16 Dirac combinations
-// 
-//     std::complex< double >* data_ptr = NULL;
-// 
-//     size_t index(-1);
-// 
-//     for (size_t iDirac=0; iDirac<16; iDirac++)
-//     {
-//       index = 12*Base::col_RED  + Base::col_RED;
-//       data_ptr = result.d_data + index;
-// 
-//       size_t const offset = iDirac * 16;
-// 
-//       data_ptr[  0] =  rrC[offset ];
-//       data_ptr[  3] =  rrC[offset + 1];
-//       data_ptr[  6] =  rrC[offset + 2];
-//       data_ptr[  9] =  rrC[offset + 3];
-//       data_ptr[ 36] =  rrC[offset + 4];
-//       data_ptr[ 39] =  rrC[offset + 5];
-//       data_ptr[ 42] =  rrC[offset + 6];
-//       data_ptr[ 45] =  rrC[offset + 7];
-//       data_ptr[ 72] =  rrC[offset + 8];
-//       data_ptr[ 75] =  rrC[offset + 9];
-//       data_ptr[ 78] =  rrC[offset +10];
-//       data_ptr[ 81] =  rrC[offset +11];
-//       data_ptr[108] =  rrC[offset +12];
-//       data_ptr[111] =  rrC[offset +13];
-//       data_ptr[114] =  rrC[offset +14];
-//       data_ptr[117] =  rrC[offset +15];
-// 
-//       index = 12*Base::col_RED  + Base::col_GREEN;
-//       data_ptr = result.d_data + index;
-// 
-//       data_ptr[  0] =  rgC[offset + 0];
-//       data_ptr[  3] =  rgC[offset + 1];
-//       data_ptr[  6] =  rgC[offset + 2];
-//       data_ptr[  9] =  rgC[offset + 3];
-//       data_ptr[ 36] =  rgC[offset + 4];
-//       data_ptr[ 39] =  rgC[offset + 5];
-//       data_ptr[ 42] =  rgC[offset + 6];
-//       data_ptr[ 45] =  rgC[offset + 7];
-//       data_ptr[ 72] =  rgC[offset + 8];
-//       data_ptr[ 75] =  rgC[offset + 9];
-//       data_ptr[ 78] =  rgC[offset +10];
-//       data_ptr[ 81] =  rgC[offset +11];
-//       data_ptr[108] =  rgC[offset +12];
-//       data_ptr[111] =  rgC[offset +13];
-//       data_ptr[114] =  rgC[offset +14];
-//       data_ptr[117] =  rgC[offset +15];
-// 
-//       index = 12*Base::col_RED  + Base::col_BLUE;
-//       data_ptr = result.d_data + index;
-// 
-//       data_ptr[  0] =  rbC[offset];
-//       data_ptr[  3] =  rbC[offset + 1];
-//       data_ptr[  6] =  rbC[offset + 2];
-//       data_ptr[  9] =  rbC[offset + 3];
-//       data_ptr[ 36] =  rbC[offset + 4];
-//       data_ptr[ 39] =  rbC[offset + 5];
-//       data_ptr[ 42] =  rbC[offset + 6];
-//       data_ptr[ 45] =  rbC[offset + 7];
-//       data_ptr[ 72] =  rbC[offset + 8];
-//       data_ptr[ 75] =  rbC[offset + 9];
-//       data_ptr[ 78] =  rbC[offset +10];
-//       data_ptr[ 81] =  rbC[offset +11];
-//       data_ptr[108] =  rbC[offset +12];
-//       data_ptr[111] =  rbC[offset +13];
-//       data_ptr[114] =  rbC[offset +14];
-//       data_ptr[117] =  rbC[offset +15];
-// 
-//       /* --------------------------------------------- */
-// 
-//       index = 12*Base::col_GREEN  + Base::col_RED;
-//       data_ptr = result.d_data + index;
-// 
-//       data_ptr[  0] =  grC[offset];
-//       data_ptr[  3] =  grC[offset + 1];
-//       data_ptr[  6] =  grC[offset + 2];
-//       data_ptr[  9] =  grC[offset + 3];
-//       data_ptr[ 36] =  grC[offset + 4];
-//       data_ptr[ 39] =  grC[offset + 5];
-//       data_ptr[ 42] =  grC[offset + 6];
-//       data_ptr[ 45] =  grC[offset + 7];
-//       data_ptr[ 72] =  grC[offset + 8];
-//       data_ptr[ 75] =  grC[offset + 9];
-//       data_ptr[ 78] =  grC[offset +10];
-//       data_ptr[ 81] =  grC[offset +11];
-//       data_ptr[108] =  grC[offset +12];
-//       data_ptr[111] =  grC[offset +13];
-//       data_ptr[114] =  grC[offset +14];
-//       data_ptr[117] =  grC[offset +15];
-// 
-//       index = 12*Base::col_GREEN  + Base::col_GREEN;
-//       data_ptr = result.d_data + index;
-// 
-//       data_ptr[  0] =  ggC[offset];
-//       data_ptr[  3] =  ggC[offset + 1];
-//       data_ptr[  6] =  ggC[offset + 2];
-//       data_ptr[  9] =  ggC[offset + 3];
-//       data_ptr[ 36] =  ggC[offset + 4];
-//       data_ptr[ 39] =  ggC[offset + 5];
-//       data_ptr[ 42] =  ggC[offset + 6];
-//       data_ptr[ 45] =  ggC[offset + 7];
-//       data_ptr[ 72] =  ggC[offset + 8];
-//       data_ptr[ 75] =  ggC[offset + 9];
-//       data_ptr[ 78] =  ggC[offset +10];
-//       data_ptr[ 81] =  ggC[offset +11];
-//       data_ptr[108] =  ggC[offset +12];
-//       data_ptr[111] =  ggC[offset +13];
-//       data_ptr[114] =  ggC[offset +14];
-//       data_ptr[117] =  ggC[offset +15];
-// 
-//       index = 12*Base::col_GREEN  + Base::col_BLUE;
-//       data_ptr = result.d_data + index;
-// 
-//       data_ptr[  0] =  gbC[offset];
-//       data_ptr[  3] =  gbC[offset + 1];
-//       data_ptr[  6] =  gbC[offset + 2];
-//       data_ptr[  9] =  gbC[offset + 3];
-//       data_ptr[ 36] =  gbC[offset + 4];
-//       data_ptr[ 39] =  gbC[offset + 5];
-//       data_ptr[ 42] =  gbC[offset + 6];
-//       data_ptr[ 45] =  gbC[offset + 7];
-//       data_ptr[ 72] =  gbC[offset + 8];
-//       data_ptr[ 75] =  gbC[offset + 9];
-//       data_ptr[ 78] =  gbC[offset +10];
-//       data_ptr[ 81] =  gbC[offset +11];
-//       data_ptr[108] =  gbC[offset +12];
-//       data_ptr[111] =  gbC[offset +13];
-//       data_ptr[114] =  gbC[offset +14];
-//       data_ptr[117] =  gbC[offset +15];
-// 
-//       /* --------------------------------------------- */
-// 
-//       index = 12*Base::col_BLUE  + Base::col_RED;
-//       data_ptr = result.d_data + index;
-// 
-//       data_ptr[  0] =  brC[offset];
-//       data_ptr[  3] =  brC[offset + 1];
-//       data_ptr[  6] =  brC[offset + 2];
-//       data_ptr[  9] =  brC[offset + 3];
-//       data_ptr[ 36] =  brC[offset + 4];
-//       data_ptr[ 39] =  brC[offset + 5];
-//       data_ptr[ 42] =  brC[offset + 6];
-//       data_ptr[ 45] =  brC[offset + 7];
-//       data_ptr[ 72] =  brC[offset + 8];
-//       data_ptr[ 75] =  brC[offset + 9];
-//       data_ptr[ 78] =  brC[offset +10];
-//       data_ptr[ 81] =  brC[offset +11];
-//       data_ptr[108] =  brC[offset +12];
-//       data_ptr[111] =  brC[offset +13];
-//       data_ptr[114] =  brC[offset +14];
-//       data_ptr[117] =  brC[offset +15];
-// 
-//       index = 12*Base::col_BLUE  + Base::col_GREEN;
-//       data_ptr = result.d_data + index;
-// 
-//       data_ptr[  0] =  bgC[offset];
-//       data_ptr[  3] =  bgC[offset + 1];
-//       data_ptr[  6] =  bgC[offset + 2];
-//       data_ptr[  9] =  bgC[offset + 3];
-//       data_ptr[ 36] =  bgC[offset + 4];
-//       data_ptr[ 39] =  bgC[offset + 5];
-//       data_ptr[ 42] =  bgC[offset + 6];
-//       data_ptr[ 45] =  bgC[offset + 7];
-//       data_ptr[ 72] =  bgC[offset + 8];
-//       data_ptr[ 75] =  bgC[offset + 9];
-//       data_ptr[ 78] =  bgC[offset +10];
-//       data_ptr[ 81] =  bgC[offset +11];
-//       data_ptr[108] =  bgC[offset +12];
-//       data_ptr[111] =  bgC[offset +13];
-//       data_ptr[114] =  bgC[offset +14];
-//       data_ptr[117] =  bgC[offset +15];
-// 
-//       index = 12*Base::col_BLUE  + Base::col_BLUE;
-//       data_ptr = result.d_data + index;
-// 
-//       data_ptr[  0] =  bbC[offset];
-//       data_ptr[  3] =  bbC[offset + 1];
-//       data_ptr[  6] =  bbC[offset + 2];
-//       data_ptr[  9] =  bbC[offset + 3];
-//       data_ptr[ 36] =  bbC[offset + 4];
-//       data_ptr[ 39] =  bbC[offset + 5];
-//       data_ptr[ 42] =  bbC[offset + 6];
-//       data_ptr[ 45] =  bbC[offset + 7];
-//       data_ptr[ 72] =  bbC[offset + 8];
-//       data_ptr[ 75] =  bbC[offset + 9];
-//       data_ptr[ 78] =  bbC[offset +10];
-//       data_ptr[ 81] =  bbC[offset +11];
-//       data_ptr[108] =  bbC[offset +12];
-//       data_ptr[111] =  bbC[offset +13];
-//       data_ptr[114] =  bbC[offset +14];
-//       data_ptr[117] =  bbC[offset +15];
-// 
-//       data_ptr = NULL;
-//     }
+
+    std::complex< double > tmp[16];
+
+    for (size_t idx=0; idx<alpha_f_perms.size(); idx++)
+    {
+      Base::DiracIndex const alpha_f = alpha_f_perms[idx];
+      Base::DiracIndex const alpha_i = alpha_f_std[idx%4];
+
+
+      std::complex< double > rrC[16];
+      std::fill_n(rrC, 16, COMPLEX_0);
+      ggU1.outer_product(bbU2, tmp, Dirac::order_FIRST_FIXED, alpha_i, alpha_f);
+      std::transform(tmp, tmp+16, rrC, rrC, std::plus< std::complex< double> >());
+      gbU1.outer_product(bgU2, tmp, Dirac::order_FIRST_FIXED, alpha_i, alpha_f);
+      std::transform(tmp, tmp+16, rrC, rrC, std::minus< std::complex< double> >());
+      bgU1.outer_product(gbU2, tmp, Dirac::order_FIRST_FIXED, alpha_i, alpha_f);
+      std::transform(tmp, tmp+16, rrC, rrC, std::minus< std::complex< double> >());
+      bbU1.outer_product(ggU2, tmp, Dirac::order_FIRST_FIXED, alpha_i, alpha_f);
+      std::transform(tmp, tmp+16, rrC, rrC, std::plus< std::complex< double> >());
+      ggU1.outer_product(bbU2, tmp, Dirac::order_OUTER_FIXED, alpha_i, alpha_f);
+      std::transform(tmp, tmp+16, rrC, rrC, std::plus< std::complex< double> >());
+      gbU1.outer_product(bgU2, tmp, Dirac::order_OUTER_FIXED, alpha_i, alpha_f);
+      std::transform(tmp, tmp+16, rrC, rrC, std::minus< std::complex< double> >());
+      bgU1.outer_product(gbU2, tmp, Dirac::order_OUTER_FIXED, alpha_i, alpha_f);
+      std::transform(tmp, tmp+16, rrC, rrC, std::minus< std::complex< double> >());
+      bbU1.outer_product(ggU2, tmp, Dirac::order_OUTER_FIXED, alpha_i, alpha_f);
+      std::transform(tmp, tmp+16, rrC, rrC, std::plus< std::complex< double> >());
+
+      std::complex< double > rgC[16];
+      std::fill_n(rgC, 16, COMPLEX_0);
+      gbU1.outer_product(brU2, tmp, Dirac::order_FIRST_FIXED, alpha_i, alpha_f);
+      std::transform(tmp, tmp+16, rgC, rgC, std::plus< std::complex< double> >());
+      grU1.outer_product(bbU2, tmp, Dirac::order_FIRST_FIXED, alpha_i, alpha_f);
+      std::transform(tmp, tmp+16, rgC, rgC, std::minus< std::complex< double> >());
+      bbU1.outer_product(grU2, tmp, Dirac::order_FIRST_FIXED, alpha_i, alpha_f);
+      std::transform(tmp, tmp+16, rgC, rgC, std::minus< std::complex< double> >());
+      brU1.outer_product(gbU2, tmp, Dirac::order_FIRST_FIXED, alpha_i, alpha_f);
+      std::transform(tmp, tmp+16, rgC, rgC, std::plus< std::complex< double> >());
+      gbU1.outer_product(brU2, tmp, Dirac::order_OUTER_FIXED, alpha_i, alpha_f);
+      std::transform(tmp, tmp+16, rgC, rgC, std::plus< std::complex< double> >());
+      grU1.outer_product(bbU2, tmp, Dirac::order_OUTER_FIXED, alpha_i, alpha_f);
+      std::transform(tmp, tmp+16, rgC, rgC, std::minus< std::complex< double> >());
+      bbU1.outer_product(grU2, tmp, Dirac::order_OUTER_FIXED, alpha_i, alpha_f);
+      std::transform(tmp, tmp+16, rgC, rgC, std::minus< std::complex< double> >());
+      brU1.outer_product(gbU2, tmp, Dirac::order_OUTER_FIXED, alpha_i, alpha_f);
+      std::transform(tmp, tmp+16, rgC, rgC, std::plus< std::complex< double> >());
+
+      std::complex< double > rbC[16];
+      std::fill_n(rbC, 16, COMPLEX_0);
+      grU1.outer_product(bgU2, tmp, Dirac::order_FIRST_FIXED, alpha_i, alpha_f);
+      std::transform(tmp, tmp+16, rbC, rbC, std::plus< std::complex< double> >());
+      ggU1.outer_product(brU2, tmp, Dirac::order_FIRST_FIXED, alpha_i, alpha_f);
+      std::transform(tmp, tmp+16, rbC, rbC, std::minus< std::complex< double> >());
+      brU1.outer_product(ggU2, tmp, Dirac::order_FIRST_FIXED, alpha_i, alpha_f);
+      std::transform(tmp, tmp+16, rbC, rbC, std::minus< std::complex< double> >());
+      bgU1.outer_product(grU2, tmp, Dirac::order_FIRST_FIXED, alpha_i, alpha_f);
+      std::transform(tmp, tmp+16, rbC, rbC, std::plus< std::complex< double> >());
+      grU1.outer_product(bgU2, tmp, Dirac::order_OUTER_FIXED, alpha_i, alpha_f);
+      std::transform(tmp, tmp+16, rbC, rbC, std::plus< std::complex< double> >());
+      ggU1.outer_product(brU2, tmp, Dirac::order_OUTER_FIXED, alpha_i, alpha_f);
+      std::transform(tmp, tmp+16, rbC, rbC, std::minus< std::complex< double> >());
+      brU1.outer_product(ggU2, tmp, Dirac::order_OUTER_FIXED, alpha_i, alpha_f);
+      std::transform(tmp, tmp+16, rbC, rbC, std::minus< std::complex< double> >());
+      bgU1.outer_product(grU2, tmp, Dirac::order_OUTER_FIXED, alpha_i, alpha_f);
+      std::transform(tmp, tmp+16, rbC, rbC, std::plus< std::complex< double> >());
+
+      /* ----------------------- */
+
+      std::complex< double > grC[16];
+      std::fill_n(grC, 16, COMPLEX_0);
+      rbU1.outer_product(bgU2, tmp, Dirac::order_FIRST_FIXED, alpha_i, alpha_f);
+      std::transform(tmp, tmp+16, grC, grC, std::plus< std::complex< double> >());
+      rgU1.outer_product(bbU2, tmp, Dirac::order_FIRST_FIXED, alpha_i, alpha_f);
+      std::transform(tmp, tmp+16, grC, grC, std::minus< std::complex< double> >());
+      bbU1.outer_product(rgU2, tmp, Dirac::order_FIRST_FIXED, alpha_i, alpha_f);
+      std::transform(tmp, tmp+16, grC, grC, std::minus< std::complex< double> >());
+      bgU1.outer_product(rbU2, tmp, Dirac::order_FIRST_FIXED, alpha_i, alpha_f);
+      std::transform(tmp, tmp+16, grC, grC, std::plus< std::complex< double> >());
+      rbU1.outer_product(bgU2, tmp, Dirac::order_OUTER_FIXED, alpha_i, alpha_f);
+      std::transform(tmp, tmp+16, grC, grC, std::plus< std::complex< double> >());
+      rgU1.outer_product(bbU2, tmp, Dirac::order_OUTER_FIXED, alpha_i, alpha_f);
+      std::transform(tmp, tmp+16, grC, grC, std::minus< std::complex< double> >());
+      bbU1.outer_product(rgU2, tmp, Dirac::order_OUTER_FIXED, alpha_i, alpha_f);
+      std::transform(tmp, tmp+16, grC, grC, std::minus< std::complex< double> >());
+      bgU1.outer_product(rbU2, tmp, Dirac::order_OUTER_FIXED, alpha_i, alpha_f);
+      std::transform(tmp, tmp+16, grC, grC, std::plus< std::complex< double> >());
+
+      std::complex< double > ggC[16];
+      std::fill_n(ggC, 16, COMPLEX_0);
+      rrU1.outer_product(bbU2, tmp, Dirac::order_FIRST_FIXED, alpha_i, alpha_f);
+      std::transform(tmp, tmp+16, ggC, ggC, std::plus< std::complex< double> >());
+      rbU1.outer_product(brU2, tmp, Dirac::order_FIRST_FIXED, alpha_i, alpha_f);
+      std::transform(tmp, tmp+16, ggC, ggC, std::minus< std::complex< double> >());
+      brU1.outer_product(rbU2, tmp, Dirac::order_FIRST_FIXED, alpha_i, alpha_f);
+      std::transform(tmp, tmp+16, ggC, ggC, std::minus< std::complex< double> >());
+      bbU1.outer_product(rrU2, tmp, Dirac::order_FIRST_FIXED, alpha_i, alpha_f);
+      std::transform(tmp, tmp+16, ggC, ggC, std::plus< std::complex< double> >());
+      rrU1.outer_product(bbU2, tmp, Dirac::order_OUTER_FIXED, alpha_i, alpha_f);
+      std::transform(tmp, tmp+16, ggC, ggC, std::plus< std::complex< double> >());
+      rbU1.outer_product(brU2, tmp, Dirac::order_OUTER_FIXED, alpha_i, alpha_f);
+      std::transform(tmp, tmp+16, ggC, ggC, std::minus< std::complex< double> >());
+      brU1.outer_product(rbU2, tmp, Dirac::order_OUTER_FIXED, alpha_i, alpha_f);
+      std::transform(tmp, tmp+16, ggC, ggC, std::minus< std::complex< double> >());
+      bbU1.outer_product(rrU2, tmp, Dirac::order_OUTER_FIXED, alpha_i, alpha_f);
+      std::transform(tmp, tmp+16, ggC, ggC, std::plus< std::complex< double> >());
+
+      std::complex< double > gbC[16];
+      std::fill_n(gbC, 16, COMPLEX_0);
+      rgU1.outer_product(brU2, tmp, Dirac::order_FIRST_FIXED, alpha_i, alpha_f);
+      std::transform(tmp, tmp+16, gbC, gbC, std::plus< std::complex< double> >());
+      rrU1.outer_product(bgU2, tmp, Dirac::order_FIRST_FIXED, alpha_i, alpha_f);
+      std::transform(tmp, tmp+16, gbC, gbC, std::minus< std::complex< double> >());
+      bgU1.outer_product(rrU2, tmp, Dirac::order_FIRST_FIXED, alpha_i, alpha_f);
+      std::transform(tmp, tmp+16, gbC, gbC, std::minus< std::complex< double> >());
+      brU1.outer_product(rgU2, tmp, Dirac::order_FIRST_FIXED, alpha_i, alpha_f);
+      std::transform(tmp, tmp+16, gbC, gbC, std::plus< std::complex< double> >());
+      rgU1.outer_product(brU2, tmp, Dirac::order_OUTER_FIXED, alpha_i, alpha_f);
+      std::transform(tmp, tmp+16, gbC, gbC, std::plus< std::complex< double> >());
+      rrU1.outer_product(bgU2, tmp, Dirac::order_OUTER_FIXED, alpha_i, alpha_f);
+      std::transform(tmp, tmp+16, gbC, gbC, std::minus< std::complex< double> >());
+      bgU1.outer_product(rrU2, tmp, Dirac::order_OUTER_FIXED, alpha_i, alpha_f);
+      std::transform(tmp, tmp+16, gbC, gbC, std::minus< std::complex< double> >());
+      brU1.outer_product(rgU2, tmp, Dirac::order_OUTER_FIXED, alpha_i, alpha_f);
+      std::transform(tmp, tmp+16, gbC, gbC, std::plus< std::complex< double> >());
+
+      /* ----------------------- */
+
+      std::complex< double > brC[16];
+      std::fill_n(brC, 16, COMPLEX_0);
+      rgU1.outer_product(gbU2, tmp, Dirac::order_FIRST_FIXED, alpha_i, alpha_f);
+      std::transform(tmp, tmp+16, brC, brC, std::plus< std::complex< double> >());
+      rbU1.outer_product(ggU2, tmp, Dirac::order_FIRST_FIXED, alpha_i, alpha_f);
+      std::transform(tmp, tmp+16, brC, brC, std::minus< std::complex< double> >());
+      ggU1.outer_product(rbU2, tmp, Dirac::order_FIRST_FIXED, alpha_i, alpha_f);
+      std::transform(tmp, tmp+16, brC, brC, std::minus< std::complex< double> >());
+      gbU1.outer_product(rgU2, tmp, Dirac::order_FIRST_FIXED, alpha_i, alpha_f);
+      std::transform(tmp, tmp+16, brC, brC, std::plus< std::complex< double> >());
+      rgU1.outer_product(gbU2, tmp, Dirac::order_OUTER_FIXED, alpha_i, alpha_f);
+      std::transform(tmp, tmp+16, brC, brC, std::plus< std::complex< double> >());
+      rbU1.outer_product(ggU2, tmp, Dirac::order_OUTER_FIXED, alpha_i, alpha_f);
+      std::transform(tmp, tmp+16, brC, brC, std::minus< std::complex< double> >());
+      ggU1.outer_product(rbU2, tmp, Dirac::order_OUTER_FIXED, alpha_i, alpha_f);
+      std::transform(tmp, tmp+16, brC, brC, std::minus< std::complex< double> >());
+      gbU1.outer_product(rgU2, tmp, Dirac::order_OUTER_FIXED, alpha_i, alpha_f);
+      std::transform(tmp, tmp+16, brC, brC, std::plus< std::complex< double> >());
+
+      std::complex< double > bgC[16];
+      std::fill_n(bgC, 16, COMPLEX_0);
+      rbU1.outer_product(grU2, tmp, Dirac::order_FIRST_FIXED, alpha_i, alpha_f);
+      std::transform(tmp, tmp+16, bgC, bgC, std::plus< std::complex< double> >());
+      rrU1.outer_product(gbU2, tmp, Dirac::order_FIRST_FIXED, alpha_i, alpha_f);
+      std::transform(tmp, tmp+16, bgC, bgC, std::minus< std::complex< double> >());
+      gbU1.outer_product(rrU2, tmp, Dirac::order_FIRST_FIXED, alpha_i, alpha_f);
+      std::transform(tmp, tmp+16, bgC, bgC, std::minus< std::complex< double> >());
+      grU1.outer_product(rbU2, tmp, Dirac::order_FIRST_FIXED, alpha_i, alpha_f);
+      std::transform(tmp, tmp+16, bgC, bgC, std::plus< std::complex< double> >());
+      rbU1.outer_product(grU2, tmp, Dirac::order_OUTER_FIXED, alpha_i, alpha_f);
+      std::transform(tmp, tmp+16, bgC, bgC, std::plus< std::complex< double> >());
+      rrU1.outer_product(gbU2, tmp, Dirac::order_OUTER_FIXED, alpha_i, alpha_f);
+      std::transform(tmp, tmp+16, bgC, bgC, std::minus< std::complex< double> >());
+      gbU1.outer_product(rrU2, tmp, Dirac::order_OUTER_FIXED, alpha_i, alpha_f);
+      std::transform(tmp, tmp+16, bgC, bgC, std::minus< std::complex< double> >());
+      grU1.outer_product(rbU2, tmp, Dirac::order_OUTER_FIXED, alpha_i, alpha_f);
+      std::transform(tmp, tmp+16, bgC, bgC, std::plus< std::complex< double> >());
+
+      std::complex< double > bbC[16];
+      std::fill_n(bbC, 16, COMPLEX_0);
+      rrU1.outer_product(ggU2, tmp, Dirac::order_FIRST_FIXED, alpha_i, alpha_f);
+      std::transform(tmp, tmp+16, bbC, bbC, std::plus< std::complex< double> >());
+      rgU1.outer_product(grU2, tmp, Dirac::order_FIRST_FIXED, alpha_i, alpha_f);
+      std::transform(tmp, tmp+16, bbC, bbC, std::minus< std::complex< double> >());
+      grU1.outer_product(rgU2, tmp, Dirac::order_FIRST_FIXED, alpha_i, alpha_f);
+      std::transform(tmp, tmp+16, bbC, bbC, std::minus< std::complex< double> >());
+      ggU1.outer_product(rrU2, tmp, Dirac::order_FIRST_FIXED, alpha_i, alpha_f);
+      std::transform(tmp, tmp+16, bbC, bbC, std::plus< std::complex< double> >());
+      rrU1.outer_product(ggU2, tmp, Dirac::order_OUTER_FIXED, alpha_i, alpha_f);
+      std::transform(tmp, tmp+16, bbC, bbC, std::plus< std::complex< double> >());
+      rgU1.outer_product(grU2, tmp, Dirac::order_OUTER_FIXED, alpha_i, alpha_f);
+      std::transform(tmp, tmp+16, bbC, bbC, std::minus< std::complex< double> >());
+      grU1.outer_product(rgU2, tmp, Dirac::order_OUTER_FIXED, alpha_i, alpha_f);
+      std::transform(tmp, tmp+16, bbC, bbC, std::minus< std::complex< double> >());
+      ggU1.outer_product(rrU2, tmp, Dirac::order_OUTER_FIXED, alpha_i, alpha_f);
+      std::transform(tmp, tmp+16, bbC, bbC, std::plus< std::complex< double> >());
+
+      /* --------------------------------------------- */
+
+      // the following part takes 9 Dirac::Matrixes and translates them to a Tensor (tmp_result)
+
+      QCD::Tensor tmp_result;
+
+      std::complex< double > *data_ptr(NULL);
+
+      size_t index(-1);
+
+      index = 12*Base::col_RED  + Base::col_RED;
+      data_ptr = tmp_result.d_data + index;
+      data_ptr[  0] =  rrC[ 0];
+      data_ptr[  3] =  rrC[ 1];
+      data_ptr[  6] =  rrC[ 2];
+      data_ptr[  9] =  rrC[ 3];
+      data_ptr[ 36] =  rrC[ 4];
+      data_ptr[ 39] =  rrC[ 5];
+      data_ptr[ 42] =  rrC[ 6];
+      data_ptr[ 45] =  rrC[ 7];
+      data_ptr[ 72] =  rrC[ 8];
+      data_ptr[ 75] =  rrC[ 9];
+      data_ptr[ 78] =  rrC[10];
+      data_ptr[ 81] =  rrC[11];
+      data_ptr[108] =  rrC[12];
+      data_ptr[111] =  rrC[13];
+      data_ptr[114] =  rrC[14];
+      data_ptr[117] =  rrC[15];
+
+      index = 12*Base::col_RED  + Base::col_GREEN;
+      data_ptr = tmp_result.d_data + index;
+
+      data_ptr[  0] =  rgC[ 0];
+      data_ptr[  3] =  rgC[ 1];
+      data_ptr[  6] =  rgC[ 2];
+      data_ptr[  9] =  rgC[ 3];
+      data_ptr[ 36] =  rgC[ 4];
+      data_ptr[ 39] =  rgC[ 5];
+      data_ptr[ 42] =  rgC[ 6];
+      data_ptr[ 45] =  rgC[ 7];
+      data_ptr[ 72] =  rgC[ 8];
+      data_ptr[ 75] =  rgC[ 9];
+      data_ptr[ 78] =  rgC[10];
+      data_ptr[ 81] =  rgC[11];
+      data_ptr[108] =  rgC[12];
+      data_ptr[111] =  rgC[13];
+      data_ptr[114] =  rgC[14];
+      data_ptr[117] =  rgC[15];
+
+      index = 12*Base::col_RED  + Base::col_BLUE;
+      data_ptr = tmp_result.d_data + index;
+
+      data_ptr[  0] =  rbC[ 0];
+      data_ptr[  3] =  rbC[ 1];
+      data_ptr[  6] =  rbC[ 2];
+      data_ptr[  9] =  rbC[ 3];
+      data_ptr[ 36] =  rbC[ 4];
+      data_ptr[ 39] =  rbC[ 5];
+      data_ptr[ 42] =  rbC[ 6];
+      data_ptr[ 45] =  rbC[ 7];
+      data_ptr[ 72] =  rbC[ 8];
+      data_ptr[ 75] =  rbC[ 9];
+      data_ptr[ 78] =  rbC[10];
+      data_ptr[ 81] =  rbC[11];
+      data_ptr[108] =  rbC[12];
+      data_ptr[111] =  rbC[13];
+      data_ptr[114] =  rbC[14];
+      data_ptr[117] =  rbC[15];
+
+      /* --------------------------------------------- */
+
+      index = 12*Base::col_GREEN  + Base::col_RED;
+      data_ptr = tmp_result.d_data + index;
+
+      data_ptr[  0] =  grC[ 0];
+      data_ptr[  3] =  grC[ 1];
+      data_ptr[  6] =  grC[ 2];
+      data_ptr[  9] =  grC[ 3];
+      data_ptr[ 36] =  grC[ 4];
+      data_ptr[ 39] =  grC[ 5];
+      data_ptr[ 42] =  grC[ 6];
+      data_ptr[ 45] =  grC[ 7];
+      data_ptr[ 72] =  grC[ 8];
+      data_ptr[ 75] =  grC[ 9];
+      data_ptr[ 78] =  grC[10];
+      data_ptr[ 81] =  grC[11];
+      data_ptr[108] =  grC[12];
+      data_ptr[111] =  grC[13];
+      data_ptr[114] =  grC[14];
+      data_ptr[117] =  grC[15];
+
+      index = 12*Base::col_GREEN  + Base::col_GREEN;
+      data_ptr = tmp_result.d_data + index;
+
+      data_ptr[  0] =  ggC[ 0];
+      data_ptr[  3] =  ggC[ 1];
+      data_ptr[  6] =  ggC[ 2];
+      data_ptr[  9] =  ggC[ 3];
+      data_ptr[ 36] =  ggC[ 4];
+      data_ptr[ 39] =  ggC[ 5];
+      data_ptr[ 42] =  ggC[ 6];
+      data_ptr[ 45] =  ggC[ 7];
+      data_ptr[ 72] =  ggC[ 8];
+      data_ptr[ 75] =  ggC[ 9];
+      data_ptr[ 78] =  ggC[10];
+      data_ptr[ 81] =  ggC[11];
+      data_ptr[108] =  ggC[12];
+      data_ptr[111] =  ggC[13];
+      data_ptr[114] =  ggC[14];
+      data_ptr[117] =  ggC[15];
+
+      index = 12*Base::col_GREEN  + Base::col_BLUE;
+      data_ptr = tmp_result.d_data + index;
+
+      data_ptr[  0] =  gbC[ 0];
+      data_ptr[  3] =  gbC[ 1];
+      data_ptr[  6] =  gbC[ 2];
+      data_ptr[  9] =  gbC[ 3];
+      data_ptr[ 36] =  gbC[ 4];
+      data_ptr[ 39] =  gbC[ 5];
+      data_ptr[ 42] =  gbC[ 6];
+      data_ptr[ 45] =  gbC[ 7];
+      data_ptr[ 72] =  gbC[ 8];
+      data_ptr[ 75] =  gbC[ 9];
+      data_ptr[ 78] =  gbC[10];
+      data_ptr[ 81] =  gbC[11];
+      data_ptr[108] =  gbC[12];
+      data_ptr[111] =  gbC[13];
+      data_ptr[114] =  gbC[14];
+      data_ptr[117] =  gbC[15];
+
+      /* --------------------------------------------- */
+
+      index = 12*Base::col_BLUE  + Base::col_RED;
+      data_ptr = tmp_result.d_data + index;
+
+      data_ptr[  0] =  brC[ 0];
+      data_ptr[  3] =  brC[ 1];
+      data_ptr[  6] =  brC[ 2];
+      data_ptr[  9] =  brC[ 3];
+      data_ptr[ 36] =  brC[ 4];
+      data_ptr[ 39] =  brC[ 5];
+      data_ptr[ 42] =  brC[ 6];
+      data_ptr[ 45] =  brC[ 7];
+      data_ptr[ 72] =  brC[ 8];
+      data_ptr[ 75] =  brC[ 9];
+      data_ptr[ 78] =  brC[10];
+      data_ptr[ 81] =  brC[11];
+      data_ptr[108] =  brC[12];
+      data_ptr[111] =  brC[13];
+      data_ptr[114] =  brC[14];
+      data_ptr[117] =  brC[15];
+
+      index = 12*Base::col_BLUE  + Base::col_GREEN;
+      data_ptr = tmp_result.d_data + index;
+
+      data_ptr[  0] =  bgC[ 0];
+      data_ptr[  3] =  bgC[ 1];
+      data_ptr[  6] =  bgC[ 2];
+      data_ptr[  9] =  bgC[ 3];
+      data_ptr[ 36] =  bgC[ 4];
+      data_ptr[ 39] =  bgC[ 5];
+      data_ptr[ 42] =  bgC[ 6];
+      data_ptr[ 45] =  bgC[ 7];
+      data_ptr[ 72] =  bgC[ 8];
+      data_ptr[ 75] =  bgC[ 9];
+      data_ptr[ 78] =  bgC[10];
+      data_ptr[ 81] =  bgC[11];
+      data_ptr[108] =  bgC[12];
+      data_ptr[111] =  bgC[13];
+      data_ptr[114] =  bgC[14];
+      data_ptr[117] =  bgC[15];
+
+      index = 12*Base::col_BLUE  + Base::col_BLUE;
+      data_ptr = tmp_result.d_data + index;
+
+      data_ptr[  0] =  bbC[ 0];
+      data_ptr[  3] =  bbC[ 1];
+      data_ptr[  6] =  bbC[ 2];
+      data_ptr[  9] =  bbC[ 3];
+      data_ptr[ 36] =  bbC[ 4];
+      data_ptr[ 39] =  bbC[ 5];
+      data_ptr[ 42] =  bbC[ 6];
+      data_ptr[ 45] =  bbC[ 7];
+      data_ptr[ 72] =  bbC[ 8];
+      data_ptr[ 75] =  bbC[ 9];
+      data_ptr[ 78] =  bbC[10];
+      data_ptr[ 81] =  bbC[11];
+      data_ptr[108] =  bbC[12];
+      data_ptr[111] =  bbC[13];
+      data_ptr[114] =  bbC[14];
+      data_ptr[117] =  bbC[15];
+
+      data_ptr = NULL;
+
+      tmp_result *= alpha_f_factors[idx];
+      result += tmp_result;
+    }
   }
 
 }

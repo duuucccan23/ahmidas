@@ -13,6 +13,7 @@
 #include <L0/Core/Propagator.h>
 #include <L2/Contract/Baryon.h>
 #include <L1/Tool/IO.h>
+#include <L1/Smear/APE.h>
 #include <L1/Smear/Jacobi.h>
 #include <L2/Input/FileReader.h>
 
@@ -144,10 +145,15 @@ int main(int argc, char **argv)
 
   Contract::create_sequential_source_proton_d(sequentialSource, uProp, uProp, timeslice_sink, Base::proj_PARITY_PLUS_TM);
 
+//   std::cout << "sequential source (d)\n\n" << sequentialSource << std::endl;
+
   Tool::IO::save(&sequentialSource, files[5], Tool::IO::fileSCIDAC);
 
+  Contract::create_sequential_source_proton_u(sequentialSource, uProp, uProp, dProp, timeslice_sink, Base::proj_PARITY_PLUS_TM);
 
-  std::cout << sequentialSource[0] << std::endl;
+//   std::cout << "sequential source (u)\n\n" << sequentialSource << std::endl;
+
+  Tool::IO::save(&sequentialSource, files[6], Tool::IO::fileSCIDAC);
 
   std::string const inversion_command_d ("../test/invert -f ../test/invert_input_d");
   std::string const inversion_command_u ("../test/invert -f ../test/invert_input_u");
@@ -172,9 +178,17 @@ int main(int argc, char **argv)
     exit(1);
   }
 
+  Core::Propagator sequentialPropagator_u(L, T);
+  Core::Propagator sequentialPropagator_d(L, T);
 
+  Tool::IO::load(&sequentialPropagator_d, files[7], Tool::IO::fileSCIDAC);
+  Tool::IO::load(&sequentialPropagator_u, files[8], Tool::IO::fileSCIDAC);
 
-  //Core::Correlator C3pd = Contract::proton_threepoint_d(Core:: Propagator * const bw_prop, Core:: Propagator * const fw_prop);
+  std::vector< Core::Correlator > C3p = Contract::proton_threepoint_sequential(sequentialPropagator_u, uProp,
+                                                                 sequentialPropagator_d, dProp,
+                                                                 my_operators, Base::proj_PARITY_PLUS_TM);
+
+  std::cout << C3p[0] << std::endl;
 
   std::cout << "\nprogramm is going to exit normally now\n" << std::endl;
 

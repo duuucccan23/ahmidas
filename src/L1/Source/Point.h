@@ -33,7 +33,7 @@ namespace Source
 
       size_t coord(Base::SpaceTimeIndex const idx) const;
       size_t const *coord() const;
-      
+
       std::complex< double > *field();
       std::complex< double > const *field() const;
   };

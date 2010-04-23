@@ -1,9 +1,8 @@
 namespace Smear
 {
-  template< size_t L, size_t T >
-  void Jacobi::smear(Core::Field< QCD::Spinor, L, T > *spinorField, Core::Field< QCD::Gauge, L, T > &gaugeField) const
+  void Jacobi::smear(Core::Field< QCD::Spinor > *spinorField, Core::Field< QCD::Gauge > &gaugeField) const
   {
-    Core::Field< QCD::Spinor, L, T > neighbourSpinor(*spinorField);
+    Core::Field< QCD::Spinor > neighbourSpinor(*spinorField);
     neighbourSpinor *= d_kappa;
 
     (*spinorField) *= d_weight;

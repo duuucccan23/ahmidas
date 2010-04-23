@@ -13,6 +13,7 @@
 #include <L0/Core/Propagator.h>
 #include <L2/Contract/Baryon.h>
 #include <L1/Tool/IO.h>
+#include <L1/Smear/Jacobi.h>
 #include <L2/Input/FileReader.h>
 
 
@@ -102,78 +103,75 @@ int main(int argc, char **argv)
 
 //   std::cout << Contract::proton_twopoint(uProp, uProp, dProp, Base::proj_PARITY_PLUS_TM) << std::endl;
 
-  std::vector< Core::Correlator > p3p = Contract::proton_threepoint_stochastic_naive(uProp, dProp,
-                                                          stochastic_uProp, stochastic_dProp, stochasticSource,
-                                                          NULL, //no gauge field at the moment
-                                                          my_operators,
-                                                          timeslice_source, timeslice_sink);
-
-
-  std::vector< Core::Correlator > p3p_stoch = Contract::proton_threepoint_stochastic(uProp, dProp,
-                                                                     stochastic_uProp, stochastic_dProp,
-                                                                     stochasticSource,
-                                                                     timeslice_source, timeslice_stochSource,
-                                                                     my_operators, Base::proj_PARITY_PLUS_TM);
-
+//   std::vector< Core::Correlator > p3p = Contract::proton_threepoint_stochastic_naive(uProp, dProp,
+//                                                           stochastic_uProp, stochastic_dProp, stochasticSource,
+//                                                           NULL, //no gauge field at the moment
+//                                                           my_operators,
+//                                                           timeslice_source, timeslice_sink);
+// 
+// 
+// //   std::vector< Core::Correlator > p3p_stoch = Contract::proton_threepoint_stochastic(uProp, dProp,
+// //                                                                      stochastic_uProp, stochastic_dProp,
+// //                                                                      stochasticSource,
+// //                                                                      timeslice_source, timeslice_stochSource,
+// //                                                                      my_operators, Base::proj_PARITY_PLUS_TM);
+// 
+//   p3p[0] *= Base::proj_PARITY_PLUS_TM;
+//   p3p[1] *= Base::proj_PARITY_PLUS_TM;
+// 
+// 
+//   std::cout.precision(8);
+// 
+//   std::cout << "\nproton threepoint (naive):\n" <<std::endl;
+//   std::cout << "\n d_bar*Op*d" <<std::endl;
 //   for (size_t t=0; t<p3p[0].T(); t++)
 //   {
 //     if(abs(tr((p3p[0])[t])) > 1.e-100)
-//       std::cout << "t = " << t  << "\n" << (p3p[0])[t] << std::endl;
+//       std::cout << t << "  " << (tr((p3p[0])[t])).real() << "  " << (tr((p3p[0])[t])).imag() << std::endl;
 //   }
+//   std::cout << "\n u_bar*Op*u" <<std::endl;
+//   for (size_t t=0; t<p3p[1].T(); t++)
+//   {
+//     if(abs(tr((p3p[1])[t])) > 1.e-100)
+//       std::cout << t << "  " << (tr((p3p[1])[t])).real() << "  " << (tr((p3p[1])[t])).imag() << std::endl;
+//   }
+// 
+//   p3p.clear();
 
 
-  p3p[0] *= Base::proj_PARITY_PLUS_TM;
-  p3p[1] *= Base::proj_PARITY_PLUS_TM;
+
+  Core::Propagator sequentialSource(L, T);
+
+  Contract::create_sequential_source_proton_d(sequentialSource, uProp, uProp, timeslice_sink, Base::proj_PARITY_PLUS_TM);
+
+  Tool::IO::save(&sequentialSource, files[5], Tool::IO::fileSCIDAC);
 
 
-  std::cout.precision(8);
+  std::cout << sequentialSource[0] << std::endl;
 
-  std::cout << "\nproton threepoint (naive):\n" <<std::endl;
-  std::cout << "\n d_bar*Op*d" <<std::endl;
-  for (size_t t=0; t<p3p[0].T(); t++)
+  std::string const inversion_command_d ("../test/invert -f ../test/invert_input_d");
+  std::string const inversion_command_u ("../test/invert -f ../test/invert_input_u");
+
+  int state = system(inversion_command_d.c_str());
+
+  if(state == 0)
+    std::cout << "sequential source (d) inverted successfully!" << std::endl;
+  else
   {
-    if(abs(tr((p3p[0])[t])) > 1.e-100)
-      std::cout << t << "  " << (tr((p3p[0])[t])).real() << "  " << (tr((p3p[0])[t])).imag() << std::endl;
+    std::cerr << "error occurred while trying to invert sequential source (d)!" << std::endl;
+    exit(1);
   }
-  std::cout << "\n u_bar*Op*u" <<std::endl;
-  for (size_t t=0; t<p3p[1].T(); t++)
+
+  state = system(inversion_command_u.c_str());
+
+  if(state == 0)
+    std::cout << "sequential source (u) inverted successfully!" << std::endl;
+  else
   {
-    if(abs(tr((p3p[1])[t])) > 1.e-100)
-      std::cout << t << "  " << (tr((p3p[1])[t])).real() << "  " << (tr((p3p[1])[t])).imag() << std::endl;
+    std::cerr << "error occurred while trying to invert sequential source (u)!" << std::endl;
+    exit(1);
   }
 
-  p3p.clear();
-
-  std::cout << "\nproton threepoint (stochastic):\n" <<std::endl;
-  std::cout << "\n d_bar*Op*d" <<std::endl;
-  for (size_t t=0; t<p3p_stoch[0].T(); t++)
-  {
-    if(abs(tr((p3p_stoch[0])[t])) > 1.e-100)
-      std::cout << t << "  " << (tr((p3p_stoch[0])[t])).real() << "  " << (tr((p3p_stoch[0])[t])).imag() << std::endl;
-  }
-
-  p3p_stoch.clear();
-
-
-//   std::cout << "\nthat is supposed to be the result:\n"
-//     << "0   1.16145514e-03  -7.64689531e-05\n"
-//     << "1   1.37746719e-03  -1.02786839e-05\n"
-//     << "2   4.29020380e-05   3.89420319e-08\n"
-//     << "3   1.34970449e-03   1.41088319e-05"
-//     << std::endl;
-// 
-// 
-//   Core::Propagator sequentialSource[16] = {Core:: Propagator(L,T), Core:: Propagator(L,T), Core:: Propagator(L,T), Core:: Propagator(L,T),
-//                                            Core:: Propagator(L,T), Core:: Propagator(L,T), Core:: Propagator(L,T), Core:: Propagator(L,T),
-//                                            Core:: Propagator(L,T), Core:: Propagator(L,T), Core:: Propagator(L,T), Core:: Propagator(L,T),
-//                                            Core:: Propagator(L,T), Core:: Propagator(L,T), Core:: Propagator(L,T), Core:: Propagator(L,T)};
-// 
-//   Contract::create_sequential_source_proton_d(sequentialSource, uProp, uProp, timeslice_sink);
-// 
-//   Tool::IO::save(&(sequentialSource[0]), files[5], Tool::IO::fileSCIDAC);
-// 
-// 
-//   std::cout << sequentialSource[0] << std::endl;
 
 
   //Core::Correlator C3pd = Contract::proton_threepoint_d(Core:: Propagator * const bw_prop, Core:: Propagator * const fw_prop);

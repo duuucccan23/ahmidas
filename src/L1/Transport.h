@@ -9,16 +9,15 @@
 
 namespace Transport
 {
-  template< size_t L, size_t T >
-  Core::Field< QCD::Spinor, L, T > step(Core::Field< QCD::Spinor, L, T > const &spinor,
-      Core::Field< QCD::Gauge, L, T > const &gauge,
+
+  Core::Field< QCD::Spinor > step(Core::Field< QCD::Spinor > const &spinor,
+      Core::Field< QCD::Gauge > const &gauge,
       Base::SpaceTimeIndex idx, Base::Direction dir);
 
-  template< size_t L, size_t T >
-  Core::Field< QCD::Spinor, L, T > range(Core::Field< QCD::Spinor, L, T > const &spinor,
-      Core::Field< QCD::Gauge, L, T > const &gauge,
+  Core::Field< QCD::Spinor > range(Core::Field< QCD::Spinor > const &spinor,
+      Core::Field< QCD::Gauge > const &gauge,
       Base::SpaceTimeIndex idx, Base::Direction dir, size_t steps);
 }
 
-#include "Transport_step.template"
-#include "Transport_range.template"
+#include "Transport/Transport_step.template"
+#include "Transport/Transport_range.template"

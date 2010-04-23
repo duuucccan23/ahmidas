@@ -1,51 +1,89 @@
 #include "Tensor.ih"
 
+#include <vector>
+
 namespace QCD
 {
 
   // this is for the d_bar * Op * d current
-  void make_sequential_d(Tensor &result, Tensor const &U1, Tensor const &U2, Base::BaryonPropagatorProjector projector)
+  void make_sequential_d(Tensor &result, Tensor const &U1, Tensor const &U2, Base::BaryonPropagatorProjector const projector)
   {
-//     /* under construction */
-//     Dirac::Matrix rrU1;
-//     Dirac::Matrix rgU1;
-//     Dirac::Matrix rbU1;
-//     Dirac::Matrix grU1;
-//     Dirac::Matrix gbU1;
-//     Dirac::Matrix ggU1;
-//     Dirac::Matrix brU1;
-//     Dirac::Matrix bbU1;
-//     Dirac::Matrix bgU1;
-// 
-//     Dirac::Matrix rrU2;
-//     Dirac::Matrix rgU2;
-//     Dirac::Matrix rbU2;
-//     Dirac::Matrix grU2;
-//     Dirac::Matrix gbU2;
-//     Dirac::Matrix ggU2;
-//     Dirac::Matrix brU2;
-//     Dirac::Matrix bbU2;
-//     Dirac::Matrix bgU2;
-// 
-//     U1.getDiracMatrix(rrU1, Base::col_RED,   Base::col_RED);
-//     U1.getDiracMatrix(rgU1, Base::col_RED,   Base::col_GREEN);
-//     U1.getDiracMatrix(rbU1, Base::col_RED,   Base::col_BLUE);
-//     U1.getDiracMatrix(grU1, Base::col_GREEN, Base::col_RED);
-//     U1.getDiracMatrix(gbU1, Base::col_GREEN, Base::col_BLUE);
-//     U1.getDiracMatrix(ggU1, Base::col_GREEN, Base::col_GREEN);
-//     U1.getDiracMatrix(brU1, Base::col_BLUE,  Base::col_RED);
-//     U1.getDiracMatrix(bbU1, Base::col_BLUE,  Base::col_BLUE);
-//     U1.getDiracMatrix(bgU1, Base::col_BLUE,  Base::col_GREEN);
-// 
-//     U2.getDiracMatrix(rrU2, Base::col_RED,   Base::col_RED);
-//     U2.getDiracMatrix(rgU2, Base::col_GREEN, Base::col_RED);
-//     U2.getDiracMatrix(rbU2, Base::col_BLUE,  Base::col_RED);
-//     U2.getDiracMatrix(grU2, Base::col_RED,   Base::col_GREEN);
-//     U2.getDiracMatrix(gbU2, Base::col_BLUE,  Base::col_GREEN);
-//     U2.getDiracMatrix(ggU2, Base::col_GREEN, Base::col_GREEN);
-//     U2.getDiracMatrix(brU2, Base::col_RED,   Base::col_BLUE);
-//     U2.getDiracMatrix(bbU2, Base::col_BLUE,  Base::col_BLUE);
-//     U2.getDiracMatrix(bgU2, Base::col_GREEN, Base::col_BLUE);
+
+    std::vector< size_t > alpha_f_perms;
+    alpha_f_perms.reserve(8);
+    std::vector< std::complex< double > > alpha_f_factors;
+    alpha_f_factors.reserve(8);
+
+    static std::complex< double > const COMPLEX_P_I( 0,  1);
+    static std::complex< double > const COMPLEX_M_I( 0, -1);
+    static std::complex< double > const COMPLEX_P_1( 1,  0);
+    static std::complex< double > const COMPLEX_M_1(-1,  0);
+    static std::complex< double > const COMPLEX_0(0, 0);
+
+    switch (projector)
+    {
+      case Base::proj_PARITY_PLUS_TM:
+        alpha_f_perms.push_back(2);
+        alpha_f_factors.push_back(0.5*COMPLEX_M_1);
+        alpha_f_perms.push_back(3);
+        alpha_f_factors.push_back(0.5*COMPLEX_M_1);
+        alpha_f_perms.push_back(0);
+        alpha_f_factors.push_back(0.5*COMPLEX_M_1);
+        alpha_f_perms.push_back(1);
+        alpha_f_factors.push_back(0.5*COMPLEX_M_1);
+        alpha_f_perms.push_back(0);
+        alpha_f_factors.push_back(0.5*COMPLEX_P_I);
+        alpha_f_perms.push_back(1);
+        alpha_f_factors.push_back(0.5*COMPLEX_P_I);
+        alpha_f_perms.push_back(2);
+        alpha_f_factors.push_back(0.5*COMPLEX_M_I);
+        alpha_f_perms.push_back(3);
+        alpha_f_factors.push_back(0.5*COMPLEX_M_I);
+      break;
+      default:
+      std::cerr << "Unknown projector in QCD::make_sequential_d() " << std::endl;
+    }
+
+    /* under construction */
+    Dirac::Matrix rrU1;
+    Dirac::Matrix rgU1;
+    Dirac::Matrix rbU1;
+    Dirac::Matrix grU1;
+    Dirac::Matrix gbU1;
+    Dirac::Matrix ggU1;
+    Dirac::Matrix brU1;
+    Dirac::Matrix bbU1;
+    Dirac::Matrix bgU1;
+
+    Dirac::Matrix rrU2;
+    Dirac::Matrix rgU2;
+    Dirac::Matrix rbU2;
+    Dirac::Matrix grU2;
+    Dirac::Matrix gbU2;
+    Dirac::Matrix ggU2;
+    Dirac::Matrix brU2;
+    Dirac::Matrix bbU2;
+    Dirac::Matrix bgU2;
+
+    U1.getDiracMatrix(rrU1, Base::col_RED,   Base::col_RED);
+    U1.getDiracMatrix(rgU1, Base::col_RED,   Base::col_GREEN);
+    U1.getDiracMatrix(rbU1, Base::col_RED,   Base::col_BLUE);
+    U1.getDiracMatrix(grU1, Base::col_GREEN, Base::col_RED);
+    U1.getDiracMatrix(gbU1, Base::col_GREEN, Base::col_BLUE);
+    U1.getDiracMatrix(ggU1, Base::col_GREEN, Base::col_GREEN);
+    U1.getDiracMatrix(brU1, Base::col_BLUE,  Base::col_RED);
+    U1.getDiracMatrix(bbU1, Base::col_BLUE,  Base::col_BLUE);
+    U1.getDiracMatrix(bgU1, Base::col_BLUE,  Base::col_GREEN);
+
+    U2.getDiracMatrix(rrU2, Base::col_RED,   Base::col_RED);
+    U2.getDiracMatrix(rgU2, Base::col_GREEN, Base::col_RED);
+    U2.getDiracMatrix(rbU2, Base::col_BLUE,  Base::col_RED);
+    U2.getDiracMatrix(grU2, Base::col_RED,   Base::col_GREEN);
+    U2.getDiracMatrix(gbU2, Base::col_BLUE,  Base::col_GREEN);
+    U2.getDiracMatrix(ggU2, Base::col_GREEN, Base::col_GREEN);
+    U2.getDiracMatrix(brU2, Base::col_RED,   Base::col_BLUE);
+    U2.getDiracMatrix(bbU2, Base::col_BLUE,  Base::col_BLUE);
+    U2.getDiracMatrix(bgU2, Base::col_GREEN, Base::col_BLUE);
 // 
 //     size_t const n_complex = 16*16;
 // 

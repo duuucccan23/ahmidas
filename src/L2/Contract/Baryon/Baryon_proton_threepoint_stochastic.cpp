@@ -12,6 +12,10 @@ namespace Contract
                                                 std::vector< Base::Operator > const &my_operators,
                                                 Base::BaryonPropagatorProjector const my_projector)
   {
+
+    // still under construction ...
+    assert(false);
+
     assert(u.L() == d.L() && u.T() == d.T());
     if (my_projector == Base::proj_PARITY_PLUS_TM)
     {

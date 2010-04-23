@@ -3,7 +3,7 @@
 namespace QCD
 {
 
-  // this is for the d_bar * Op * d current
+  // this is for the d_bar * Op * d current (and it keeps all indices free)
   void make_sequential_d(Tensor result[16], Tensor const &A, Tensor const &B)
   {
     /* under construction */
@@ -441,14 +441,5 @@ namespace QCD
       data_ptr = NULL;
     }
   }
-
-
-//   // this is for the u_bar * Op * u current
-//   void make_sequential_u(Tensor result[16], Tensor const &A, Tensor const &B)
-//   {
-//   }
-//
-
-
 
 }

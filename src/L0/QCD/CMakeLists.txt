@@ -6,6 +6,9 @@ SET(Sources_Tensor     Tensor/Tensor_leftMultiply_a.cpp Tensor/Tensor_leftMultip
                        Tensor/Tensor_getDiracMatrix_c.cpp Tensor/Tensor_getDiracMatrix_d.cpp
                        Tensor/Tensor_getDiracMatrix_alternative.cpp
                        Tensor/Tensor_make_sequential.cpp
+                       Tensor/Tensor_make_sequential_d_a.cpp
+                       Tensor/Tensor_make_sequential_u_a.cpp
+                       Tensor/Tensor_multiplyOuterDiracIndices.cpp
                        Tensor/Tensor_Tensor.cpp)
 SET(Sources_WeylSpinor WeylSpinor/WeylSpinor_leftMultiply_a.cpp WeylSpinor/WeylSpinor_leftMultiply_b.cpp
                        WeylSpinor/WeylSpinor_leftMultiply_c.cpp WeylSpinor/WeylSpinor_swap.cpp)

@@ -28,9 +28,10 @@ namespace Contract
                                                           std::vector< Base::Operator > const &ops,
                                                           size_t const t_src, size_t const t_snk);
 
-  Core::Correlator proton_threepoint_d(Core:: Propagator const * const bw_prop, Core:: Propagator const &fw_prop, Base::Operator op);
-
-  Core::Correlator proton_threepoint_u(Core:: Propagator const * const bw_prop, Core:: Propagator const &fw_prop, Base::Operator op);
+  std::vector< Core::Correlator > proton_threepoint_sequential(
+    Core:: Propagator const &bw_prop_u, Core::Propagator const &fw_prop_u,
+    Core:: Propagator const &bw_prop_d, Core::Propagator const &fw_prop_d,
+    std::vector< Base::Operator > ops, Base::BaryonPropagatorProjector const my_projector);
 
   std::vector< Core::Correlator > proton_threepoint_stochastic(Core::Propagator const &u,
                                                 Core::Propagator const &d,

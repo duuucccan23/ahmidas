@@ -154,6 +154,11 @@ namespace QCD
       friend void getDiracMatrix(Dirac::Matrix &dMatrix, Tensor const &A, Tensor const &B, Tensor const &C, Base::BaryonInterpolatingField const iPol);
       friend void getDiracMatrix_alternative(Dirac::Matrix &dMatrix, Tensor const &A, Tensor const &B, Tensor const &C, Base::BaryonInterpolatingField const iPol);
 
+      // this is a very unelegant solution needed for threepoints
+      friend void multiplyOuterDiracIndices(Tensor const &left, Tensor const * const right, Tensor * const result);
+
+      friend void make_sequential_d(Tensor &result, Tensor const &U1, Tensor const &U2, Base::BaryonPropagatorProjector projector);
+      friend void make_sequential_u(Tensor &result, Tensor const &U1, Tensor const &U2, Base::BaryonPropagatorProjector projector);
       friend void make_sequential_d(Tensor result[16], Tensor const &A, Tensor const &B);
       friend void make_sequential_u(Tensor result[16], Tensor const &A, Tensor const &B);
   };
@@ -172,6 +177,11 @@ namespace QCD
   // note: one should worry about the correct convention here. Still, both functions give the same result for a proton tow point,
   // provided that A and C are equal (i.e. we use the same propagators for both u)
   void getDiracMatrix_alternative(Dirac::Matrix &dMatrix, Tensor const &A, Tensor const &B, Tensor const &C, Base::BaryonInterpolatingField const iPol);
+
+  void multiplyOuterDiracIndices(Tensor const &left, Tensor const * const right, Tensor * const result);
+
+  void make_sequential_d(Tensor &result, Tensor const &U1, Tensor const &U2, Base::BaryonPropagatorProjector projector);
+  void make_sequential_u(Tensor &result, Tensor const &U1, Tensor const &U2, Base::BaryonPropagatorProjector projector);
   void make_sequential_d(Tensor result[16], Tensor const &A, Tensor const &B);
   void make_sequential_u(Tensor result[16], Tensor const &A, Tensor const &B);
 

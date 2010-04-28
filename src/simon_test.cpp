@@ -8,6 +8,7 @@
 #include <fstream>
 #include <sstream>
 
+#include <L0/Base/Weave.h>
 #include <L0/Dirac/Gamma.h>
 #include <L0/QCD/Gauge.h>
 #include <L0/Core/Propagator.h>
@@ -43,7 +44,7 @@ int main(int argc, char **argv)
   size_t const timeslice_source = (positions[0])[Base::idx_T];
   std::cout << "timeslice (source) = " << timeslice_source << std::endl;
   // size_t const source_position[4] = {0,0,0,timeslice_source};
-  // size_t const timeslice_boundary(T-1);
+  size_t const timeslice_boundary(T-1);
   size_t const timeslice_stochSource = (positions[1])[Base::idx_T];
   size_t const timeslice_sink = timeslice_stochSource;
   std::cout << "timeslice (stochastic wall source) = " << timeslice_stochSource << std::endl;
@@ -55,18 +56,18 @@ int main(int argc, char **argv)
   std::vector< std::string > const &stochasticSourceFiles(files[4]);
 
 
-  std::cout << "The following files are going to be read:" << std::endl;
-
-  for (int f=0; f<12; f++)
-  {
-      std::cout << propfilesU[f]           << "\n" << propfilesD[f]           << std::endl;
-      std::cout << stochasticPropFilesD[f] << "\n" << stochasticPropFilesU[f] << std::endl;
-  }
-
-  for (int f=0; f<12; f++)
-  {
-    std::cout << stochasticSourceFiles[f] << std::endl;
-  }
+//   std::cout << "The following files are going to be read:" << std::endl;
+// 
+//   for (int f=0; f<12; f++)
+//   {
+//       std::cout << propfilesU[f]           << "\n" << propfilesD[f]           << std::endl;
+//       std::cout << stochasticPropFilesD[f] << "\n" << stochasticPropFilesU[f] << std::endl;
+//   }
+// 
+//   for (int f=0; f<12; f++)
+//   {
+//     std::cout << stochasticSourceFiles[f] << std::endl;
+//   }
 
   Core::Propagator uProp = Core::Propagator(L, T);
 
@@ -101,8 +102,15 @@ int main(int argc, char **argv)
 
   std::vector< Base::Operator > my_operators;
   my_operators.push_back(Base::op_GAMMA_4);
+  // my_operators.push_back(Base::op_UNITY);
 
-//   std::cout << Contract::proton_twopoint(uProp, uProp, dProp, Base::proj_PARITY_PLUS_TM) << std::endl;
+  Core::Correlator p2p = Contract::proton_twopoint(uProp, uProp, dProp, Base::proj_NO_PROJECTOR);
+  std::cout << "\nproton twopoint at t=4, full spin structure in twisted basis\n" << std::endl;
+  std::cout << p2p[4] << std::endl;
+  std::cout << "\nproton twopoint\n" << std::endl;
+  p2p *= Base::proj_PARITY_PLUS_TM;
+  std::cout << p2p << std::endl;
+
 
 //   std::vector< Core::Correlator > p3p = Contract::proton_threepoint_stochastic_naive(uProp, dProp,
 //                                                           stochastic_uProp, stochastic_dProp, stochasticSource,
@@ -110,38 +118,144 @@ int main(int argc, char **argv)
 //                                                           my_operators,
 //                                                           timeslice_source, timeslice_sink);
 // 
-// 
-// //   std::vector< Core::Correlator > p3p_stoch = Contract::proton_threepoint_stochastic(uProp, dProp,
-// //                                                                      stochastic_uProp, stochastic_dProp,
-// //                                                                      stochasticSource,
-// //                                                                      timeslice_source, timeslice_stochSource,
-// //                                                                      my_operators, Base::proj_PARITY_PLUS_TM);
+// // 
+//   std::vector< Core::Correlator > p3p = Contract::proton_threepoint_stochastic(uProp, dProp,
+//                                                                      stochastic_uProp, stochastic_dProp,
+//                                                                      stochasticSource,
+//                                                                      timeslice_source, timeslice_stochSource,
+//                                                                      my_operators, Base::proj_PARITY_PLUS_TM);
 // 
 //   p3p[0] *= Base::proj_PARITY_PLUS_TM;
 //   p3p[1] *= Base::proj_PARITY_PLUS_TM;
-// 
-// 
-//   std::cout.precision(8);
-// 
+// //   p3p[2] *= Base::proj_PARITY_PLUS_TM;
+// //   p3p[3] *= Base::proj_PARITY_PLUS_TM;
+// // 
+// //   std::cout.precision(8);
+// // 
 //   std::cout << "\nproton threepoint (naive):\n" <<std::endl;
-//   std::cout << "\n d_bar*Op*d" <<std::endl;
+//   std::cout << "\n d_bar*gamma0*d" <<std::endl;
 //   for (size_t t=0; t<p3p[0].T(); t++)
 //   {
 //     if(abs(tr((p3p[0])[t])) > 1.e-100)
 //       std::cout << t << "  " << (tr((p3p[0])[t])).real() << "  " << (tr((p3p[0])[t])).imag() << std::endl;
 //   }
-//   std::cout << "\n u_bar*Op*u" <<std::endl;
+//   std::cout << "\n u_bar*gamma0*u" <<std::endl;
 //   for (size_t t=0; t<p3p[1].T(); t++)
 //   {
 //     if(abs(tr((p3p[1])[t])) > 1.e-100)
 //       std::cout << t << "  " << (tr((p3p[1])[t])).real() << "  " << (tr((p3p[1])[t])).imag() << std::endl;
 //   }
+//   std::cout << "\n d_bar*1*d" <<std::endl;
+//   for (size_t t=0; t<p3p[2].T(); t++)
+//   {
+//     if(abs(tr((p3p[2])[t])) > 1.e-100)
+//       std::cout << t << "  " << (tr((p3p[2])[t])).real() << "  " << (tr((p3p[2])[t])).imag() << std::endl;
+//   }
+//   std::cout << "\n u_bar*1*u" <<std::endl;
+//   for (size_t t=0; t<p3p[3].T(); t++)
+//   {
+//     if(abs(tr((p3p[3])[t])) > 1.e-100)
+//       std::cout << t << "  " << (tr((p3p[3])[t])).real() << "  " << (tr((p3p[3])[t])).imag() << std::endl;
+//   }
 // 
 //   p3p.clear();
 
+  {
+    Core::Propagator sequentialSource[16] = {
+      Core::Propagator(L, T), Core::Propagator(L, T), Core::Propagator(L, T), Core::Propagator(L, T),
+      Core::Propagator(L, T), Core::Propagator(L, T), Core::Propagator(L, T), Core::Propagator(L, T),
+      Core::Propagator(L, T), Core::Propagator(L, T), Core::Propagator(L, T), Core::Propagator(L, T),
+      Core::Propagator(L, T), Core::Propagator(L, T), Core::Propagator(L, T), Core::Propagator(L, T)};
 
+    // Contract::create_sequential_source_proton_d(sequentialSource, uProp, uProp, timeslice_sink);
+    // Tool::IO::save(&(sequentialSource[0]), files[9], Tool::IO::fileSCIDAC);
+
+    //std::cerr << "sequential source (d)\n\n" << sequentialSource[0] << std::endl;
+
+    Dirac::Gamma< 4 > gamma0;
+    Dirac::Gamma< 5 > gamma5;
+
+  // this is a good test for the sequential source generation
+  // just multiplying the sequential source (without gamma_5 and dagger) to a propagator gives the twopoint
+
+
+    Core::Propagator sequentialSource_fixedProjector(L, T);
+
+    Core::Propagator dProp_mod(dProp);
+    Core::Propagator::iterator it = dProp_mod.begin();
+    while(it != dProp_mod.end())
+    {
+      (*it).right_multiply_proton();
+      (*it).left_multiply_proton();
+      (*it).transposeFull();
+      ++it;
+    }
+
+    sequentialSource_fixedProjector *= std::complex< double >(0, 0);
+    Base::Weave weave(L, T);
+
+    QCD::Tensor tmp[16];
+
+    size_t localIndex;
+    for(size_t idx_Z = 0; idx_Z < L; idx_Z++)
+    {
+      for(size_t idx_Y = 0; idx_Y < L; idx_Y++)
+      {
+        for(size_t idx_X = 0; idx_X < L; idx_X++)
+        {
+          localIndex = weave.globalCoordToLocalIndex(idx_X, idx_Y, idx_Z, timeslice_sink);
+          /* globalCoordToLocalIndex returns local volume if local data is not available on this cpu */
+          if (localIndex == weave.localVolume())
+            continue;
+          QCD::make_sequential_d(tmp, uProp[localIndex], uProp[localIndex]);
+          QCD::make_sequential_d(sequentialSource_fixedProjector[localIndex], uProp[localIndex], uProp[localIndex], Base::proj_PARITY_PLUS_TM);
+          //QCD::make_sequential_u( sequentialSource[localIndex], dProp_mod[localIndex], uProp[localIndex], uProp[localIndex], Base::proj_PARITY_PLUS_TM);
+          //std::cout << sequentialSource[localIndex];
+          for(size_t idx_D = 0; idx_D < 16; idx_D++)
+            (sequentialSource[idx_D])[localIndex] = tmp[idx_D];
+        }
+      }
+    }
+
+    std::cout.precision(6);
+
+    Dirac::Matrix matrix1;
+
+    std::cout << "\nproton twopoint from sequential source, full spin structure in twisted basis\n" << std::endl;
+    for(size_t idx_D = 0; idx_D < 16; idx_D++)
+    {
+      Core::Correlator p2p_seq(L, T, (sequentialSource[idx_D]).contract(dProp_mod));
+      p2p_seq.sumOverSpatialVolume();
+      matrix1[idx_D] = (p2p_seq[4]).trace();
+      std::cout.width(16);
+      std::cout << (p2p_seq[4]).trace().real();
+      std::cout.width(16);
+      std::cout << (p2p_seq[4]).trace().imag();
+      if ((idx_D+1)%4 == 0)
+        std::cout << std::endl;
+    }
+    std::cout << "\nthis is the trace of the projected and traced twopoint in physical basis\n" << std::endl;
+    Dirac::Matrix matrix2(matrix1);
+    matrix1 *= gamma0;
+    matrix2 *= gamma5;
+    matrix2 *= std::complex< double >(0, 1);
+    matrix1 += matrix2;
+    std::cout.width(16);
+    std::cout << matrix1.trace().real();
+    std::cout.width(16);
+    std::cout << matrix1.trace().imag();
+    std::cout << std::endl;
+    std::cout << "\nproton twopoint from sequential source, fixed projector\n" << std::endl;
+    Core::Correlator p2p_seq(L, T, sequentialSource_fixedProjector.contract(dProp_mod));
+    p2p_seq.sumOverSpatialVolume();
+    std::cout << p2p_seq << "\n" << std::endl;
+  }
+
+
+  return 0;
 
   Core::Propagator sequentialSource(L, T);
+  sequentialSource *= std::complex< double >(0, 0);
 
   Contract::create_sequential_source_proton_d(sequentialSource, uProp, uProp, timeslice_sink, Base::proj_PARITY_PLUS_TM);
 
@@ -153,10 +267,13 @@ int main(int argc, char **argv)
 
 //   std::cout << "sequential source (u)\n\n" << sequentialSource << std::endl;
 
+//   return 0;
+
+
   Tool::IO::save(&sequentialSource, files[6], Tool::IO::fileSCIDAC);
 
-  std::string const inversion_command_d ("../test/invert -f ../test/invert_input_d");
-  std::string const inversion_command_u ("../test/invert -f ../test/invert_input_u");
+  std::string const inversion_command_d ("../test/invert -f ../test/invert_input_d >/dev/null");
+  std::string const inversion_command_u ("../test/invert -f ../test/invert_input_u >/dev/null");
 
   int state = system(inversion_command_d.c_str());
 
@@ -184,11 +301,20 @@ int main(int argc, char **argv)
   Tool::IO::load(&sequentialPropagator_d, files[7], Tool::IO::fileSCIDAC);
   Tool::IO::load(&sequentialPropagator_u, files[8], Tool::IO::fileSCIDAC);
 
+  sequentialPropagator_u.changeBoundaryConditions_uniformToFixed(timeslice_sink, timeslice_boundary);
+  sequentialPropagator_d.changeBoundaryConditions_uniformToFixed(timeslice_sink, timeslice_boundary);
+
   std::vector< Core::Correlator > C3p = Contract::proton_threepoint_sequential(sequentialPropagator_u, uProp,
                                                                  sequentialPropagator_d, dProp,
                                                                  my_operators, Base::proj_PARITY_PLUS_TM);
-
+  std::cout << "\n ubar gamma_0 u \n" << std::endl;
   std::cout << C3p[0] << std::endl;
+  std::cout << "\n dbar gamma_0 d \n" << std::endl;
+  std::cout << C3p[1] << std::endl;
+//   std::cout << "\n ubar u \n" << std::endl;
+//   std::cout << C3p[2] << std::endl;
+//   std::cout << "\n dbar d \n" << std::endl;
+//   std::cout << C3p[3] << std::endl;
 
   std::cout << "\nprogramm is going to exit normally now\n" << std::endl;
 

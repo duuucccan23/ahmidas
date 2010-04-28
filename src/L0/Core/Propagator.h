@@ -49,14 +49,24 @@ namespace Core
       QCD::Tensor       &operator[](size_t const localIndex);
       QCD::Tensor const &operator[](size_t const localIndex) const;
 
+      void operator*=(std::complex< double > const &factor);
+
       template< size_t Index >
       void operator*=(Dirac::Gamma< Index > const &gamma);
 
       template< size_t Index >
       Propagator operator*(Dirac::Gamma< Index > const &gamma) const;
 
+      template < size_t Index >
+      void rightMultiply(Dirac::Gamma< Index > const& gamma);
+
       // needed for meson contractions
       Core::Field< Dirac::Matrix > *operator*(Propagator const &other) const;
+
+      // this is a simple contraction: A be a Tensor of *this, B be a Tensor of other,
+      // both at the same lattice site.
+      // this routine does A.leftMultiply(B) and takes the color trace of the result.
+      Core::Field< Dirac::Matrix > *contract(Propagator const &other) const;
 
       // needed for baryon contractions (twopoint)
       Core::Field< Dirac::Matrix > *construct_baryon(Propagator const &no2, Propagator const &no3,
@@ -85,6 +95,8 @@ namespace Core
       Propagator &revert();
 
       Propagator &dagger();
+      Propagator &conjugate();
+      Propagator &transpose();
 
       // average difference of two different propagators
       double diff(Propagator const& other) const;

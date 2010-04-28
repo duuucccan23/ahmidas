@@ -85,11 +85,13 @@ namespace Base
     proj_PARITY_PLUS_STD,
     proj_PARITY_MINUS_STD,
     proj_PARITY_PLUS_TM,
-    proj_PARITY_MINUS_TM
+    proj_PARITY_MINUS_TM,
+    proj_NO_PROJECTOR // this one does not do anything
   };
 
   enum Operator
   {
+    op_UNITY = -1,
     op_GAMMA_4 = 0
     // op_CONSERVED_CURRENT_GAMMA_4 = 16,
     // op_O44 = 32

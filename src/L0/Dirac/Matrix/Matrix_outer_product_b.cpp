@@ -185,6 +185,12 @@ namespace Dirac
                       std::bind1st(std::multiplies< std::complex< double > >(), *(d_data + 15)));
         (const_cast< Dirac::Matrix * >(&other))->transpose();
         break;
+        case order_FIRST_OUTER_DELTA:
+        case order_SECOND_OUTER_DELTA:
+        case order_BOTH_OUTER_DELTA:
+          std::cerr << "This should not happen in Matrix::outer_product(Matrix &, std::complex< double > *, OuterProductIndexOrder)";
+          std::cerr << std::endl;
+          exit(1);
       }
   }
 

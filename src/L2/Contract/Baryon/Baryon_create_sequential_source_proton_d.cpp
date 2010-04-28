@@ -31,10 +31,53 @@ namespace Contract
             continue;
 
           QCD::make_sequential_d(tmp, u1[localIndex], u2[localIndex], proj);
-          tmp *= gamma5;
-          tmp = QCD::Tensor(tmp.dagger());
+          tmp.conjugate();
+          // actually we have to multiply by the appropriate gamma combination "dagger"-ed,
+          // but in case of i*gamma2*gamma0*gamma5 the dagger does not change anything
           tmp.right_multiply_proton();
+          tmp.rightMultiply(gamma5);
           seqSrc[localIndex] = tmp;
+        }
+      }
+    }
+  }
+
+  // all Dirac indices free at source and sink
+  void create_sequential_source_proton_d(Core:: Propagator * const seqSrc,
+                                    Core::Propagator const &u1, Core::Propagator const &u2,
+                                    size_t const t_snk)
+  {
+
+    size_t const L(u1.L());
+    size_t const T(u1.T());
+    assert(L == u2.L()        && T == u2.T());
+    assert(L == seqSrc[0].L() && T == seqSrc[0].T());
+
+    Base::Weave weave(L, T);
+
+    Dirac::Gamma< 5 > gamma5;
+    QCD::Tensor tmp[16];
+
+    size_t localIndex;
+    for(size_t idx_Z = 0; idx_Z < L; idx_Z++)
+    {
+      for(size_t idx_Y = 0; idx_Y < L; idx_Y++)
+      {
+        for(size_t idx_X = 0; idx_X < L; idx_X++)
+        {
+          localIndex = weave.globalCoordToLocalIndex(idx_X, idx_Y, idx_Z, t_snk);
+          /* globalCoordToLocalIndex returns local volume if local data is not available on this cpu */
+          if (localIndex == weave.localVolume())
+            continue;
+
+          QCD::make_sequential_d(tmp, u1[localIndex], u2[localIndex]);
+          for (size_t idx = 0; idx < 16; idx++)
+          {
+            (tmp[idx]).conjugate();
+            (tmp[idx]).right_multiply_proton();
+            (tmp[idx]).rightMultiply(gamma5);
+            (seqSrc[idx])[localIndex] = tmp[idx];
+          }
         }
       }
     }

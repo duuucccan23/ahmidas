@@ -4,6 +4,7 @@ namespace Dirac
 {
   std::ostream &operator<<(std::ostream &out, Matrix const &mat)
   {
+    size_t prec = out.precision();
     out << std::scientific << std::setprecision(3) << std::showpos
         << "[ " << mat.d_data[ 0].real() << "  " << mat.d_data[ 0].imag() << " * i   "
                 << mat.d_data[ 1].real() << "  " << mat.d_data[ 1].imag() << " * i   "
@@ -25,6 +26,7 @@ namespace Dirac
                 << mat.d_data[14].real() << "  " << mat.d_data[14].imag() << " * i   "
                 << mat.d_data[15].real() << "  " << mat.d_data[15].imag() << " * i  ]"
                 << std::endl;
+    out.precision(prec);
     return out;
   }
 }

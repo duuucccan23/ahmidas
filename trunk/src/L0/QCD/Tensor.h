@@ -40,11 +40,6 @@ namespace QCD
 
     std::complex< double > d_data[144];
 
-    // get entries for fixed color at source and sink
-    void getDiracMatrix(Dirac::Matrix &dMatrix,
-                        Base::ColourIndex const colour_src,
-                        Base::ColourIndex const colour_snk) const;
-
     public:
       Tensor();
       Tensor(Tensor const &other);
@@ -65,6 +60,11 @@ namespace QCD
                                          size_t const dirSource, size_t const colSource);
       std::complex< double > const &operator()(size_t const dirSink, size_t const colSink,
                                                size_t const dirSource, size_t const colSource) const;
+
+      // get entries for fixed color at source and sink
+      void getDiracMatrix(Dirac::Matrix &dMatrix,
+                          Base::ColourIndex const colour_src,
+                          Base::ColourIndex const colour_snk) const;
 
       /*  NOTE for performance reason the (template) member operator
           Tensor Tensor::operator*(Dirac::Gamma< Index > const &gamma) const
@@ -158,9 +158,9 @@ namespace QCD
       friend void multiplyOuterDiracIndices(Tensor const &left, Tensor const * const right, Tensor * const result);
 
       friend void make_sequential_d(Tensor &result, Tensor const &U1, Tensor const &U2, Base::BaryonPropagatorProjector const projector);
-      friend void make_sequential_u(Tensor &result, Tensor const &D, Tensor const &U1, Tensor const &U2, Base::BaryonPropagatorProjector const projector);
-      friend void make_sequential_d(Tensor result[16], Tensor const &A, Tensor const &B);
-      friend void make_sequential_u(Tensor result[16], Tensor const &A, Tensor const &B);
+      friend void make_sequential_u(Tensor &result, Tensor const &D,  Tensor const &U,  Base::BaryonPropagatorProjector const projector);
+      friend void make_sequential_d(Tensor result[16], Tensor const &U1, Tensor const &U2);
+      friend void make_sequential_u(Tensor result[16], Tensor const &D, Tensor const &U);
   };
 
   std::ostream &operator<<(std::ostream &out, Tensor const &tensor);

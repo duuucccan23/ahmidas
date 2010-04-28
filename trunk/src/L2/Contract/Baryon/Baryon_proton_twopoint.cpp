@@ -7,16 +7,17 @@ namespace Contract
                                    Base::BaryonPropagatorProjector const projector)
   {
     assert(u1.L() == d.L() && u1.T() == d.T() && u2.L() == d.L() && u2.T() == d.T());
-    if (projector == Base::proj_PARITY_PLUS_TM)
+
+    switch(projector)
     {
-      // nothing
-    }
-    else
-    {
-      std::cerr << "Error in Contract::proton_twopoint(...)";
-      std::cerr << "using projector with index" << projector << std::endl;
-      std::cerr << "THIS IS NOT IMPLEMENTED YET!" << std::endl;
-      exit(1);
+      case Base::proj_PARITY_PLUS_TM:
+      case Base::proj_NO_PROJECTOR:
+        break;
+      default:
+        std::cerr << "Error in Contract::proton_twopoint(...)";
+        std::cerr << "using projector with index" << projector << std::endl;
+        std::cerr << "THIS IS NOT IMPLEMENTED YET!" << std::endl;
+        exit(1);
     }
 
     // order of d and u in Propagator::construct_baryon is important!

@@ -23,6 +23,19 @@ namespace Core
     return tensor;
   }
 
+
+  void Propagator::operator*=(std::complex< double > const &factor)
+  {
+    isolate();
+    Propagator::iterator I(begin());
+
+    while(I != end())
+    {
+      (*I) *= factor;
+      ++I;
+    }
+  }
+
   Field< Dirac::Matrix > *Propagator::operator*(Propagator const &other) const
   {
     assert (T()==other.T() && L()==other.L());

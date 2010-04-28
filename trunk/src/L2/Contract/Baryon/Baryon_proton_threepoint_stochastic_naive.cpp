@@ -46,17 +46,6 @@ namespace Contract
       Core::Propagator::const_iterator It_phi_d(u_stoch_at_sink.begin());
       Core::Propagator::const_iterator It_phi_u(d_stoch_at_sink.begin());
 
-      switch (ops[opNo])
-      {
-        case Base::op_GAMMA_4:
-          break;
-        default:
-        std::cerr << "Error in "
-                  << "std::vector< Core::Field< Dirac::Matrix > * > construct_proton_with_operator_insertion(...):\n"
-                  << "Operator with index " << ops[opNo] << " not implemented yet!" << std::endl;
-      }
-
-
       size_t pos_snk[4];
       pos_snk[Base::idx_T] = t_snk;
 
@@ -124,8 +113,26 @@ namespace Contract
               tmp_u_from_sink.rightMultiply(gamma5);
               tmp_u_from_sink *= gamma5;
 
-              tmp_d_from_sink *= gamma0;
-              tmp_u_from_sink *= gamma0;
+
+              switch (ops[opNo])
+              {
+                case Base::op_GAMMA_4:
+                  tmp_d_from_sink *= gamma0;
+                  tmp_u_from_sink *= gamma0;
+                  break;
+                case Base::op_UNITY:
+                  // nothing  to do
+                  // tmp_d_from_sink *= gamma5;
+                  // tmp_u_from_sink *= gamma5;
+                  // tmp_d_from_sink *= std::complex< double >(-1, 0);
+                  break;
+                default:
+                std::cerr << "Error in "
+                          << "std::vector< Core::Field< Dirac::Matrix > * > construct_proton_with_operator_insertion(...):\n"
+                          << "Operator with index " << ops[opNo] << " not implemented yet!" << std::endl;
+              }
+
+
 
               tmp_d_from_sink.leftMultiply(tmp_d_from_source);
               tmp_u_from_sink.leftMultiply(tmp_u_from_source);

@@ -137,10 +137,11 @@ namespace Core
         {
           QCD::Tensor tmp_d[16];
           QCD::make_sequential_d(tmp_d, S_u_xf, S_u_xf);
-          QCD::multiplyOuterDiracIndices(xi_d_snk, tmp_d, tmp_d_ti_xi);
+          //QCD::multiplyOuterDiracIndices(xi_d_snk, tmp_d, tmp_d_ti_xi);
 
 //           std::cout << xi_d_snk << std::endl;
 //           for (size_t idx=0; idx<16; idx++)
+//             tmp_d
 //             std::cout << tmp_d_ti_xi[idx] << std::endl;
         //  exit(5);
         }

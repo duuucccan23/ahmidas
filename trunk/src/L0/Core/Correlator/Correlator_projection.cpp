@@ -22,6 +22,9 @@ void Core::Correlator::operator*=(Base::BaryonPropagatorProjector const projecto
         d_sumTimeslice_global[t] *= 0.5;
       }
       break;
+    case Base::proj_NO_PROJECTOR:
+      // nothing to do
+      break;
     default:
       std::cerr << "unknown projector in Correlator::operator*=(BaryonPropagatorProjector const &projector)!" << std::endl;
       std::cerr << "Aborting..." << std::endl;

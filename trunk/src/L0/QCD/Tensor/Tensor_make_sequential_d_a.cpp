@@ -25,6 +25,8 @@ namespace QCD
     static std::complex< double > const COMPLEX_M_1(-1,  0);
     static std::complex< double > const COMPLEX_0(0, 0);
 
+
+// // //     // note that the projector has to be conjugated
     switch (projector)
     {
       case Base::proj_PARITY_PLUS_TM:
@@ -76,21 +78,23 @@ namespace QCD
     U1.getDiracMatrix(rgU1, Base::col_RED,   Base::col_GREEN);
     U1.getDiracMatrix(rbU1, Base::col_RED,   Base::col_BLUE);
     U1.getDiracMatrix(grU1, Base::col_GREEN, Base::col_RED);
-    U1.getDiracMatrix(gbU1, Base::col_GREEN, Base::col_BLUE);
     U1.getDiracMatrix(ggU1, Base::col_GREEN, Base::col_GREEN);
+    U1.getDiracMatrix(gbU1, Base::col_GREEN, Base::col_BLUE);
     U1.getDiracMatrix(brU1, Base::col_BLUE,  Base::col_RED);
-    U1.getDiracMatrix(bbU1, Base::col_BLUE,  Base::col_BLUE);
     U1.getDiracMatrix(bgU1, Base::col_BLUE,  Base::col_GREEN);
+    U1.getDiracMatrix(bbU1, Base::col_BLUE,  Base::col_BLUE);
 
     U2.getDiracMatrix(rrU2, Base::col_RED,   Base::col_RED);
-    U2.getDiracMatrix(rgU2, Base::col_GREEN, Base::col_RED);
-    U2.getDiracMatrix(rbU2, Base::col_BLUE,  Base::col_RED);
-    U2.getDiracMatrix(grU2, Base::col_RED,   Base::col_GREEN);
-    U2.getDiracMatrix(gbU2, Base::col_BLUE,  Base::col_GREEN);
+    U2.getDiracMatrix(rgU2, Base::col_RED,   Base::col_GREEN);
+    U2.getDiracMatrix(rbU2, Base::col_RED,   Base::col_BLUE);
+    U2.getDiracMatrix(grU2, Base::col_GREEN, Base::col_RED);
     U2.getDiracMatrix(ggU2, Base::col_GREEN, Base::col_GREEN);
-    U2.getDiracMatrix(brU2, Base::col_RED,   Base::col_BLUE);
+    U2.getDiracMatrix(gbU2, Base::col_GREEN, Base::col_BLUE);
+    U2.getDiracMatrix(brU2, Base::col_BLUE,  Base::col_RED);
+    U2.getDiracMatrix(bgU2, Base::col_BLUE,  Base::col_GREEN);
     U2.getDiracMatrix(bbU2, Base::col_BLUE,  Base::col_BLUE);
-    U2.getDiracMatrix(bgU2, Base::col_GREEN, Base::col_BLUE);
+
+
 
     std::complex< double > tmp[16];
 

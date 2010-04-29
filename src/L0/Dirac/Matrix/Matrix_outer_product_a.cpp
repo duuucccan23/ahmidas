@@ -7,25 +7,28 @@ namespace Dirac
         Base::DiracIndex sourceIndex, Base::DiracIndex sinkIndex) const
   {
 
-  size_t const offset(4*sourceIndex);
+    size_t const offsetSrc(4*sourceIndex);
+    size_t const offsetSnk(4*sinkIndex);
 
     switch (idxOrd)
     {
       case order_OUTER_FIXED:
-        // this is the outer product of a row of *this (specified by sinkIndex) and
-        // a column of other (specified by sourceIndex)
-        std::transform(other.d_data + offset, other.d_data + offset + 4, result,
-                      std::bind1st(std::multiplies< std::complex< double > >(), (this->d_data)[sinkIndex     ]));
-        std::transform(other.d_data + offset, other.d_data + offset + 4, result +  4,
-                      std::bind1st(std::multiplies< std::complex< double > >(), (this->d_data)[sinkIndex +  4]));
-        std::transform(other.d_data + offset, other.d_data + offset + 4, result +  8,
-                      std::bind1st(std::multiplies< std::complex< double > >(), (this->d_data)[sinkIndex +  8]));
-        std::transform(other.d_data + offset, other.d_data + offset + 4, result + 12,
-                      std::bind1st(std::multiplies< std::complex< double > >(), (this->d_data)[sinkIndex + 12]));
+      (const_cast< Dirac::Matrix * >(&other))->transpose();
+        // this is the outer product of a row of *this (specified by sourceIndex) and
+        // a column of other (specified by sinkIndex)
+        std::transform(other.d_data + offsetSnk, other.d_data + offsetSnk + 4, result,
+                      std::bind1st(std::multiplies< std::complex< double > >(), (this->d_data)[offsetSrc    ]));
+        std::transform(other.d_data + offsetSnk, other.d_data + offsetSnk + 4, result +  4,
+                      std::bind1st(std::multiplies< std::complex< double > >(), (this->d_data)[offsetSrc + 1]));
+        std::transform(other.d_data + offsetSnk, other.d_data + offsetSnk + 4, result +  8,
+                      std::bind1st(std::multiplies< std::complex< double > >(), (this->d_data)[offsetSrc + 2]));
+        std::transform(other.d_data + offsetSnk, other.d_data + offsetSnk + 4, result + 12,
+                      std::bind1st(std::multiplies< std::complex< double > >(), (this->d_data)[offsetSrc + 3]));
+        (const_cast< Dirac::Matrix * >(&other))->transpose();
         break;
       case order_FIRST_FIXED:
         std::transform(other.d_data, other.d_data + 16, result,
-                       std::bind1st(std::multiplies< std::complex< double > >(), (this->d_data)[sinkIndex + offset]));
+                       std::bind1st(std::multiplies< std::complex< double > >(), (this->d_data)[sinkIndex + offsetSrc]));
         break;
       case order_FIRST_OUTER_DELTA:
       {
@@ -44,12 +47,12 @@ namespace Dirac
         Dirac::Matrix tmp2(*this);
         tmp2 *= other;
         std::fill_n(result, 16, std::complex< double >(0, 0));
-        std::copy(tmp2.d_data + 4*sinkIndex, tmp2.d_data + 4*sinkIndex + 4, result + offset);
+        std::copy(tmp2.d_data + 4*sinkIndex, tmp2.d_data + 4*sinkIndex + 4, result + offsetSrc);
         break;
       }
       case order_BOTH_OUTER_DELTA:
         std::fill_n(result, 16, std::complex< double >(0, 0));
-        result[sinkIndex + offset] = ((*this)*other).trace();
+        result[sinkIndex + offsetSrc] = ((*this)*other).trace();
         break;
 //       default:
 //         std::fill_n(result, 16, std::complex< double >(0, 0));

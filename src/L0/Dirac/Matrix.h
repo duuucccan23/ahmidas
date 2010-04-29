@@ -32,6 +32,7 @@ namespace Dirac
       Matrix();
       Matrix(Matrix const &other);
       Matrix(std::complex< double > const &value);
+      Matrix(std::complex< double > const * const data);
 
       std::complex< double > const &operator[](size_t const idx) const;
       std::complex< double >       &operator[](size_t const idx);
@@ -44,7 +45,7 @@ namespace Dirac
       void operator+=(Matrix const &other);
       void operator-=(Matrix const &other);
 
-//       Matrix &operator=(Matrix const &rhs);
+      bool operator==(Matrix const &rhs);
 
       template< size_t Index >
       Matrix operator*(Gamma< Index > const &gamma) const;

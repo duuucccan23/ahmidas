@@ -10,6 +10,7 @@
 
 #include <L0/Base/Weave.h>
 #include <L0/Dirac/Gamma.h>
+#include <L0/Dirac/Matrix.h>
 #include <L0/QCD/Gauge.h>
 #include <L0/Core/Propagator.h>
 #include <L2/Contract/Baryon.h>
@@ -221,25 +222,26 @@ int main(int argc, char **argv)
 
     Dirac::Matrix matrix1;
 
-    std::cout << "\nproton twopoint from sequential source, full spin structure in twisted basis\n" << std::endl;
     for(size_t idx_D = 0; idx_D < 16; idx_D++)
     {
       Core::Correlator p2p_seq(L, T, (sequentialSource[idx_D]).contract(dProp_mod));
       p2p_seq.sumOverSpatialVolume();
       matrix1[idx_D] = (p2p_seq[4]).trace();
-      std::cout.width(16);
-      std::cout << (p2p_seq[4]).trace().real();
-      std::cout.width(16);
-      std::cout << (p2p_seq[4]).trace().imag();
+      //std::cout.width(16);
+      //std::cout << (p2p_seq[4]).trace().real();
+      //std::cout.width(16);
+      //std::cout << (p2p_seq[4]).trace().imag();
       if ((idx_D+1)%4 == 0)
         std::cout << std::endl;
     }
+    std::cout << "\nproton twopoint from sequential source, full spin structure in twisted basis\n" << std::endl;
+    std::cout << matrix1 << std::endl;
     std::cout << "\nthis is the trace of the projected and traced twopoint in physical basis\n" << std::endl;
-    Dirac::Matrix matrix2(matrix1);
-    matrix1 *= gamma0;
-    matrix2 *= gamma5;
+    Dirac::Matrix matrix2(gamma5*matrix1);
     matrix2 *= std::complex< double >(0, 1);
+    matrix1 = gamma0*matrix1;
     matrix1 += matrix2;
+    matrix1 *= 0.5;
     std::cout.width(16);
     std::cout << matrix1.trace().real();
     std::cout.width(16);

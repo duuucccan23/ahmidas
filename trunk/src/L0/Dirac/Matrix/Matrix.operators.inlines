@@ -65,7 +65,3 @@ inline std::complex< double > const &Matrix::operator()(Base::DiracIndex const D
   return d_data[Dirac_src + 4*Dirac_snk];
 }
 
-inline bool Matrix::operator==(Matrix const &rhs)
-{
-  return std::equal(d_data, d_data+16, rhs.d_data);
-}

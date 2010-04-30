@@ -5,13 +5,12 @@ namespace Contract
 
   // this would do the trace over projector * sequential_source
   void create_sequential_source_proton_u(Core:: Propagator &seqSrc,
-                                         Core::Propagator const &u1, Core::Propagator const &u2,
+                                         Core::Propagator const &u,
                                          Core::Propagator const &d,
                                          size_t const t_snk, Base::BaryonPropagatorProjector const proj)
   {
-    size_t const L(u1.L());
-    size_t const T(u1.T());
-    assert(L == u2.L()     && T == u2.T());
+    size_t const L(u.L());
+    size_t const T(u.T());
     assert(L == d.L()      && T == d.T());
     assert(L == seqSrc.L() && T == seqSrc.T());
 
@@ -37,7 +36,7 @@ namespace Contract
           d_mod.right_multiply_proton();
           d_mod.transposeFull();
 
-          QCD::make_sequential_u(tmp, d_mod, u1[localIndex], u2[localIndex], proj);
+          QCD::make_sequential_u(tmp, d_mod, u[localIndex], proj);
           tmp *= gamma5;
           seqSrc[localIndex] = QCD::Tensor(tmp.dagger());
         }

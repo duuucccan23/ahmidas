@@ -27,7 +27,7 @@ namespace Contract
                                          size_t const t_snk);
 
   void create_sequential_source_proton_u(Core::Propagator &seqSrc,
-                                         Core::Propagator const &u1, Core::Propagator const &u2, Core::Propagator const &d,
+                                         Core::Propagator const &u, Core::Propagator const &d,
                                          size_t const t_snk, Base::BaryonPropagatorProjector const projector);
 
   // the proton three point with a stochastic (estimate of an) all-to-all propagator at the proton sink.
@@ -45,7 +45,7 @@ namespace Contract
   std::vector< Core::Correlator > proton_threepoint_sequential(
     Core:: Propagator const &bw_prop_u, Core::Propagator const &fw_prop_u,
     Core:: Propagator const &bw_prop_d, Core::Propagator const &fw_prop_d,
-    std::vector< Base::Operator > ops, Base::BaryonPropagatorProjector const my_projector);
+    std::vector< Base::Operator > ops);
 
   std::vector< Core::Correlator > proton_threepoint_stochastic(Core::Propagator const &u,
                                                 Core::Propagator const &d,

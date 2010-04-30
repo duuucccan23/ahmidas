@@ -211,8 +211,6 @@ int main(int argc, char **argv)
             continue;
           QCD::make_sequential_d(tmp, uProp[localIndex], uProp[localIndex]);
           QCD::make_sequential_d(sequentialSource_fixedProjector[localIndex], uProp[localIndex], uProp[localIndex], Base::proj_PARITY_PLUS_TM);
-          //QCD::make_sequential_u( sequentialSource[localIndex], dProp_mod[localIndex], uProp[localIndex], uProp[localIndex], Base::proj_PARITY_PLUS_TM);
-          //std::cout << sequentialSource[localIndex];
           for(size_t idx_D = 0; idx_D < 16; idx_D++)
             (sequentialSource[idx_D])[localIndex] = tmp[idx_D];
         }
@@ -287,6 +285,7 @@ int main(int argc, char **argv)
     std::cout << "\nproton twopoint from sequential source (u), fixed projector\n" << std::endl;
     Core::Correlator p2p_seq_u(L, T, sequentialSource_fixedProjector.contract(uProp));
     p2p_seq_u.sumOverSpatialVolume();
+    p2p_seq_u *= 0.5;
     std::cout << p2p_seq_u << "\n" << std::endl;
   }
 

@@ -289,9 +289,10 @@ int main(int argc, char **argv)
     return EXIT_FAILURE;
   }
 
-  std::cout << "\nproton twopoint from sequential source (u), fixed projector\n" << std::endl;
+  std::cout << "\nproton twopoint from sequential source (u), fixed projector (times 1/2)\n" << std::endl;
   Core::Correlator p2p_seq_u(L, T, sequentialSource_fixedProjector_u.contract(dProp));
   p2p_seq_u.sumOverSpatialVolume();
+  p2p_seq_u *= 0.5;
   std::cout << p2p_seq_u << "\n" << std::endl;
 
 

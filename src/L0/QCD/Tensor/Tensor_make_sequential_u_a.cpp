@@ -74,7 +74,6 @@ namespace QCD
 
     std::fill_n(result.d_data, result.size(), COMPLEX_0);
 
-    /* under construction */
     Dirac::Matrix rrU;
     Dirac::Matrix rgU;
     Dirac::Matrix rbU;
@@ -105,14 +104,15 @@ namespace QCD
     U.getDiracMatrix(bgU, Base::col_BLUE,  Base::col_GREEN);
     U.getDiracMatrix(bbU, Base::col_BLUE,  Base::col_BLUE);
 
+    // implicit color transpose
     D.getDiracMatrix(rrD, Base::col_RED,   Base::col_RED);
-    D.getDiracMatrix(rgD, Base::col_RED,   Base::col_GREEN);
-    D.getDiracMatrix(rbD, Base::col_RED,   Base::col_BLUE);
-    D.getDiracMatrix(grD, Base::col_GREEN, Base::col_RED);
+    D.getDiracMatrix(rgD, Base::col_GREEN, Base::col_RED);
+    D.getDiracMatrix(rbD, Base::col_BLUE,  Base::col_RED);
+    D.getDiracMatrix(grD, Base::col_RED,   Base::col_GREEN);
     D.getDiracMatrix(ggD, Base::col_GREEN, Base::col_GREEN);
-    D.getDiracMatrix(gbD, Base::col_GREEN, Base::col_BLUE);
-    D.getDiracMatrix(brD, Base::col_BLUE,  Base::col_RED);
-    D.getDiracMatrix(bgD, Base::col_BLUE,  Base::col_GREEN);
+    D.getDiracMatrix(gbD, Base::col_BLUE,  Base::col_GREEN);
+    D.getDiracMatrix(brD, Base::col_RED,   Base::col_BLUE);
+    D.getDiracMatrix(bgD, Base::col_GREEN, Base::col_BLUE);
     D.getDiracMatrix(bbD, Base::col_BLUE,  Base::col_BLUE);
 
     std::complex< double > tmp[16];
@@ -446,6 +446,7 @@ namespace QCD
       /* --------------------------------------------- */
 
       // the following part takes 9 Dirac::Matrixes and translates them to a Tensor (tmp_result)
+      // note that we have to color-transpose what we have calculated up to now
 
       QCD::Tensor tmp_result;
 
@@ -472,7 +473,8 @@ namespace QCD
       data_ptr[114] =  rrC[14];
       data_ptr[117] =  rrC[15];
 
-      index = 12*Base::col_RED  + Base::col_GREEN;
+//       index = 12*Base::col_GREEN + Base::col_RED;
+      index = 12*Base::col_RED + Base::col_GREEN;
       data_ptr = tmp_result.d_data + index;
 
       data_ptr[  0] =  rgC[ 0];
@@ -492,7 +494,8 @@ namespace QCD
       data_ptr[114] =  rgC[14];
       data_ptr[117] =  rgC[15];
 
-      index = 12*Base::col_RED  + Base::col_BLUE;
+//       index = 12*Base::col_BLUE + Base::col_RED;
+      index = 12*Base::col_RED + Base::col_BLUE;
       data_ptr = tmp_result.d_data + index;
 
       data_ptr[  0] =  rbC[ 0];
@@ -514,7 +517,8 @@ namespace QCD
 
       /* --------------------------------------------- */
 
-      index = 12*Base::col_GREEN  + Base::col_RED;
+//       index = 12* Base::col_RED + Base::col_GREEN;
+      index = 12*Base::col_BLUE + Base::col_RED;
       data_ptr = tmp_result.d_data + index;
 
       data_ptr[  0] =  grC[ 0];
@@ -554,7 +558,8 @@ namespace QCD
       data_ptr[114] =  ggC[14];
       data_ptr[117] =  ggC[15];
 
-      index = 12*Base::col_GREEN  + Base::col_BLUE;
+//       index = 12*Base::col_BLUE + Base::col_GREEN;
+      index = 12*Base::col_GREEN + Base::col_BLUE;
       data_ptr = tmp_result.d_data + index;
 
       data_ptr[  0] =  gbC[ 0];
@@ -576,7 +581,8 @@ namespace QCD
 
       /* --------------------------------------------- */
 
-      index = 12*Base::col_BLUE  + Base::col_RED;
+//       index = 12*Base::col_RED + Base::col_BLUE;
+      index = 12*Base::col_BLUE + Base::col_RED;
       data_ptr = tmp_result.d_data + index;
 
       data_ptr[  0] =  brC[ 0];
@@ -596,7 +602,8 @@ namespace QCD
       data_ptr[114] =  brC[14];
       data_ptr[117] =  brC[15];
 
-      index = 12*Base::col_BLUE  + Base::col_GREEN;
+//       index = 12*Base::col_GREEN + Base::col_BLUE;
+      index = 12*Base::col_BLUE + Base::col_GREEN;
       data_ptr = tmp_result.d_data + index;
 
       data_ptr[  0] =  bgC[ 0];

@@ -190,11 +190,86 @@ namespace Dirac
                       std::bind1st(std::multiplies< std::complex< double > >(), *(d_data + 15)));
         break;
         case order_FIRST_OUTER_DELTA:
+        {
+          // not tested yet...
+          assert(false);
+          std::fill_n(result, 256, std::complex< double >(0, 0));
+          Dirac::Matrix const tmp((*this)*other);
+          std::copy(tmp.d_data,      tmp.d_data +  4, result);
+          std::copy(tmp.d_data,      tmp.d_data +  4, result +  20);
+          std::copy(tmp.d_data,      tmp.d_data +  4, result +  40);
+          std::copy(tmp.d_data,      tmp.d_data +  4, result +  60);
+          std::copy(tmp.d_data +  4, tmp.d_data +  4, result +  65);
+          std::copy(tmp.d_data +  4, tmp.d_data +  8, result +  85);
+          std::copy(tmp.d_data +  4, tmp.d_data +  8, result + 105);
+          std::copy(tmp.d_data +  4, tmp.d_data +  8, result + 125);
+          std::copy(tmp.d_data +  8, tmp.d_data +  8, result + 130);
+          std::copy(tmp.d_data +  8, tmp.d_data + 12, result + 150);
+          std::copy(tmp.d_data +  8, tmp.d_data + 12, result + 170);
+          std::copy(tmp.d_data +  8, tmp.d_data + 12, result + 190);
+          std::copy(tmp.d_data + 12, tmp.d_data + 16, result + 195);
+          std::copy(tmp.d_data + 12, tmp.d_data + 16, result + 215);
+          std::copy(tmp.d_data + 12, tmp.d_data + 16, result + 235);
+          std::copy(tmp.d_data + 12, tmp.d_data + 16, result + 255);
+          break;
+        }
         case order_SECOND_OUTER_DELTA:
+        {
+          // not completed yet...
+          assert(false);
+          std::fill_n(result, 256, std::complex< double >(0, 0));
+          Dirac::Matrix const tmp((*this)*other);
+          std::fill_n(result, 16, std::complex< double >(0, 0));
+          result[  0] = tmp.d_data[  0];
+          result[  4] = tmp.d_data[  4];
+          result[  8] = tmp.d_data[  8];
+          result[ 12] = tmp.d_data[ 12];
+          result[ 16] = tmp.d_data[  1];
+          result[ 20] = tmp.d_data[  5];
+          result[ 24] = tmp.d_data[  9];
+          result[ 28] = tmp.d_data[ 13];
+          result[ 32] = tmp.d_data[  2];
+          result[ 36] = tmp.d_data[  6];
+          result[ 40] = tmp.d_data[ 10];
+          result[ 44] = tmp.d_data[ 14];
+          result[ 48] = tmp.d_data[  3];
+          result[ 52] = tmp.d_data[  7];
+          result[ 56] = tmp.d_data[ 11];
+          result[ 60] = tmp.d_data[ 15];
+          result[ 65] = tmp.d_data[  0];
+          result[ 69] = tmp.d_data[  4];
+          result[ 73] = tmp.d_data[  8];
+          result[ 77] = tmp.d_data[ 12];
+
+          // and so on ...
+
+          break;
+        }
         case order_BOTH_OUTER_DELTA:
-          std::cerr << "This should not happen in Matrix::outer_product(Matrix &, std::complex< double > *, OuterProductIndexOrder)";
-          std::cerr << std::endl;
-          exit(1);
+        {
+          // not tested yet...
+          assert(false);
+          std::fill_n(result, 256, std::complex< double >(0, 0));
+          Dirac::Matrix const tmp((*this)*other);
+          result[  0] = tmp[ 0];
+          result[ 17] = tmp[ 4];
+          result[ 34] = tmp[ 8];
+          result[ 51] = tmp[12];
+          result[ 68] = tmp[ 1];
+          result[ 85] = tmp[ 5];
+          result[102] = tmp[ 9];
+          result[119] = tmp[13];
+          result[136] = tmp[ 2];
+          result[153] = tmp[ 6];
+          result[170] = tmp[10];
+          result[187] = tmp[14];
+          result[204] = tmp[ 3];
+          result[221] = tmp[ 7];
+          result[238] = tmp[11];
+          result[255] = tmp[15];
+          break;
+        }
+
       }
   }
 

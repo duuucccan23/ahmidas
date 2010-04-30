@@ -37,22 +37,22 @@ namespace Dirac
       case order_FIRST_OUTER_DELTA:
       {
         // this could be done more efficiently, since we only use one row of the matrix product
-        Dirac::Matrix tmp2(*this);
-        tmp2 *= other;
+        Dirac::Matrix tmp(*this);
+        tmp *= other;
         std::fill_n(result, 16, std::complex< double >(0, 0));
-        std::copy(tmp2.d_data + offsetSrc, tmp2.d_data + offsetSrc + 4, result + 4*sinkIndex);
+        std::copy(tmp.d_data + offsetSrc, tmp.d_data + offsetSrc + 4, result + 4*sinkIndex);
         break;
       }
       case order_SECOND_OUTER_DELTA:
       {
         // this could be done more efficiently, since we only use one column of the matrix product
-        Dirac::Matrix tmp1(other);
-        tmp1 *= (*this);
+        Dirac::Matrix tmp(*this);
+        tmp *= other;
         std::fill_n(result, 16, std::complex< double >(0, 0));
-        result[sourceIndex     ] = tmp1.d_data[sinkIndex     ];
-        result[sourceIndex +  4] = tmp1.d_data[sinkIndex +  4];
-        result[sourceIndex +  8] = tmp1.d_data[sinkIndex +  8];
-        result[sourceIndex + 12] = tmp1.d_data[sinkIndex + 12];
+        result[sourceIndex     ] = tmp.d_data[sinkIndex     ];
+        result[sourceIndex +  4] = tmp.d_data[sinkIndex +  4];
+        result[sourceIndex +  8] = tmp.d_data[sinkIndex +  8];
+        result[sourceIndex + 12] = tmp.d_data[sinkIndex + 12];
         break;
       }
       case order_BOTH_OUTER_DELTA:

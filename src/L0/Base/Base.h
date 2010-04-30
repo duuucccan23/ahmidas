@@ -85,6 +85,7 @@ namespace Base
     proj_PARITY_PLUS_STD,
     proj_PARITY_MINUS_STD,
     proj_PARITY_PLUS_TM,
+    proj_PARITY_PLUS_TM_STAR,
     proj_PARITY_MINUS_TM,
     proj_NO_PROJECTOR // this one does not do anything
   };

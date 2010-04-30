@@ -108,6 +108,7 @@ int main(int argc, char **argv)
   Core::Correlator p2p = Contract::proton_twopoint(uProp, uProp, dProp, Base::proj_NO_PROJECTOR);
   std::cout << "\nproton twopoint at t=4, full spin structure in twisted basis\n" << std::endl;
   std::cout << p2p[4] << std::endl;
+  Dirac::Matrix p2pTest(p2p[4]);
   std::cout << "\nproton twopoint\n" << std::endl;
   p2p *= Base::proj_PARITY_PLUS_TM;
   std::cout << p2p << std::endl;
@@ -236,6 +237,7 @@ int main(int argc, char **argv)
     }
     std::cout << "\nproton twopoint from sequential source, full spin structure in twisted basis\n" << std::endl;
     std::cout << matrix1 << std::endl;
+    Dirac::Matrix matrixTest (matrix1);
     std::cout << "\nthis is the trace of the projected and traced twopoint in physical basis\n" << std::endl;
     Dirac::Matrix matrix2(gamma5*matrix1);
     matrix2 *= std::complex< double >(0, 1);
@@ -247,32 +249,66 @@ int main(int argc, char **argv)
     std::cout.width(16);
     std::cout << matrix1.trace().imag();
     std::cout << std::endl;
-    std::cout << "\nproton twopoint from sequential source, fixed projector\n" << std::endl;
+    std::cout << "\nproton twopoint from sequential source (d), fixed projector\n" << std::endl;
     Core::Correlator p2p_seq(L, T, sequentialSource_fixedProjector.contract(dProp_mod));
     p2p_seq.sumOverSpatialVolume();
     std::cout << p2p_seq << "\n" << std::endl;
+
+
+    matrixTest -= p2pTest;
+    for(size_t idx = 0; idx < 16; idx++)
+      matrixTest[idx] = abs(matrixTest[idx])/abs(p2pTest[idx]);
+
+    std::cout << "\nrelative difference between correct and this solution\n" << std::endl;
+    std::cout << matrixTest << std::endl;
+
+
+    // now the same for the u current sequential source
+
+    sequentialSource_fixedProjector *= std::complex< double >(0, 0);
+
+    for(size_t idx_Z = 0; idx_Z < L; idx_Z++)
+    {
+      for(size_t idx_Y = 0; idx_Y < L; idx_Y++)
+      {
+        for(size_t idx_X = 0; idx_X < L; idx_X++)
+        {
+          localIndex = weave.globalCoordToLocalIndex(idx_X, idx_Y, idx_Z, timeslice_sink);
+          /* globalCoordToLocalIndex returns local volume if local data is not available on this cpu */
+          if (localIndex == weave.localVolume())
+            continue;
+          QCD::make_sequential_u(sequentialSource_fixedProjector[localIndex], dProp_mod[localIndex], uProp[localIndex], Base::proj_PARITY_PLUS_TM);
+          for(size_t idx_D = 0; idx_D < 16; idx_D++)
+            (sequentialSource[idx_D])[localIndex] = tmp[idx_D];
+        }
+      }
+    }
+
+    std::cout << "\nproton twopoint from sequential source (u), fixed projector\n" << std::endl;
+    Core::Correlator p2p_seq_u(L, T, sequentialSource_fixedProjector.contract(uProp));
+    p2p_seq_u.sumOverSpatialVolume();
+    std::cout << p2p_seq_u << "\n" << std::endl;
   }
 
 
-  return 0;
+return 0;
 
   Core::Propagator sequentialSource(L, T);
   sequentialSource *= std::complex< double >(0, 0);
 
-  Contract::create_sequential_source_proton_d(sequentialSource, uProp, uProp, timeslice_sink, Base::proj_PARITY_PLUS_TM);
+  Contract::create_sequential_source_proton_d(sequentialSource, uProp, uProp, timeslice_sink, Base::proj_PARITY_PLUS_TM_STAR);
 
 //   std::cout << "sequential source (d)\n\n" << sequentialSource << std::endl;
 
   Tool::IO::save(&sequentialSource, files[5], Tool::IO::fileSCIDAC);
 
-  Contract::create_sequential_source_proton_u(sequentialSource, uProp, uProp, dProp, timeslice_sink, Base::proj_PARITY_PLUS_TM);
+  Contract::create_sequential_source_proton_u(sequentialSource, uProp, dProp, timeslice_sink, Base::proj_PARITY_PLUS_TM_STAR);
 
 //   std::cout << "sequential source (u)\n\n" << sequentialSource << std::endl;
 
-//   return 0;
-
-
   Tool::IO::save(&sequentialSource, files[6], Tool::IO::fileSCIDAC);
+
+
 
   std::string const inversion_command_d ("../test/invert -f ../test/invert_input_d >/dev/null");
   std::string const inversion_command_u ("../test/invert -f ../test/invert_input_u >/dev/null");
@@ -308,7 +344,7 @@ int main(int argc, char **argv)
 
   std::vector< Core::Correlator > C3p = Contract::proton_threepoint_sequential(sequentialPropagator_u, uProp,
                                                                  sequentialPropagator_d, dProp,
-                                                                 my_operators, Base::proj_PARITY_PLUS_TM);
+                                                                 my_operators);
   std::cout << "\n ubar gamma_0 u \n" << std::endl;
   std::cout << C3p[0] << std::endl;
   std::cout << "\n dbar gamma_0 d \n" << std::endl;

@@ -6,8 +6,9 @@ namespace QCD
   // this is for the d_bar * Op * d current (and it keeps all indices free)
   void make_sequential_d(Tensor result[16], Tensor const &U1, Tensor const &U2)
   {
-    /* under construction */
-    // assert(false);
+
+   // here source colour indices are left and sink indices are right
+
     Dirac::Matrix rrU1;
     Dirac::Matrix rgU1;
     Dirac::Matrix rbU1;
@@ -32,11 +33,11 @@ namespace QCD
     U1.getDiracMatrix(rgU1, Base::col_RED,   Base::col_GREEN);
     U1.getDiracMatrix(rbU1, Base::col_RED,   Base::col_BLUE);
     U1.getDiracMatrix(grU1, Base::col_GREEN, Base::col_RED);
-    U1.getDiracMatrix(gbU1, Base::col_GREEN, Base::col_BLUE);
     U1.getDiracMatrix(ggU1, Base::col_GREEN, Base::col_GREEN);
+    U1.getDiracMatrix(gbU1, Base::col_GREEN, Base::col_BLUE);
     U1.getDiracMatrix(brU1, Base::col_BLUE,  Base::col_RED);
-    U1.getDiracMatrix(bbU1, Base::col_BLUE,  Base::col_BLUE);
     U1.getDiracMatrix(bgU1, Base::col_BLUE,  Base::col_GREEN);
+    U1.getDiracMatrix(bbU1, Base::col_BLUE,  Base::col_BLUE);
 
     U2.getDiracMatrix(rrU2, Base::col_RED,   Base::col_RED);
     U2.getDiracMatrix(rgU2, Base::col_RED,   Base::col_GREEN);
@@ -61,190 +62,182 @@ namespace QCD
     std::complex< double > rrC[n_complex];
     std::fill_n(rrC, n_complex, zero);
     ggU1.outer_product(bbU2, tmpTensors, Dirac::order_FIRST_FIXED);
-    std::transform(tmp, tmp + n_complex, rrC, rrC, std::plus< std::complex< double> >());
+    std::transform(rrC, rrC + n_complex, tmp, rrC, std::plus< std::complex< double> >());
     gbU1.outer_product(bgU2, tmpTensors, Dirac::order_FIRST_FIXED);
-    std::transform(tmp, tmp + n_complex, rrC, rrC, std::minus< std::complex< double> >());
+    std::transform(rrC, rrC + n_complex, tmp, rrC, std::minus< std::complex< double> >());
     bgU1.outer_product(gbU2, tmpTensors, Dirac::order_FIRST_FIXED);
-    std::transform(tmp, tmp + n_complex, rrC, rrC, std::minus< std::complex< double> >());
+    std::transform(rrC, rrC + n_complex, tmp, rrC, std::minus< std::complex< double> >());
     bbU1.outer_product(ggU2, tmpTensors, Dirac::order_FIRST_FIXED);
-    std::transform(tmp, tmp + n_complex, rrC, rrC, std::plus< std::complex< double> >());
+    std::transform(rrC, rrC + n_complex, tmp, rrC, std::plus< std::complex< double> >());
     ggU1.outer_product(bbU2, tmpTensors, Dirac::order_OUTER_FIXED);
-    std::transform(tmp, tmp + n_complex, rrC, rrC, std::plus< std::complex< double> >());
+    std::transform(rrC, rrC + n_complex, tmp, rrC, std::plus< std::complex< double> >());
     gbU1.outer_product(bgU2, tmpTensors, Dirac::order_OUTER_FIXED);
-    std::transform(tmp, tmp + n_complex, rrC, rrC, std::minus< std::complex< double> >());
+    std::transform(rrC, rrC + n_complex, tmp, rrC, std::minus< std::complex< double> >());
     bgU1.outer_product(gbU2, tmpTensors, Dirac::order_OUTER_FIXED);
-    std::transform(tmp, tmp + n_complex, rrC, rrC, std::minus< std::complex< double> >());
+    std::transform(rrC, rrC + n_complex, tmp, rrC, std::minus< std::complex< double> >());
     bbU1.outer_product(ggU2, tmpTensors, Dirac::order_OUTER_FIXED);
-    std::transform(tmp, tmp + n_complex, rrC, rrC, std::plus< std::complex< double> >());
+    std::transform(rrC, rrC + n_complex, tmp, rrC, std::plus< std::complex< double> >());
 
 
     std::complex< double > rgC[n_complex];
     std::fill_n(rgC, n_complex, zero);
     gbU1.outer_product(brU2, tmpTensors, Dirac::order_FIRST_FIXED);
-    std::transform(tmp, tmp + n_complex, rgC, rgC, std::plus< std::complex< double> >());
+    std::transform(rgC, rgC + n_complex, tmp, rgC, std::plus< std::complex< double> >());
     grU1.outer_product(bbU2, tmpTensors, Dirac::order_FIRST_FIXED);
-    std::transform(tmp, tmp + n_complex, rgC, rgC, std::minus< std::complex< double> >());
+    std::transform(rgC, rgC + n_complex, tmp, rgC, std::minus< std::complex< double> >());
     bbU1.outer_product(grU2, tmpTensors, Dirac::order_FIRST_FIXED);
-    std::transform(tmp, tmp + n_complex, rgC, rgC, std::minus< std::complex< double> >());
+    std::transform(rgC, rgC + n_complex, tmp, rgC, std::minus< std::complex< double> >());
     brU1.outer_product(gbU2, tmpTensors, Dirac::order_FIRST_FIXED);
-    std::transform(tmp, tmp + n_complex, rgC, rgC, std::plus< std::complex< double> >());
+    std::transform(rgC, rgC + n_complex, tmp, rgC, std::plus< std::complex< double> >());
     gbU1.outer_product(brU2, tmpTensors, Dirac::order_OUTER_FIXED);
-    std::transform(tmp, tmp + n_complex, rgC, rgC, std::plus< std::complex< double> >());
+    std::transform(rgC, rgC + n_complex, tmp, rgC, std::plus< std::complex< double> >());
     grU1.outer_product(bbU2, tmpTensors, Dirac::order_OUTER_FIXED);
-    std::transform(tmp, tmp + n_complex, rgC, rgC, std::minus< std::complex< double> >());
+    std::transform(rgC, rgC + n_complex, tmp, rgC, std::minus< std::complex< double> >());
     bbU1.outer_product(grU2, tmpTensors, Dirac::order_OUTER_FIXED);
-    std::transform(tmp, tmp + n_complex, rgC, rgC, std::minus< std::complex< double> >());
+    std::transform(rgC, rgC + n_complex, tmp, rgC, std::minus< std::complex< double> >());
     brU1.outer_product(gbU2, tmpTensors, Dirac::order_OUTER_FIXED);
-    std::transform(tmp, tmp + n_complex, rgC, rgC, std::plus< std::complex< double> >());
+    std::transform(rgC, rgC + n_complex, tmp, rgC, std::plus< std::complex< double> >());
 
     std::complex< double > rbC[n_complex];
     std::fill_n(rbC, n_complex, zero);
     grU1.outer_product(bgU2, tmpTensors, Dirac::order_FIRST_FIXED);
-    std::transform(tmp, tmp + n_complex, rbC, rbC, std::plus< std::complex< double> >());
+    std::transform(rbC, rbC + n_complex, tmp, rbC, std::plus< std::complex< double> >());
     ggU1.outer_product(brU2, tmpTensors, Dirac::order_FIRST_FIXED);
-    std::transform(tmp, tmp + n_complex, rbC, rbC, std::minus< std::complex< double> >());
+    std::transform(rbC, rbC + n_complex, tmp, rbC, std::minus< std::complex< double> >());
     brU1.outer_product(ggU2, tmpTensors, Dirac::order_FIRST_FIXED);
-    std::transform(tmp, tmp + n_complex, rbC, rbC, std::minus< std::complex< double> >());
+    std::transform(rbC, rbC + n_complex, tmp, rbC, std::minus< std::complex< double> >());
     bgU1.outer_product(grU2, tmpTensors, Dirac::order_FIRST_FIXED);
-    std::transform(tmp, tmp + n_complex, rbC, rbC, std::plus< std::complex< double> >());
+    std::transform(rbC, rbC + n_complex, tmp, rbC, std::plus< std::complex< double> >());
     grU1.outer_product(bgU2, tmpTensors, Dirac::order_OUTER_FIXED);
-    std::transform(tmp, tmp + n_complex, rbC, rbC, std::plus< std::complex< double> >());
+    std::transform(rbC, rbC + n_complex, tmp, rbC, std::plus< std::complex< double> >());
     ggU1.outer_product(brU2, tmpTensors, Dirac::order_OUTER_FIXED);
-    std::transform(tmp, tmp + n_complex, rbC, rbC, std::minus< std::complex< double> >());
+    std::transform(rbC, rbC + n_complex, tmp, rbC, std::minus< std::complex< double> >());
     brU1.outer_product(ggU2, tmpTensors, Dirac::order_OUTER_FIXED);
-    std::transform(tmp, tmp + n_complex, rbC, rbC, std::minus< std::complex< double> >());
+    std::transform(rbC, rbC + n_complex, tmp, rbC, std::minus< std::complex< double> >());
     bgU1.outer_product(grU2, tmpTensors, Dirac::order_OUTER_FIXED);
-    std::transform(tmp, tmp + n_complex, rbC, rbC, std::plus< std::complex< double> >());
+    std::transform(rbC, rbC + n_complex, tmp, rbC, std::plus< std::complex< double> >());
 
     /* ----------------------- */
 
     std::complex< double > grC[n_complex];
     std::fill_n(grC, n_complex, zero);
     rbU1.outer_product(bgU2, tmpTensors, Dirac::order_FIRST_FIXED);
-    std::transform(tmp, tmp + n_complex, grC, grC, std::plus< std::complex< double> >());
+    std::transform(grC, grC + n_complex, tmp, grC, std::plus< std::complex< double> >());
     rgU1.outer_product(bbU2, tmpTensors, Dirac::order_FIRST_FIXED);
-    std::transform(tmp, tmp + n_complex, grC, grC, std::minus< std::complex< double> >());
+    std::transform(grC, grC + n_complex, tmp, grC, std::minus< std::complex< double> >());
     bbU1.outer_product(rgU2, tmpTensors, Dirac::order_FIRST_FIXED);
-    std::transform(tmp, tmp + n_complex, grC, grC, std::minus< std::complex< double> >());
+    std::transform(grC, grC + n_complex, tmp, grC, std::minus< std::complex< double> >());
     bgU1.outer_product(rbU2, tmpTensors, Dirac::order_FIRST_FIXED);
-    std::transform(tmp, tmp + n_complex, grC, grC, std::plus< std::complex< double> >());
+    std::transform(grC, grC + n_complex, tmp, grC, std::plus< std::complex< double> >());
     rbU1.outer_product(bgU2, tmpTensors, Dirac::order_OUTER_FIXED);
-    std::transform(tmp, tmp + n_complex, grC, grC, std::plus< std::complex< double> >());
+    std::transform(grC, grC + n_complex, tmp, grC, std::plus< std::complex< double> >());
     rgU1.outer_product(bbU2, tmpTensors, Dirac::order_OUTER_FIXED);
-    std::transform(tmp, tmp + n_complex, grC, grC, std::minus< std::complex< double> >());
+    std::transform(grC, grC + n_complex, tmp, grC, std::minus< std::complex< double> >());
     bbU1.outer_product(rgU2, tmpTensors, Dirac::order_OUTER_FIXED);
-    std::transform(tmp, tmp + n_complex, grC, grC, std::minus< std::complex< double> >());
+    std::transform(grC, grC + n_complex, tmp, grC, std::minus< std::complex< double> >());
     bgU1.outer_product(rbU2, tmpTensors, Dirac::order_OUTER_FIXED);
-    std::transform(tmp, tmp + n_complex, grC, grC, std::plus< std::complex< double> >());
+    std::transform(grC, grC + n_complex, tmp, grC, std::plus< std::complex< double> >());
 
     std::complex< double > ggC[n_complex];
     std::fill_n(ggC, n_complex, zero);
     rrU1.outer_product(bbU2, tmpTensors, Dirac::order_FIRST_FIXED);
-    std::transform(tmp, tmp + n_complex, ggC, ggC, std::plus< std::complex< double> >());
+    std::transform(ggC, ggC + n_complex, tmp, ggC, std::plus< std::complex< double> >());
     rbU1.outer_product(brU2, tmpTensors, Dirac::order_FIRST_FIXED);
-    std::transform(tmp, tmp + n_complex, ggC, ggC, std::minus< std::complex< double> >());
+    std::transform(ggC, ggC + n_complex, tmp, ggC, std::minus< std::complex< double> >());
     brU1.outer_product(rbU2, tmpTensors, Dirac::order_FIRST_FIXED);
-    std::transform(tmp, tmp + n_complex, ggC, ggC, std::minus< std::complex< double> >());
+    std::transform(ggC, ggC + n_complex, tmp, ggC, std::minus< std::complex< double> >());
     bbU1.outer_product(rrU2, tmpTensors, Dirac::order_FIRST_FIXED);
-    std::transform(tmp, tmp + n_complex, ggC, ggC, std::plus< std::complex< double> >());
+    std::transform(ggC, ggC + n_complex, tmp, ggC, std::plus< std::complex< double> >());
     rrU1.outer_product(bbU2, tmpTensors, Dirac::order_OUTER_FIXED);
-    std::transform(tmp, tmp + n_complex, ggC, ggC, std::plus< std::complex< double> >());
+    std::transform(ggC, ggC + n_complex, tmp, ggC, std::plus< std::complex< double> >());
     rbU1.outer_product(brU2, tmpTensors, Dirac::order_OUTER_FIXED);
-    std::transform(tmp, tmp + n_complex, ggC, ggC, std::minus< std::complex< double> >());
+    std::transform(ggC, ggC + n_complex, tmp, ggC, std::minus< std::complex< double> >());
     brU1.outer_product(rbU2, tmpTensors, Dirac::order_OUTER_FIXED);
-    std::transform(tmp, tmp + n_complex, ggC, ggC, std::minus< std::complex< double> >());
+    std::transform(ggC, ggC + n_complex, tmp, ggC, std::minus< std::complex< double> >());
     bbU1.outer_product(rrU2, tmpTensors, Dirac::order_OUTER_FIXED);
-    std::transform(tmp, tmp + n_complex, ggC, ggC, std::plus< std::complex< double> >());
+    std::transform(ggC, ggC + n_complex, tmp, ggC, std::plus< std::complex< double> >());
 
     std::complex< double > gbC[n_complex];
     std::fill_n(gbC, n_complex, zero);
     rgU1.outer_product(brU2, tmpTensors, Dirac::order_FIRST_FIXED);
-    std::transform(tmp, tmp + n_complex, gbC, gbC, std::plus< std::complex< double> >());
+    std::transform(gbC, gbC + n_complex, tmp, gbC, std::plus< std::complex< double> >());
     rrU1.outer_product(bgU2, tmpTensors, Dirac::order_FIRST_FIXED);
-    std::transform(tmp, tmp + n_complex, gbC, gbC, std::minus< std::complex< double> >());
+    std::transform(gbC, gbC + n_complex, tmp, gbC, std::minus< std::complex< double> >());
     bgU1.outer_product(rrU2, tmpTensors, Dirac::order_FIRST_FIXED);
-    std::transform(tmp, tmp + n_complex, gbC, gbC, std::minus< std::complex< double> >());
+    std::transform(gbC, gbC + n_complex, tmp, gbC, std::minus< std::complex< double> >());
     brU1.outer_product(rgU2, tmpTensors, Dirac::order_FIRST_FIXED);
-    std::transform(tmp, tmp + n_complex, gbC, gbC, std::plus< std::complex< double> >());
+    std::transform(gbC, gbC + n_complex, tmp, gbC, std::plus< std::complex< double> >());
     rgU1.outer_product(brU2, tmpTensors, Dirac::order_OUTER_FIXED);
-    std::transform(tmp, tmp + n_complex, gbC, gbC, std::plus< std::complex< double> >());
+    std::transform(gbC, gbC + n_complex, tmp, gbC, std::plus< std::complex< double> >());
     rrU1.outer_product(bgU2, tmpTensors, Dirac::order_OUTER_FIXED);
-    std::transform(tmp, tmp + n_complex, gbC, gbC, std::minus< std::complex< double> >());
+    std::transform(gbC, gbC + n_complex, tmp, gbC, std::minus< std::complex< double> >());
     bgU1.outer_product(rrU2, tmpTensors, Dirac::order_OUTER_FIXED);
-    std::transform(tmp, tmp + n_complex, gbC, gbC, std::minus< std::complex< double> >());
+    std::transform(gbC, gbC + n_complex, tmp, gbC, std::minus< std::complex< double> >());
     brU1.outer_product(rgU2, tmpTensors, Dirac::order_OUTER_FIXED);
-    std::transform(tmp, tmp + n_complex, gbC, gbC, std::plus< std::complex< double> >());
+    std::transform(gbC, gbC + n_complex, tmp, gbC, std::plus< std::complex< double> >());
 
     /* ----------------------- */
 
     std::complex< double > brC[n_complex];
     std::fill_n(brC, n_complex, zero);
     rgU1.outer_product(gbU2, tmpTensors, Dirac::order_FIRST_FIXED);
-    std::transform(tmp, tmp + n_complex, brC, brC, std::plus< std::complex< double> >());
+    std::transform(brC, brC + n_complex, tmp, brC, std::plus< std::complex< double> >());
     rbU1.outer_product(ggU2, tmpTensors, Dirac::order_FIRST_FIXED);
-    std::transform(tmp, tmp + n_complex, brC, brC, std::minus< std::complex< double> >());
+    std::transform(brC, brC + n_complex, tmp, brC, std::minus< std::complex< double> >());
     ggU1.outer_product(rbU2, tmpTensors, Dirac::order_FIRST_FIXED);
-    std::transform(tmp, tmp + n_complex, brC, brC, std::minus< std::complex< double> >());
+    std::transform(brC, brC + n_complex, tmp, brC, std::minus< std::complex< double> >());
     gbU1.outer_product(rgU2, tmpTensors, Dirac::order_FIRST_FIXED);
-    std::transform(tmp, tmp + n_complex, brC, brC, std::plus< std::complex< double> >());
+    std::transform(brC, brC + n_complex, tmp, brC, std::plus< std::complex< double> >());
     rgU1.outer_product(gbU2, tmpTensors, Dirac::order_OUTER_FIXED);
-    std::transform(tmp, tmp + n_complex, brC, brC, std::plus< std::complex< double> >());
+    std::transform(brC, brC + n_complex, tmp, brC, std::plus< std::complex< double> >());
     rbU1.outer_product(ggU2, tmpTensors, Dirac::order_OUTER_FIXED);
-    std::transform(tmp, tmp + n_complex, brC, brC, std::minus< std::complex< double> >());
+    std::transform(brC, brC + n_complex, tmp, brC, std::minus< std::complex< double> >());
     ggU1.outer_product(rbU2, tmpTensors, Dirac::order_OUTER_FIXED);
-    std::transform(tmp, tmp + n_complex, brC, brC, std::minus< std::complex< double> >());
+    std::transform(brC, brC + n_complex, tmp, brC, std::minus< std::complex< double> >());
     gbU1.outer_product(rgU2, tmpTensors, Dirac::order_OUTER_FIXED);
-    std::transform(tmp, tmp + n_complex, brC, brC, std::plus< std::complex< double> >());
+    std::transform(brC, brC + n_complex, tmp, brC, std::plus< std::complex< double> >());
 
     std::complex< double > bgC[n_complex];
     std::fill_n(bgC, n_complex, zero);
     rbU1.outer_product(grU2, tmpTensors, Dirac::order_FIRST_FIXED);
-    std::transform(tmp, tmp + n_complex, bgC, bgC, std::plus< std::complex< double> >());
+    std::transform(bgC, bgC + n_complex, tmp, bgC, std::plus< std::complex< double> >());
     rrU1.outer_product(gbU2, tmpTensors, Dirac::order_FIRST_FIXED);
-    std::transform(tmp, tmp + n_complex, bgC, bgC, std::minus< std::complex< double> >());
+    std::transform(bgC, bgC + n_complex, tmp, bgC, std::minus< std::complex< double> >());
     gbU1.outer_product(rrU2, tmpTensors, Dirac::order_FIRST_FIXED);
-    std::transform(tmp, tmp + n_complex, bgC, bgC, std::minus< std::complex< double> >());
+    std::transform(bgC, bgC + n_complex, tmp, bgC, std::minus< std::complex< double> >());
     grU1.outer_product(rbU2, tmpTensors, Dirac::order_FIRST_FIXED);
-    std::transform(tmp, tmp + n_complex, bgC, bgC, std::plus< std::complex< double> >());
+    std::transform(bgC, bgC + n_complex, tmp, bgC, std::plus< std::complex< double> >());
     rbU1.outer_product(grU2, tmpTensors, Dirac::order_OUTER_FIXED);
-    std::transform(tmp, tmp + n_complex, bgC, bgC, std::plus< std::complex< double> >());
+    std::transform(bgC, bgC + n_complex, tmp, bgC, std::plus< std::complex< double> >());
     rrU1.outer_product(gbU2, tmpTensors, Dirac::order_OUTER_FIXED);
-    std::transform(tmp, tmp + n_complex, bgC, bgC, std::minus< std::complex< double> >());
+    std::transform(bgC, bgC + n_complex, tmp, bgC, std::minus< std::complex< double> >());
     gbU1.outer_product(rrU2, tmpTensors, Dirac::order_OUTER_FIXED);
-    std::transform(tmp, tmp + n_complex, bgC, bgC, std::minus< std::complex< double> >());
+    std::transform(bgC, bgC + n_complex, tmp, bgC, std::minus< std::complex< double> >());
     grU1.outer_product(rbU2, tmpTensors, Dirac::order_OUTER_FIXED);
-    std::transform(tmp, tmp + n_complex, bgC, bgC, std::plus< std::complex< double> >());
+    std::transform(bgC, bgC + n_complex, tmp, bgC, std::plus< std::complex< double> >());
 
     std::complex< double > bbC[n_complex];
     std::fill_n(bbC, n_complex, zero);
     rrU1.outer_product(ggU2, tmpTensors, Dirac::order_FIRST_FIXED);
-    std::transform(tmp, tmp + n_complex, bbC, bbC, std::plus< std::complex< double> >());
+    std::transform(bbC, bbC + n_complex, tmp, bbC, std::plus< std::complex< double> >());
     rgU1.outer_product(grU2, tmpTensors, Dirac::order_FIRST_FIXED);
-    std::transform(tmp, tmp + n_complex, bbC, bbC, std::minus< std::complex< double> >());
+    std::transform(bbC, bbC + n_complex, tmp, bbC, std::minus< std::complex< double> >());
     grU1.outer_product(rgU2, tmpTensors, Dirac::order_FIRST_FIXED);
-    std::transform(tmp, tmp + n_complex, bbC, bbC, std::minus< std::complex< double> >());
+    std::transform(bbC, bbC + n_complex, tmp, bbC, std::minus< std::complex< double> >());
     ggU1.outer_product(rrU2, tmpTensors, Dirac::order_FIRST_FIXED);
-    std::transform(tmp, tmp + n_complex, bbC, bbC, std::plus< std::complex< double> >());
+    std::transform(bbC, bbC + n_complex, tmp, bbC, std::plus< std::complex< double> >());
     rrU1.outer_product(ggU2, tmpTensors, Dirac::order_OUTER_FIXED);
-    std::transform(tmp, tmp + n_complex, bbC, bbC, std::plus< std::complex< double> >());
+    std::transform(bbC, bbC + n_complex, tmp, bbC, std::plus< std::complex< double> >());
     rgU1.outer_product(grU2, tmpTensors, Dirac::order_OUTER_FIXED);
-    std::transform(tmp, tmp + n_complex, bbC, bbC, std::minus< std::complex< double> >());
+    std::transform(bbC, bbC + n_complex, tmp, bbC, std::minus< std::complex< double> >());
     grU1.outer_product(rgU2, tmpTensors, Dirac::order_OUTER_FIXED);
-    std::transform(tmp, tmp + n_complex, bbC, bbC, std::minus< std::complex< double> >());
+    std::transform(bbC, bbC + n_complex, tmp, bbC, std::minus< std::complex< double> >());
     ggU1.outer_product(rrU2, tmpTensors, Dirac::order_OUTER_FIXED);
-    std::transform(tmp, tmp + n_complex, bbC, bbC, std::plus< std::complex< double> >());
-
-//     for (size_t iDirac=0; iDirac<16*16; iDirac++)
-//     {
-//       if (iDirac % 16 == 0)
-//         std::cout << std::endl;
-//       std::cout << tmp[iDirac] << " ";
-//     }
-//     std::cout << std::endl;
+    std::transform(bbC, bbC + n_complex, tmp, bbC, std::plus< std::complex< double> >());
 
     /* --------------------------------------------- */
 
-    // the following part takes 9 Dirac::Matrixes and translates them to a Tensor for each od the 16 Dirac combinations
+    // the following part takes 9 Dirac::Matrixes and translates them to a Tensor for each of the 16 Dirac combinations
 
     std::complex< double >* data_ptr = NULL;
 
@@ -257,7 +250,7 @@ namespace QCD
 
       size_t const offset = iDirac * 16;
 
-      data_ptr[  0] =  rrC[offset ];
+      data_ptr[  0] =  rrC[offset];
       data_ptr[  3] =  rrC[offset + 1];
       data_ptr[  6] =  rrC[offset + 2];
       data_ptr[  9] =  rrC[offset + 3];
@@ -277,7 +270,7 @@ namespace QCD
       index = 12*Base::col_RED  + Base::col_GREEN;
       data_ptr = (result[iDirac]).d_data + index;
 
-      data_ptr[  0] =  rgC[offset + 0];
+      data_ptr[  0] =  rgC[offset];
       data_ptr[  3] =  rgC[offset + 1];
       data_ptr[  6] =  rgC[offset + 2];
       data_ptr[  9] =  rgC[offset + 3];

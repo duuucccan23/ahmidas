@@ -6,7 +6,7 @@ namespace QCD
   void Tensor::getDiracMatrix(Dirac::Matrix &dMatrix, Base::ColourIndex const colour_src, Base::ColourIndex const colour_snk) const
   {
     size_t index = 12*colour_src + colour_snk;
-    dMatrix[ 0] = d_data[index     ];
+    dMatrix[ 0] = d_data[index      ];
     dMatrix[ 1] = d_data[index +   3];
     dMatrix[ 2] = d_data[index +   6];
     dMatrix[ 3] = d_data[index +   9];

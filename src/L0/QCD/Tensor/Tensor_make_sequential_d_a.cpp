@@ -25,8 +25,6 @@ namespace QCD
     static std::complex< double > const COMPLEX_M_1(-1,  0);
     static std::complex< double > const COMPLEX_0(0, 0);
 
-
-// // //     // note that the projector has to be conjugated
     switch (projector)
     {
       case Base::proj_PARITY_PLUS_TM:
@@ -47,13 +45,30 @@ namespace QCD
         alpha_f_perms.push_back(Base::gam_4);
         alpha_f_factors.push_back(0.5*COMPLEX_M_I);
       break;
+      case Base::proj_PARITY_PLUS_TM_STAR:
+        alpha_f_perms.push_back(Base::gam_3);
+        alpha_f_factors.push_back(0.5*COMPLEX_M_1);
+        alpha_f_perms.push_back(Base::gam_4);
+        alpha_f_factors.push_back(0.5*COMPLEX_M_1);
+        alpha_f_perms.push_back(Base::gam_1);
+        alpha_f_factors.push_back(0.5*COMPLEX_M_1);
+        alpha_f_perms.push_back(Base::gam_2);
+        alpha_f_factors.push_back(0.5*COMPLEX_M_1);
+        alpha_f_perms.push_back(Base::gam_1);
+        alpha_f_factors.push_back(0.5*COMPLEX_M_I);
+        alpha_f_perms.push_back(Base::gam_2);
+        alpha_f_factors.push_back(0.5*COMPLEX_M_I);
+        alpha_f_perms.push_back(Base::gam_3);
+        alpha_f_factors.push_back(0.5*COMPLEX_P_I);
+        alpha_f_perms.push_back(Base::gam_4);
+        alpha_f_factors.push_back(0.5*COMPLEX_P_I);
+      break;
       default:
       std::cerr << "Unknown projector in QCD::make_sequential_d() " << std::endl;
     }
 
     std::fill_n(result.d_data, result.size(), COMPLEX_0);
 
-    /* under construction */
     Dirac::Matrix rrU1;
     Dirac::Matrix rgU1;
     Dirac::Matrix rbU1;
@@ -107,177 +122,177 @@ namespace QCD
       std::complex< double > rrC[16];
       std::fill_n(rrC, 16, COMPLEX_0);
       ggU1.outer_product(bbU2, tmp, Dirac::order_FIRST_FIXED, alpha_i, alpha_f);
-      std::transform(tmp, tmp+16, rrC, rrC, std::plus< std::complex< double> >());
+      std::transform(rrC, rrC+16, tmp, rrC, std::plus< std::complex< double> >());
       gbU1.outer_product(bgU2, tmp, Dirac::order_FIRST_FIXED, alpha_i, alpha_f);
-      std::transform(tmp, tmp+16, rrC, rrC, std::minus< std::complex< double> >());
+      std::transform(rrC, rrC+16, tmp, rrC, std::minus< std::complex< double> >());
       bgU1.outer_product(gbU2, tmp, Dirac::order_FIRST_FIXED, alpha_i, alpha_f);
-      std::transform(tmp, tmp+16, rrC, rrC, std::minus< std::complex< double> >());
+      std::transform(rrC, rrC+16, tmp, rrC, std::minus< std::complex< double> >());
       bbU1.outer_product(ggU2, tmp, Dirac::order_FIRST_FIXED, alpha_i, alpha_f);
-      std::transform(tmp, tmp+16, rrC, rrC, std::plus< std::complex< double> >());
+      std::transform(rrC, rrC+16, tmp, rrC, std::plus< std::complex< double> >());
       ggU1.outer_product(bbU2, tmp, Dirac::order_OUTER_FIXED, alpha_i, alpha_f);
-      std::transform(tmp, tmp+16, rrC, rrC, std::plus< std::complex< double> >());
+      std::transform(rrC, rrC+16, tmp, rrC, std::plus< std::complex< double> >());
       gbU1.outer_product(bgU2, tmp, Dirac::order_OUTER_FIXED, alpha_i, alpha_f);
-      std::transform(tmp, tmp+16, rrC, rrC, std::minus< std::complex< double> >());
+      std::transform(rrC, rrC+16, tmp, rrC, std::minus< std::complex< double> >());
       bgU1.outer_product(gbU2, tmp, Dirac::order_OUTER_FIXED, alpha_i, alpha_f);
-      std::transform(tmp, tmp+16, rrC, rrC, std::minus< std::complex< double> >());
+      std::transform(rrC, rrC+16, tmp, rrC, std::minus< std::complex< double> >());
       bbU1.outer_product(ggU2, tmp, Dirac::order_OUTER_FIXED, alpha_i, alpha_f);
-      std::transform(tmp, tmp+16, rrC, rrC, std::plus< std::complex< double> >());
+      std::transform(rrC, rrC+16, tmp, rrC, std::plus< std::complex< double> >());
 
       std::complex< double > rgC[16];
       std::fill_n(rgC, 16, COMPLEX_0);
       gbU1.outer_product(brU2, tmp, Dirac::order_FIRST_FIXED, alpha_i, alpha_f);
-      std::transform(tmp, tmp+16, rgC, rgC, std::plus< std::complex< double> >());
+      std::transform(rgC, rgC+16, tmp, rgC, std::plus< std::complex< double> >());
       grU1.outer_product(bbU2, tmp, Dirac::order_FIRST_FIXED, alpha_i, alpha_f);
-      std::transform(tmp, tmp+16, rgC, rgC, std::minus< std::complex< double> >());
+      std::transform(rgC, rgC+16, tmp, rgC, std::minus< std::complex< double> >());
       bbU1.outer_product(grU2, tmp, Dirac::order_FIRST_FIXED, alpha_i, alpha_f);
-      std::transform(tmp, tmp+16, rgC, rgC, std::minus< std::complex< double> >());
+      std::transform(rgC, rgC+16, tmp, rgC, std::minus< std::complex< double> >());
       brU1.outer_product(gbU2, tmp, Dirac::order_FIRST_FIXED, alpha_i, alpha_f);
-      std::transform(tmp, tmp+16, rgC, rgC, std::plus< std::complex< double> >());
+      std::transform(rgC, rgC+16, tmp, rgC, std::plus< std::complex< double> >());
       gbU1.outer_product(brU2, tmp, Dirac::order_OUTER_FIXED, alpha_i, alpha_f);
-      std::transform(tmp, tmp+16, rgC, rgC, std::plus< std::complex< double> >());
+      std::transform(rgC, rgC+16, tmp, rgC, std::plus< std::complex< double> >());
       grU1.outer_product(bbU2, tmp, Dirac::order_OUTER_FIXED, alpha_i, alpha_f);
-      std::transform(tmp, tmp+16, rgC, rgC, std::minus< std::complex< double> >());
+      std::transform(rgC, rgC+16, tmp, rgC, std::minus< std::complex< double> >());
       bbU1.outer_product(grU2, tmp, Dirac::order_OUTER_FIXED, alpha_i, alpha_f);
-      std::transform(tmp, tmp+16, rgC, rgC, std::minus< std::complex< double> >());
+      std::transform(rgC, rgC+16, tmp, rgC, std::minus< std::complex< double> >());
       brU1.outer_product(gbU2, tmp, Dirac::order_OUTER_FIXED, alpha_i, alpha_f);
-      std::transform(tmp, tmp+16, rgC, rgC, std::plus< std::complex< double> >());
+      std::transform(rgC, rgC+16, tmp, rgC, std::plus< std::complex< double> >());
 
       std::complex< double > rbC[16];
       std::fill_n(rbC, 16, COMPLEX_0);
       grU1.outer_product(bgU2, tmp, Dirac::order_FIRST_FIXED, alpha_i, alpha_f);
-      std::transform(tmp, tmp+16, rbC, rbC, std::plus< std::complex< double> >());
+      std::transform(rbC, rbC+16, tmp, rbC, std::plus< std::complex< double> >());
       ggU1.outer_product(brU2, tmp, Dirac::order_FIRST_FIXED, alpha_i, alpha_f);
-      std::transform(tmp, tmp+16, rbC, rbC, std::minus< std::complex< double> >());
+      std::transform(rbC, rbC+16, tmp, rbC, std::minus< std::complex< double> >());
       brU1.outer_product(ggU2, tmp, Dirac::order_FIRST_FIXED, alpha_i, alpha_f);
-      std::transform(tmp, tmp+16, rbC, rbC, std::minus< std::complex< double> >());
+      std::transform(rbC, rbC+16, tmp, rbC, std::minus< std::complex< double> >());
       bgU1.outer_product(grU2, tmp, Dirac::order_FIRST_FIXED, alpha_i, alpha_f);
-      std::transform(tmp, tmp+16, rbC, rbC, std::plus< std::complex< double> >());
+      std::transform(rbC, rbC+16, tmp, rbC, std::plus< std::complex< double> >());
       grU1.outer_product(bgU2, tmp, Dirac::order_OUTER_FIXED, alpha_i, alpha_f);
-      std::transform(tmp, tmp+16, rbC, rbC, std::plus< std::complex< double> >());
+      std::transform(rbC, rbC+16, tmp, rbC, std::plus< std::complex< double> >());
       ggU1.outer_product(brU2, tmp, Dirac::order_OUTER_FIXED, alpha_i, alpha_f);
-      std::transform(tmp, tmp+16, rbC, rbC, std::minus< std::complex< double> >());
+      std::transform(rbC, rbC+16, tmp, rbC, std::minus< std::complex< double> >());
       brU1.outer_product(ggU2, tmp, Dirac::order_OUTER_FIXED, alpha_i, alpha_f);
-      std::transform(tmp, tmp+16, rbC, rbC, std::minus< std::complex< double> >());
+      std::transform(rbC, rbC+16, tmp, rbC, std::minus< std::complex< double> >());
       bgU1.outer_product(grU2, tmp, Dirac::order_OUTER_FIXED, alpha_i, alpha_f);
-      std::transform(tmp, tmp+16, rbC, rbC, std::plus< std::complex< double> >());
+      std::transform(rbC, rbC+16, tmp, rbC, std::plus< std::complex< double> >());
 
       /* ----------------------- */
 
       std::complex< double > grC[16];
       std::fill_n(grC, 16, COMPLEX_0);
       rbU1.outer_product(bgU2, tmp, Dirac::order_FIRST_FIXED, alpha_i, alpha_f);
-      std::transform(tmp, tmp+16, grC, grC, std::plus< std::complex< double> >());
+      std::transform(grC, grC+16, tmp, grC, std::plus< std::complex< double> >());
       rgU1.outer_product(bbU2, tmp, Dirac::order_FIRST_FIXED, alpha_i, alpha_f);
-      std::transform(tmp, tmp+16, grC, grC, std::minus< std::complex< double> >());
+      std::transform(grC, grC+16, tmp, grC, std::minus< std::complex< double> >());
       bbU1.outer_product(rgU2, tmp, Dirac::order_FIRST_FIXED, alpha_i, alpha_f);
-      std::transform(tmp, tmp+16, grC, grC, std::minus< std::complex< double> >());
+      std::transform(grC, grC+16, tmp, grC, std::minus< std::complex< double> >());
       bgU1.outer_product(rbU2, tmp, Dirac::order_FIRST_FIXED, alpha_i, alpha_f);
-      std::transform(tmp, tmp+16, grC, grC, std::plus< std::complex< double> >());
+      std::transform(grC, grC+16, tmp, grC, std::plus< std::complex< double> >());
       rbU1.outer_product(bgU2, tmp, Dirac::order_OUTER_FIXED, alpha_i, alpha_f);
-      std::transform(tmp, tmp+16, grC, grC, std::plus< std::complex< double> >());
+      std::transform(grC, grC+16, tmp, grC, std::plus< std::complex< double> >());
       rgU1.outer_product(bbU2, tmp, Dirac::order_OUTER_FIXED, alpha_i, alpha_f);
-      std::transform(tmp, tmp+16, grC, grC, std::minus< std::complex< double> >());
+      std::transform(grC, grC+16, tmp, grC, std::minus< std::complex< double> >());
       bbU1.outer_product(rgU2, tmp, Dirac::order_OUTER_FIXED, alpha_i, alpha_f);
-      std::transform(tmp, tmp+16, grC, grC, std::minus< std::complex< double> >());
+      std::transform(grC, grC+16, tmp, grC, std::minus< std::complex< double> >());
       bgU1.outer_product(rbU2, tmp, Dirac::order_OUTER_FIXED, alpha_i, alpha_f);
-      std::transform(tmp, tmp+16, grC, grC, std::plus< std::complex< double> >());
+      std::transform(grC, grC+16, tmp, grC, std::plus< std::complex< double> >());
 
       std::complex< double > ggC[16];
       std::fill_n(ggC, 16, COMPLEX_0);
       rrU1.outer_product(bbU2, tmp, Dirac::order_FIRST_FIXED, alpha_i, alpha_f);
-      std::transform(tmp, tmp+16, ggC, ggC, std::plus< std::complex< double> >());
+      std::transform(ggC, ggC+16, tmp, ggC, std::plus< std::complex< double> >());
       rbU1.outer_product(brU2, tmp, Dirac::order_FIRST_FIXED, alpha_i, alpha_f);
-      std::transform(tmp, tmp+16, ggC, ggC, std::minus< std::complex< double> >());
+      std::transform(ggC, ggC+16, tmp, ggC, std::minus< std::complex< double> >());
       brU1.outer_product(rbU2, tmp, Dirac::order_FIRST_FIXED, alpha_i, alpha_f);
-      std::transform(tmp, tmp+16, ggC, ggC, std::minus< std::complex< double> >());
+      std::transform(ggC, ggC+16, tmp, ggC, std::minus< std::complex< double> >());
       bbU1.outer_product(rrU2, tmp, Dirac::order_FIRST_FIXED, alpha_i, alpha_f);
-      std::transform(tmp, tmp+16, ggC, ggC, std::plus< std::complex< double> >());
+      std::transform(ggC, ggC+16, tmp, ggC, std::plus< std::complex< double> >());
       rrU1.outer_product(bbU2, tmp, Dirac::order_OUTER_FIXED, alpha_i, alpha_f);
-      std::transform(tmp, tmp+16, ggC, ggC, std::plus< std::complex< double> >());
+      std::transform(ggC, ggC+16, tmp, ggC, std::plus< std::complex< double> >());
       rbU1.outer_product(brU2, tmp, Dirac::order_OUTER_FIXED, alpha_i, alpha_f);
-      std::transform(tmp, tmp+16, ggC, ggC, std::minus< std::complex< double> >());
+      std::transform(ggC, ggC+16, tmp, ggC, std::minus< std::complex< double> >());
       brU1.outer_product(rbU2, tmp, Dirac::order_OUTER_FIXED, alpha_i, alpha_f);
-      std::transform(tmp, tmp+16, ggC, ggC, std::minus< std::complex< double> >());
+      std::transform(ggC, ggC+16, tmp, ggC, std::minus< std::complex< double> >());
       bbU1.outer_product(rrU2, tmp, Dirac::order_OUTER_FIXED, alpha_i, alpha_f);
-      std::transform(tmp, tmp+16, ggC, ggC, std::plus< std::complex< double> >());
+      std::transform(ggC, ggC+16, tmp, ggC, std::plus< std::complex< double> >());
 
       std::complex< double > gbC[16];
       std::fill_n(gbC, 16, COMPLEX_0);
       rgU1.outer_product(brU2, tmp, Dirac::order_FIRST_FIXED, alpha_i, alpha_f);
-      std::transform(tmp, tmp+16, gbC, gbC, std::plus< std::complex< double> >());
+      std::transform(gbC, gbC+16, tmp, gbC, std::plus< std::complex< double> >());
       rrU1.outer_product(bgU2, tmp, Dirac::order_FIRST_FIXED, alpha_i, alpha_f);
-      std::transform(tmp, tmp+16, gbC, gbC, std::minus< std::complex< double> >());
+      std::transform(gbC, gbC+16, tmp, gbC, std::minus< std::complex< double> >());
       bgU1.outer_product(rrU2, tmp, Dirac::order_FIRST_FIXED, alpha_i, alpha_f);
-      std::transform(tmp, tmp+16, gbC, gbC, std::minus< std::complex< double> >());
+      std::transform(gbC, gbC+16, tmp, gbC, std::minus< std::complex< double> >());
       brU1.outer_product(rgU2, tmp, Dirac::order_FIRST_FIXED, alpha_i, alpha_f);
-      std::transform(tmp, tmp+16, gbC, gbC, std::plus< std::complex< double> >());
+      std::transform(gbC, gbC+16, tmp, gbC, std::plus< std::complex< double> >());
       rgU1.outer_product(brU2, tmp, Dirac::order_OUTER_FIXED, alpha_i, alpha_f);
-      std::transform(tmp, tmp+16, gbC, gbC, std::plus< std::complex< double> >());
+      std::transform(gbC, gbC+16, tmp, gbC, std::plus< std::complex< double> >());
       rrU1.outer_product(bgU2, tmp, Dirac::order_OUTER_FIXED, alpha_i, alpha_f);
-      std::transform(tmp, tmp+16, gbC, gbC, std::minus< std::complex< double> >());
+      std::transform(gbC, gbC+16, tmp, gbC, std::minus< std::complex< double> >());
       bgU1.outer_product(rrU2, tmp, Dirac::order_OUTER_FIXED, alpha_i, alpha_f);
-      std::transform(tmp, tmp+16, gbC, gbC, std::minus< std::complex< double> >());
+      std::transform(gbC, gbC+16, tmp, gbC, std::minus< std::complex< double> >());
       brU1.outer_product(rgU2, tmp, Dirac::order_OUTER_FIXED, alpha_i, alpha_f);
-      std::transform(tmp, tmp+16, gbC, gbC, std::plus< std::complex< double> >());
+      std::transform(gbC, gbC+16, tmp, gbC, std::plus< std::complex< double> >());
 
       /* ----------------------- */
 
       std::complex< double > brC[16];
       std::fill_n(brC, 16, COMPLEX_0);
       rgU1.outer_product(gbU2, tmp, Dirac::order_FIRST_FIXED, alpha_i, alpha_f);
-      std::transform(tmp, tmp+16, brC, brC, std::plus< std::complex< double> >());
+      std::transform(brC, brC+16, tmp, brC, std::plus< std::complex< double> >());
       rbU1.outer_product(ggU2, tmp, Dirac::order_FIRST_FIXED, alpha_i, alpha_f);
-      std::transform(tmp, tmp+16, brC, brC, std::minus< std::complex< double> >());
+      std::transform(brC, brC+16, tmp, brC, std::minus< std::complex< double> >());
       ggU1.outer_product(rbU2, tmp, Dirac::order_FIRST_FIXED, alpha_i, alpha_f);
-      std::transform(tmp, tmp+16, brC, brC, std::minus< std::complex< double> >());
+      std::transform(brC, brC+16, tmp, brC, std::minus< std::complex< double> >());
       gbU1.outer_product(rgU2, tmp, Dirac::order_FIRST_FIXED, alpha_i, alpha_f);
-      std::transform(tmp, tmp+16, brC, brC, std::plus< std::complex< double> >());
+      std::transform(brC, brC+16, tmp, brC, std::plus< std::complex< double> >());
       rgU1.outer_product(gbU2, tmp, Dirac::order_OUTER_FIXED, alpha_i, alpha_f);
-      std::transform(tmp, tmp+16, brC, brC, std::plus< std::complex< double> >());
+      std::transform(brC, brC+16, tmp, brC, std::plus< std::complex< double> >());
       rbU1.outer_product(ggU2, tmp, Dirac::order_OUTER_FIXED, alpha_i, alpha_f);
-      std::transform(tmp, tmp+16, brC, brC, std::minus< std::complex< double> >());
+      std::transform(brC, brC+16, tmp, brC, std::minus< std::complex< double> >());
       ggU1.outer_product(rbU2, tmp, Dirac::order_OUTER_FIXED, alpha_i, alpha_f);
-      std::transform(tmp, tmp+16, brC, brC, std::minus< std::complex< double> >());
+      std::transform(brC, brC+16, tmp, brC, std::minus< std::complex< double> >());
       gbU1.outer_product(rgU2, tmp, Dirac::order_OUTER_FIXED, alpha_i, alpha_f);
-      std::transform(tmp, tmp+16, brC, brC, std::plus< std::complex< double> >());
+      std::transform(brC, brC+16, tmp, brC, std::plus< std::complex< double> >());
 
       std::complex< double > bgC[16];
       std::fill_n(bgC, 16, COMPLEX_0);
       rbU1.outer_product(grU2, tmp, Dirac::order_FIRST_FIXED, alpha_i, alpha_f);
-      std::transform(tmp, tmp+16, bgC, bgC, std::plus< std::complex< double> >());
+      std::transform(bgC, bgC+16, tmp, bgC, std::plus< std::complex< double> >());
       rrU1.outer_product(gbU2, tmp, Dirac::order_FIRST_FIXED, alpha_i, alpha_f);
-      std::transform(tmp, tmp+16, bgC, bgC, std::minus< std::complex< double> >());
+      std::transform(bgC, bgC+16, tmp, bgC, std::minus< std::complex< double> >());
       gbU1.outer_product(rrU2, tmp, Dirac::order_FIRST_FIXED, alpha_i, alpha_f);
-      std::transform(tmp, tmp+16, bgC, bgC, std::minus< std::complex< double> >());
+      std::transform(bgC, bgC+16, tmp, bgC, std::minus< std::complex< double> >());
       grU1.outer_product(rbU2, tmp, Dirac::order_FIRST_FIXED, alpha_i, alpha_f);
-      std::transform(tmp, tmp+16, bgC, bgC, std::plus< std::complex< double> >());
+      std::transform(bgC, bgC+16, tmp, bgC, std::plus< std::complex< double> >());
       rbU1.outer_product(grU2, tmp, Dirac::order_OUTER_FIXED, alpha_i, alpha_f);
-      std::transform(tmp, tmp+16, bgC, bgC, std::plus< std::complex< double> >());
+      std::transform(bgC, bgC+16, tmp, bgC, std::plus< std::complex< double> >());
       rrU1.outer_product(gbU2, tmp, Dirac::order_OUTER_FIXED, alpha_i, alpha_f);
-      std::transform(tmp, tmp+16, bgC, bgC, std::minus< std::complex< double> >());
+      std::transform(bgC, bgC+16, tmp, bgC, std::minus< std::complex< double> >());
       gbU1.outer_product(rrU2, tmp, Dirac::order_OUTER_FIXED, alpha_i, alpha_f);
-      std::transform(tmp, tmp+16, bgC, bgC, std::minus< std::complex< double> >());
+      std::transform(bgC, bgC+16, tmp, bgC, std::minus< std::complex< double> >());
       grU1.outer_product(rbU2, tmp, Dirac::order_OUTER_FIXED, alpha_i, alpha_f);
-      std::transform(tmp, tmp+16, bgC, bgC, std::plus< std::complex< double> >());
+      std::transform(bgC, bgC+16, tmp, bgC, std::plus< std::complex< double> >());
 
       std::complex< double > bbC[16];
       std::fill_n(bbC, 16, COMPLEX_0);
       rrU1.outer_product(ggU2, tmp, Dirac::order_FIRST_FIXED, alpha_i, alpha_f);
-      std::transform(tmp, tmp+16, bbC, bbC, std::plus< std::complex< double> >());
+      std::transform(bbC, bbC+16, tmp, bbC, std::plus< std::complex< double> >());
       rgU1.outer_product(grU2, tmp, Dirac::order_FIRST_FIXED, alpha_i, alpha_f);
-      std::transform(tmp, tmp+16, bbC, bbC, std::minus< std::complex< double> >());
+      std::transform(bbC, bbC+16, tmp, bbC, std::minus< std::complex< double> >());
       grU1.outer_product(rgU2, tmp, Dirac::order_FIRST_FIXED, alpha_i, alpha_f);
-      std::transform(tmp, tmp+16, bbC, bbC, std::minus< std::complex< double> >());
+      std::transform(bbC, bbC+16, tmp, bbC, std::minus< std::complex< double> >());
       ggU1.outer_product(rrU2, tmp, Dirac::order_FIRST_FIXED, alpha_i, alpha_f);
-      std::transform(tmp, tmp+16, bbC, bbC, std::plus< std::complex< double> >());
+      std::transform(bbC, bbC+16, tmp, bbC, std::plus< std::complex< double> >());
       rrU1.outer_product(ggU2, tmp, Dirac::order_OUTER_FIXED, alpha_i, alpha_f);
-      std::transform(tmp, tmp+16, bbC, bbC, std::plus< std::complex< double> >());
+      std::transform(bbC, bbC+16, tmp, bbC, std::plus< std::complex< double> >());
       rgU1.outer_product(grU2, tmp, Dirac::order_OUTER_FIXED, alpha_i, alpha_f);
-      std::transform(tmp, tmp+16, bbC, bbC, std::minus< std::complex< double> >());
+      std::transform(bbC, bbC+16, tmp, bbC, std::minus< std::complex< double> >());
       grU1.outer_product(rgU2, tmp, Dirac::order_OUTER_FIXED, alpha_i, alpha_f);
-      std::transform(tmp, tmp+16, bbC, bbC, std::minus< std::complex< double> >());
+      std::transform(bbC, bbC+16, tmp, bbC, std::minus< std::complex< double> >());
       ggU1.outer_product(rrU2, tmp, Dirac::order_OUTER_FIXED, alpha_i, alpha_f);
-      std::transform(tmp, tmp+16, bbC, bbC, std::plus< std::complex< double> >());
+      std::transform(bbC, bbC+16, tmp, bbC, std::plus< std::complex< double> >());
 
       /* --------------------------------------------- */
 

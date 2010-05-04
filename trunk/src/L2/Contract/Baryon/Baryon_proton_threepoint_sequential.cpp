@@ -25,7 +25,7 @@ namespace Contract
 
     {
       Core::Propagator fw_tmp_u(fw_prop_u);
-      Core::Propagator bw_tmp_u(fw_prop_u);
+      Core::Propagator bw_tmp_u(bw_prop_u);
       bw_tmp_u.dagger();
       bw_tmp_u *= gamma5;
 
@@ -51,7 +51,7 @@ namespace Contract
 
     {
       Core::Propagator fw_tmp_d(fw_prop_d);
-      Core::Propagator bw_tmp_d(fw_prop_d);
+      Core::Propagator bw_tmp_d(bw_prop_d);
       bw_tmp_d.dagger();
       bw_tmp_d *= gamma5;
 //       // since we have to take the transpose later, we replace the above expressions by:
@@ -69,14 +69,6 @@ namespace Contract
           // fw_tmp_d *= std::complex< double> (-1, 0);
           break;
       }
-
-      Core::Propagator::iterator I_fw_tmp_d(fw_tmp_d.begin());
-      while(I_fw_tmp_d != fw_tmp_d.end())
-      {
-        (*I_fw_tmp_d).left_multiply_proton();
-        ++I_fw_tmp_d;
-      }
-      //fw_tmp_d.transpose();
 
       Core::Correlator p3p_tmp_d(L, T, bw_tmp_d.contract(fw_tmp_d));
       p3p_tmp_d.sumOverSpatialVolume();

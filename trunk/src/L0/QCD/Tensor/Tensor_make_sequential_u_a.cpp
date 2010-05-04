@@ -473,8 +473,7 @@ namespace QCD
       data_ptr[114] =  rrC[14];
       data_ptr[117] =  rrC[15];
 
-//       index = 12*Base::col_GREEN + Base::col_RED;
-      index = 12*Base::col_RED + Base::col_GREEN;
+      index = 12*Base::col_GREEN + Base::col_RED;
       data_ptr = tmp_result.d_data + index;
 
       data_ptr[  0] =  rgC[ 0];
@@ -494,8 +493,7 @@ namespace QCD
       data_ptr[114] =  rgC[14];
       data_ptr[117] =  rgC[15];
 
-//       index = 12*Base::col_BLUE + Base::col_RED;
-      index = 12*Base::col_RED + Base::col_BLUE;
+      index = 12*Base::col_BLUE + Base::col_RED;
       data_ptr = tmp_result.d_data + index;
 
       data_ptr[  0] =  rbC[ 0];
@@ -517,8 +515,7 @@ namespace QCD
 
       /* --------------------------------------------- */
 
-//       index = 12* Base::col_RED + Base::col_GREEN;
-      index = 12*Base::col_BLUE + Base::col_RED;
+      index = 12* Base::col_RED + Base::col_GREEN;
       data_ptr = tmp_result.d_data + index;
 
       data_ptr[  0] =  grC[ 0];
@@ -558,8 +555,7 @@ namespace QCD
       data_ptr[114] =  ggC[14];
       data_ptr[117] =  ggC[15];
 
-//       index = 12*Base::col_BLUE + Base::col_GREEN;
-      index = 12*Base::col_GREEN + Base::col_BLUE;
+      index = 12*Base::col_BLUE + Base::col_GREEN;
       data_ptr = tmp_result.d_data + index;
 
       data_ptr[  0] =  gbC[ 0];
@@ -581,8 +577,7 @@ namespace QCD
 
       /* --------------------------------------------- */
 
-//       index = 12*Base::col_RED + Base::col_BLUE;
-      index = 12*Base::col_BLUE + Base::col_RED;
+      index = 12*Base::col_RED + Base::col_BLUE;
       data_ptr = tmp_result.d_data + index;
 
       data_ptr[  0] =  brC[ 0];
@@ -602,8 +597,7 @@ namespace QCD
       data_ptr[114] =  brC[14];
       data_ptr[117] =  brC[15];
 
-//       index = 12*Base::col_GREEN + Base::col_BLUE;
-      index = 12*Base::col_BLUE + Base::col_GREEN;
+      index = 12*Base::col_GREEN + Base::col_BLUE;
       data_ptr = tmp_result.d_data + index;
 
       data_ptr[  0] =  bgC[ 0];

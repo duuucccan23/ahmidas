@@ -27,8 +27,12 @@ namespace Contract
                                          size_t const t_snk);
 
   void create_sequential_source_proton_u(Core::Propagator &seqSrc,
-                                         Core::Propagator const &u, Core::Propagator const &d,
+                                         Core::Propagator const &d, Core::Propagator const &u,
                                          size_t const t_snk, Base::BaryonPropagatorProjector const projector);
+
+  void create_sequential_source_proton_u(Core::Propagator * const seqSrc,
+                                         Core::Propagator const &d, Core::Propagator const &u,
+                                         size_t const t_snk);
 
   // the proton three point with a stochastic (estimate of an) all-to-all propagator at the proton sink.
   // this is a mess concerning performance since it scales vith 4-Volume^2, but provides a good cross-check

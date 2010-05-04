@@ -14,7 +14,7 @@ namespace Contract
   {
 
     // still under construction ...
-    assert(false);
+//     assert(false);
 
     assert(u.L() == d.L() && u.T() == d.T());
     if (my_projector == Base::proj_PARITY_PLUS_TM)
@@ -46,8 +46,8 @@ namespace Contract
       threepoint_UU.sumOverSpatialVolume();
       threepoint_DD.sumOverSpatialVolume();
 
-      threepoint_UU *= my_projector;
-      threepoint_DD *= my_projector;
+//       threepoint_UU *= my_projector;
+//       threepoint_DD *= my_projector;
       allthreepoints.push_back(threepoint_UU);
       allthreepoints.push_back(threepoint_DD);
     }

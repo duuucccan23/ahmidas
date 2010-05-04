@@ -8,6 +8,7 @@ SET(Sources_Tensor     Tensor/Tensor_leftMultiply_a.cpp Tensor/Tensor_leftMultip
                        Tensor/Tensor_make_sequential_d_a.cpp
                        Tensor/Tensor_make_sequential_d_b.cpp
                        Tensor/Tensor_make_sequential_u_a.cpp
+                       Tensor/Tensor_make_sequential_u_b.cpp
                        Tensor/Tensor_multiplyOuterDiracIndices.cpp
                        Tensor/Tensor_Tensor.cpp)
 SET(Sources_WeylSpinor WeylSpinor/WeylSpinor_leftMultiply_a.cpp WeylSpinor/WeylSpinor_leftMultiply_b.cpp

@@ -36,6 +36,10 @@ namespace Dirac
 
   bool Matrix::operator==(Matrix const &rhs)
   {
+    // this is the best that can happen: matrices are absolutely equal
+    if (std::equal(d_data, d_data+16, rhs.d_data))
+      return true;
+    // check whether matrices are equal up to precision
     Matrix tmp(*this);
     std::complex< double > const ZERO(0, 0);
     tmp -= rhs;
@@ -46,7 +50,5 @@ namespace Dirac
         return false;
     }
     return true;
-    // old version
-    // std::equal(d_data, d_data+16, rhs.d_data);
   }
 }

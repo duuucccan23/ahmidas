@@ -114,39 +114,51 @@ int main(int argc, char **argv)
   std::cout << p2p << std::endl;
 
 
-//   std::vector< Core::Correlator > p3p = Contract::proton_threepoint_stochastic_naive(uProp, dProp,
-//                                                           stochastic_uProp, stochastic_dProp, stochasticSource,
-//                                                           NULL, //no gauge field at the moment
-//                                                           my_operators,
-//                                                           timeslice_source, timeslice_sink);
-// 
-// // 
-//   std::vector< Core::Correlator > p3p = Contract::proton_threepoint_stochastic(uProp, dProp,
-//                                                                      stochastic_uProp, stochastic_dProp,
-//                                                                      stochasticSource,
-//                                                                      timeslice_source, timeslice_stochSource,
-//                                                                      my_operators, Base::proj_PARITY_PLUS_TM);
-// 
-//   p3p[0] *= Base::proj_PARITY_PLUS_TM;
-//   p3p[1] *= Base::proj_PARITY_PLUS_TM;
-// //   p3p[2] *= Base::proj_PARITY_PLUS_TM;
-// //   p3p[3] *= Base::proj_PARITY_PLUS_TM;
-// // 
-// //   std::cout.precision(8);
-// // 
-//   std::cout << "\nproton threepoint (naive):\n" <<std::endl;
-//   std::cout << "\n d_bar*gamma0*d" <<std::endl;
-//   for (size_t t=0; t<p3p[0].T(); t++)
-//   {
-//     if(abs(tr((p3p[0])[t])) > 1.e-100)
-//       std::cout << t << "  " << (tr((p3p[0])[t])).real() << "  " << (tr((p3p[0])[t])).imag() << std::endl;
-//   }
-//   std::cout << "\n u_bar*gamma0*u" <<std::endl;
-//   for (size_t t=0; t<p3p[1].T(); t++)
-//   {
-//     if(abs(tr((p3p[1])[t])) > 1.e-100)
-//       std::cout << t << "  " << (tr((p3p[1])[t])).real() << "  " << (tr((p3p[1])[t])).imag() << std::endl;
-//   }
+  std::vector< Core::Correlator > p3p = Contract::proton_threepoint_stochastic_naive(uProp, dProp,
+                                                          stochastic_uProp, stochastic_dProp, stochasticSource,
+                                                          NULL, //no gauge field at the moment
+                                                          my_operators,
+                                                          timeslice_source, timeslice_sink);
+  p3p[0] *= Base::proj_PARITY_PLUS_TM;
+  p3p[1] *= Base::proj_PARITY_PLUS_TM;
+  std::cout.precision(8);
+  std::cout << "\nproton threepoint (stochastic naive):\n" <<std::endl;
+  std::cout << "\n d_bar*gamma0*d" <<std::endl;
+  for (size_t t=0; t<p3p[0].T(); t++)
+  {
+    if(abs(tr((p3p[0])[t])) > 1.e-100)
+      std::cout << t << "  " << (tr((p3p[0])[t])).real() << "  " << (tr((p3p[0])[t])).imag() << std::endl;
+  }
+  std::cout << "\n u_bar*gamma0*u" <<std::endl;
+  for (size_t t=0; t<p3p[1].T(); t++)
+  {
+    if(abs(tr((p3p[1])[t])) > 1.e-100)
+      std::cout << t << "  " << (tr((p3p[1])[t])).real() << "  " << (tr((p3p[1])[t])).imag() << std::endl;
+  }
+  p3p.clear();
+
+  p3p = Contract::proton_threepoint_stochastic(uProp, dProp,
+                                               stochastic_uProp, stochastic_dProp,
+                                               stochasticSource,
+                                               timeslice_source, timeslice_stochSource,
+                                               my_operators, Base::proj_PARITY_PLUS_TM);
+
+  std::cout.precision(8);
+  std::cout << "\nproton threepoint (stochastic):\n" <<std::endl;
+  std::cout << "\n d_bar*gamma0*d" <<std::endl;
+  for (size_t t=0; t<p3p[0].T(); t++)
+  {
+    if(abs(tr((p3p[0])[t])) > 1.e-100)
+      std::cout << t << "  " << (tr((p3p[0])[t])).real() << "  " << (tr((p3p[0])[t])).imag() << std::endl;
+  }
+  std::cout << "\n u_bar*gamma0*u" <<std::endl;
+  for (size_t t=0; t<p3p[1].T(); t++)
+  {
+    if(abs(tr((p3p[1])[t])) > 1.e-100)
+      std::cout << t << "  " << (tr((p3p[1])[t])).real() << "  " << (tr((p3p[1])[t])).imag() << std::endl;
+  }
+  p3p.clear();
+
 //   std::cout << "\n d_bar*1*d" <<std::endl;
 //   for (size_t t=0; t<p3p[2].T(); t++)
 //   {
@@ -159,8 +171,8 @@ int main(int argc, char **argv)
 //     if(abs(tr((p3p[3])[t])) > 1.e-100)
 //       std::cout << t << "  " << (tr((p3p[3])[t])).real() << "  " << (tr((p3p[3])[t])).imag() << std::endl;
 //   }
-// 
-//   p3p.clear();
+/*
+  p3p.clear();*/
 
   {
     Core::Propagator sequentialSource[16] = {
@@ -180,17 +192,18 @@ int main(int argc, char **argv)
   // this is a good test for the sequential source generation
   // just multiplying the sequential source (without gamma_5 and dagger) to a propagator gives the twopoint
 
-
     Core::Propagator sequentialSource_fixedProjector(L, T);
 
     Core::Propagator dProp_mod(dProp);
-    Core::Propagator::iterator it = dProp_mod.begin();
-    while(it != dProp_mod.end())
     {
-      (*it).right_multiply_proton();
-      (*it).left_multiply_proton();
-      (*it).transposeFull();
-      ++it;
+      Core::Propagator::iterator it = dProp_mod.begin();
+      while(it != dProp_mod.end())
+      {
+        (*it).right_multiply_proton();
+        (*it).left_multiply_proton();
+        (*it).transposeFull();
+        ++it;
+      }
     }
 
     sequentialSource_fixedProjector *= std::complex< double >(0, 0);
@@ -226,14 +239,8 @@ int main(int argc, char **argv)
       Core::Correlator p2p_seq(L, T, (sequentialSource[idx_D]).contract(dProp_mod));
       p2p_seq.sumOverSpatialVolume();
       matrix1[idx_D] = (p2p_seq[4]).trace();
-      //std::cout.width(16);
-      //std::cout << (p2p_seq[4]).trace().real();
-      //std::cout.width(16);
-      //std::cout << (p2p_seq[4]).trace().imag();
-      if ((idx_D+1)%4 == 0)
-        std::cout << std::endl;
     }
-    std::cout << "\nproton twopoint from sequential source, full spin structure in twisted basis\n" << std::endl;
+    std::cout << "\nproton twopoint from sequential source (d), full spin structure in twisted basis\n" << std::endl;
     std::cout << matrix1 << std::endl;
     Dirac::Matrix matrixTest (matrix1);
     std::cout << "\nthis is the trace of the projected and traced twopoint in physical basis\n" << std::endl;
@@ -252,14 +259,12 @@ int main(int argc, char **argv)
     p2p_seq.sumOverSpatialVolume();
     std::cout << p2p_seq << "\n" << std::endl;
 
-
     matrixTest -= p2pTest;
     for(size_t idx = 0; idx < 16; idx++)
       matrixTest[idx] = abs(matrixTest[idx])/abs(p2pTest[idx]);
 
     std::cout << "\nrelative difference between correct and this solution\n" << std::endl;
     std::cout << matrixTest << std::endl;
-
 
     // now the same for the u current sequential source
 
@@ -276,38 +281,85 @@ int main(int argc, char **argv)
           if (localIndex == weave.localVolume())
             continue;
           QCD::make_sequential_u(sequentialSource_fixedProjector[localIndex], dProp_mod[localIndex], uProp[localIndex], Base::proj_PARITY_PLUS_TM);
+          QCD::make_sequential_u(tmp, dProp_mod[localIndex], uProp[localIndex]);
           for(size_t idx_D = 0; idx_D < 16; idx_D++)
+          {
             (sequentialSource[idx_D])[localIndex] = tmp[idx_D];
+          }
         }
       }
     }
 
+    for(size_t idx_D = 0; idx_D < 16; idx_D++)
+    {
+      Core::Correlator p2p_seq(L, T, (sequentialSource[idx_D]).contract(uProp));
+      p2p_seq.sumOverSpatialVolume();
+      matrix1[idx_D] = (p2p_seq[4]).trace()*0.5;
+    }
+    std::cout << "\nproton twopoint from sequential source (u), full spin structure in twisted basis\n" << std::endl;
+    std::cout << matrix1 << std::endl;
+    matrixTest = matrix1;
+    std::cout << "\nthis is the trace of the projected and traced twopoint in physical basis\n" << std::endl;
+    matrix2= gamma5*matrix1;
+    matrix2 *= std::complex< double >(0, 1);
+    matrix1 = gamma0*matrix1;
+    matrix1 += matrix2;
+    matrix1 *= 0.5;
+    std::cout.width(16);
+    std::cout << matrix1.trace().real();
+    std::cout.width(16);
+    std::cout << matrix1.trace().imag();
+    std::cout << std::endl;
     std::cout << "\nproton twopoint from sequential source (u), fixed projector\n" << std::endl;
     Core::Correlator p2p_seq_u(L, T, sequentialSource_fixedProjector.contract(uProp));
     p2p_seq_u.sumOverSpatialVolume();
     p2p_seq_u *= 0.5;
     std::cout << p2p_seq_u << "\n" << std::endl;
+
+    matrixTest -= p2pTest;
+    for(size_t idx = 0; idx < 16; idx++)
+      matrixTest[idx] = abs(matrixTest[idx])/abs(p2pTest[idx]);
+
+    std::cout << "\nrelative difference between correct and this solution\n" << std::endl;
+    std::cout << matrixTest << std::endl;
+
   }
 
+  {
 
-return 0;
+    Core::Propagator sequentialSource[16] = {
+      Core::Propagator(L, T), Core::Propagator(L, T), Core::Propagator(L, T), Core::Propagator(L, T),
+      Core::Propagator(L, T), Core::Propagator(L, T), Core::Propagator(L, T), Core::Propagator(L, T),
+      Core::Propagator(L, T), Core::Propagator(L, T), Core::Propagator(L, T), Core::Propagator(L, T),
+      Core::Propagator(L, T), Core::Propagator(L, T), Core::Propagator(L, T), Core::Propagator(L, T)};
+
+    Core::Propagator dProp_mod(dProp);
+    Core::Propagator::iterator it = dProp_mod.begin();
+    while(it != dProp_mod.end())
+    {
+      (*it).right_multiply_proton();
+      (*it).left_multiply_proton();
+      (*it).transposeFull();
+      ++it;
+    }
+
+    Contract::create_sequential_source_proton_d(sequentialSource, uProp, uProp, timeslice_sink);
+    Tool::IO::save(&(sequentialSource[0]), files[9], Tool::IO::fileSCIDAC);
+
+    Contract::create_sequential_source_proton_u(sequentialSource, dProp, uProp, timeslice_sink);
+    Tool::IO::save(&(sequentialSource[0]), files[10], Tool::IO::fileSCIDAC);
+  }
 
   Core::Propagator sequentialSource(L, T);
   sequentialSource *= std::complex< double >(0, 0);
 
   Contract::create_sequential_source_proton_d(sequentialSource, uProp, uProp, timeslice_sink, Base::proj_PARITY_PLUS_TM_STAR);
 
-//   std::cout << "sequential source (d)\n\n" << sequentialSource << std::endl;
-
   Tool::IO::save(&sequentialSource, files[5], Tool::IO::fileSCIDAC);
 
   Contract::create_sequential_source_proton_u(sequentialSource, uProp, dProp, timeslice_sink, Base::proj_PARITY_PLUS_TM_STAR);
 
-//   std::cout << "sequential source (u)\n\n" << sequentialSource << std::endl;
-
   Tool::IO::save(&sequentialSource, files[6], Tool::IO::fileSCIDAC);
-
-
 
   std::string const inversion_command_d ("../test/invert -f ../test/invert_input_d >/dev/null");
   std::string const inversion_command_u ("../test/invert -f ../test/invert_input_u >/dev/null");

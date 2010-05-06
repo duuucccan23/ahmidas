@@ -50,6 +50,10 @@ ADD_EXECUTABLE(sequential_sources sequential_sources.cpp)
 TARGET_LINK_LIBRARIES(sequential_sources SU3 QCD IO Base Core Weave Contract)
 ADD_TEST(generate_sequential_source sequential_sources)
 
+ADD_EXECUTABLE(smearing smearing.cpp)
+TARGET_LINK_LIBRARIES(smearing SU3 QCD IO Base Core Weave Smear)
+ADD_TEST(smearing_test smearing)
+
 # IF(USE_MPI)
 # ADD_EXECUTABLE(MPIstartstop MPIstartstop.cpp)
 # ADD_TEST(MPIstarting_stopping MPIstartstop)

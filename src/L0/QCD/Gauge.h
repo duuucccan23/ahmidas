@@ -30,6 +30,10 @@ namespace QCD
       void rightMultiply(Gauge const &other);
       void rightMultiply(SU3::Matrix const &other);
 
+      bool equals(Gauge const &other, double const relativePrecision) const;
+
+      bool operator==(Gauge const &other) const;
+
       template< typename T >
       Gauge &operator+=(T const &rhand);
 
@@ -47,6 +51,8 @@ namespace QCD
 
       size_t size() const;
   };
+
+  std::ostream &operator<<(std::ostream &out, Gauge const &gauge);
 }
 
 #include "Gauge/Gauge.inlines"

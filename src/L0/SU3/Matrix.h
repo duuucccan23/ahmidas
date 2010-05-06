@@ -44,8 +44,12 @@ namespace SU3
       Matrix(Matrix const &other);
       explicit Matrix(hcMatrix const &other);
 
+      bool operator==(Matrix const &other) const;
+
       Matrix &operator=(Matrix const &other);
       Matrix &operator=(hcMatrix const &other);
+
+      bool equals(Matrix const &other, double const relativePrecision) const;
 
       static Matrix const &identity();
       static Matrix const &zero();

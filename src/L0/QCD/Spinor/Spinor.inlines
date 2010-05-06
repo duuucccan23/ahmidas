@@ -2,17 +2,17 @@ namespace QCD
 {
   inline Spinor::Spinor()
   {}
-  
+
   inline Spinor::Spinor(SU3::Vector const &value)
   {
     std::fill(d_data, d_data + 4, value);
   }
-  
+
   inline Spinor::Spinor(Spinor const &other)
   {
     std::copy(other.d_data, other.d_data + 4, d_data);
   }
-  
+
   inline Spinor::Spinor(double const *data)
   {
     std::copy(data, data + 24, reinterpret_cast< double* >(d_data));
@@ -38,7 +38,7 @@ namespace QCD
       *iter += rhand;
     return *this;
   }
-      
+
   template< >
   inline Spinor &Spinor::operator+=(Spinor const &rhand)
   {
@@ -53,16 +53,16 @@ namespace QCD
     for (SU3::Vector *iter = d_data; iter < d_data + 4; ++iter)
       *iter -= rhand;
     return *this;
-  }      
-  
+  }
+
   template< >
   inline Spinor &Spinor::operator-=(Spinor const &rhand)
   {
     for (size_t ctr = 0; ctr < 4; ++ctr)
       d_data[ctr] -= rhand.d_data[ctr];
     return *this;
-  }      
-      
+  }
+
   template< typename T >
   inline Spinor &Spinor::operator*=(T const &rhand)
   {
@@ -78,12 +78,12 @@ namespace QCD
       *iter /= rhand;
     return *this;
   }
-      
+
   inline void Spinor::leftMultiply(SU3::Matrix const &mat)
   {
     for (SU3::Vector *iter = d_data; iter < d_data + 4; ++iter)
       iter->leftMultiply(mat);
-  }      
+  }
 
   inline void Spinor::leftMultiply(SU3::hcMatrix const &mat)
   {
@@ -95,7 +95,7 @@ namespace QCD
   {
     return d_data[index];
   }
-  
+
   inline SU3::Vector const &Spinor::operator[](size_t const index) const
   {
     return d_data[index];
@@ -105,17 +105,17 @@ namespace QCD
   {
     return d_data[dir][col];
   }
-  
+
   inline std::complex< double > const &Spinor::operator()(Base::DiracIndex const dir, Base::ColourIndex const col) const
   {
-    return d_data[dir][col];    
+    return d_data[dir][col];
   }
-  
+
   inline WeylSpinor Spinor::upper()
   {
     return WeylSpinor(d_data);
   }
-  
+
   inline WeylSpinor Spinor::lower()
   {
     return WeylSpinor(d_data + 2);
@@ -126,7 +126,7 @@ namespace QCD
     for (SU3::Vector *iter = d_data; iter < d_data + 4; ++iter)
       iter->setToRandom();
   }
-  
+
   inline void Spinor::setToZero()
   {
     for (SU3::Vector *iter = d_data; iter < d_data + 4; ++iter)
@@ -136,12 +136,6 @@ namespace QCD
   inline size_t Spinor::size() const
   {
     return 12;
-  }
-
-  inline std::ostream &operator<<(std::ostream &out, Spinor const &spinor)
-  {
-    out << spinor.d_data[0] << spinor.d_data[1] << spinor.d_data[2] << spinor.d_data[3] << std::endl;
-    return out;
   }
 
   inline std::complex< double > innerProduct(Spinor const &left, Spinor const &right)

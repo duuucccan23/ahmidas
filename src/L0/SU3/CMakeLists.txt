@@ -4,6 +4,7 @@ SET(Sources_Matrix Matrix/Matrix_givens.cpp Matrix/Matrix_cout_operator_lshift.c
                    Matrix/Matrix_reunitarize.cpp Matrix/Matrix_rightMultiply_a.cpp
                    Matrix/Matrix_rightMultiply_b.cpp Matrix/Matrix.cpp
                    Matrix/Matrix_operator_addeq.cpp Matrix/Matrix_operator_subeq.cpp
+                   Matrix/Matrix_operator_eqeq.cpp  Matrix/Matrix_equals.cpp
                    Matrix/Matrix_operator_assign.cpp)
 SET(Sources_Vector Vector/Vector_leftMultiply_a.cpp Vector/Vector_leftMultiply_b.cpp
                    Vector/Vector.cpp Vector/Vector_cout_operator_lshift.cpp Vector/Vector_random.cpp)

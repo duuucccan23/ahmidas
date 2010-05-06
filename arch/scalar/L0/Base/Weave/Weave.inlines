@@ -72,6 +72,10 @@ namespace Base
     std::copy(data_send, data_send + count*d_T, data_recv);
   }
 
+
+  inline void Weave::barrier() const
+  {}
+
   template< typename Element >
   inline void Weave::broadcast(Element *, size_t const, int) const
   {}

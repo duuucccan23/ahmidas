@@ -18,7 +18,7 @@ namespace Smear
 
       void smear(Core::Field< QCD::Spinor > *spinorField, Core::Field< QCD::Gauge > &gaugeField) const;
 
-      void smear(Core::Field< QCD::Spinor > *spinorField, Core::Field< QCD::Gauge > &gaugeField, size_t iterations) const;
+      void smear(Core::Field< QCD::Spinor > *spinorField, Core::Field< QCD::Gauge > &gaugeField, size_t const iterations) const;
 
 //       void smear(Source::Point< L, T > *source, Core::Field< QCD::Gauge > &gaugeField, Base::ColourIndex, Base::DiracIndex) const;
 // 

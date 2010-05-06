@@ -95,6 +95,12 @@ namespace Base
             + fromGlobal(z, Base::idx_Z) * localSurface(Base::idx_Z) + fromGlobal(t, Base::idx_T) * localSurface(Base::idx_T));
   }
 
+
+  void Weave:barrier() const
+  {
+    d_grid.grid().Barrier();
+  }
+
   template< typename Element >
   inline void Weave::broadcast(Element *data, size_t const count, int root) const
   {

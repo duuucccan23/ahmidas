@@ -2,7 +2,7 @@
 
 std::ostream &SU3::operator<<(std::ostream &out, SU3::Matrix const &mat)
 {
-  out << std::scientific << std::setprecision(2) << std::showpos
+  out << std::scientific << std::setprecision(3) << std::showpos
       << "[ " << mat.d_data[0].real() <<  "  " << mat.d_data[0].imag() << " * i   "
               << mat.d_data[1].real() <<  "  " << mat.d_data[1].imag() << " * i   "
               << mat.d_data[2].real() <<  "  " << mat.d_data[2].imag() << " * i ]\n"

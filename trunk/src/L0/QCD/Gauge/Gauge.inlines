@@ -76,6 +76,23 @@ namespace QCD
       d_data[ctr].rightMultiply(other.d_data[ctr]);
   }
 
+  inline bool Gauge::equals(Gauge const &other, double const relativePrecision) const
+  {
+    return ((d_data[0]).equals(other.d_data[0], relativePrecision) &&
+            (d_data[1]).equals(other.d_data[1], relativePrecision) &&
+            (d_data[2]).equals(other.d_data[2], relativePrecision) &&
+            (d_data[3]).equals(other.d_data[3], relativePrecision));
+  }
+
+  inline bool Gauge::operator==(Gauge const &other) const
+  {
+    return (d_data[0] == other.d_data[0] &&
+            d_data[1] == other.d_data[1] &&
+            d_data[2] == other.d_data[2] &&
+            d_data[3] == other.d_data[3]);
+  }
+
+
   template< typename T >
   inline Gauge &Gauge::operator+=(T const &rhand)
   {

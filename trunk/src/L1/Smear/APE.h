@@ -14,7 +14,7 @@ namespace Smear
       APE(double alpha);
 
       void smear(Core::Field< QCD::Gauge > &field) const;
-      void smear(Core::Field< QCD::Gauge > &field, size_t iterations) const;
+      void smear(Core::Field< QCD::Gauge > &field, size_t const iterations) const;
   };
 }
 

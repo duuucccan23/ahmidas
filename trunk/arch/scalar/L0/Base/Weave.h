@@ -47,6 +47,9 @@ namespace Base
       void sumOverTimeSlices(std::complex< double > const *data_send,
                              std::complex< double > *data_recv, size_t const count=1) const;
 
+      // this function does not do anything in the scalar code
+      void barrier() const;
+
       template< typename Element >
       void broadcast(Element *data, size_t const count, int root) const;
 

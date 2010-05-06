@@ -51,6 +51,9 @@ namespace Base
       void sumOverTimeSlices(std::complex< double > const *data_send,
                              std::complex< double > *data_recv, size_t const count=1) const;
 
+      // a wrapper for the MPI::Barrier function
+      void barrier() const;
+
       template< typename Element >
       inline void broadcast(Element *data, size_t const count, int root) const;
 

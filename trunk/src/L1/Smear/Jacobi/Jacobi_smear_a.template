@@ -5,8 +5,6 @@ namespace Smear
     Core::Field< QCD::Spinor > neighbourSpinor(*spinorField);
     neighbourSpinor *= d_kappa;
 
-    (*spinorField) *= d_weight;
-
     // Sum the field with the parallelly transported neighbours.
     (*spinorField) += Transport::step(neighbourSpinor, gaugeField, Base::idx_X, Base::dir_DOWN);
     (*spinorField) += Transport::step(neighbourSpinor, gaugeField, Base::idx_Y, Base::dir_DOWN);
@@ -15,5 +13,7 @@ namespace Smear
     (*spinorField) += Transport::step(neighbourSpinor, gaugeField, Base::idx_X, Base::dir_UP);
     (*spinorField) += Transport::step(neighbourSpinor, gaugeField, Base::idx_Y, Base::dir_UP);
     (*spinorField) += Transport::step(neighbourSpinor, gaugeField, Base::idx_Z, Base::dir_UP);
+
+    (*spinorField) *= d_weight;
   }
 }

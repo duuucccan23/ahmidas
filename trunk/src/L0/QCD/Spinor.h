@@ -4,6 +4,7 @@
 #include <complex>
 #include <iostream>
 
+#include <L0/Base/Base.h>
 #include <L0/Dirac/Gamma.h>
 #include <L0/Dirac/Sigma.h>
 #include <L0/QCD/WeylSpinor.h>
@@ -35,6 +36,8 @@ namespace QCD
 
       template< typename T >
       Spinor &operator/=(T const &rhand);
+
+      bool equals(Spinor const &other, double const relPrecision) const;
 
       void leftMultiply(SU3::Matrix const &mat);
       void leftMultiply(SU3::hcMatrix const &mat);

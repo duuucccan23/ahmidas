@@ -2,7 +2,7 @@
 
 namespace Smear
 {
-  void APE::smear(Core::Field< QCD::Gauge > &field, size_t iterations) const
+  void APE::smear(Core::Field< QCD::Gauge > &field, size_t const iterations) const
   {
     for (size_t ctr = 0; ctr < iterations; ++ctr)
       smear(field);

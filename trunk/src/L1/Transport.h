@@ -12,11 +12,11 @@ namespace Transport
 
   Core::Field< QCD::Spinor > step(Core::Field< QCD::Spinor > const &spinor,
       Core::Field< QCD::Gauge > &gauge,
-      Base::SpaceTimeIndex idx, Base::Direction dir);
+      Base::SpaceTimeIndex const idx, Base::Direction const dir);
 
   Core::Field< QCD::Spinor > range(Core::Field< QCD::Spinor > const &spinor,
       Core::Field< QCD::Gauge > &gauge,
-      Base::SpaceTimeIndex idx, Base::Direction dir, size_t steps);
+      Base::SpaceTimeIndex const idx, Base::Direction const dir, size_t const steps);
 }
 
 #include "Transport/Transport_step.template"

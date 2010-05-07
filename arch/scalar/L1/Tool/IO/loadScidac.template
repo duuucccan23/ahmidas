@@ -8,6 +8,7 @@ void Tool::IO::loadScidac(Core::Field< Element > *field, std::string const &file
   if (reader.fail())
   {
     std::cerr << "Lime reader could not find the record, check path and file, and check lime contents of file.\nField unchanged!.\n";
+    std::cerr << "File: " << filename << std::endl;
     exit(EXIT_FAILURE);
     return;
   }
@@ -47,6 +48,7 @@ void Tool::IO::loadScidac(Core::Field< Element > *field, std::string const &file
   if (reader.fail())
   {
     std::cerr << "Lime reader could not find the record, check path and file, and check lime contents of file.\nField unchanged!.\n";
+    std::cerr << "File: " << filename << std::endl;
     exit(EXIT_FAILURE);
     return;
   }

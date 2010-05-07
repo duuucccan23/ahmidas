@@ -61,7 +61,7 @@ namespace Core
       template < size_t Index >
       void rightMultiply(Dirac::Gamma< Index > const& gamma);
 
-      Propagator &smearJacobi(double const kappa, size_t const iterations, Field< QCD::Gauge > &gauge_field);
+      Propagator &smearJacobi(double const alpha, size_t const iterations, Field< QCD::Gauge > &gauge_field);
 
       // needed for meson contractions
       Core::Field< Dirac::Matrix > *operator*(Propagator const &other) const;

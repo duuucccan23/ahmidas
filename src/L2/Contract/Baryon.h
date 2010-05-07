@@ -5,6 +5,7 @@
 #include <L0/Core/Field.h>
 #include <L0/Core/Propagator.h>
 #include <L0/Core/Correlator.h>
+#include <L1/Smear.h>
 
 namespace Contract
 {
@@ -12,27 +13,82 @@ namespace Contract
   Core::Correlator proton_twopoint(Core::Propagator const &u1, Core::Propagator const &u2, Core::Propagator const &d,
                                    Base::BaryonPropagatorProjector const projector);
 
+  /* ---------------------------------------------------------------------------------------------- */
 
-  void create_sequential_source_proton_d(Core::Propagator &seqSrc,
-                                         Core::Propagator const &u1, Core::Propagator const &u2,
-                                         size_t const t_snk, Base::BaryonPropagatorProjector const projector);
+  // keep full source and sink Dirac index dependence of the proton
 
-  // this only does the precontraction
-  void create_sequential_source_proton_d_pure(Core::Propagator &seqSrc,
-                                         Core::Propagator const &u1, Core::Propagator const &u2,
-                                         size_t const t_snk, Base::BaryonPropagatorProjector const projector);
 
   void create_sequential_source_proton_d(Core:: Propagator * const seqSrc,
                                          Core::Propagator const &u1, Core::Propagator const &u2,
                                          size_t const t_snk);
 
+  void create_sequential_source_proton_u(Core::Propagator * const seqSrc,
+                                         Core::Propagator const &d, Core::Propagator const &u,
+                                         size_t const t_snk);
+
+
+  /* ---------------------------------------------------------------------------------------------- */
+
+  // standard versions, projector inserted at sink, trace is taken
+
+
+  void create_sequential_source_proton_d(Core::Propagator &seqSrc,
+                                         Core::Propagator const &u1, Core::Propagator const &u2,
+                                         size_t const t_snk, Base::BaryonPropagatorProjector const projector);
+
   void create_sequential_source_proton_u(Core::Propagator &seqSrc,
                                          Core::Propagator const &d, Core::Propagator const &u,
                                          size_t const t_snk, Base::BaryonPropagatorProjector const projector);
 
-  void create_sequential_source_proton_u(Core::Propagator * const seqSrc,
-                                         Core::Propagator const &d, Core::Propagator const &u,
+
+  /* ---------------------------------------------------------------------------------------------- */
+
+  // versions with smearing, expects (smeared) gauge field and source- and sink-smeared propagators.
+  // the sequential source is smeared in order to have a fully smeared proton at the sink.
+
+
+  void create_sequential_source_proton_d(Core:: Propagator &seqSrc,
+                                        Core::Propagator const &u1, Core::Propagator const &u2,
+                                        Core::Field < QCD::Gauge > &gauge_field,
+                                        Smear::fermionFieldSmearing const smearing,
+                                        // smearing: iterations and parameter
+                                        size_t const nSmear, double const pSmear,
+                                        size_t const t_snk, Base::BaryonPropagatorProjector const proj);
+
+  void create_sequential_source_proton_u(Core:: Propagator &seqSrc,
+                                         Core::Propagator const &d,
+                                         Core::Propagator const &u,
+                                         Core::Field < QCD::Gauge > &gauge_field,
+                                         Smear::fermionFieldSmearing const smearing,
+                                         // smearing: iterations and parameter
+                                         size_t const nSmear, double const pSmear,
+                                         size_t const t_snk, Base::BaryonPropagatorProjector const proj);
+
+
+  // accordingly with free proton Dirac indices:
+
+
+  void create_sequential_source_proton_d(Core:: Propagator * const seqSrc,
+                                        Core::Propagator const &u1, Core::Propagator const &u2,
+                                        Core::Field < QCD::Gauge > &gauge_field,
+                                        Smear::fermionFieldSmearing const smearing,
+                                        // smearing: iterations and parameter
+                                        size_t const nSmear, double const pSmear,
+                                        size_t const t_snk);
+
+  void create_sequential_source_proton_u(Core:: Propagator * const seqSrc,
+                                         Core::Propagator const &d,
+                                         Core::Propagator const &u,
+                                         Core::Field < QCD::Gauge > &gauge_field,
+                                         Smear::fermionFieldSmearing const smearing,
+                                         // smearing: iterations and parameter
+                                         size_t const nSmear, double const pSmear,
                                          size_t const t_snk);
+
+
+  /* ---------------------------------------------------------------------------------------------- */
+
+
 
   // the proton three point with a stochastic (estimate of an) all-to-all propagator at the proton sink.
   // this is a mess concerning performance since it scales vith 4-Volume^2, but provides a good cross-check

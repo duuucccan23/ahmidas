@@ -6,6 +6,9 @@ namespace Base
     : d_L(L), d_T(T)
   {
     // NOTE This forces intialization of s_agent - should be really fixed.
+
+//     hopefully the things done in the constructor and destructor of
+//     s_agent will do the job
     std::cout << "Fix this! Value is still " << s_agent.val << std::endl;;
     size_t gridSize = static_cast< size_t >(MPI::COMM_WORLD.Get_size());
     if (totalVolume() % gridSize) // No balanced distribution available

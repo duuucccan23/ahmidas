@@ -8,29 +8,29 @@ namespace Tool
   }
 }
 
+
 void Tool::IO::save(Core::Field< QCD::Gauge > *field, std::string const &filename, filetype type)
 {
-   switch(type) {
-   case Tool::IO::fileSCIDAC :
-      Tool::IO::saveScidac(*field, filename);
+  switch(type) {
+  case fileILDG :
+      // at current status, this will give an error message and
+      // exit, since not implemented yet
+      saveILDG(*field, filename);
       break;
-   case Tool::IO::fileILDG :
-      Tool::IO::saveILDG(*field, filename);
+  default :
       break;
-   default :
-      break;
-   }
+  }
 }
 
 void Tool::IO::save(Core::Field< QCD::Spinor > *field, std::string const &filename, filetype type)
 {
-   switch(type) {
-   case Tool::IO::fileSCIDAC :
-      Tool::IO::saveScidac(*field, filename);
+  switch(type) {
+  case fileSCIDAC :
+      saveScidac(*field, filename);
       break;
-   default :
+  default :
       break;
-   }
+  }
 }
 
 void Tool::IO::save(Core::Propagator *propagator, std::vector< std::string> const &filenames, filetype type)
@@ -43,7 +43,6 @@ void Tool::IO::save(Core::Propagator *propagator, std::vector< std::string> cons
       break;
   }
 }
-
 
 // a lot of data is copied back and forth - this has to be reviewed if more efficiency is desired
 void Tool::IO::saveScidac(Core::Propagator *propagator, std::vector< std::string> const &filenames)
@@ -102,7 +101,7 @@ void Tool::IO::saveScidac(Core::Propagator *propagator, std::vector< std::string
   }
   else
   {
-    std::cerr << "Error in void Tool::IO::saveScidac(Core::Propagator *, std::vector< std::string> const &):"
+    std::cerr << "Error in void Tool::IO::loadScidac(Core::Propagator *, std::vector< std::string> const &):"
               << std::endl;
     std::cerr << "filenames.size() should be 12" << std::endl;
     exit(1);

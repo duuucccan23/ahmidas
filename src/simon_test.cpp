@@ -41,10 +41,10 @@ int main(int argc, char **argv)
   double kappa = floats["kappa"];
   double mu    = floats["mu"];
   double const APE_alpha      = floats["APE_param"];
-  size_t const APE_iterations = floats["APE_steps"];
+  size_t const APE_iterations = size_t(floats["APE_steps"]);
 
   double const Jac_alpha      = floats["Jac_param"];
-  size_t const Jac_iterations = floats["Jac_steps"];
+  size_t const Jac_iterations = size_t(floats["Jac_steps"]);
 
   std::cout << "kappa = " << kappa << ", mu = " << mu << std::endl;
   std::cout << "APE    smearing: parameter = " << APE_alpha << ", iterations = " << APE_iterations << std::endl;

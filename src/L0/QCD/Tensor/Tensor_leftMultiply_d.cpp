@@ -1,14 +1,12 @@
 #include "Tensor.ih"
 
-QCD::Tensor &QCD::Tensor::leftMultiply(SU3::Matrix const &mat)
+QCD::Tensor &QCD::Tensor::leftMultiply(SU3::hcMatrix const &mat)
 {
   std::complex< double > result0[144];
   std::complex< double > result1[144];
   std::complex< double > result2[144];
 
-  // this is supposed to speed up the calculation, since it enables us to use std::inner_product(...)
-  // when multiplying the colums of the original matrix
-  SU3::Matrix const mat_T = mat.transpose();
+  SU3::Matrix const mat_T(SU3::Matrix(mat).transpose());
 
   for (size_t idx=0; idx<144; idx+=36)
   {

@@ -1,3 +1,5 @@
+#include "Jacobi.ih"
+
 namespace Smear
 {
   void Jacobi::smear(Core::Field< QCD::Spinor > *spinorField, Core::Field< QCD::Gauge > &gaugeField) const

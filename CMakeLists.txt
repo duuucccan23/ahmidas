@@ -41,4 +41,4 @@ ADD_EXECUTABLE(main src/main.cpp)
 TARGET_LINK_LIBRARIES(main Dirac SU3)
 
 ADD_EXECUTABLE(simon_test src/simon_test.cpp)
-TARGET_LINK_LIBRARIES(simon_test SU3 QCD IO Base Core Dirac Weave Contract Input)
+TARGET_LINK_LIBRARIES(simon_test SU3 QCD IO Base Core Dirac Weave Contract Input Smear)

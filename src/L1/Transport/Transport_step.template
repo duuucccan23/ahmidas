@@ -1,4 +1,4 @@
-Core::Field< QCD::Spinor > Transport::step(Core::Field< QCD::Spinor > const &spinor,
+inline Core::Field< QCD::Spinor > Transport::step(Core::Field< QCD::Spinor > const &spinor,
                                            Core::Field< QCD::Gauge > &gauge,
                                            Base::SpaceTimeIndex idx, Base::Direction dir)
 {
@@ -11,6 +11,24 @@ Core::Field< QCD::Spinor > Transport::step(Core::Field< QCD::Spinor > const &spi
   else
   {
     result.leftMultiply(gauge.component< SU3::Matrix >(idx).dagger());
+    result.shift(idx, dir);
+  }
+  return result;
+}
+
+inline Core::Field< QCD::Tensor > Transport::step(Core::Field< QCD::Tensor > const &tensor,
+                                           Core::Field< QCD::Gauge > &gauge,
+                                           Base::SpaceTimeIndex const idx, Base::Direction const dir)
+{
+  Core::Field< QCD::Tensor > result(tensor);
+  if (dir == Base::dir_DOWN)
+  {
+    result.shift(idx, dir);
+    result.rightMultiply(gauge.component< SU3::Matrix >(idx));
+  }
+  else
+  {
+    result.rightMultiply(gauge.component< SU3::Matrix >(idx).dagger());
     result.shift(idx, dir);
   }
   return result;

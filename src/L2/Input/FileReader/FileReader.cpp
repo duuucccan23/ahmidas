@@ -171,22 +171,27 @@ namespace Input
         positions.push_back(pos);
         continue;
       }
-      if((*It).first == "kappa")
-      {
-        double tmp;
-        std::istringstream iss((*It).second);
-        iss >> tmp;
-        floats.insert(make_pair((*It).first, tmp));
-        continue;
-      }
-      if((*It).first == "mu")
-      {
-        double tmp;
-        std::istringstream iss((*It).second);
-        iss >> tmp;
-        floats.insert(make_pair((*It).first, tmp));
-        continue;
-      }
+      double tmp;
+      std::istringstream iss((*It).second);
+      iss >> tmp;
+      floats.insert(make_pair((*It).first, tmp));
+
+//       if((*It).first == "kappa")
+//       {
+//         double tmp;
+//         std::istringstream iss((*It).second);
+//         iss >> tmp;
+//         floats.insert(make_pair((*It).first, tmp));
+//         continue;
+//       }
+//       if((*It).first == "mu")
+//       {
+//         double tmp;
+//         std::istringstream iss((*It).second);
+//         iss >> tmp;
+//         floats.insert(make_pair((*It).first, tmp));
+//         continue;
+//       }
     }
     for (size_t iF=0; iF<files.size(); iF++)
     {

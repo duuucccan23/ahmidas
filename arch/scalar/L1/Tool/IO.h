@@ -53,10 +53,11 @@ namespace Tool
       Scidacinfo(Lime::Reader &reader);
     };
 
-    void load(Core::Field< QCD::Gauge > *field, std::string const &filename, Tool::IO::filetype);
+    void load(Core::Field< QCD::Gauge >  *field, std::string const &filename, Tool::IO::filetype);
     void load(Core::Field< QCD::Spinor > *field, std::string const &filename, Tool::IO::filetype);
     void load(Core::Field< QCD::Spinor > *field, std::string const &filename, Tool::IO::filetype, size_t const precision);
 
+    void save(Core::Field< QCD::Gauge >  *field, std::string const &filename, Tool::IO::filetype type);
     void save(Core::Field< QCD::Spinor > *field, std::string const &filename, Tool::IO::filetype type);
 
     void load(Core::Propagator *propagator, std::vector< std::string > const &filenames,

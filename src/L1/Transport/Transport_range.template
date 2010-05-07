@@ -1,5 +1,5 @@
 
-Core::Field< QCD::Spinor > Transport::range(Core::Field< QCD::Spinor > const &spinor,
+inline Core::Field< QCD::Spinor > Transport::range(Core::Field< QCD::Spinor > const &spinor,
                                                   Core::Field< QCD::Gauge > &gauge,
                                                   Base::SpaceTimeIndex idx, Base::Direction dir, size_t steps)
 {

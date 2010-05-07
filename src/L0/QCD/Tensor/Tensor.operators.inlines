@@ -1,14 +1,14 @@
 namespace QCD
 {
 
-  inline Spinor &Tensor::operator()(size_t const idx)
+  inline Spinor &Tensor::operator[](short const component)
   {
-    return *(reinterpret_cast< Spinor * > (d_data + idx*12));
+    return *(reinterpret_cast< Spinor * > (d_data + component*12));
   }
 
-  inline Spinor const &Tensor::operator()(size_t const idx) const
+  inline Spinor const &Tensor::operator[](short const component) const
   {
-    return *(reinterpret_cast< Spinor const * > (d_data + idx*12));
+    return *(reinterpret_cast< Spinor const * > (d_data + component*12));
   }
 
   inline Tensor::Tensor(std::complex< double > *data)
@@ -16,12 +16,12 @@ namespace QCD
     std::copy(data, data + 144, d_data);
   }
 
-  inline std::complex< double > &Tensor::operator[](size_t const idx)
+  inline std::complex< double > &Tensor::operator()(size_t const idx)
   {
     return d_data[idx];
   }
 
-  inline std::complex< double > const &Tensor::operator[](size_t const idx) const
+  inline std::complex< double > const &Tensor::operator()(size_t const idx) const
   {
     return d_data[idx];
   }

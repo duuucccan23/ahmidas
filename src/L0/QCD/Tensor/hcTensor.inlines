@@ -14,9 +14,9 @@ namespace QCD
   }
 
   // NOTE This is slower than alternative operations... Try coordinate indexing?
-  inline std::complex< double > hcTensor::operator[](size_t const idx) const
+  inline std::complex< double > hcTensor::operator()(size_t const idx) const
   {
-    return std::conj(d_parent[(idx % 12) * 12 + (idx / 12)]);
+    return std::conj(d_parent((idx % 12) * 12 + (idx / 12)));
   }
 
   inline size_t hcTensor::size() const

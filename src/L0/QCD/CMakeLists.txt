@@ -1,8 +1,9 @@
 SET(Sources_Gauge      Gauge/Gauge_cout_operator_lshift.cpp)
 SET(Sources_Spinor     Spinor/Spinor_equals.cpp Spinor/Spinor_cout_operator_lshift.cpp)
-SET(Sources_Tensor     Tensor/Tensor_leftMultiply_a.cpp Tensor/Tensor_leftMultiply_b.cpp
-                       Tensor/Tensor_leftMultiply_c.cpp Tensor/Tensor_rightMultiply_a.cpp
-                       Tensor/Tensor_rightMultiply_b.cpp Tensor/Tensor_rightMultiply_c.cpp
+SET(Sources_Tensor     Tensor/Tensor_leftMultiply_a.cpp  Tensor/Tensor_leftMultiply_b.cpp
+                       Tensor/Tensor_leftMultiply_c.cpp  Tensor/Tensor_leftMultiply_d.cpp
+                       Tensor/Tensor_rightMultiply_a.cpp Tensor/Tensor_rightMultiply_b.cpp
+                       Tensor/Tensor_rightMultiply_c.cpp Tensor/Tensor_rightMultiply_d.cpp
                        Tensor/Tensor_operator_assign_a.cpp Tensor/Tensor_operator_assign_b.cpp
                        Tensor/Tensor_getDiracMatrix_a.cpp Tensor/Tensor_getDiracMatrix_b.cpp
                        Tensor/Tensor_getDiracMatrix_c.cpp Tensor/Tensor_getDiracMatrix_d.cpp

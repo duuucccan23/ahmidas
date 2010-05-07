@@ -50,11 +50,11 @@ namespace QCD
       Tensor &operator=(Tensor const &other);
       Tensor &operator=(hcTensor const &other);
 
-      Spinor &operator()(size_t const idx);
-      Spinor const &operator()(size_t const idx) const;
+      Spinor &operator[](short const component);
+      Spinor const &operator[](short const component) const;
 
-      std::complex< double > &operator[](size_t const idx);
-      std::complex< double > const &operator[](size_t const idx) const;
+      std::complex< double > &operator()(size_t const idx);
+      std::complex< double > const &operator()(size_t const idx) const;
 
       std::complex< double > &operator()(size_t const dirSink, size_t const colSink,
                                          size_t const dirSource, size_t const colSource);
@@ -109,6 +109,9 @@ namespace QCD
 
       Tensor &leftMultiply(SU3::Matrix const &mat);
       Tensor &rightMultiply(SU3::Matrix const &mat);
+
+      Tensor &leftMultiply(SU3::hcMatrix const &mat);
+      Tensor &rightMultiply(SU3::hcMatrix const &mat);
 
       //those functions are for construction of baryon fields
       void left_multiply_proton();
@@ -196,9 +199,9 @@ namespace QCD
     public:
       hcTensor(hcTensor const &parent);
 
-      Spinor operator()(size_t const idx) const;
+      Spinor operator[](size_t const idx) const;
 
-      std::complex< double > operator[](size_t const idx) const;
+      std::complex< double > operator()(size_t const idx) const;
 
       Tensor const &dagger() const;
 

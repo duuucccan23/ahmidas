@@ -1,0 +1,75 @@
+template< typename Element >
+void Tool::IO::saveScidac(Core::Field< Element > const &field, std::string const &filename)
+{
+  //  under construction
+  assert(false);
+
+  Base::Weave weave(field.L(), field.T());
+
+  weave.barrier();
+
+  if (weave.dim(Base::idx_X) > 1 ||
+      weave.dim(Base::idx_Y) > 1 ||
+      weave.dim(Base::idx_Z) > 1)
+  {
+    std::cerr << "parallel writing does not work for parallalization in spatial directions" << std::endl;
+    exit(1);
+  }
+
+  int const nprocs((weave.d_grid.grid()).Get_size());
+  int const rank((weave.d_grid.grid()).Get_rank());
+
+  int const root_rank = 0;
+
+  assert (nprocs == int(weave.dim(Base::idx_T)));
+
+  unsigned long elem_offset(weave.globalVolume());
+
+  // each node has to find his own offset
+  for (size_t my_offset = 0; my_offset < weave.globalVolume();
+       my_offset += weave.localVolume())
+  {
+    if ((unsigned int)(rank) == weave.d_grid.rank(my_offset))
+    {
+      elem_offset = (unsigned long)(my_offset);
+      break;
+    }
+  }
+  assert(elem_offset < weave.globalVolume());
+
+  Lime::Writer writer(filename);
+  assert(writer.good());
+
+
+  if (rank == root_rank)
+  {
+    writer.newRecord("scidac-binary-data");
+  }
+  weave.barrier();
+
+  // all writers have to get the same state!
+  // it remains to be tested whether this works
+  weave.broadcast(&writer, 1, root_rank);
+
+  assert(writer.good());
+
+  size_t const elements = sizeof(Element) / sizeof(double);
+
+  // each writer jumps to the position it is supposed to start writing at
+  writer.seekg(elem_offset*elements);
+  assert(writer.good());
+
+  double buffer[elements];
+  for (size_t siteIdx = 0; siteIdx < field.size(); ++siteIdx)
+  {
+    std::copy(reinterpret_cast< double const* >(&(field.constPhysicalIndex(siteIdx))),
+              reinterpret_cast< double const* >(&(field.constPhysicalIndex(siteIdx))) + elements, buffer);
+    if (!Base::bigEndian)
+    {
+      Base::swapEndian(buffer, buffer + elements, sizeof(double));
+    }
+    writer.write(buffer, elements);
+  }
+
+  weave.barrier();
+}

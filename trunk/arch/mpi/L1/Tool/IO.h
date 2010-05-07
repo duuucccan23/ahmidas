@@ -8,6 +8,7 @@
 #include <L0/Core/Propagator.h>
 #include <L1/Tool.h>
 #include <L1/Tool/IO/Lime/Reader.h>
+#include <L1/Tool/IO/Lime/Writer.h>
 #include <L1/Tool/ScidacChecksum.h>
 
 namespace Tool
@@ -31,7 +32,7 @@ namespace Tool
       Scidacinfo(Lime::Reader &reader);
     };
 
-    void load(Core::Field< QCD::Gauge > *field, std::string const &filename, Tool::IO::filetype);
+    void load(Core::Field< QCD::Gauge >  *field, std::string const &filename, Tool::IO::filetype);
     void load(Core::Field< QCD::Spinor > *field, std::string const &filename, Tool::IO::filetype);
     void load(Core::Field< QCD::Spinor > *field, std::string const &filename, Tool::IO::filetype, size_t const precision);
 
@@ -44,6 +45,13 @@ namespace Tool
     void load(Core::StochasticPropagator< 4 > *sPropagator, std::vector< std::string > const &filenames,
               Tool::IO::filetype type);
 
+
+    void save(Core::Field< QCD::Gauge >  *field, std::string const &filename, Tool::IO::filetype);
+    void save(Core::Field< QCD::Spinor > *field, std::string const &filename, Tool::IO::filetype);
+
+    void save(Core::Propagator *propagator, std::vector< std::string > const &filenames,
+              Tool::IO::filetype type);
+
     template< typename Element >
     void loadScidac(Core::Field< Element > *field, std::string const &filename);
 
@@ -51,11 +59,8 @@ namespace Tool
     void loadScidac(Core::Field< Element > *field, std::string const &filename, size_t const precision);
 
     template< typename Element >
-    inline void loadILDG(Core::Field< Element > *field, std::string const &filename)
-    {
-      std::cerr << "loadILDG(...) has not been implemented yet for parallel architecture! Aborting..." << std::endl;
-      exit(1);
-    }
+    void loadILDG(Core::Field< Element > *field, std::string const &filename);
+
 
     template< typename Element >
     inline void loadMILC(Core::Field< Element > *field, std::string const &filename)
@@ -65,20 +70,16 @@ namespace Tool
     }
 
     template< typename Element >
-    inline void saveILDG(Core::Field< Element > const &field, std::string const &filename)
-    {
-      std::cerr << "saveILDG(...) has not been implemented yet for parallel architecture! Aborting..." << std::endl;
-      exit(1);
-    }
+    void saveILDG(Core::Field< Element > const &field, std::string const &filename);
 
     template< typename Element >
-    inline void saveScidac(Core::Field< Element > const &field, std::string const &filename)
-    {
-      std::cerr << "saveScidac(...) has not been implemented yet for parallel architecture! Aborting..." << std::endl;
-      exit(1);
-    }
+    void saveScidac(Core::Field< Element > const &field, std::string const &filename);
 
   }
 }
 
-
+#include "IO/loadScidac_a.template"
+#include "IO/loadScidac_b.template"
+#include "IO/loadILDG.template"
+#include "IO/saveScidac.template"
+#include "IO/saveILDG.template"

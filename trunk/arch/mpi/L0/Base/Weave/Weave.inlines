@@ -96,7 +96,7 @@ namespace Base
   }
 
 
-  void Weave:barrier() const
+  inline void Weave::barrier() const
   {
     d_grid.grid().Barrier();
   }

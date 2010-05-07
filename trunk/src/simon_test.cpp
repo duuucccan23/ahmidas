@@ -38,9 +38,16 @@ int main(int argc, char **argv)
   std::cout << "Lattice size: " << L << "x" << L << "x" << L << "x" << T << std::endl;
 
   double kappa = floats["kappa"];
-  double mu = floats["mu"];
+  double mu    = floats["mu"];
+  double const APE_alpha      = floats["APE_param"];
+  size_t const APE_iterations = floats["APE_steps"];
+
+  double const Jac_alpha      = floats["Jac_param"];
+  size_t const Jac_iterations = floats["Jac_steps"];
 
   std::cout << "kappa = " << kappa << ", mu = " << mu << std::endl;
+  std::cout << "APE    smearing: parameter = " << APE_alpha << ", iterations = " << APE_iterations << std::endl;
+  std::cout << "Jacobi smearing: parameter = " << Jac_alpha << ", iterations = " << Jac_iterations << std::endl;
 
   size_t const timeslice_source = (positions[0])[Base::idx_T];
   std::cout << "timeslice (source) = " << timeslice_source << std::endl;
@@ -55,20 +62,44 @@ int main(int argc, char **argv)
   std::vector< std::string > const &stochasticPropFilesD(files[2]);
   std::vector< std::string > const &stochasticPropFilesU(files[3]);
   std::vector< std::string > const &stochasticSourceFiles(files[4]);
+  std::vector< std::string > const &gaugeFieldFiles(files[11]);
+  std::vector< std::string > const &sourceFiles(files[12]);
+  std::vector< std::string > const &smearedSourceFiles(files[13]);
+
+  std::cout << "gauge field to be read from " << gaugeFieldFiles[0] << " ... ";
+  Core::Field< QCD::Gauge > gauge_field(L, T);
+  Tool::IO::load(&gauge_field, gaugeFieldFiles[0], Tool::IO::fileILDG);
+  std::cout << "done.\n" << std::endl;
+
+  Smear::APE APE_tool(APE_alpha);
+  Smear::Jacobi Jacobi_tool(Jac_alpha);
+
+  APE_tool.smear(gauge_field, APE_iterations);
+
+//   Tool::IO::save(&gauge_field, gaugeFieldFiles[0] + ".smeared", Tool::IO::fileILDG);
+// 
+//   Core::Field< QCD::Spinor > spinor_field(L, T);
+// 
+//   for (size_t idx=0; idx<12; idx++)
+//   {
+//     std::cout << "spinor field to be read from " << sourceFiles[idx] << " ... ";
+//     std::cout.flush();
+//     Tool::IO::load(&spinor_field, sourceFiles[idx], Tool::IO::fileSCIDAC, 64);
+//     std::cout << "done.\n" << std::endl;
+//     Jacobi_tool.smear(&spinor_field, gauge_field, Jac_iterations);
+//     Tool::IO::save(&spinor_field, smearedSourceFiles[idx], Tool::IO::fileSCIDAC);
+//   }
 
 
-//   std::cout << "The following files are going to be read:" << std::endl;
-// 
-//   for (int f=0; f<12; f++)
-//   {
-//       std::cout << propfilesU[f]           << "\n" << propfilesD[f]           << std::endl;
-//       std::cout << stochasticPropFilesD[f] << "\n" << stochasticPropFilesU[f] << std::endl;
-//   }
-// 
-//   for (int f=0; f<12; f++)
-//   {
-//     std::cout << stochasticSourceFiles[f] << std::endl;
-//   }
+  Core::Propagator source(L, T);
+
+  Tool::IO::load(&source, sourceFiles, Tool::IO::fileSCIDAC, 64);
+
+  source.smearJacobi(Jac_alpha, Jac_iterations, gauge_field);
+
+  Tool::IO::save(&source, smearedSourceFiles, Tool::IO::fileSCIDAC);
+
+  return 0;
 
   Core::Propagator uProp = Core::Propagator(L, T);
 
@@ -159,171 +190,20 @@ int main(int argc, char **argv)
   }
   p3p.clear();
 
-//   std::cout << "\n d_bar*1*d" <<std::endl;
-//   for (size_t t=0; t<p3p[2].T(); t++)
+
 //   {
-//     if(abs(tr((p3p[2])[t])) > 1.e-100)
-//       std::cout << t << "  " << (tr((p3p[2])[t])).real() << "  " << (tr((p3p[2])[t])).imag() << std::endl;
-//   }
-//   std::cout << "\n u_bar*1*u" <<std::endl;
-//   for (size_t t=0; t<p3p[3].T(); t++)
-//   {
-//     if(abs(tr((p3p[3])[t])) > 1.e-100)
-//       std::cout << t << "  " << (tr((p3p[3])[t])).real() << "  " << (tr((p3p[3])[t])).imag() << std::endl;
+//     Core::Propagator sequentialSource[16] = {
+//       Core::Propagator(L, T), Core::Propagator(L, T), Core::Propagator(L, T), Core::Propagator(L, T),
+//       Core::Propagator(L, T), Core::Propagator(L, T), Core::Propagator(L, T), Core::Propagator(L, T),
+//       Core::Propagator(L, T), Core::Propagator(L, T), Core::Propagator(L, T), Core::Propagator(L, T),
+//       Core::Propagator(L, T), Core::Propagator(L, T), Core::Propagator(L, T), Core::Propagator(L, T)};
+// 
+//     // Contract::create_sequential_source_proton_d(sequentialSource, uProp, uProp, timeslice_sink);
+//     // Tool::IO::save(&(sequentialSource[0]), files[9], Tool::IO::fileSCIDAC);
+// 
+//     //std::cerr << "sequential source (d)\n\n" << sequentialSource[0] << std::endl;
 //   }
 /*
-  p3p.clear();*/
-
-  {
-    Core::Propagator sequentialSource[16] = {
-      Core::Propagator(L, T), Core::Propagator(L, T), Core::Propagator(L, T), Core::Propagator(L, T),
-      Core::Propagator(L, T), Core::Propagator(L, T), Core::Propagator(L, T), Core::Propagator(L, T),
-      Core::Propagator(L, T), Core::Propagator(L, T), Core::Propagator(L, T), Core::Propagator(L, T),
-      Core::Propagator(L, T), Core::Propagator(L, T), Core::Propagator(L, T), Core::Propagator(L, T)};
-
-    // Contract::create_sequential_source_proton_d(sequentialSource, uProp, uProp, timeslice_sink);
-    // Tool::IO::save(&(sequentialSource[0]), files[9], Tool::IO::fileSCIDAC);
-
-    //std::cerr << "sequential source (d)\n\n" << sequentialSource[0] << std::endl;
-
-    Dirac::Gamma< 4 > gamma0;
-    Dirac::Gamma< 5 > gamma5;
-
-  // this is a good test for the sequential source generation
-  // just multiplying the sequential source (without gamma_5 and dagger) to a propagator gives the twopoint
-
-    Core::Propagator sequentialSource_fixedProjector(L, T);
-
-    Core::Propagator dProp_mod(dProp);
-    {
-      Core::Propagator::iterator it = dProp_mod.begin();
-      while(it != dProp_mod.end())
-      {
-        (*it).right_multiply_proton();
-        (*it).left_multiply_proton();
-        (*it).transposeFull();
-        ++it;
-      }
-    }
-
-    sequentialSource_fixedProjector *= std::complex< double >(0, 0);
-    Base::Weave weave(L, T);
-
-    QCD::Tensor tmp[16];
-
-    size_t localIndex;
-    for(size_t idx_Z = 0; idx_Z < L; idx_Z++)
-    {
-      for(size_t idx_Y = 0; idx_Y < L; idx_Y++)
-      {
-        for(size_t idx_X = 0; idx_X < L; idx_X++)
-        {
-          localIndex = weave.globalCoordToLocalIndex(idx_X, idx_Y, idx_Z, timeslice_sink);
-          /* globalCoordToLocalIndex returns local volume if local data is not available on this cpu */
-          if (localIndex == weave.localVolume())
-            continue;
-          QCD::make_sequential_d(tmp, uProp[localIndex], uProp[localIndex]);
-          QCD::make_sequential_d(sequentialSource_fixedProjector[localIndex], uProp[localIndex], uProp[localIndex], Base::proj_PARITY_PLUS_TM);
-          for(size_t idx_D = 0; idx_D < 16; idx_D++)
-            (sequentialSource[idx_D])[localIndex] = tmp[idx_D];
-        }
-      }
-    }
-
-    std::cout.precision(6);
-
-    Dirac::Matrix matrix1;
-
-    for(size_t idx_D = 0; idx_D < 16; idx_D++)
-    {
-      Core::Correlator p2p_seq(L, T, (sequentialSource[idx_D]).contract(dProp_mod));
-      p2p_seq.sumOverSpatialVolume();
-      matrix1[idx_D] = (p2p_seq[4]).trace();
-    }
-    std::cout << "\nproton twopoint from sequential source (d), full spin structure in twisted basis\n" << std::endl;
-    std::cout << matrix1 << std::endl;
-    Dirac::Matrix matrixTest (matrix1);
-    std::cout << "\nthis is the trace of the projected and traced twopoint in physical basis\n" << std::endl;
-    Dirac::Matrix matrix2(gamma5*matrix1);
-    matrix2 *= std::complex< double >(0, 1);
-    matrix1 = gamma0*matrix1;
-    matrix1 += matrix2;
-    matrix1 *= 0.5;
-    std::cout.width(16);
-    std::cout << matrix1.trace().real();
-    std::cout.width(16);
-    std::cout << matrix1.trace().imag();
-    std::cout << std::endl;
-    std::cout << "\nproton twopoint from sequential source (d), fixed projector\n" << std::endl;
-    Core::Correlator p2p_seq(L, T, sequentialSource_fixedProjector.contract(dProp_mod));
-    p2p_seq.sumOverSpatialVolume();
-    std::cout << p2p_seq << "\n" << std::endl;
-
-    matrixTest -= p2pTest;
-    for(size_t idx = 0; idx < 16; idx++)
-      matrixTest[idx] = abs(matrixTest[idx])/abs(p2pTest[idx]);
-
-    std::cout << "\nrelative difference between correct and this solution\n" << std::endl;
-    std::cout << matrixTest << std::endl;
-
-    // now the same for the u current sequential source
-
-    sequentialSource_fixedProjector *= std::complex< double >(0, 0);
-
-    for(size_t idx_Z = 0; idx_Z < L; idx_Z++)
-    {
-      for(size_t idx_Y = 0; idx_Y < L; idx_Y++)
-      {
-        for(size_t idx_X = 0; idx_X < L; idx_X++)
-        {
-          localIndex = weave.globalCoordToLocalIndex(idx_X, idx_Y, idx_Z, timeslice_sink);
-          /* globalCoordToLocalIndex returns local volume if local data is not available on this cpu */
-          if (localIndex == weave.localVolume())
-            continue;
-          QCD::make_sequential_u(sequentialSource_fixedProjector[localIndex], dProp_mod[localIndex], uProp[localIndex], Base::proj_PARITY_PLUS_TM);
-          QCD::make_sequential_u(tmp, dProp_mod[localIndex], uProp[localIndex]);
-          for(size_t idx_D = 0; idx_D < 16; idx_D++)
-          {
-            (sequentialSource[idx_D])[localIndex] = tmp[idx_D];
-          }
-        }
-      }
-    }
-
-    for(size_t idx_D = 0; idx_D < 16; idx_D++)
-    {
-      Core::Correlator p2p_seq(L, T, (sequentialSource[idx_D]).contract(uProp));
-      p2p_seq.sumOverSpatialVolume();
-      matrix1[idx_D] = (p2p_seq[4]).trace()*0.5;
-    }
-    std::cout << "\nproton twopoint from sequential source (u), full spin structure in twisted basis\n" << std::endl;
-    std::cout << matrix1 << std::endl;
-    matrixTest = matrix1;
-    std::cout << "\nthis is the trace of the projected and traced twopoint in physical basis\n" << std::endl;
-    matrix2= gamma5*matrix1;
-    matrix2 *= std::complex< double >(0, 1);
-    matrix1 = gamma0*matrix1;
-    matrix1 += matrix2;
-    matrix1 *= 0.5;
-    std::cout.width(16);
-    std::cout << matrix1.trace().real();
-    std::cout.width(16);
-    std::cout << matrix1.trace().imag();
-    std::cout << std::endl;
-    std::cout << "\nproton twopoint from sequential source (u), fixed projector\n" << std::endl;
-    Core::Correlator p2p_seq_u(L, T, sequentialSource_fixedProjector.contract(uProp));
-    p2p_seq_u.sumOverSpatialVolume();
-    p2p_seq_u *= 0.5;
-    std::cout << p2p_seq_u << "\n" << std::endl;
-
-    matrixTest -= p2pTest;
-    for(size_t idx = 0; idx < 16; idx++)
-      matrixTest[idx] = abs(matrixTest[idx])/abs(p2pTest[idx]);
-
-    std::cout << "\nrelative difference between correct and this solution\n" << std::endl;
-    std::cout << matrixTest << std::endl;
-
-  }
 
   {
 
@@ -348,7 +228,7 @@ int main(int argc, char **argv)
 
     Contract::create_sequential_source_proton_u(sequentialSource, dProp, uProp, timeslice_sink);
     Tool::IO::save(&(sequentialSource[0]), files[10], Tool::IO::fileSCIDAC);
-  }
+  }*/
 
   Core::Propagator sequentialSource(L, T);
   sequentialSource *= std::complex< double >(0, 0);

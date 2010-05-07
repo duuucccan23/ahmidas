@@ -8,6 +8,20 @@ namespace Tool
   }
 }
 
+void Tool::IO::save(Core::Field< QCD::Gauge > *field, std::string const &filename, filetype type)
+{
+   switch(type) {
+   case Tool::IO::fileSCIDAC :
+      Tool::IO::saveScidac(*field, filename);
+      break;
+   case Tool::IO::fileILDG :
+      Tool::IO::saveILDG(*field, filename);
+      break;
+   default :
+      break;
+   }
+}
+
 void Tool::IO::save(Core::Field< QCD::Spinor > *field, std::string const &filename, filetype type)
 {
    switch(type) {
@@ -74,7 +88,7 @@ void Tool::IO::saveScidac(Core::Propagator *propagator, std::vector< std::string
     {
       for (size_t i=0; i<12; i++)
       {
-        (*(itsSpinor[i])) = (*itTensor)(i);
+        (*(itsSpinor[i])) = (*itTensor)[i];
         ++(itsSpinor[i]);
       }
       ++itTensor;

@@ -14,6 +14,10 @@ namespace Transport
       Core::Field< QCD::Gauge > &gauge,
       Base::SpaceTimeIndex const idx, Base::Direction const dir);
 
+  Core::Field< QCD::Tensor > step(Core::Field< QCD::Tensor > const &tensor,
+      Core::Field< QCD::Gauge > &gauge,
+      Base::SpaceTimeIndex const idx, Base::Direction const dir);
+
   Core::Field< QCD::Spinor > range(Core::Field< QCD::Spinor > const &spinor,
       Core::Field< QCD::Gauge > &gauge,
       Base::SpaceTimeIndex const idx, Base::Direction const dir, size_t const steps);

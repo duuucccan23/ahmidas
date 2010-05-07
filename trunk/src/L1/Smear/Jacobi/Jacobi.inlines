@@ -1,12 +1,18 @@
 namespace Smear
 {
-  Jacobi::Jacobi(double kappa)
+  inline Jacobi::Jacobi(double kappa)
     : d_kappa(kappa), d_weight(1 / (1 + 6 * kappa))
   {}
 
-  void Jacobi::smear(Core::Field< QCD::Spinor> *spinorField, Core::Field< QCD::Gauge> &gaugeField, size_t const iterations) const
+  inline void Jacobi::smear(Core::Field< QCD::Spinor > *spinorField, Core::Field< QCD::Gauge > &gaugeField, size_t const iterations) const
   {
     for (size_t ctr = 0; ctr < iterations; ++ctr)
       smear(spinorField, gaugeField);
+  }
+
+  inline void Jacobi::smear(Core::Field< QCD::Tensor > *tensorField, Core::Field< QCD::Gauge > &gaugeField, size_t const iterations) const
+  {
+    for (size_t ctr = 0; ctr < iterations; ++ctr)
+      smear(tensorField, gaugeField);
   }
 }

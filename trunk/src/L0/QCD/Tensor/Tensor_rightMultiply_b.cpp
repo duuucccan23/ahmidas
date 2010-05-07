@@ -7,7 +7,7 @@ QCD::Tensor &QCD::Tensor::rightMultiply(QCD::hcTensor const &other)
   for (size_t rowIdx = 0; rowIdx < 12; ++rowIdx)
     for (size_t colIdx = 0; colIdx < 12; ++colIdx)
       for (size_t resIdx = 0; resIdx < 12; ++resIdx)
-        result[rowIdx + colIdx * 12] += d_data[resIdx + 12 * colIdx] * other[rowIdx + 12 * resIdx];
+        result[rowIdx + colIdx * 12] += d_data[resIdx + 12 * colIdx] * other(rowIdx + 12 * resIdx);
   std::copy(result, result + 144, d_data);
   return *this;
 }

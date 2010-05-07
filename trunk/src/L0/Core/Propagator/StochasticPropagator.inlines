@@ -22,18 +22,18 @@ inline StochasticPropagator< 4 >::StochasticPropagator(Propagator const &other)
   Propagator::iterator Inew = begin();
   while(Inew != end())
   {
-    (*Inew)( 0) = (*Iold)(0);
-    (*Inew)( 1).setToZero();
-    (*Inew)( 2).setToZero();
-    (*Inew)( 3) = (*Iold)(1);
-    (*Inew)( 4).setToZero();
-    (*Inew)( 5).setToZero();
-    (*Inew)( 6) = (*Iold)(2);
-    (*Inew)( 7).setToZero();
-    (*Inew)( 8).setToZero();
-    (*Inew)( 9) = (*Iold)(3);
-    (*Inew)(10).setToZero();
-    (*Inew)(11).setToZero();
+    (*Inew)[ 0] = (*Iold)[0];
+    (*Inew)[ 1].setToZero();
+    (*Inew)[ 2].setToZero();
+    (*Inew)[ 3] = (*Iold)[1];
+    (*Inew)[ 4].setToZero();
+    (*Inew)[ 5].setToZero();
+    (*Inew)[ 6] = (*Iold)[2];
+    (*Inew)[ 7].setToZero();
+    (*Inew)[ 8].setToZero();
+    (*Inew)[ 9] = (*Iold)[3];
+    (*Inew)[10].setToZero();
+    (*Inew)[11].setToZero();
     ++Inew;
     ++Iold;
   }

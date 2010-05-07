@@ -11,6 +11,7 @@ SET(Sources_Propagator Propagator/StochasticSource.cpp
                        Propagator/Propagator_isolate.cpp
                        Propagator/Propagator_revert.cpp
                        Propagator/Propagator_shift.cpp
+                       Propagator/Propagator_smearJacobi.cpp
                        Propagator/Propagator.operators.cpp)
 ADD_LIBRARY(Core ${Sources_Correlator} ${Sources_Propagator})
 TARGET_LINK_LIBRARIES(Core Weave Dirac SU3 QCD)

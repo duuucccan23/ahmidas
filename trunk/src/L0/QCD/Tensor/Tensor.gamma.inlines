@@ -83,7 +83,7 @@ namespace QCD
   {
     for(size_t Idx=0; Idx<12; Idx++)
     {
-      (tensor(Idx)).leftMultiply(gamma);
+      (tensor[Idx]).leftMultiply(gamma);
     }
   }
 
@@ -99,7 +99,7 @@ namespace QCD
     Tensor tmp(tensor);
     for(size_t Idx=0; Idx<12; Idx++)
     {
-      (tmp(Idx)).leftMultiply(gamma);
+      (tmp[Idx]).leftMultiply(gamma);
     }
     return tmp;
   }
@@ -115,7 +115,7 @@ namespace QCD
   {
     for(size_t Idx=0; Idx<12; Idx++)
     {
-      ((*this)(Idx)).leftMultiply(gamma);
+      ((*this)[Idx]).leftMultiply(gamma);
     }
   }
 

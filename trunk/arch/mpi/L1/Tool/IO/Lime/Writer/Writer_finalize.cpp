@@ -2,9 +2,22 @@
 
 void Tool::IO::Lime::Writer::finalize()
 {
-  uint64_t written = d_stream.tellp() - d_record.offset - 144;
+
+  if(!d_writeHeader)
+  {
+    // this process has done its duty
+    return;
+  }
+
+  assert(d_stream.tellp() >= d_record.recOffset);
+  // size can be zero if only one process has written the current record
+  // in that case we can ask the stream how many bytes have been written
+  uint64_t written
+  = d_record.size > (d_stream.tellp() - d_record.recOffset - d_record.offset) ?
+                      d_record.size : (d_stream.tellp() - d_record.recOffset);
+
   d_stream.write(s_padding, (8 - (written % 8)) % 8);
-  std::streampos startOfNextRecord = d_stream.tellp();
+  d_startOfNextRecord = d_stream.tellp();
 
   uHeader header;
   std::fill(header.as8, header.as8 + s_headerSize, 0x00);
@@ -27,7 +40,13 @@ void Tool::IO::Lime::Writer::finalize()
   std::copy(d_record.type, d_record.type + 128, header.as8 + 16);
 
   // Go back and do the actual writing
-  d_stream.seekp(d_record.offset, std::ios::beg);
+
+  // offset is supposed to be zero or s_headerSize,
+  // depending on whether Writer::seekp(streampos const) has been called
+  assert (d_record.offset == std::streampos(0) || d_record.offset == std::streampos(s_headerSize));
+
+  d_stream.seekp(d_record.recOffset, std::ios::beg);
   d_stream.write(header.as8, 144);
-  d_stream.seekp(startOfNextRecord, std::ios::beg);
+
+  d_stream.seekp(d_startOfNextRecord, std::ios::beg);
 }

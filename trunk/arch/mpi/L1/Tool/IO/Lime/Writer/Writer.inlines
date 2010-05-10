@@ -4,14 +4,21 @@ namespace Tool
   {
     namespace Lime
     {
+
       inline Writer::Record::Record()
-        : size(0), offset(0), version(1), mesBeg(false), mesEnd(false)
+        : size(0), recOffset(0), offset(0), version(1), mesBeg(false), mesEnd(false)
       {
         std::fill(type, type + 128, '\0');
       }
 
-      inline Writer::Writer(std::string const &filename)
-        : d_stream(filename.c_str()), d_hasWritten(false), d_messageRunning(false)
+      inline Writer::Record::Record(size_t const rOffset, size_t const recSize)
+        : size(recSize), recOffset(rOffset), offset(0), version(1), mesBeg(false), mesEnd(false)
+      {
+        std::fill(type, type + 128, '\0');
+      }
+
+      inline Writer::Writer(std::string const &filename, bool const writeHeader)
+        : d_stream(filename.c_str()), d_hasWritten(false), d_messageRunning(false), d_writeHeader(writeHeader)
       {}
 
       inline Writer::~Writer()
@@ -50,9 +57,10 @@ namespace Tool
         return d_stream.good();
       }
 
-      inline void Writer::seekg(std::streampos const offset)
+      inline void Writer::seekp(std::streampos const offset)
       {
-        d_record.offset += offset;
+        d_record.offset = (offset + std::streampos(s_headerSize));
+        d_stream.seekp(d_record.offset + d_record.recOffset, std::ios::beg);
       }
 
 

@@ -55,7 +55,10 @@ namespace Base
       void barrier() const;
 
       template< typename Element >
-      inline void broadcast(Element *data, size_t const count, int root) const;
+      void broadcast(Element *data, size_t const count, int root) const;
+
+      template< typename Element >
+      void sendRecv(Element const * data_send, Element * data_recv, size_t const count, int source, int destination);
 
       template< typename Element >
       void allReduce(Element const *data_send, Element *data_recv, size_t const count=1) const;

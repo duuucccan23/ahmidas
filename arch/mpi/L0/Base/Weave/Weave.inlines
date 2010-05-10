@@ -108,6 +108,15 @@ namespace Base
   }
 
   template< typename Element >
+  inline void Weave::sendRecv(Element const * data_send, Element * data_recv, size_t const count, int source, int destination)
+  {
+    static int stag(1);
+    static int rtag(1);
+    (d_grid.grid()).Sendrecv(data_send, count * sizeof(Element), MPI_BYTE, destination, stag++,
+                             data_recv, count * sizeof(Element), MPI_BYTE, source,      rtag++);
+  }
+
+  template< typename Element >
   inline void Weave::allReduce(Element const *data_send, Element *data_recv, size_t const count) const
   {
     // have to wait until all calculations are finished

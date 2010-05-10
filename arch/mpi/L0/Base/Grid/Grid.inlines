@@ -106,7 +106,6 @@ namespace Base
     // We would need argv and argc to be able to pass arguments
     std::cout << "initializing MPI" << std::endl;
     MPI_Init(0, 0);
-    val++;
   }
 
   inline Grid::MPIAgent::~MPIAgent()

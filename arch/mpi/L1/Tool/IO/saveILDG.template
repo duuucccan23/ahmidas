@@ -1,8 +1,8 @@
 template< typename Element >
 void Tool::IO::saveILDG(Core::Field< Element > const &field, std::string const &filename)
 {
-  //  under construction
-  assert(false);
+//   //  under construction
+//   assert(false);
 
   Base::Weave weave(field.L(), field.T());
 
@@ -19,7 +19,8 @@ void Tool::IO::saveILDG(Core::Field< Element > const &field, std::string const &
   int const nprocs((weave.d_grid.grid()).Get_size());
   int const rank((weave.d_grid.grid()).Get_rank());
 
-  int const root_rank = 0;
+  // the main work has to be done by the writer holding the element at the origin
+  int const root_rank = weave.d_grid.rank(size_t(0));
 
   assert (nprocs == int(weave.dim(Base::idx_T)));
 
@@ -37,28 +38,27 @@ void Tool::IO::saveILDG(Core::Field< Element > const &field, std::string const &
   }
   assert(elem_offset < weave.globalVolume());
 
-  Lime::Writer writer(filename);
+  // 2nd argument is boolean and determines whether the writer is allowed to write the header,
+  // which only the writer of the process holding the Element(s) to be written first may do
+  Lime::Writer writer(filename, rank == root_rank);
   assert(writer.good());
 
+  writer.newRecord("ildg-data-lfn", 0, 0); //NOTE incomplete header for now
+  size_t pos = writer.closeRecord();
+  writer.finishMessage();
 
-  if (rank == root_rank)
-  {
-    writer.newRecord("ildg-data-lfn"); //NOTE incomplete header for now
-    writer.finishMessage();
-    writer.newRecord("scidac-binary-data");
-  }
+  // all processes should know where we are
+  weave.broadcast(&pos, 1, root_rank);
+  writer.newRecord("ildg-binary-data", pos, weave.globalVolume() * sizeof(Element));
+
   weave.barrier();
-
-  // all writers have to get the same state!
-  // it remains to be tested whether this works
-  weave.broadcast(&writer, 1, root_rank);
-
   assert(writer.good());
 
   size_t const elements = sizeof(Element) / sizeof(double);
 
   // each writer jumps to the position it is supposed to start writing at
-  writer.seekg(elem_offset*elements);
+  writer.seekp(elem_offset * sizeof(Element));
+
   assert(writer.good());
 
   double buffer[elements];

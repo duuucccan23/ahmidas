@@ -72,12 +72,17 @@ int main(int argc, char **argv)
   Tool::IO::load(&gauge_field, gaugeFieldFiles[0], Tool::IO::fileILDG);
   std::cout << "done.\n" << std::endl;
 
-  Smear::APE APE_tool(APE_alpha);
+//   return 0;
+
+//   Smear::APE APE_tool(APE_alpha);
 //   Smear::Jacobi Jacobi_tool(Jac_alpha);
 
-  APE_tool.smear(gauge_field, APE_iterations);
+//   APE_tool.smear(gauge_field, APE_iterations);
 
-//   Tool::IO::save(&gauge_field, gaugeFieldFiles[0] + ".smeared", Tool::IO::fileILDG);
+  Tool::IO::save(&gauge_field, gaugeFieldFiles[0] + ".smeared", Tool::IO::fileILDG);
+
+  return 0;
+
 // 
 //   Core::Field< QCD::Spinor > spinor_field(L, T);
 // 

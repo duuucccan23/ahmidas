@@ -10,6 +10,10 @@ ADD_EXECUTABLE(weave weave.cpp)
 TARGET_LINK_LIBRARIES(weave Base Weave)
 ADD_TEST(weave_initialization weave)
 
+ADD_EXECUTABLE(field_shift field_shift.cpp)
+TARGET_LINK_LIBRARIES(field_shift SU3 QCD Base Core Weave)
+ADD_TEST(field_shift_test field_shift)
+
 ADD_EXECUTABLE(limereader limereader.cpp)
 TARGET_LINK_LIBRARIES(limereader Lime Base)
 ADD_TEST(limereader_read_in limereader ../../test/conf.88)

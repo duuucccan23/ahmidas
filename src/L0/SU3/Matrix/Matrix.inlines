@@ -8,6 +8,11 @@ namespace SU3
     std::copy(data, data + 18, reinterpret_cast< double* >(d_data));
   }
 
+  inline Matrix::Matrix(std::complex< double > const &value)
+  {
+    std::fill_n(d_data, 9, value);
+  }
+
   inline Matrix::Matrix(std::complex< double > const *data)
   {
     std::copy(data, data + 9, d_data);

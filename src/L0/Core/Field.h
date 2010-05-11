@@ -83,7 +83,7 @@ namespace Core
       template< typename Atom >
       Component< Element, Atom > component(size_t const component);
 
-      Field< Element > &shift(Base::SpaceTimeIndex idx, Base::Direction shift);
+      Field< Element > &shift(Base::SpaceTimeIndex const idx, Base::Direction const shift);
 
 #include "Field/Field.operators"
 

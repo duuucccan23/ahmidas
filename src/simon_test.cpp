@@ -60,35 +60,275 @@ int main(int argc, char **argv)
 
   std::vector< std::string > const &propfilesD(files[0]);
   std::vector< std::string > const &propfilesU(files[1]);
-  std::vector< std::string > const &stochasticPropFilesD(files[2]);
-  std::vector< std::string > const &stochasticPropFilesU(files[3]);
-  std::vector< std::string > const &stochasticSourceFiles(files[4]);
-  std::vector< std::string > const &gaugeFieldFiles(files[11]);
-  std::vector< std::string > const &sourceFiles(files[12]);
-  std::vector< std::string > const &smearedSourceFiles(files[13]);
+//   std::vector< std::string > const &stochasticPropFilesD(files[2]);
+//   std::vector< std::string > const &stochasticPropFilesU(files[3]);
+//   std::vector< std::string > const &stochasticSourceFiles(files[4]);
+//   std::vector< std::string > const &gaugeFieldFiles(files[11]);
+//   std::vector< std::string > const &sourceFiles(files[12]);
+//   std::vector< std::string > const &smearedSourceFiles(files[13]);
 
-  std::cout << "gauge field to be read from " << gaugeFieldFiles[0] << " ... ";
+
+  Base::Weave weave(L, T);
+
   Core::Field< QCD::Gauge > gauge_field(L, T);
-  Tool::IO::load(&gauge_field, gaugeFieldFiles[0], Tool::IO::fileILDG);
-  std::cout << "done.\n" << std::endl;
 
-  Core::Propagator testProp(L, T);
-  std::cout << "spinor field to be read from " <<  stochasticSourceFiles[0] << " and so on ... ";
-  Tool::IO::load(&testProp, stochasticSourceFiles, Tool::IO::fileSCIDAC, 64);
-  std::cout << "done.\n" << std::endl;
+  size_t idx(0);
 
-  Tool::IO::save(&gauge_field, gaugeFieldFiles[0] + ".rw", Tool::IO::fileILDG);
-  std::cout << "gauge field saved" << std::endl;
+  SU3::Matrix links[4];
 
-
-  std::vector< std::string > stochasticSourceFilesRW;
-  for (size_t idx=0; idx<12; idx++)
+  size_t localIndex;
+  for(size_t idx_T = 0; idx_T < T; idx_T++)
   {
-    stochasticSourceFilesRW.push_back((files[4])[idx] + ".rw");
+    for(size_t idx_Z = 0; idx_Z < L; idx_Z++)
+    {
+      for(size_t idx_Y = 0; idx_Y < L; idx_Y++)
+      {
+        for(size_t idx_X = 0; idx_X < L; idx_X++)
+        {
+          localIndex = weave.globalCoordToLocalIndex(idx_X, idx_Y, idx_Z, idx_T);
+
+          // globalCoordToLocalIndex returns local volume if local data is not available on this cpu
+          if (localIndex == weave.localVolume())
+          {
+            ++idx;
+            continue;
+          }
+
+          links[0] = SU3::Matrix(std::complex< double >(idx, 0));
+          links[1] = SU3::Matrix(std::complex< double >(idx, 1));
+          links[2] = SU3::Matrix(std::complex< double >(idx, 2));
+          links[3] = SU3::Matrix(std::complex< double >(idx, 3));
+
+          gauge_field[localIndex] = QCD::Gauge(links);
+
+          ++idx;
+        }
+      }
+    }
   }
-  std::cout << "saving" << std::endl;
-  Tool::IO::save(&testProp, stochasticSourceFilesRW, Tool::IO::fileSCIDAC);
-  std::cout << "spinor field saved" << std::endl;
+
+  /*
+
+  idx = 0;
+  gauge_field.shift(Base::idx_X, Base::dir_UP);
+  gauge_field.shift(Base::idx_X, Base::dir_DOWN);
+
+  for(size_t idx_T = 0; idx_T < T; idx_T++)
+  {
+    for(size_t idx_Z = 0; idx_Z < L; idx_Z++)
+    {
+      for(size_t idx_Y = 0; idx_Y < L; idx_Y++)
+      {
+        for(size_t idx_X = 0; idx_X < L; idx_X++)
+        {
+          localIndex = weave.globalCoordToLocalIndex(idx_X, idx_Y, idx_Z, idx_T);
+
+          // globalCoordToLocalIndex returns local volume if local data is not available on this cpu
+          if (localIndex == weave.localVolume())
+          {
+            ++idx;
+            continue;
+          }
+
+
+//           std::cout << idx << std::endl;
+
+          assert(((gauge_field[localIndex])[0])(0, 0) == std::complex< double >(idx, 0));
+          assert(((gauge_field[localIndex])[1])(0, 0) == std::complex< double >(idx, 1));
+          assert(((gauge_field[localIndex])[2])(0, 0) == std::complex< double >(idx, 2));
+          assert(((gauge_field[localIndex])[3])(0, 0) == std::complex< double >(idx, 3));
+
+          ++idx;
+        }
+      }
+    }
+  }
+
+  idx = 0;
+  gauge_field.shift(Base::idx_Y, Base::dir_UP);
+  gauge_field.shift(Base::idx_Y, Base::dir_DOWN);
+
+  for(size_t idx_T = 0; idx_T < T; idx_T++)
+  {
+    for(size_t idx_Z = 0; idx_Z < L; idx_Z++)
+    {
+      for(size_t idx_Y = 0; idx_Y < L; idx_Y++)
+      {
+        for(size_t idx_X = 0; idx_X < L; idx_X++)
+        {
+          localIndex = weave.globalCoordToLocalIndex(idx_X, idx_Y, idx_Z, idx_T);
+
+          // globalCoordToLocalIndex returns local volume if local data is not available on this cpu
+          if (localIndex == weave.localVolume())
+          {
+            ++idx;
+            continue;
+          }
+
+
+//           std::cout << idx << std::endl;
+
+          assert(((gauge_field[localIndex])[0])(0, 0) == std::complex< double >(idx, 0));
+          assert(((gauge_field[localIndex])[1])(0, 0) == std::complex< double >(idx, 1));
+          assert(((gauge_field[localIndex])[2])(0, 0) == std::complex< double >(idx, 2));
+          assert(((gauge_field[localIndex])[3])(0, 0) == std::complex< double >(idx, 3));
+
+          ++idx;
+        }
+      }
+    }
+  }
+
+
+  idx = 0;
+  gauge_field.shift(Base::idx_Z, Base::dir_UP);
+  gauge_field.shift(Base::idx_Z, Base::dir_DOWN);
+
+  for(size_t idx_T = 0; idx_T < T; idx_T++)
+  {
+    for(size_t idx_Z = 0; idx_Z < L; idx_Z++)
+    {
+      for(size_t idx_Y = 0; idx_Y < L; idx_Y++)
+      {
+        for(size_t idx_X = 0; idx_X < L; idx_X++)
+        {
+          localIndex = weave.globalCoordToLocalIndex(idx_X, idx_Y, idx_Z, idx_T);
+
+          // globalCoordToLocalIndex returns local volume if local data is not available on this cpu
+          if (localIndex == weave.localVolume())
+          {
+            ++idx;
+            continue;
+          }
+
+
+//           std::cout << idx << std::endl;
+
+          assert(((gauge_field[localIndex])[0])(0, 0) == std::complex< double >(idx, 0));
+          assert(((gauge_field[localIndex])[1])(0, 0) == std::complex< double >(idx, 1));
+          assert(((gauge_field[localIndex])[2])(0, 0) == std::complex< double >(idx, 2));
+          assert(((gauge_field[localIndex])[3])(0, 0) == std::complex< double >(idx, 3));
+
+          ++idx;
+        }
+      }
+    }
+  }
+
+  */
+
+  idx = 0;
+
+  gauge_field.shift(Base::idx_T, Base::dir_DOWN);
+  gauge_field.shift(Base::idx_T, Base::dir_UP);
+
+  for(size_t idx_T = 0; idx_T < T; idx_T++)
+  {
+    for(size_t idx_Z = 0; idx_Z < L; idx_Z++)
+    {
+      for(size_t idx_Y = 0; idx_Y < L; idx_Y++)
+      {
+        for(size_t idx_X = 0; idx_X < L; idx_X++)
+        {
+          localIndex = weave.globalCoordToLocalIndex(idx_X, idx_Y, idx_Z, idx_T);
+
+          weave.barrier();
+
+          // globalCoordToLocalIndex returns local volume if local data is not available on this cpu
+          if (localIndex == weave.localVolume())
+          {
+            ++idx;
+            continue;
+          }
+
+          std::cout.width(3);
+          std::cout << idx << "  " << ((gauge_field[localIndex])[0])(0, 0) << std::endl;
+
+          assert(((gauge_field[localIndex])[0])(0, 0) == std::complex< double >(idx, 0));
+          assert(((gauge_field[localIndex])[1])(0, 0) == std::complex< double >(idx, 1));
+          assert(((gauge_field[localIndex])[2])(0, 0) == std::complex< double >(idx, 2));
+          assert(((gauge_field[localIndex])[3])(0, 0) == std::complex< double >(idx, 3));
+
+          ++idx;
+        }
+      }
+    }
+  }
+
+
+//   return 0;
+
+  // ############################################################################################
+
+  idx = 0;
+  gauge_field.shift(Base::idx_T, Base::dir_DOWN);
+  gauge_field.shift(Base::idx_T, Base::dir_DOWN);
+  gauge_field.shift(Base::idx_Y, Base::dir_UP);
+  gauge_field.shift(Base::idx_X, Base::dir_UP);
+  gauge_field.shift(Base::idx_Z, Base::dir_DOWN);
+  gauge_field.shift(Base::idx_T, Base::dir_UP);
+  gauge_field.shift(Base::idx_Y, Base::dir_DOWN);
+  gauge_field.shift(Base::idx_T, Base::dir_UP);
+  gauge_field.shift(Base::idx_X, Base::dir_DOWN);
+  gauge_field.shift(Base::idx_Z, Base::dir_UP);
+
+  for(size_t idx_T = 0; idx_T < T; idx_T++)
+  {
+    for(size_t idx_Z = 0; idx_Z < L; idx_Z++)
+    {
+      for(size_t idx_Y = 0; idx_Y < L; idx_Y++)
+      {
+        for(size_t idx_X = 0; idx_X < L; idx_X++)
+        {
+          localIndex = weave.globalCoordToLocalIndex(idx_X, idx_Y, idx_Z, idx_T);
+
+          // globalCoordToLocalIndex returns local volume if local data is not available on this cpu
+          if (localIndex == weave.localVolume())
+          {
+            ++idx;
+            continue;
+          }
+
+
+          std::cout << idx << std::endl;
+
+          assert(((gauge_field[localIndex])[0])(0, 0) == std::complex< double >(idx, 0));
+          assert(((gauge_field[localIndex])[1])(0, 0) == std::complex< double >(idx, 1));
+          assert(((gauge_field[localIndex])[2])(0, 0) == std::complex< double >(idx, 2));
+          assert(((gauge_field[localIndex])[3])(0, 0) == std::complex< double >(idx, 3));
+
+          ++idx;
+        }
+      }
+    }
+  }
+
+
+  return 0;
+
+
+//   std::cout << "gauge field to be read from " << gaugeFieldFiles[0] << " ... ";
+//   Core::Field< QCD::Gauge > gauge_field(L, T);
+//   Tool::IO::load(&gauge_field, gaugeFieldFiles[0], Tool::IO::fileILDG);
+//   std::cout << "done.\n" << std::endl;
+// 
+//   Core::Propagator testProp(L, T);
+//   std::cout << "spinor field to be read from " <<  (files[9])[0] << " and so on ... ";
+//   Tool::IO::load(&testProp, files[9], Tool::IO::fileSCIDAC, 64);
+//   std::cout << "done.\n" << std::endl;
+// 
+//   Tool::IO::save(&gauge_field, gaugeFieldFiles[0] + ".rw", Tool::IO::fileILDG);
+//   std::cout << "gauge field saved" << std::endl;
+// 
+// 
+//   std::vector< std::string > propFilesRW;
+//   for (size_t idx=0; idx<12; idx++)
+//   {
+//     propFilesRW.push_back((files[9])[idx] + ".rw");
+//   }
+//   std::cout << "saving" << std::endl;
+//   Tool::IO::save(&testProp, propFilesRW, Tool::IO::fileSCIDAC);
+//   std::cout << "spinor field saved" << std::endl;
 
 //   Smear::APE APE_tool(APE_alpha);
 // //   Smear::Jacobi Jacobi_tool(Jac_alpha);
@@ -97,7 +337,7 @@ int main(int argc, char **argv)
 // 
 //   Tool::IO::save(&gauge_field, gaugeFieldFiles[0] + ".smeared", Tool::IO::fileILDG);
 
-  return 0;
+//   return 0;
 
 // 
 //   Core::Field< QCD::Spinor > spinor_field(L, T);

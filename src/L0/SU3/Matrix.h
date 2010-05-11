@@ -40,6 +40,7 @@ namespace SU3
     public:
       Matrix();
       Matrix(double const *data);
+      Matrix(std::complex< double > const &value);
       Matrix(std::complex< double > const *data);
       Matrix(Matrix const &other);
       explicit Matrix(hcMatrix const &other);

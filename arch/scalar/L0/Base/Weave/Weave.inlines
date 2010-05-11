@@ -46,7 +46,7 @@ namespace Base
   }
 
   template< typename Element >
-  inline void Weave::fieldShift(Base::SpaceTimeIndex, Base::Direction, Element *, size_t const *) const
+  inline void Weave::fieldShift(Base::SpaceTimeIndex const, Base::Direction const, Element *, size_t const *) const
   {}
 
   inline size_t Weave::globalCoordToLocalIndex(size_t x, size_t y, size_t z) const

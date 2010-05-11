@@ -37,7 +37,7 @@ namespace Base
       size_t rank(size_t const *coords) const; // rank of the node with node coordinates coords
 
       template< typename Element >
-      void fieldShift(Base::SpaceTimeIndex idx, Base::Direction dir, Element *field, size_t const *offsets) const;
+      void fieldShift(Base::SpaceTimeIndex const idx, Base::Direction const dir, Element *field, size_t const *offsets) const;
 
       size_t globalCoordToLocalIndex(size_t const x, size_t const y, size_t const z) const;
       size_t globalCoordToLocalIndex(size_t const x, size_t const y, size_t const z, size_t const t) const;

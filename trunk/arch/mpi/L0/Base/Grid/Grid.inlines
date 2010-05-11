@@ -87,7 +87,7 @@ namespace Base
 
   inline size_t Grid::neighbour(SpaceTimeIndex idx, Direction dir) const
   {
-    int result, rank = d_grid.Get_rank();
+    int result, rank;
     d_grid.Shift(idx, dir, rank, result);
     return result;
   }
@@ -107,12 +107,12 @@ namespace Base
   {
     // We would need argv and argc to be able to pass arguments
     std::cout << "initializing MPI" << std::endl;
-    MPI_Init(0, 0);
+    MPI::Init();
   }
 
   inline Grid::MPIAgent::~MPIAgent()
   {
-    MPI_Finalize();
+    MPI::Finalize();
     std::cout << "MPI finalized" << std::endl;
   }
 }

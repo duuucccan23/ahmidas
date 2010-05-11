@@ -1,7 +1,7 @@
 namespace Core
 {
   template< typename Element >
-  Field< Element > &Field< Element >::shift(Base::SpaceTimeIndex idx, Base::Direction dir)
+  Field< Element > &Field< Element >::shift(Base::SpaceTimeIndex const idx, Base::Direction const dir)
   {
     isolate();
     d_weave.fieldShift(idx, dir, d_field, d_offsets);

@@ -1,11 +1,10 @@
 template< typename Element >
-void Base::Weave::fieldShift(Base::SpaceTimeIndex idx, Base::Direction dir, Element *field, size_t const *offsets) const
+void Base::Weave::fieldShift(Base::SpaceTimeIndex const idx, Base::Direction const dir, Element *field, size_t const *offsets) const
 {
   // Determine what to send
   // Create a basic datatype for the element -- we want to be agnostic about this
-  MPI_Datatype etype;
-  MPI_Type_contiguous(sizeof(Element), MPI_BYTE, &etype);
-  MPI_Type_commit(&etype);
+  MPI::Datatype etype(MPI::BYTE.Create_contiguous(sizeof(Element)));
+  etype.Commit();
 
   // Set up arrays for the MPI subarray
   int sizes[4];
@@ -18,23 +17,53 @@ void Base::Weave::fieldShift(Base::SpaceTimeIndex idx, Base::Direction dir, Elem
   int starts[4];
   std::fill(starts, starts + 4, 0);
   starts[idx] = offsets[idx];
-  if (dir == dir_DOWN)
+  if (dir == dir_UP)
     starts[idx] = (starts[idx] + sizes[idx] - 1) % sizes[idx];
 
+  /*
+  std::cout << "starts:";
+  for(size_t mu = 0; mu < 4; mu++)
+  {
+    std::cout << " ";
+    std::cout.width(4);
+    std::cout << starts[mu];
+  }
+  std::cout << std::endl;
+
+  std::cout << "sizes:";
+  for(size_t mu = 0; mu < 4; mu++)
+  {
+    std::cout << " ";
+    std::cout.width(4);
+    std::cout << sizes[mu];
+  }
+  std::cout << std::endl;
+
+  std::cout << "subsizes:";
+  for(size_t mu = 0; mu < 4; mu++)
+  {
+    std::cout << " ";
+    std::cout.width(4);
+    std::cout << subsizes[mu];
+  }
+  std::cout << std::endl;
+  */
+
   // Create a subarray for the surface we need
-  MPI_Datatype surface;
-  MPI_Type_create_subarray(4, sizes, subsizes, starts, MPI_ORDER_C, etype, &surface);
-  MPI_Type_commit(&surface);
+  // Note that the order is column mayor order (reflected by MPI::ORDER_FORTRAN)
+  MPI::Datatype surface(etype.Create_subarray(4, sizes, subsizes, starts, MPI::ORDER_FORTRAN));
+  surface.Commit();
+
+
+  int source_rank, dest_rank;
+  (d_grid.grid()).Shift(idx, dir, source_rank, dest_rank);
 
   // Send the data indicated by the subarray to our neighbours
-  MPI_Status status;
-  Base::Direction opp_dir = (dir == dir_UP) ? dir_DOWN : dir_UP;
-  MPI_Sendrecv_replace(field, 1, surface,
-                       d_grid.neighbour(idx, dir) /* destination */, 1 /* sendtag */,
-                       d_grid.neighbour(idx, opp_dir) /* source */, 1 /* recvtag */,
-                       d_grid.grid(), &status);
+  (d_grid.grid()).Sendrecv_replace(field, 1, surface,
+                                   // send own data in direction, recieve data from opposite direction
+                                   dest_rank, 1 /* sendtag */, source_rank,  1 /* recvtag */);
 
   // Clear up any resources we claimed
-  MPI_Type_free(&surface);
-  MPI_Type_free(&etype);
+  surface.Free();
+  etype.Free();
 }

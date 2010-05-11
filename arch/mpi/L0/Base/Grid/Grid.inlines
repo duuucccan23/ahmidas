@@ -1,7 +1,9 @@
 namespace Base
 {
   inline Grid::~Grid()
-  {}
+  {
+    s_agent.val--;
+  }
 
   inline MPI::Cartcomm const &Grid::grid() const
   {

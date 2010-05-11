@@ -44,8 +44,9 @@ void Tool::IO::saveILDG(Core::Field< Element > const &field, std::string const &
   assert(writer.good());
 
   writer.newRecord("ildg-data-lfn", 0, 0); //NOTE incomplete header for now
-  size_t pos = writer.closeRecord();
   writer.finishMessage();
+
+  size_t pos = writer.closeRecord();
 
   // all processes should know where we are
   weave.broadcast(&pos, 1, root_rank);

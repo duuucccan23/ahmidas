@@ -19,6 +19,10 @@ namespace Base
 
       MPIAgent(); // Protected constructor
       public:
+      // This is a dummy member which helps enforcing
+      // intialization of static member Grid::s_agent.
+      // It is needed since compilers most likely optimize it away,
+      // even though it is crucial for initializing and finalizing MPI.
       int val;
       ~MPIAgent();
     };

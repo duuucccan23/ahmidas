@@ -18,4 +18,5 @@ void Tool::IO::Lime::Writer::newRecord(std::string const &type, size_t const rOf
   d_stream.seekp(d_startOfNextRecord, std::ios::beg);
 
   reserveHeader();
+  d_hasWritten = false;
 }

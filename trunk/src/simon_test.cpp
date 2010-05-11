@@ -72,14 +72,30 @@ int main(int argc, char **argv)
   Tool::IO::load(&gauge_field, gaugeFieldFiles[0], Tool::IO::fileILDG);
   std::cout << "done.\n" << std::endl;
 
-//   return 0;
+  Core::Propagator testProp(L, T);
+  std::cout << "spinor field to be read from " <<  stochasticSourceFiles[0] << " and so on ... ";
+  Tool::IO::load(&testProp, stochasticSourceFiles, Tool::IO::fileSCIDAC, 64);
+  std::cout << "done.\n" << std::endl;
+
+  Tool::IO::save(&gauge_field, gaugeFieldFiles[0] + ".rw", Tool::IO::fileILDG);
+  std::cout << "gauge field saved" << std::endl;
+
+
+  std::vector< std::string > stochasticSourceFilesRW;
+  for (size_t idx=0; idx<12; idx++)
+  {
+    stochasticSourceFilesRW.push_back((files[4])[idx] + ".rw");
+  }
+  std::cout << "saving" << std::endl;
+  Tool::IO::save(&testProp, stochasticSourceFilesRW, Tool::IO::fileSCIDAC);
+  std::cout << "spinor field saved" << std::endl;
 
 //   Smear::APE APE_tool(APE_alpha);
-//   Smear::Jacobi Jacobi_tool(Jac_alpha);
-
+// //   Smear::Jacobi Jacobi_tool(Jac_alpha);
+// 
 //   APE_tool.smear(gauge_field, APE_iterations);
-
-  Tool::IO::save(&gauge_field, gaugeFieldFiles[0] + ".smeared", Tool::IO::fileILDG);
+// 
+//   Tool::IO::save(&gauge_field, gaugeFieldFiles[0] + ".smeared", Tool::IO::fileILDG);
 
   return 0;
 

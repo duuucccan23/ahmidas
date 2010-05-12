@@ -89,6 +89,14 @@ namespace Contract
   /* ---------------------------------------------------------------------------------------------- */
 
 
+  std::vector< Core::Correlator > proton_threepoint_sequential(
+    Core:: Propagator const &bw_prop_u, Core::Propagator const &fw_prop_u,
+    Core:: Propagator const &bw_prop_d, Core::Propagator const &fw_prop_d,
+    std::vector< Base::Operator > ops);
+
+
+  /* ---------------------------------------------------------------------------------------------- */
+
 
   // the proton three point with a stochastic (estimate of an) all-to-all propagator at the proton sink.
   // this is a mess concerning performance since it scales vith 4-Volume^2, but provides a good cross-check
@@ -102,10 +110,6 @@ namespace Contract
                                                           std::vector< Base::Operator > const &ops,
                                                           size_t const t_src, size_t const t_snk);
 
-  std::vector< Core::Correlator > proton_threepoint_sequential(
-    Core:: Propagator const &bw_prop_u, Core::Propagator const &fw_prop_u,
-    Core:: Propagator const &bw_prop_d, Core::Propagator const &fw_prop_d,
-    std::vector< Base::Operator > ops);
 
   std::vector< Core::Correlator > proton_threepoint_stochastic(Core::Propagator const &u,
                                                 Core::Propagator const &d,

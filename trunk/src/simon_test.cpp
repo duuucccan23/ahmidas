@@ -219,8 +219,8 @@ int main(int argc, char **argv)
 
   idx = 0;
 
-  gauge_field.shift(Base::idx_T, Base::dir_DOWN);
-  gauge_field.shift(Base::idx_T, Base::dir_UP);
+//   gauge_field.shift(Base::idx_T, Base::dir_DOWN);
+  gauge_field.shift(Base::idx_X, Base::dir_UP);
 
   for(size_t idx_T = 0; idx_T < T; idx_T++)
   {
@@ -244,10 +244,10 @@ int main(int argc, char **argv)
           std::cout.width(3);
           std::cout << idx << "  " << ((gauge_field[localIndex])[0])(0, 0) << std::endl;
 
-          assert(((gauge_field[localIndex])[0])(0, 0) == std::complex< double >(idx, 0));
-          assert(((gauge_field[localIndex])[1])(0, 0) == std::complex< double >(idx, 1));
-          assert(((gauge_field[localIndex])[2])(0, 0) == std::complex< double >(idx, 2));
-          assert(((gauge_field[localIndex])[3])(0, 0) == std::complex< double >(idx, 3));
+//           assert(((gauge_field[localIndex])[0])(0, 0) == std::complex< double >(idx, 0));
+//           assert(((gauge_field[localIndex])[1])(0, 0) == std::complex< double >(idx, 1));
+//           assert(((gauge_field[localIndex])[2])(0, 0) == std::complex< double >(idx, 2));
+//           assert(((gauge_field[localIndex])[3])(0, 0) == std::complex< double >(idx, 3));
 
           ++idx;
         }
@@ -256,7 +256,7 @@ int main(int argc, char **argv)
   }
 
 
-//   return 0;
+   return 0;
 
   // ############################################################################################
 
@@ -288,7 +288,6 @@ int main(int argc, char **argv)
             ++idx;
             continue;
           }
-
 
           std::cout << idx << std::endl;
 

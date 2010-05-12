@@ -3,6 +3,14 @@ namespace Core
   template< typename Element >
   Field< Element > &Field< Element >::shift(Base::SpaceTimeIndex const idx, Base::Direction const dir)
   {
+
+    /* NOTE
+       convention:
+       numbers = data, positions 
+       dir == Base::dir_UP   => 0,1,2,3,4 -> 1,2,3,4,0
+       dir == Base::dir_DOWN => 0,1,2,3,4 -> 4,0,1,2,3
+    */
+
     isolate();
     d_weave.fieldShift(idx, dir, d_field, d_offsets);
 

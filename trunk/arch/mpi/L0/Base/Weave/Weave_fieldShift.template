@@ -56,12 +56,15 @@ void Base::Weave::fieldShift(Base::SpaceTimeIndex const idx, Base::Direction con
 
 
   int source_rank, dest_rank;
+  // The MPI cartesian communicator tells us where to send the data and from where to recieve
   (d_grid.grid()).Shift(idx, dir, source_rank, dest_rank);
 
   // Send the data indicated by the subarray to our neighbours
   (d_grid.grid()).Sendrecv_replace(field, 1, surface,
                                    // send own data in direction, recieve data from opposite direction
                                    dest_rank, 1 /* sendtag */, source_rank,  1 /* recvtag */);
+
+  barrier();
 
   // Clear up any resources we claimed
   surface.Free();

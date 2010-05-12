@@ -7,7 +7,7 @@ Core::Field< SU3::Matrix > Path::square(Core::Field< QCD::Gauge > &field, Base::
   Core::Field< SU3::Matrix > result(Path::step(field, via, dirVia)); //step1
 
   Path::step(&result, field, to, dirTo); //step2
-  Path::step(&result, field, via, opposite(dirVia)); //step3
-  Path::step(&result, field, to, opposite(dirTo)); //back to starting point
+  Path::step(&result, field, via, Base::opposite(dirVia)); //step3
+  Path::step(&result, field, to,  Base::opposite(dirTo)); //back to starting point
   return result;
 }

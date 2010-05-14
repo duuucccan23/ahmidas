@@ -1,8 +1,9 @@
 class const_iterator;
 
-class iterator: public std::iterator< std::bidirectional_iterator_tag, Element >
+class iterator : public std::iterator< std::bidirectional_iterator_tag, Element >
 {
   friend class Field< Element >;
+  friend class const_iterator;
 
   private:
    Field< Element >  &d_parent;

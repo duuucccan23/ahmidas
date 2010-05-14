@@ -52,6 +52,8 @@ namespace SU3
 
   typedef class Tensor< 1 > Vector;
 
+  std::ostream &operator<<(std::ostream &out, Vector const &vec);
+
   std::complex< double > innerProduct(Vector const &left, Vector const &right);
 }
 

@@ -68,6 +68,7 @@ namespace Base
 
   inline bool Weave::isRoot() const
   {
+    // std::cout <<  "my_rank =" <<  d_grid.grid().Get_rank() << std::endl;
     return d_grid.grid().Get_rank() == 0;
   }
 

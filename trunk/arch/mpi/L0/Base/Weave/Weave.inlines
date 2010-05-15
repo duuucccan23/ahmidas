@@ -38,6 +38,7 @@ namespace Base
   inline double Weave::sum(double result) const
   {
     double all_result;
+    barrier();
     d_grid.grid().Allreduce(static_cast< const void * >(&result), static_cast< void * >(&all_result),
                            1, MPI::DOUBLE, MPI::SUM);
     return all_result;

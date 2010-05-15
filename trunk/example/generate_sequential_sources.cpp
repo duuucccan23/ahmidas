@@ -1,0 +1,139 @@
+#include <cstring>
+#include <vector>
+#include <map>
+#include <complex>
+#include <iomanip>
+#include <iostream>
+#include <fstream>
+#include <sstream>
+
+#include <L0/QCD/Gauge.h>
+#include <L0/Core/Propagator.h>
+#include <L2/Contract/Baryon.h>
+#include <L1/Tool/IO.h>
+#include <L1/Smear.h>
+#include <L1/Smear/APE.h>
+#include <L1/Smear/Jacobi.h>
+#include <L2/Input/FileReader.h>
+
+
+// comment this in if propagators have uniform temporal boundary contitions
+// (e.g. the HMC inverter does this)
+#define __COMPENSATE_UNIFORM_BOUNDARY_CONDITIONS__
+
+
+int main(int argc, char **argv)
+{
+
+  size_t L = 0;
+  size_t T = 0;
+
+
+  Input::FileReader reader("./generate_sequential_sources_input.xml");
+
+  std::map< std::string, double > floats;
+  std::vector< size_t * > positions;
+  std::map< std::string, int > operators;
+  std::vector< std::vector< std::string > > files;
+
+  reader.initializeParameters(L, T, files, floats, positions, operators);
+
+  Base::Weave weave(L, T);
+  weave.barrier();
+
+  std::cout << "Lattice size: " << L << "x" << L << "x" << L << "x" << T << std::endl;
+
+  double kappa = floats["kappa"];
+  double mu    = floats["mu"];
+  std::cout << "kappa = " << kappa << ", mu = " << mu << std::endl;
+
+
+  double const APE_alpha      = floats["APE_param"];
+  size_t const APE_iterations = size_t(floats["APE_steps"]);
+  double const Jac_alpha      = floats["Jac_param"];
+  size_t const Jac_iterations = size_t(floats["Jac_steps"]);
+
+  size_t const sourceSinkSeparation = size_t(floats["sourceSinkSeparation"]);
+  assert(sourceSinkSeparation > 0 && sourceSinkSeparation < T-1);
+
+  std::cout << "APE    smearing: parameter = " << APE_alpha << ", iterations = " << APE_iterations << std::endl;
+  std::cout << "Jacobi smearing: parameter = " << Jac_alpha << ", iterations = " << Jac_iterations << std::endl;
+
+  size_t const * const source_position = positions[0];
+  size_t const timeslice_source = source_position[Base::idx_T];
+  std::cout << "timeslice (source) = " << timeslice_source << std::endl;
+  size_t const timeslice_sink = (timeslice_source +  sourceSinkSeparation) % T;
+  std::cout << "timeslice (sink) = " << timeslice_sink << std::endl;
+
+  // make sure the boundary is not crossed by source-sink correlaton function
+  size_t const timeslice_boundary = timeslice_sink > timeslice_source ? (T-1) : timeslice_source-1;
+  std::cout << "timeslice (boundary) = " << timeslice_source << std::endl;
+
+  std::vector< std::string > const &propfilesD(files[0]);
+  std::vector< std::string > const &propfilesU(files[1]);
+  std::vector< std::string > const &gaugeFieldFiles(files[2]);
+  std::vector< std::string > const &seqSourceFilesD(files[3]);
+  std::vector< std::string > const &seqSourceFilesU(files[4]);
+
+  Core::Field< QCD::Gauge > gauge_field(L, T);
+
+  std::cout << "gauge field to be read from " << gaugeFieldFiles[0] << " ... ";
+  Tool::IO::load(&gauge_field, gaugeFieldFiles[0], Tool::IO::fileILDG);
+  std::cout << "done.\n" << std::endl;
+
+
+  Smear::APE APE_tool(APE_alpha);
+  Smear::Jacobi Jacobi_tool(Jac_alpha);
+
+  APE_tool.smear(gauge_field, APE_iterations);
+
+
+  Core::Propagator uProp = Core::Propagator(L, T);
+  Tool::IO::load(&uProp, propfilesU, Tool::IO::fileSCIDAC, 64);
+
+  std::cout << "u quark propagator successfully loaded\n" << std::endl;
+
+  Core::Propagator dProp = Core::Propagator(L, T);
+  Tool::IO::load(&dProp, propfilesD, Tool::IO::fileSCIDAC, 64);
+
+
+  std::cout << "d quark propagator successfully loaded\n" << std::endl;
+
+
+#ifdef __COMPENSATE_UNIFORM_BOUNDARY_CONDITIONS__
+  dProp.changeBoundaryConditions_uniformToFixed(timeslice_source, timeslice_boundary);
+  uProp.changeBoundaryConditions_uniformToFixed(timeslice_source, timeslice_boundary);
+#endif
+
+
+  uProp.smearJacobi(Jac_alpha, Jac_iterations, gauge_field);
+  dProp.smearJacobi(Jac_alpha, Jac_iterations, gauge_field);
+
+  std::cout << "propagators smeared successfully\n" << std::endl;
+
+  Core::Propagator sequentialSource(L, T);
+  sequentialSource *= std::complex< double >(0, 0); // initialize with zero
+
+
+  Contract::create_sequential_source_proton_d(sequentialSource, uProp, uProp,
+                                              gauge_field, Smear::sm_Jacobi, Jac_iterations, Jac_alpha,
+                                              timeslice_sink, Base::proj_PARITY_PLUS_TM);
+
+
+
+  Tool::IO::save(&sequentialSource, seqSourceFilesD, Tool::IO::fileSCIDAC);
+
+  sequentialSource *= std::complex< double >(0, 0); // initialize with zero
+
+
+  Contract::create_sequential_source_proton_u(sequentialSource, dProp, uProp,
+                                              gauge_field, Smear::sm_Jacobi, Jac_iterations, Jac_alpha,
+                                              timeslice_sink, Base::proj_PARITY_PLUS_TM);
+
+
+  Tool::IO::save(&sequentialSource, seqSourceFilesU, Tool::IO::fileSCIDAC);
+
+  std::cout << "sequential sources generated and saved successfully\n" << std::endl;
+
+  return EXIT_SUCCESS;
+}

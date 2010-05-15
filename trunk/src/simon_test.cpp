@@ -85,6 +85,11 @@ int main(int argc, char **argv)
 
   std::vector< std::string > const &propfilesD(files[0]);
   std::vector< std::string > const &propfilesU(files[1]);
+#ifdef __VINCENT__
+ std::vector< std::string > const &smearedPropFilesDSmeared(files[2]);
+ std::vector< std::string > const &smearedPropFilesUSmeared(files[3]);
+#endif
+
 //   std::vector< std::string > const &stochasticPropFilesD(files[2]);
 //   std::vector< std::string > const &stochasticPropFilesU(files[3]);
 //   std::vector< std::string > const &stochasticSourceFiles(files[4]);
@@ -108,6 +113,7 @@ int main(int argc, char **argv)
   Smear::Jacobi Jacobi_tool(Jac_alpha);
 
   APE_tool.smear(gauge_field, APE_iterations);
+
 
 #ifdef __VINCENT__
   Tool::IO::save(&gauge_field, smearedGaugeFieldFiles[0], Tool::IO::fileILDG);
@@ -177,10 +183,11 @@ int main(int argc, char **argv)
 
 #ifdef __VINCENT__
 #ifdef __SMEARING__
-  dProp.changeBoundaryConditions_uniformToFixed(timeslice_sink, timeslice_boundary);
-  uProp.changeBoundaryConditions_uniformToFixed(timeslice_sink, timeslice_boundary);
+  dProp.changeBoundaryConditions_uniformToFixed(timeslice_source, timeslice_boundary);
+  uProp.changeBoundaryConditions_uniformToFixed(timeslice_source, timeslice_boundary);
 #endif
 #endif
+
 
 
 #ifdef __SMEARING__
@@ -191,6 +198,9 @@ int main(int argc, char **argv)
 
   uPropSmeared.smearJacobi(Jac_alpha, Jac_iterations, gauge_field);
   dPropSmeared.smearJacobi(Jac_alpha, Jac_iterations, gauge_field);
+
+  Tool::IO::save(&uPropSmeared, smearedPropFilesUSmeared, Tool::IO::fileSCIDAC);
+  Tool::IO::save(&dPropSmeared, smearedPropFilesDSmeared, Tool::IO::fileSCIDAC);
 
 #endif
 
@@ -320,7 +330,7 @@ int main(int argc, char **argv)
 //                                                 timeslice_sink);
 //     Tool::IO::save(&(sequentialSource[0]), files[10], Tool::IO::fileSCIDAC);
 // 
-//     return 0;
+//     //return 0;
 //   }
 #endif
 
@@ -328,9 +338,10 @@ int main(int argc, char **argv)
   sequentialSource *= std::complex< double >(0, 0);
 
 #ifdef __SMEARING__
-  Contract::create_sequential_source_proton_d(sequentialSource, uProp, uProp,
+  Contract::create_sequential_source_proton_d(sequentialSource, uPropSmeared, uPropSmeared,
                                               gauge_field, Smear::sm_Jacobi, Jac_iterations, Jac_alpha,
                                               timeslice_sink, Base::proj_PARITY_PLUS_TM);
+
 #else
   Contract::create_sequential_source_proton_d(sequentialSource, uProp, uProp, timeslice_sink, Base::proj_PARITY_PLUS_TM);
 #endif
@@ -340,7 +351,7 @@ int main(int argc, char **argv)
   sequentialSource *= std::complex< double >(0, 0);
 
 #ifdef __SMEARING__
-  Contract::create_sequential_source_proton_u(sequentialSource, dProp, uProp,
+  Contract::create_sequential_source_proton_u(sequentialSource, dPropSmeared, uPropSmeared,
                                               gauge_field, Smear::sm_Jacobi, Jac_iterations, Jac_alpha,
                                               timeslice_sink, Base::proj_PARITY_PLUS_TM);
 #else

@@ -55,7 +55,8 @@ namespace Base
     {
       bool wrap[] = {true, true, true, true};
       int intGrid[4];
-      std::copy(d_dims, d_dims + 4, intGrid);
+      for (size_t idx = 0; idx < 4; ++idx)
+        intGrid[idx] = int(d_dims[idx]);
 
       d_grid = MPI::COMM_WORLD.Create_cart(4 /* ndims */, intGrid, wrap, true /* reorder */);
 
@@ -65,7 +66,8 @@ namespace Base
       d_backbone = d_grid.Split(d_timeSlice.Get_rank(), 0); // We'll leave the rank in standard order
 
       d_grid.Get_coords(d_grid.Get_rank(), 4, intGrid);
-      std::copy(intGrid, intGrid + 4, d_coords);
+      for (size_t idx = 0; idx < 4; ++idx)
+        d_coords[idx] = size_t(intGrid[idx]);
     }
 
     // Calculate and store the dimensional size for the distribution just constructed

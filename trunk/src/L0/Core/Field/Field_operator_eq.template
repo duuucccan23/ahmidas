@@ -10,5 +10,7 @@ Core::Field< Element > &Core::Field< Element >::operator=(Core::Field< Element >
   *d_references += 1;
   d_field = other.d_field;
   d_offsets = other.d_offsets;
+
+  d_weave.barrier();
   return *this;
 }

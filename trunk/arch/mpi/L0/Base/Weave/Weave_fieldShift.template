@@ -20,7 +20,7 @@ void Base::Weave::fieldShift(Base::SpaceTimeIndex const idx, Base::Direction con
   if (dir == dir_UP)
     starts[idx] = (starts[idx] + sizes[idx] - 1) % sizes[idx];
 
-  /*
+/*  
   std::cout << "starts:";
   for(size_t mu = 0; mu < 4; mu++)
   {
@@ -46,18 +46,19 @@ void Base::Weave::fieldShift(Base::SpaceTimeIndex const idx, Base::Direction con
     std::cout.width(4);
     std::cout << subsizes[mu];
   }
-  std::cout << std::endl;
-  */
+  std::cout << std::endl;*/
+
 
   // Create a subarray for the surface we need
   // Note that the order is column mayor order (reflected by MPI::ORDER_FORTRAN)
   MPI::Datatype surface(etype.Create_subarray(4, sizes, subsizes, starts, MPI::ORDER_FORTRAN));
   surface.Commit();
 
-
   int source_rank, dest_rank;
   // The MPI cartesian communicator tells us where to send the data and from where to recieve
   (d_grid.grid()).Shift(idx, dir, source_rank, dest_rank);
+
+//   std::cout << "rank " << rank() << " is sending to rank " << dest_rank << " and recieving from rank " << source_rank << std::endl;
 
   // Send the data indicated by the subarray to our neighbours
   (d_grid.grid()).Sendrecv_replace(field, 1, surface,
@@ -65,6 +66,7 @@ void Base::Weave::fieldShift(Base::SpaceTimeIndex const idx, Base::Direction con
                                    dest_rank, 1 /* sendtag */, source_rank,  1 /* recvtag */);
 
   barrier();
+
 
   // Clear up any resources we claimed
   surface.Free();

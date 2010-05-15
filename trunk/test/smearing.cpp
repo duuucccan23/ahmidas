@@ -23,6 +23,8 @@ int main(int argc, char **argv)
   size_t const L = 4;
   size_t const T = 8;
 
+  Base::Weave weave(L, T);
+
   double const precision_APE    = 1.e-5;
   double const precision_Jacobi = 1.e-5;
 
@@ -32,15 +34,17 @@ int main(int argc, char **argv)
   double const Jac_alpha = 0.5;
   size_t const Jac_iterations = 5;
 
-
   Core::Field< QCD::Gauge > my_gauge_field(L, T);
   Tool::IO::load(&my_gauge_field, "../../test/conf.48", Tool::IO::fileILDG);
   Core::Field< QCD::Spinor > my_spinor_field(L, T);
   Tool::IO::load(&my_spinor_field, "../../test/point_src.48", Tool::IO::fileSCIDAC, 64);
 
+  weave.barrier();
+
   Smear::APE my_APE_tool(APE_alpha);
   my_APE_tool.smear(my_gauge_field, APE_iterations);
 
+  weave.barrier();
 
   Smear::Jacobi my_Jacobi_tool(Jac_alpha);
   my_Jacobi_tool.smear(&my_spinor_field, my_gauge_field, Jac_iterations);
@@ -49,8 +53,6 @@ int main(int argc, char **argv)
   /* ----------------------------------------------------------------------------- */
 
   bool testPassed(false);
-
-  Base::Weave weave(L, T);
 
   size_t const idx_T = 5;
   size_t const idx_X = 2;
@@ -66,6 +68,12 @@ int main(int argc, char **argv)
   size_t localIndex = weave.globalCoordToLocalIndex(idx_X, idx_Y, idx_Z, idx_T);
 
   size_t data_rank = weave.rank(site);
+//   std::cout << "my rank = "<< weave.rank() << ", data rank = " << data_rank  << ", localIndex = " << localIndex << std::endl;
+
+//   size_t const *coords = weave.d_grid.coords();
+
+//   std::cout << weave.rank() << ": " <<coords[0] <<  coords[1] << coords[2] <<  coords[3] << std::endl;
+//   std::cout << weave.rank() <<": dims: " << weave.d_grid.dim(0) <<  weave.d_grid.dim(1) << weave.d_grid.dim(2) <<  weave.d_grid.dim(3) << std::endl;
 
   /* if data locally available */
   if (data_rank == weave.rank())

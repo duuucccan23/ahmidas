@@ -17,7 +17,7 @@ int main(int argc, char **argv)
   double plaqt = Tool::temporalPlaquette(myfield);
   double plaq = 0.5 * (plaqt + plaqs);
 
-  std::cout << "Summmed plaquette value: " << std::setprecision(14) << plaq << std::endl;
+  std::cout << "Summed plaquette value: " << std::setprecision(14) << plaq << std::endl;
   bool plaqeq = (fabs(plaq/stored - 1) <= prec);
   std::cout << "This differs " << (plaqeq ? "less" : "more") << " then " << prec << " from the stored value.\n";
 

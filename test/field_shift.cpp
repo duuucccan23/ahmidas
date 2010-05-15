@@ -215,5 +215,95 @@ int main(int argc, char **argv)
     }
   }
 
+
+ {
+    Core::Field< QCD::Gauge > gauge_field_tmp(gauge_field);
+
+    size_t const idx_X(0);
+    size_t const idx_Z(0);
+    size_t const idx_T(T-1);
+
+    size_t const coords[4]  = {idx_X, 0, idx_Z, idx_T};
+
+    std::complex< double > c_after;
+
+    std::complex< double > c_before(idx_T*(L*L*L)+L*(L-1), 0);
+
+    weave.barrier();
+
+    gauge_field_tmp.shift(Base::idx_Y, Base::dir_UP);
+
+    size_t const rank = weave.rank(coords);
+
+    if (weave.rank() == rank)
+    {
+      size_t localIndex = weave.globalCoordToLocalIndex(idx_X, 0, idx_Z, idx_T);
+      c_after = ((gauge_field_tmp[localIndex])[0])(0, 0);
+    }
+    weave.broadcast(&c_after, 1, rank);
+
+    std::cout.width(4);
+    std::cout << c_before.real() << " <- expected | observed -> ";
+    std::cout.width(4);
+    std::cout << c_after.real() << std::endl;
+
+    weave.barrier();
+
+    if (c_before == c_after)
+    {
+      std::cout << "SUCCESS: shifting Y index up gives expected result!" << std::endl;
+    }
+    else
+    {
+      std::cerr << "FAILURE: shifting Y index up gives unexpected results!" << std::endl;
+      return EXIT_FAILURE;
+    }
+  }
+
+
+ {
+    Core::Field< QCD::Gauge > gauge_field_tmp(gauge_field);
+
+    size_t const idx_X(0);
+    size_t const idx_Y(0);
+    size_t const idx_T(T-1);
+
+    size_t const coords[4]  = {idx_X, idx_Y, 0, idx_T};
+
+    std::complex< double > c_after;
+
+    std::complex< double > c_before(idx_T*(L*L*L)+L*L*(L-1), 0);
+
+    weave.barrier();
+
+    gauge_field_tmp.shift(Base::idx_Z, Base::dir_UP);
+
+    size_t const rank = weave.rank(coords);
+
+    if (weave.rank() == rank)
+    {
+      size_t localIndex = weave.globalCoordToLocalIndex(idx_X, idx_Y, 0, idx_T);
+      c_after = ((gauge_field_tmp[localIndex])[0])(0, 0);
+    }
+    weave.broadcast(&c_after, 1, rank);
+
+    std::cout.width(4);
+    std::cout << c_before.real() << " <- expected | observed -> ";
+    std::cout.width(4);
+    std::cout << c_after.real() << std::endl;
+
+    weave.barrier();
+
+    if (c_before == c_after)
+    {
+      std::cout << "SUCCESS: shifting Z index up gives expected result!" << std::endl;
+    }
+    else
+    {
+      std::cerr << "FAILURE: shifting Z index up gives unexpected results!" << std::endl;
+      return EXIT_FAILURE;
+    }
+  }
+
   return EXIT_SUCCESS;
 }

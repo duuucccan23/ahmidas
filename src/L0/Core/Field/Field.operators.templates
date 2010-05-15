@@ -137,6 +137,7 @@ namespace Core
     isolate();
     for (size_t idx = 0; idx < d_weave.localVolume(); ++idx )
       d_field[idx] += other[shiftIdxToZero(idx)];
+    d_weave.barrier();
     return *this;
   }
 
@@ -147,6 +148,7 @@ namespace Core
     isolate();
     for (size_t idx = 0; idx < d_weave.localVolume(); ++idx )
       d_field[idx] += other.parentIdx(shiftIdxToZero(idx)).dagger();
+    d_weave.barrier();
     return *this;
   }
 
@@ -157,6 +159,7 @@ namespace Core
     isolate();
     for (size_t idx = 0; idx < d_weave.localVolume(); ++idx)
       d_field[idx] -= other;
+    d_weave.barrier();
     return *this;
   }
 
@@ -167,6 +170,7 @@ namespace Core
     isolate();
     for (size_t idx = 0; idx < d_weave.localVolume(); ++idx)
       d_field[idx] -= other[shiftIdxToZero(idx)];
+    d_weave.barrier();
     return *this;
   }
 
@@ -177,6 +181,7 @@ namespace Core
     isolate();
     for (size_t idx = 0; idx < d_weave.localVolume(); ++idx)
       d_field[idx] -= other[shiftIdxToZero(idx)].dagger();
+    d_weave.barrier();
     return *this;
   }
 
@@ -187,6 +192,7 @@ namespace Core
     isolate();
     for (size_t idx = 0; idx < d_weave.localVolume(); ++idx )
       d_field[idx] -= other[shiftIdxToZero(idx)];
+    d_weave.barrier();
     return *this;
   }
 
@@ -197,6 +203,7 @@ namespace Core
     isolate();
     for (size_t idx = 0; idx < d_weave.localVolume(); ++idx )
       d_field[idx] -= other.parentIdx(shiftIdxToZero(idx)).dagger();
+    d_weave.barrier();
     return *this;
   }
 
@@ -207,6 +214,7 @@ namespace Core
     isolate();
     for (size_t idx = 0; idx < d_weave.localVolume(); ++idx)
       d_field[idx] *= other;
+    d_weave.barrier();
     return *this;
   }
 
@@ -217,6 +225,7 @@ namespace Core
     isolate();
     for (size_t idx = 0; idx < d_weave.localVolume(); ++idx)
       d_field[idx] *= other[shiftIdxToZero(idx)];
+    d_weave.barrier();
     return *this;
   }
 
@@ -227,6 +236,7 @@ namespace Core
     isolate();
     for (size_t idx = 0; idx < d_weave.localVolume(); ++idx)
       d_field[idx] *= other[shiftIdxToZero(idx)].dagger();
+    d_weave.barrier();
     return *this;
   }
 
@@ -237,6 +247,7 @@ namespace Core
     isolate();
     for (size_t idx = 0; idx < d_weave.localVolume(); ++idx )
       d_field[idx] *= other[shiftIdxToZero(idx)];
+    d_weave.barrier();
     return *this;
   }
 
@@ -247,6 +258,7 @@ namespace Core
     isolate();
     for (size_t idx = 0; idx < d_weave.localVolume(); ++idx )
       d_field[idx] *= other.parentIdx(shiftIdxToZero(idx)).dagger();
+    d_weave.barrier();
     return *this;
   }
 
@@ -257,6 +269,7 @@ namespace Core
     isolate();
     for (size_t idx = 0; idx < d_weave.localVolume(); ++idx)
       d_field[idx] /= other;
+    d_weave.barrier();
     return *this;
   }
 
@@ -267,6 +280,7 @@ namespace Core
     isolate();
     for (size_t idx = 0; idx < d_weave.localVolume(); ++idx)
       d_field[idx] /= other[shiftIdxToZero(idx)];
+    d_weave.barrier();
     return *this;
   }
 
@@ -277,6 +291,7 @@ namespace Core
     isolate();
     for (size_t idx = 0; idx < d_weave.localVolume(); ++idx)
       d_field[idx] /= other[shiftIdxToZero(idx)].dagger();
+    d_weave.barrier();
     return *this;
   }
 
@@ -287,6 +302,7 @@ namespace Core
     isolate();
     for (size_t idx = 0; idx < d_weave.localVolume(); ++idx )
       d_field[idx] /= other[shiftIdxToZero(idx)];
+    d_weave.barrier();
     return *this;
   }
 
@@ -297,6 +313,7 @@ namespace Core
     isolate();
     for (size_t idx = 0; idx < d_weave.localVolume(); ++idx )
       d_field[idx] /= other.parentIdx(shiftIdxToZero(idx)).dagger();
+    d_weave.barrier();
     return *this;
   }
 }

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<ahmidas>
+  <params>
+    <L> 4 </L>
+    <T> 4 </T>
+    <kappa> 0.10 </kappa>
+    <mu> 0.01 </mu>
+  </params>
+  <files>
+    <file>
+      <type>stoc_propagator</type>
+      <directory>../test</directory>
+      <filenameBase>source.9999.01.</filenameBase>
+      <filenameEnding>.inverted</filenameEnding>
+      <firstIndex>0</firstIndex>
+      <lastIndex>3</lastIndex>
+      <indexWidth>2</indexWidth>
+    </file>
+    <file>
+      <type>stoc_propagator</type>
+      <directory>../test</directory>
+      <filenameBase>source.9999.01.sequential.</filenameBase>
+      <firstIndex>0</firstIndex>
+      <lastIndex>3</lastIndex>
+      <indexWidth>2</indexWidth>
+    </file>
+  </files>
+</ahmidas>

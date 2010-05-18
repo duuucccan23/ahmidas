@@ -12,3 +12,6 @@ TARGET_LINK_LIBRARIES(gamma Dirac)
 
 ADD_EXECUTABLE(generate_sequential_sources generate_sequential_sources.cpp)
 TARGET_LINK_LIBRARIES(generate_sequential_sources SU3 IO Base Core Dirac Weave Contract Input Smear)
+
+ADD_EXECUTABLE(prova prova.cpp)
+TARGET_LINK_LIBRARIES(prova Base Core IO Input)

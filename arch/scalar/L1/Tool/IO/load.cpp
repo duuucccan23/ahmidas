@@ -269,7 +269,8 @@ void Tool::IO::loadScidac(Core::StochasticPropagator< 4 > *sPropagator, std::vec
       for (size_t i=0; i<12; i+=3)
       {
         spinors[i] = new QCD::Spinor(*(itsSpinor[i/3]));
-        ++(itsSpinor[i/3]);
+        if(i%3 == 0)
+          ++(itsSpinor[i/3]);
       }
       (*itTensor) = QCD::Tensor(spinors);
       for (size_t i=0; i<12; i+=3)

@@ -5,7 +5,7 @@ inline StochasticPropagator< NComp >::StochasticPropagator(size_t const L, size_
 
 template< size_t NComp >
 inline StochasticPropagator< NComp >::StochasticPropagator(StochasticPropagator< NComp > const &other)
-  : Propagator(dynamic_cast< Propagator const& >(other))
+ : Propagator(other)
 {}
 
 template< size_t NComp >

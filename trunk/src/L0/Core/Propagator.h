@@ -24,8 +24,6 @@ namespace Core
   class Propagator
   {
 
-    size_t *d_references;
-
     static const size_t nDirac  = 2;
     static const size_t nColour = 2;
     static const size_t d_size = 144;
@@ -33,11 +31,12 @@ namespace Core
     protected:
       Core::Field< QCD::Tensor > *d_components;
 
+      size_t *d_references;
+
     public:
 
       Propagator(size_t L, size_t T, bool alloc=true);
       Propagator(Propagator const &other);
-      Propagator(Propagator const &other, size_t const timeslice);
       ~Propagator();
 
 
@@ -61,6 +60,9 @@ namespace Core
 
       template < size_t Index >
       void rightMultiply(Dirac::Gamma< Index > const& gamma);
+
+
+      Propagator &select_timeslice(size_t const timeslice);
 
       Propagator &smearJacobi(double const alpha, size_t const iterations, Field< QCD::Gauge > &gauge_field);
 
@@ -132,7 +134,7 @@ namespace Core
 
       friend std::ostream &operator<<(std::ostream &out, Propagator const &p);
 
-    private:
+    protected:
       void destroy();
       void isolate();
 
@@ -184,11 +186,16 @@ namespace Core
       StochasticPropagator< NComp > (Propagator const &other);
 
       StochasticPropagator< NComp > (StochasticPropagator< NComp > const &other);
-      StochasticPropagator< NComp > (StochasticPropagator< NComp > const &other, size_t const timeslice);
 
       Field< Dirac::Matrix > *operator*(StochasticPropagator< NComp > const &other) const;
 
+      StochasticPropagator< NComp > &select_timeslice(size_t const timeslice);
+      
       Propagator operator*(StochasticSource< NComp > const &sSource) const;
+     
+      private:
+        void isolate();
+
 
   };
 

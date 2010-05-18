@@ -55,7 +55,9 @@ namespace Tool
     void load(Core::StochasticPropagator< 4 > *sPropagator, std::vector< std::string > const &filenames,
               Tool::IO::filetype type);
 
-
+    void save(Core::StochasticPropagator< 4 > *sPropagator, std::vector< std::string > const &filenames,
+              Tool::IO::filetype type);
+    
     void save(Core::Field< QCD::Gauge >  *field, std::string const &filename, Tool::IO::filetype);
     void save(Core::Field< QCD::Spinor > *field, std::string const &filename, Tool::IO::filetype);
 

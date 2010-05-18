@@ -114,7 +114,9 @@ int main(int argc, char **argv)
   // here we declare a gamma-matrix
   Dirac::Gamma<5> gamma5;
 
-  Core::StochasticPropagator<4> sequential_source(stoc_propagator, t_insertion);
+  Core::StochasticPropagator<4> sequential_source(stoc_propagator);
+  // we are only interested in one timeslice
+  sequential_source.select_timeslice(t_insertion);
 
   sequential_source.rightMultiply(gamma5); 
 

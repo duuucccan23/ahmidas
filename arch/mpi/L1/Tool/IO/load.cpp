@@ -264,15 +264,15 @@ namespace Tool
 
         while (itTensor != sPropagator->end())
         {
-          for (size_t i=0; i<12; i+=3)
+          for (size_t i=0; i<4; i++)
           {
-            spinors[i] = new QCD::Spinor(*(itsSpinor[i/3]));
-            ++(itsSpinor[i/3]);
+            spinors[i*3] = new QCD::Spinor(*(itsSpinor[i]));
+            ++(itsSpinor[i]);
           }
           (*itTensor) = QCD::Tensor(spinors);
-          for (size_t i=0; i<12; i+=3)
+          for (size_t i=0; i<4; i++)
           {
-            delete spinors[i];
+            delete spinors[i*3];
           }
           ++itTensor;
         }

@@ -1,7 +1,7 @@
 SET(Sources_Correlator Correlator/Correlator_sumOverSpatialVolume.cpp Correlator/Correlator_projection.cpp
                        Correlator/Correlator_cout_operator_lshift.cpp Correlator/Correlator_isolate.cpp
                        Correlator/Correlator_destroy.cpp)
-SET(Sources_Propagator Propagator/StochasticPropagator_StochasticPropagator.cpp
+SET(Sources_Propagator Propagator/StochasticPropagator.cpp
                        Propagator/StochasticSource.cpp
                        Propagator/Propagator_changeBoundaryConditions.cpp
                        Propagator/Propagator_construct_baryon.cpp
@@ -10,8 +10,8 @@ SET(Sources_Propagator Propagator/StochasticPropagator_StochasticPropagator.cpp
                        Propagator/Propagator_diff.cpp
                        Propagator/Propagator_gaugeTransformation.cpp
                        Propagator/Propagator_isolate.cpp
-                       Propagator/Propagator_Propagator.cpp
                        Propagator/Propagator_revert.cpp
+                       Propagator/Propagator_select_timeslice.cpp
                        Propagator/Propagator_shift.cpp
                        Propagator/Propagator_smearJacobi.cpp
                        Propagator/Propagator.operators.cpp)

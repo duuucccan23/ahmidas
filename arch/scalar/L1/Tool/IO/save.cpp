@@ -172,3 +172,4 @@ void Tool::IO::saveScidac(Core::StochasticPropagator<4> *spropagator, std::vecto
     exit(1);
   }
 }
+

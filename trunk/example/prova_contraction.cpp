@@ -1,5 +1,6 @@
+
 /*
-   This is meant to prepare the source for the sequential propagator of PS mesons.
+   This is meant to be the contrction code for 3pts functions of PS mesons.
 */
 
 // C++ complex library
@@ -17,6 +18,8 @@
 #include <iostream>
 
 
+
+
 /* *** ahmidas interfaces *** */
 
 // representation of Dirac gamma matrices
@@ -30,11 +33,18 @@
 // // underlying Tensor structure
 // #include <L0/QCD/Tensor.h>
 
+// correlation function structure
+#include <L0/Core/Correlator.h>
+
+// this contains the contractions we actually perform directly in the main function here
+#include <L2/Contract/Meson.h>
+
 // IO interface
 #include <L1/Tool/IO.h>
 
 // input file reader interface
 #include <L2/Input/FileReader.h>
+
 
 
 
@@ -45,7 +55,6 @@ int main(int argc, char **argv)
   size_t L(0);
   size_t T(0);
 
-
   /* those are the containers to be filled by the input file reader */
 
   // this one contains floating point variables like kappa, mu, ...
@@ -53,15 +62,12 @@ int main(int argc, char **argv)
   // this one contains the file names (themselves stored in containers) of propagators (or sources, gauge fields, ...)
   std::vector< std::vector< std::string > > files;
 
-
-
-
   /* ****************************************** */
   /* ****** reading the input file ************ */
   /* ****************************************** */
 
   // create input file reader, the name of the input file has to be passed as a parameter
-  Input::FileReader reader("../example/prova_input.xml");
+  Input::FileReader reader("../example/prova_contraction_input.xml");
 
   // get input parameters
   // note: this is how to invoke a member function of an object in C++:
@@ -81,8 +87,6 @@ int main(int argc, char **argv)
   std::cout << "kappa = " << kappa << ", mu = " << mu << std::endl;
 
   size_t t_src = size_t(floats["timesliceSource"]); 
-  size_t t_srcsnk = size_t(floats["timeseparationSourceSink"]); 
-  size_t t_insertion = (t_srcsnk + t_src) % T;
 
   std::cout << "\nThe following files are going to be read:" << std::endl;
 
@@ -93,32 +97,74 @@ int main(int argc, char **argv)
     std::cout << (files[0])[fileIndex] << std::endl;
   }
 
-  // create Propagator structure
-  // note: we use dynamical memory allocation (indicated by the C++ keyword "new")
-  // thus u_propagator actually is a pointer to the dynamically created object
-  // the object itself (*u_propagator) can be accessed via the dereferencing operator "*"
-
   Core::StochasticPropagator<4> stoc_propagator(L,T);
 
-  /* ****************************************** */
-  /* ****** reading the propagator ************ */
-  /* ****************************************** */
-
-  Tool::IO::load(&stoc_propagator, files[0], Tool::IO::fileSCIDAC);
-  // notes:
-  // first parameter has to be pointer to Core::Propagator object
-  // last parameter is precision, this can be omitted if lime files have a proper header
+  Core::StochasticPropagator<4> sequential_propagator(L,T);
 
   /* ****************************************** */
+  /* ****** reading the propagators *********** */
+  /* ****************************************** */
 
-  // here we declare a gamma-matrix
+  Tool::IO::load(&sequential_propagator, files[0], Tool::IO::fileSCIDAC);
+
+  Tool::IO::load(&stoc_propagator, files[1], Tool::IO::fileSCIDAC);
+
+  /* ****************************************** */
+
+
+
+
+  /* ****************************************** */
+  /* ****** CONTRACTION *********************** */
+  /* ****************************************** */
+
+
+  /* We want to compute the three point function of PS mesons
+    (interpolating field is u*gamma5*d_bar)
+    C_3 (t) = sum_x'{Tr[gamma5*S_u (x',t+t_0; x_0,t_0)*gamma0*S_d (x_0,t_0 x',t+t_0)]},
+            = sum_x'{Tr[gamma5*S_u (x',t+t_0; x_0,t_0)*gamma0*(gamma5*S^dagger_u(x',t+t_0; x_0,t_0)*gamma5)]}
+            = sum_x'{Tr[S_u (x',t+t_0; x_0,t_0)*gamma05*S^dagger_u(x',t+t_0; x_0,t_0)]}
+     where S is a quark propagator, x' is the sink 3d-position
+     and x_0, t_0 are the source position and timeslice.
+     The trace is over spin and colour, the "dagger" acts on spin and color indices only.
+  */
+ // here we declare a gamma-matrix
   Dirac::Gamma<5> gamma5;
+  Dirac::Gamma<45> gamma05;
+  
+  /* First of all we calculate gamma_5*S^dagger_u*gamma5 */
 
-  Core::StochasticPropagator<4> sequential_source(stoc_propagator, t_insertion);
+  // for that we need a copy of the up quark Propagator
+  Core::StochasticPropagator<4> stoc_bar_propagator(stoc_propagator);
+  // the following routine does exacly what we want
+  // note: this is how you invoke the member function of a C++ object from the pointer to that object
+  stoc_bar_propagator.dagger();
 
-  sequential_source.rightMultiply(gamma5); 
+  // multiply sequential_propagator by gamma05
+//  sequential_propagator *= gamma05;
 
-  Tool::IO::save(&sequential_source, files[1], Tool::IO::fileSCIDAC);
+
+  // create the Correlator object
+  // note: multiplying the two Propagator objects already performs the colour trace,
+  // the full Dirac structure is kept for a reason
+  Core::Correlator ps_3point(L, T, sequential_propagator * stoc_bar_propagator);
+
+  // this does the zero-momentum projection
+  // note: the same function with an argument projects to any momentum
+  ps_3point.sumOverSpatialVolume();
+
+
+
+
+  // Essentially everything is computed now, we only have to perform the Dirac trace.
+  // We can access the full Dirac structure of the momentum projected two point function
+  // of a timeslice like an element of a C array using the access operator "[<timeslice>]".
+  // The member function trace() returns the trace of that Dirac structure (this is just a 4x4 matrix).
+  std::cout << "\nPS three point function:" << std::endl;
+  std::cout << ps_3point;
+
+
+
 
   // leave main function
   return EXIT_SUCCESS;

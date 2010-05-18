@@ -15,3 +15,6 @@ TARGET_LINK_LIBRARIES(generate_sequential_sources SU3 IO Base Core Dirac Weave C
 
 ADD_EXECUTABLE(prova prova.cpp)
 TARGET_LINK_LIBRARIES(prova Base Core IO Input)
+
+ADD_EXECUTABLE(prova_contraction prova_contraction.cpp)
+TARGET_LINK_LIBRARIES(prova_contraction Base Core IO Input)

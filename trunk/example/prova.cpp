@@ -87,6 +87,9 @@ int main(int argc, char **argv)
 
   std::cout << "kappa = " << kappa << ", mu = " << mu << std::endl;
 
+  size_t t_src = size_t(floats["timesliceSource"]); 
+  size_t t_snk = size_t(floats["timesliceSink"]); 
+
   std::cout << "\nThe following files are going to be read:" << std::endl;
 
   // there should only be one container in files, which can be accessed by files[0]
@@ -123,7 +126,8 @@ int main(int argc, char **argv)
   // here we declare a gamma-matrix
   Dirac::Gamma<5> gamma5;
 
-  Core::StochasticPropagator< 4 > sequential_source(stoc_propagator);
+
+  Core::StochasticPropagator< 4 > sequential_source(stoc_propagator, t_snk);
 
   sequential_source.rightMultiply(gamma5); 
 

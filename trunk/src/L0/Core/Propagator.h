@@ -37,7 +37,7 @@ namespace Core
 
       Propagator(size_t L, size_t T, bool alloc=true);
       Propagator(Propagator const &other);
-      Propagator(Propagator const &other, size_t timeslice);
+      Propagator(Propagator const &other, size_t const timeslice);
       ~Propagator();
 
 
@@ -184,6 +184,7 @@ namespace Core
       StochasticPropagator< NComp > (Propagator const &other);
 
       StochasticPropagator< NComp > (StochasticPropagator< NComp > const &other);
+      StochasticPropagator< NComp > (StochasticPropagator< NComp > const &other, size_t const timeslice);
 
       Field< Dirac::Matrix > *operator*(StochasticPropagator< NComp > const &other) const;
 

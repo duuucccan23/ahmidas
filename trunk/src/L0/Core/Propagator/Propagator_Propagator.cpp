@@ -1,11 +1,11 @@
 #include "Propagator.ih"
 
-inline Core::Propagator::Propagator(Core::Propagator const &other, size_t const timeslice)
+Core::Propagator::Propagator(Core::Propagator const &other, size_t const timeslice)
   : d_references(other.d_references),
     d_components(other.d_components)
 {
   *d_references += 1;
-  assert(timeslice > 0 && timeslice < T());
+  assert(timeslice >= 0 && timeslice < T());
   
   std::complex< double > ZERO(0,0);
   isolate();

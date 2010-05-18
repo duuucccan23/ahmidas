@@ -5,6 +5,8 @@
     <T> 4 </T>
     <kappa> 0.10 </kappa>
     <mu> 0.01 </mu>
+    <timesliceSource> 1 </timesliceSource>
+    <timesliceSink>   3 </timesliceSink>
   </params>
   <files>
     <file>

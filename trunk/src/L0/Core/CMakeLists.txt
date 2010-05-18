@@ -9,6 +9,7 @@ SET(Sources_Propagator Propagator/StochasticSource.cpp
                        Propagator/Propagator_diff.cpp
                        Propagator/Propagator_gaugeTransformation.cpp
                        Propagator/Propagator_isolate.cpp
+                       Propagator/Propagator_Propagator.cpp
                        Propagator/Propagator_revert.cpp
                        Propagator/Propagator_shift.cpp
                        Propagator/Propagator_smearJacobi.cpp

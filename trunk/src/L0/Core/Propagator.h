@@ -37,6 +37,7 @@ namespace Core
 
       Propagator(size_t L, size_t T, bool alloc=true);
       Propagator(Propagator const &other);
+      Propagator(Propagator const &other, size_t timeslice);
       ~Propagator();
 
 

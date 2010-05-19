@@ -70,21 +70,30 @@ int main(int argc, char **argv)
 
   /* ****************************************** */
 
+  // this is needed if we want to have the output (i.e. to the standard output) done by only
+  // one process in the parallel version
+  Base::Weave weave(L, T);
+
+
+
   // that's how writing to the standard output works in C++
   // note: the "<<" operator also works for most of the ahmidas objects like SU3::Spinor or QCD::Tensor
-  std::cout << "\nLattice size: " << L << "x" << L << "x" << L << "x" << T << std::endl;
+  if(weave.isRoot())
+    std::cout << "\nLattice size: " << L << "x" << L << "x" << L << "x" << T << std::endl;
 
   // that's how one can access the values in the map "floats"
   double kappa = floats["kappa"];
   double mu    = floats["mu"];
 
-  std::cout << "kappa = " << kappa << ", mu = " << mu << std::endl;
+  if(weave.isRoot())
+    std::cout << "kappa = " << kappa << ", mu = " << mu << std::endl;
 
   size_t t_src = size_t(floats["timesliceSource"]); 
   size_t t_srcsnk = size_t(floats["timeseparationSourceSink"]); 
   size_t t_insertion = (t_srcsnk + t_src) % T;
 
-  std::cout << "\nThe following files are going to be read:" << std::endl;
+  if(weave.isRoot())
+    std::cout << "\nThe following files are going to be read:" << std::endl;
 
   // there should only be one container in files, which can be accessed by files[0]
   // (similar to accessing an object in a C array)

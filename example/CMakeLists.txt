@@ -18,3 +18,6 @@ TARGET_LINK_LIBRARIES(prova Base Core IO Input)
 
 ADD_EXECUTABLE(prova_contraction prova_contraction.cpp)
 TARGET_LINK_LIBRARIES(prova_contraction Base Core IO Input)
+
+ADD_EXECUTABLE(prova_sequential_contraction prova_sequential_contraction.cpp)
+TARGET_LINK_LIBRARIES(prova_sequential_contraction Base Core IO Input)

@@ -67,7 +67,7 @@ int main(int argc, char **argv)
   /* ****************************************** */
 
   // create input file reader, the name of the input file has to be passed as a parameter
-  Input::FileReader reader("../example/prova_contraction_input.xml");
+  Input::FileReader reader("../example/prova_sequential_contraction_input.xml");
 
   // get input parameters
   // note: this is how to invoke a member function of an object in C++:
@@ -108,6 +108,8 @@ int main(int argc, char **argv)
 
   Core::StochasticPropagator<4> sequential_propagator(L,T);
 
+  Core::StochasticSource<4> stoc_source(L,T);
+
   /* ****************************************** */
   /* ****** reading the propagators *********** */
   /* ****************************************** */
@@ -115,6 +117,8 @@ int main(int argc, char **argv)
   Tool::IO::load(&sequential_propagator, files[0], Tool::IO::fileSCIDAC, 64);
 
   Tool::IO::load(&stoc_propagator, files[1], Tool::IO::fileSCIDAC);
+
+  Tool::IO::load(reinterpret_cast< Core::StochasticPropagator<4> * >(&stoc_source), files[2], Tool::IO::fileSCIDAC, 64);
 
   /* ****************************************** */
 
@@ -151,11 +155,15 @@ int main(int argc, char **argv)
   // multiply sequential_propagator by gamma05
 //  sequential_propagator *= gamma05;
 
+  stoc_source.dagger();
+  stoc_source.shift(Base::idx_T, Base::dir_UP, 2);
+
+  sequential_propagator.rightMultiply(gamma5);
 
   // create the Correlator object
   // note: multiplying the two Propagator objects already performs the colour trace,
   // the full Dirac structure is kept for a reason
-  Core::Correlator ps_3point(L, T, sequential_propagator * stoc_bar_propagator);
+  Core::Correlator ps_3point(L, T, (dynamic_cast< Core::Propagator & >(sequential_propagator)) * (dynamic_cast< Core::Propagator & >(stoc_source)));
 
   // this does the zero-momentum projection
   // note: the same function with an argument projects to any momentum

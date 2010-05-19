@@ -139,6 +139,7 @@ int main(int argc, char **argv)
   // the following routine does exacly what we want
   // note: this is how you invoke the member function of a C++ object from the pointer to that object
   stoc_bar_propagator.dagger();
+  stoc_bar_propagator *= gamma5;
 
   // multiply sequential_propagator by gamma05
 //  sequential_propagator *= gamma05;

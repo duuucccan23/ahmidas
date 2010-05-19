@@ -54,6 +54,9 @@ namespace Tool
 
     void load(Core::StochasticPropagator< 4 > *sPropagator, std::vector< std::string > const &filenames,
               Tool::IO::filetype type);
+    
+    void load(Core::StochasticPropagator< 4 > *sPropagator, std::vector< std::string > const &filenames,
+              Tool::IO::filetype type, size_t const precision);
 
     void save(Core::StochasticPropagator< 4 > *sPropagator, std::vector< std::string > const &filenames,
               Tool::IO::filetype type);

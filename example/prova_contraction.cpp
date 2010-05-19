@@ -105,7 +105,7 @@ int main(int argc, char **argv)
   /* ****** reading the propagators *********** */
   /* ****************************************** */
 
-  Tool::IO::load(&sequential_propagator, files[0], Tool::IO::fileSCIDAC);
+  Tool::IO::load(&sequential_propagator, files[0], Tool::IO::fileSCIDAC, 64);
 
   Tool::IO::load(&stoc_propagator, files[1], Tool::IO::fileSCIDAC);
 

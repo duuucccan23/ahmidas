@@ -19,7 +19,7 @@
      <file>
       <type>stoc_propagator</type>
       <directory>../test</directory>
-      <filenameBase>source4x4_u.</filenameBase>
+      <filenameBase>source.9999.01.</filenameBase>
       <filenameEnding>.inverted</filenameEnding>
       <firstIndex>0</firstIndex>
       <lastIndex>3</lastIndex>

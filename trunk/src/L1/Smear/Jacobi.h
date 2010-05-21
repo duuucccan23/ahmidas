@@ -25,7 +25,10 @@ namespace Smear
 
       void smear(Core::Field< QCD::Tensor > *tensorField, Core::Field< QCD::Gauge > &gaugeField, size_t const iterations) const;
 
-
+      // FIX THIS: those routine is just a workaround for better performance in scalar code
+      void smear(Core::Field< QCD::Tensor > *tensorField, Core::Field< QCD::Gauge > &gaugeField, size_t const iterations, size_t const timeslice) const;
+      void smear(Core::Field< QCD::Spinor > *spinorField, Core::Field< QCD::Gauge > &gaugeField, size_t const iterations, size_t const timeslice) const;
+  
 //       void smear(Source::Point< L, T > *source, Core::Field< QCD::Gauge > &gaugeField, Base::ColourIndex, Base::DiracIndex) const;
 // 
 //       void smear(Source::Point< L, T > *source, Core::Field< QCD::Gauge > &gaugeField,

@@ -15,4 +15,112 @@ namespace Smear
     for (size_t ctr = 0; ctr < iterations; ++ctr)
       smear(tensorField, gaugeField);
   }
+
+  inline void Jacobi::smear(Core::Field< QCD::Tensor > *tensorField, Core::Field< QCD::Gauge > &gaugeField, size_t const iterations, size_t const timeslice) const
+  {
+
+    size_t const L = gaugeField.L();
+    size_t const T = gaugeField.T();
+
+    assert(timeslice < T);
+    Base::Weave weaveAll(L, T);
+    assert(weaveAll.rank() == 0);
+    weaveAll.barrier();
+    Base::Weave weaveTimeslice(L, 1);
+
+    Core::Field< QCD::Tensor > timeslice_tensorField(L, 1);
+    Core::Field< QCD::Gauge >  timeslice_gaugeField(L, 1);
+
+    // copy one timeslice of the field and smear that
+
+    for(size_t idx_Z = 0; idx_Z < L; idx_Z++)
+    {
+      for(size_t idx_Y = 0; idx_Y < L; idx_Y++)
+      {
+        for(size_t idx_X = 0; idx_X < L; idx_X++)
+        {
+          timeslice_tensorField[weaveTimeslice.globalCoordToLocalIndex(idx_X, idx_Y, idx_Z, 1)] =
+            (*tensorField)[weaveAll.globalCoordToLocalIndex(idx_X, idx_Y, idx_Z, timeslice)];
+
+          timeslice_gaugeField[weaveTimeslice.globalCoordToLocalIndex(idx_X, idx_Y, idx_Z, 1)] =
+           gaugeField[weaveAll.globalCoordToLocalIndex(idx_X, idx_Y, idx_Z, timeslice)];
+        }
+      }
+    }
+
+
+    for (size_t ctr = 0; ctr < iterations; ++ctr)
+      smear(&timeslice_tensorField, timeslice_gaugeField);
+
+
+    for(size_t idx_Z = 0; idx_Z < L; idx_Z++)
+    {
+      for(size_t idx_Y = 0; idx_Y < L; idx_Y++)
+      {
+        for(size_t idx_X = 0; idx_X < L; idx_X++)
+        {
+          (*tensorField)[weaveAll.globalCoordToLocalIndex(idx_X, idx_Y, idx_Z, timeslice)] =
+            timeslice_tensorField[weaveTimeslice.globalCoordToLocalIndex(idx_X, idx_Y, idx_Z, 1)];
+
+          gaugeField[weaveAll.globalCoordToLocalIndex(idx_X, idx_Y, idx_Z, timeslice)] =
+            timeslice_gaugeField[weaveTimeslice.globalCoordToLocalIndex(idx_X, idx_Y, idx_Z, 1)];
+        }
+      }
+    }
+
+  }
+  inline void Jacobi::smear(Core::Field< QCD::Spinor > *spinorField, Core::Field< QCD::Gauge > &gaugeField, size_t const iterations, size_t const timeslice) const
+  {
+
+    size_t const L = gaugeField.L();
+    size_t const T = gaugeField.T();
+
+    assert(timeslice < T);
+    Base::Weave weaveAll(L, T);
+    assert(weaveAll.rank() == 0);
+    weaveAll.barrier();
+    Base::Weave weaveTimeslice(L, 1);
+
+    Core::Field< QCD::Spinor > timeslice_spinorField(L, 1);
+    Core::Field< QCD::Gauge >  timeslice_gaugeField(L, 1);
+
+    // copy one timeslice of the field and smear that
+
+    for(size_t idx_Z = 0; idx_Z < L; idx_Z++)
+    {
+      for(size_t idx_Y = 0; idx_Y < L; idx_Y++)
+      {
+        for(size_t idx_X = 0; idx_X < L; idx_X++)
+        {
+          timeslice_spinorField[weaveTimeslice.globalCoordToLocalIndex(idx_X, idx_Y, idx_Z, 1)] =
+            (*spinorField)[weaveAll.globalCoordToLocalIndex(idx_X, idx_Y, idx_Z, timeslice)];
+
+          timeslice_gaugeField[weaveTimeslice.globalCoordToLocalIndex(idx_X, idx_Y, idx_Z, 1)] =
+           gaugeField[weaveAll.globalCoordToLocalIndex(idx_X, idx_Y, idx_Z, timeslice)];
+        }
+      }
+    }
+
+
+    for (size_t ctr = 0; ctr < iterations; ++ctr)
+      smear(&timeslice_spinorField, timeslice_gaugeField);
+
+
+    for(size_t idx_Z = 0; idx_Z < L; idx_Z++)
+    {
+      for(size_t idx_Y = 0; idx_Y < L; idx_Y++)
+      {
+        for(size_t idx_X = 0; idx_X < L; idx_X++)
+        {
+          (*spinorField)[weaveAll.globalCoordToLocalIndex(idx_X, idx_Y, idx_Z, timeslice)] =
+            timeslice_spinorField[weaveTimeslice.globalCoordToLocalIndex(idx_X, idx_Y, idx_Z, 1)];
+
+          gaugeField[weaveAll.globalCoordToLocalIndex(idx_X, idx_Y, idx_Z, timeslice)] =
+            timeslice_gaugeField[weaveTimeslice.globalCoordToLocalIndex(idx_X, idx_Y, idx_Z, 1)];
+        }
+      }
+    }
+
+  }
+
 }

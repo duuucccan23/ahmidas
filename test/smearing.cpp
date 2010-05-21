@@ -42,11 +42,17 @@ int main(int argc, char **argv)
   weave.barrier();
 
   Smear::APE my_APE_tool(APE_alpha);
+
+//   my_APE_tool.smear(my_gauge_field, APE_iterations, 5);
+//   my_APE_tool.smear(my_gauge_field, APE_iterations, 0);
+
   my_APE_tool.smear(my_gauge_field, APE_iterations);
 
   weave.barrier();
 
   Smear::Jacobi my_Jacobi_tool(Jac_alpha);
+//   my_Jacobi_tool.smear(&my_spinor_field, my_gauge_field, Jac_iterations, 0);
+
   my_Jacobi_tool.smear(&my_spinor_field, my_gauge_field, Jac_iterations);
 
   // test APE smearing

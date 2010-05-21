@@ -1,7 +1,7 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
 PROJECT(Ahmidas CXX)
 
-# SET(CMAKE_CXX_COMPILER "icc")
+# SET(CMAKE_CXX_COMPILER "icpc")
 
 # Options for setting the type of build
 OPTION(USE_MPI "Build Ahmidas for use on parallel systems, using MPI for parallelism." OFF)

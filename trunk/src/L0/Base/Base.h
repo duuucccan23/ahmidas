@@ -93,9 +93,15 @@ namespace Base
   enum Operator
   {
     op_UNITY = -1,
-    op_GAMMA_4 = 0
+    op_GAMMA_4 = 0,
+    op_GAMMA_1 = 1,
+    op_GAMMA_2 = 2,
+    op_GAMMA_3 = 3,
     // op_CONSERVED_CURRENT_GAMMA_4 = 16,
-    // op_O44 = 32
+    op_O44 = 32,
+    op_O11 = 33,
+    op_O22 = 34,
+    op_O33 = 35
   };
 
   extern bool const bigEndian;

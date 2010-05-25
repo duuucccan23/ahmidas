@@ -88,50 +88,54 @@ int main(int argc, char **argv)
   APE_tool.smear(gauge_field, APE_iterations, timeslice_sink);
 
 
-  Core::Propagator uProp = Core::Propagator(L, T);
-  Tool::IO::load(&uProp, propfilesU, Tool::IO::fileSCIDAC, 64);
+  Core::Propagator *uProp = new Core::Propagator(L, T);
+  Tool::IO::load(uProp, propfilesU, Tool::IO::fileSCIDAC, 64);
 
   std::cout << "u quark propagator successfully loaded\n" << std::endl;
 
-  Core::Propagator dProp = Core::Propagator(L, T);
-  Tool::IO::load(&dProp, propfilesD, Tool::IO::fileSCIDAC, 64);
+  Core::Propagator *dProp = new Core::Propagator(L, T);
+  Tool::IO::load(dProp, propfilesD, Tool::IO::fileSCIDAC, 64);
 
 
   std::cout << "d quark propagator successfully loaded\n" << std::endl;
 
 
 #ifdef __COMPENSATE_UNIFORM_BOUNDARY_CONDITIONS__
-  dProp.changeBoundaryConditions_uniformToFixed(timeslice_source, timeslice_boundary);
-  uProp.changeBoundaryConditions_uniformToFixed(timeslice_source, timeslice_boundary);
+  dProp->changeBoundaryConditions_uniformToFixed(timeslice_source, timeslice_boundary);
+  uProp->changeBoundaryConditions_uniformToFixed(timeslice_source, timeslice_boundary);
 #endif
 
 
-  uProp.smearJacobi(Jac_alpha, Jac_iterations, gauge_field, timeslice_sink);
-  dProp.smearJacobi(Jac_alpha, Jac_iterations, gauge_field, timeslice_sink);
+  uProp->smearJacobi(Jac_alpha, Jac_iterations, gauge_field, timeslice_sink);
+  dProp->smearJacobi(Jac_alpha, Jac_iterations, gauge_field, timeslice_sink);
 
   std::cout << "propagators smeared successfully\n" << std::endl;
 
   Core::Propagator sequentialSource(L, T);
+
   sequentialSource *= std::complex< double >(0, 0); // initialize with zero
 
-
-  Contract::create_sequential_source_proton_d(sequentialSource, uProp, uProp,
+  Contract::create_sequential_source_proton_u(sequentialSource, *dProp, *uProp,
                                               gauge_field, Smear::sm_Jacobi, Jac_iterations, Jac_alpha,
                                               timeslice_sink, Base::proj_PARITY_PLUS_TM);
 
 
+  delete dProp;
+
+  Tool::IO::save(&sequentialSource, seqSourceFilesU, Tool::IO::fileSCIDAC);
+
+
+  sequentialSource *= std::complex< double >(0, 0); // initialize with zero
+
+  Contract::create_sequential_source_proton_d(sequentialSource, *uProp, *uProp,
+                                              gauge_field, Smear::sm_Jacobi, Jac_iterations, Jac_alpha,
+                                              timeslice_sink, Base::proj_PARITY_PLUS_TM);
+
+  delete uProp;
 
   Tool::IO::save(&sequentialSource, seqSourceFilesD, Tool::IO::fileSCIDAC);
 
-  sequentialSource *= std::complex< double >(0, 0); // initialize with zero
 
-
-  Contract::create_sequential_source_proton_u(sequentialSource, dProp, uProp,
-                                              gauge_field, Smear::sm_Jacobi, Jac_iterations, Jac_alpha,
-                                              timeslice_sink, Base::proj_PARITY_PLUS_TM);
-
-
-  Tool::IO::save(&sequentialSource, seqSourceFilesU, Tool::IO::fileSCIDAC);
 
   std::cout << "sequential sources generated and saved successfully\n" << std::endl;
 

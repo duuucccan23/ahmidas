@@ -61,6 +61,10 @@ namespace Core
       template < size_t Index >
       void rightMultiply(Dirac::Gamma< Index > const& gamma);
 
+      // multiplication by operator
+      void operator*=(Base::Operator const& O);
+      friend Propagator operator*(Base::Operator const& O, Propagator const& P);
+
 
       Propagator &select_timeslice(size_t const timeslice);
 
@@ -141,6 +145,8 @@ namespace Core
 
   };
 
+  Propagator operator*(Base::Operator const& O, Propagator const& P);
+
   template< size_t Index >
   Propagator operator*(Dirac::Gamma< Index > const &gamma, Propagator const &p);
 
@@ -191,9 +197,9 @@ namespace Core
       Field< Dirac::Matrix > *operator*(StochasticPropagator< NComp > const &other) const;
 
       StochasticPropagator< NComp > &select_timeslice(size_t const timeslice);
-      
+
       Propagator operator*(StochasticSource< NComp > const &sSource) const;
-     
+
       private:
         void isolate();
 

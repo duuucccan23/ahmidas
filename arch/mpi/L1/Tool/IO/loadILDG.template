@@ -36,6 +36,7 @@ void Tool::IO::loadILDG(Core::Field< Element > *field, std::string const &filena
   assert(elem_offset < weave.globalVolume());
 
   Lime::Reader reader(filename);
+  assert(reader.good());
   ILDGinfo *info = 0;
 
   // since this is causing problems in massive parallelization, the following block is

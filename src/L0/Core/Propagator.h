@@ -65,6 +65,7 @@ namespace Core
       Propagator &select_timeslice(size_t const timeslice);
 
       Propagator &smearJacobi(double const alpha, size_t const iterations, Field< QCD::Gauge > &gauge_field);
+      Propagator &smearJacobi(double const alpha, size_t const iterations, Field< QCD::Gauge > &gauge_field, size_t const timeslice);
 
       // needed for meson contractions
       Core::Field< Dirac::Matrix > *operator*(Propagator const &other) const;

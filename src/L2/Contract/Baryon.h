@@ -92,6 +92,7 @@ namespace Contract
   std::vector< Core::Correlator > proton_threepoint_sequential(
     Core:: Propagator const &bw_prop_u, Core::Propagator const &fw_prop_u,
     Core:: Propagator const &bw_prop_d, Core::Propagator const &fw_prop_d,
+    Core::Field< QCD::Gauge > * const gauge_field,
     std::vector< Base::Operator > ops);
 
 

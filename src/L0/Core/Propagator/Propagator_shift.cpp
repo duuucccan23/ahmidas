@@ -2,7 +2,7 @@
 
 namespace Core
 {
-  Propagator &Propagator::shift(Base::SpaceTimeIndex const idx, Base::Direction const dir, int const times)
+  Propagator &Propagator::shift(Base::SpaceTimeIndex const idx, Base::Direction const dir, size_t const times)
   {
     if (times == 0)
       return *this;

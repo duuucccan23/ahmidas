@@ -411,6 +411,7 @@ int main(int argc, char **argv)
 
   std::vector< Core::Correlator > C3p = Contract::proton_threepoint_sequential(sequentialPropagator_u, uProp,
                                                                                sequentialPropagator_d, dProp,
+                                                                               NULL, // no gauge field
                                                                                my_operators);
   if (weave.isRoot())
   {

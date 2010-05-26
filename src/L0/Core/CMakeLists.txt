@@ -10,6 +10,7 @@ SET(Sources_Propagator Propagator/StochasticPropagator.cpp
                        Propagator/Propagator_diff.cpp
                        Propagator/Propagator_gaugeTransformation.cpp
                        Propagator/Propagator_isolate.cpp
+                       Propagator/Propagator_multiplyOperator.cpp
                        Propagator/Propagator_revert.cpp
                        Propagator/Propagator_select_timeslice.cpp
                        Propagator/Propagator_shift.cpp

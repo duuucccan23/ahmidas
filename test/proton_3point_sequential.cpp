@@ -83,7 +83,7 @@ int main(int argc, char **argv)
 
   // the actual contraction
   std::vector< Core::Correlator > threepoint =
-    Contract::proton_threepoint_sequential(uBwProp, uProp, dBwProp, dProp, operators);
+    Contract::proton_threepoint_sequential(uBwProp, uProp, dBwProp, dProp, NULL, operators);
 
 
   if(false)

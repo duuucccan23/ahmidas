@@ -61,9 +61,8 @@ namespace Core
       template < size_t Index >
       void rightMultiply(Dirac::Gamma< Index > const& gamma);
 
-      // multiplication by operator
-      void operator*=(Base::Operator const& O);
-      friend Propagator operator*(Base::Operator const& O, Propagator const& P);
+      // multiplication by operator (this is multiplication from the right)
+      void multiplyOperator(Base::Operator const O, Field< QCD::Gauge > * const gauge_field);
 
 
       Propagator &select_timeslice(size_t const timeslice);
@@ -117,7 +116,7 @@ namespace Core
 
       void changeBoundaryConditions_uniformToFixed(size_t timesliceSource, size_t timesliceBoundary);
 
-      Propagator &shift(Base::SpaceTimeIndex const idx, Base::Direction const dir, int const times);
+      Propagator &shift(Base::SpaceTimeIndex const idx, Base::Direction const dir, size_t const times=1);
 
       void gaugeTransform_fixedSource(Field< SU3::Matrix > const &gaugeTrafo, size_t const * sourcePos);
 
@@ -144,8 +143,6 @@ namespace Core
       void isolate();
 
   };
-
-  Propagator operator*(Base::Operator const& O, Propagator const& P);
 
   template< size_t Index >
   Propagator operator*(Dirac::Gamma< Index > const &gamma, Propagator const &p);

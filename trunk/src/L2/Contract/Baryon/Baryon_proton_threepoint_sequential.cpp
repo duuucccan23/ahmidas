@@ -4,8 +4,9 @@ namespace Contract
 {
 
   std::vector< Core::Correlator > proton_threepoint_sequential(
-    Core:: Propagator const &bw_prop_u, Core::Propagator const &fw_prop_u,
-    Core:: Propagator const &bw_prop_d, Core::Propagator const &fw_prop_d,
+    Core::Propagator const &bw_prop_u, Core::Propagator const &fw_prop_u,
+    Core::Propagator const &bw_prop_d, Core::Propagator const &fw_prop_d,
+    Core::Field< QCD::Gauge > * const gauge_field,
     std::vector< Base::Operator > ops)
   {
 
@@ -18,7 +19,7 @@ namespace Contract
 
     std::vector< Core::Correlator > p3p;
     Dirac::Gamma< 5 > gamma5;
-    Dirac::Gamma< 4 > gamma0;
+//     Dirac::Gamma< 4 > gamma0;
 
     for (size_t iOp=0; iOp<ops.size(); iOp++)
     {
@@ -29,20 +30,23 @@ namespace Contract
       bw_tmp_u.dagger();
       bw_tmp_u *= gamma5;
 
-      switch (ops[iOp])
-      {
-        case Base::op_GAMMA_4:
-          fw_tmp_u.rightMultiply(gamma0);
-          break;
-        case Base::op_UNITY:
-          // nothing to do
-          // fw_tmp_u.rightMultiply(gamma5);
-          break;
-        default:
-        std::cerr << "Error in "
-                  << "std::vector< Core::Correlator > proton_threepoint_sequential(...):\n"
-                  << "Operator with index " << ops[iOp] << " not implemented yet!" << std::endl;
-      }
+
+      bw_tmp_u.multiplyOperator(ops[iOp], gauge_field);
+
+//       switch (ops[iOp])
+//       {
+//         case Base::op_GAMMA_4:
+//           fw_tmp_u.rightMultiply(gamma0);
+//           break;
+//         case Base::op_UNITY:
+//           // nothing to do
+//           // fw_tmp_u.rightMultiply(gamma5);
+//           break;
+//         default:
+//         std::cerr << "Error in "
+//                   << "std::vector< Core::Correlator > proton_threepoint_sequential(...):\n"
+//                   << "Operator with index " << ops[iOp] << " not implemented yet!" << std::endl;
+//       }
 
       Core::Correlator p3p_tmp_u(L, T, bw_tmp_u.contract(fw_tmp_u));
       p3p_tmp_u.sumOverSpatialVolume();
@@ -54,6 +58,9 @@ namespace Contract
       Core::Propagator bw_tmp_d(bw_prop_d);
       bw_tmp_d.dagger();
       bw_tmp_d *= gamma5;
+
+      bw_tmp_d.multiplyOperator(ops[iOp], gauge_field);
+/*      
 //       // since we have to take the transpose later, we replace the above expressions by:
 //       bw_tmp_d.rightMultiply(gamma5);
 //       bw_tmp_d.conjugate();
@@ -68,7 +75,7 @@ namespace Contract
           // fw_tmp_d.rightMultiply(gamma5);
           // fw_tmp_d *= std::complex< double> (-1, 0);
           break;
-      }
+      }*/
 
       Core::Correlator p3p_tmp_d(L, T, bw_tmp_d.contract(fw_tmp_d));
       p3p_tmp_d.sumOverSpatialVolume();

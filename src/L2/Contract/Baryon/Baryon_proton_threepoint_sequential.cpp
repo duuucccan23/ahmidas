@@ -29,16 +29,12 @@ namespace Contract
       bw_tmp_u.dagger();
       bw_tmp_u *= gamma5;
 
-      std::cout << "calling bw_tmp_u.multiplyOperator(ops[iOp], gauge_field)" << std::endl;
       bw_tmp_u.multiplyOperator(ops[iOp], gauge_field);
-      std::cout << "bw_tmp_u.multiplyOperator(ops[iOp], gauge_field) finished!" << std::endl;
 
       Core::Correlator p3p_tmp_u(L, T, bw_tmp_u.contract(fw_tmp_u));
       p3p_tmp_u.sumOverSpatialVolume();
       p3p.push_back(p3p_tmp_u);
-      std::cout << "end of scope of bw_tmp_u, bw_tmp_u will be deleted now" << std::endl;
     }
-    std::cout << "bw_tmp_u deleted" << std::endl;
 
     {
       Core::Propagator fw_tmp_d(fw_prop_d);

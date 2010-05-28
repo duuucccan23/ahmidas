@@ -1,6 +1,6 @@
 inline Propagator &Propagator::operator=(Propagator const &rhs)
 {
-  std::cout << "calling assignment operator of class Propagator" << std::endl;
+  //std::cout << "calling assignment operator of class Propagator" << std::endl;
   if (this != &rhs)
   {
     destroy();

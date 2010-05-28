@@ -11,7 +11,7 @@ inline Propagator::Propagator(Propagator const &other)
 {
   *d_references += 1;
   d_components->refCountUp();
-  std::cout << "Propagator constructed:\nref = " << d_references << ": refCount (Propagator) = " << *d_references << std::endl;
+  // std::cout << "Propagator constructed:\nref = " << d_references << ": refCount (Propagator) = " << *d_references << std::endl;
 }
 
 inline Propagator::~Propagator()

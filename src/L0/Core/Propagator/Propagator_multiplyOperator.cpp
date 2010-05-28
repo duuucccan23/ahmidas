@@ -49,36 +49,56 @@ namespace Core
 
           Dirac::Gamma< 4 > gamma4;
           std::complex< double > MINUS_ONE(-1, 0);
+          std::complex< double > ZERO(0, 0);
 
-          (*this) *= gamma4;
 
-          Propagator result(*this);
+          Propagator copy(*this);
+          copy *= gamma4;
+//           std::cout << "(*this) *= 0" << std::endl;
+          (*this) *= ZERO;
+
+          // std::cout << "Propagator tmp(*this)" << std::endl;
+          Propagator tmp(copy);
+//           std::cout << "tmp.isolate();" << std::endl;
+          tmp.isolate();
+//           std::cout << "tmp is isolated;" << std::endl;
           // part 1 : times U_mu and shift up
-          result.isolate();
-          (result.d_components)->leftMultiply((*gauge_field).component< SU3::Matrix >(Base::idx_T));
-          result.shift(Base::idx_T, Base::dir_UP);
+          (tmp.d_components)->leftMultiply((*gauge_field).component< SU3::Matrix >(Base::idx_T));
+          tmp.shift(Base::idx_T, Base::dir_UP);
+          (*this) += tmp;
 
-          Propagator tmp(*this);
+//           std::cout << "part 1 calculated!" << std::endl;
+
+          tmp = copy;
           tmp.isolate();
           // part 2 : shift up and times U_mu^dagger
           tmp.shift(Base::idx_T, Base::dir_UP);
           (tmp.d_components)->leftMultiply((*gauge_field).component< SU3::Matrix >(Base::idx_T).dagger());
           tmp *= MINUS_ONE;
-          (*(result.d_components)) += (*(tmp.d_components));
+          (*this) -= tmp;
 
-          tmp = (*this);
+//           std::cout << "part 2 calculated!" << std::endl;
+
+          tmp = copy;
+          tmp.isolate();
           // part 3 : shift down and times U_mu^dagger
           tmp.shift(Base::idx_T, Base::dir_DOWN);
           (tmp.d_components)->leftMultiply((*gauge_field).component< SU3::Matrix >(Base::idx_T).dagger());
           tmp *= MINUS_ONE;
-          (*(result.d_components)) += (*(tmp.d_components));
+          (*this) -= tmp;
 
-          tmp = (*this);
+//           std::cout << "part 3 calculated!" << std::endl;
+
+          tmp = copy;
+          tmp.isolate();
           // part 4 : times U_mu and shift down
           (tmp.d_components)->leftMultiply((*gauge_field).component< SU3::Matrix >(Base::idx_T));
           tmp.shift(Base::idx_T, Base::dir_DOWN);
-          (*(result.d_components)) += (*(tmp.d_components));
-          (*this) = Propagator(result);
+          (*this) += tmp;
+
+//           std::cout << "part 4 calculated!" << std::endl;
+
+//           std::cout << "end of scope of tmp, tmp will be deleted now" << std::endl;
         }
         break;
       }

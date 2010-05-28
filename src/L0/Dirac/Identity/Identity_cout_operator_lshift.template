@@ -1,0 +1,14 @@
+inline std::ostream &Dirac::operator<<(std::ostream &out, Dirac::Identity const &id)
+{
+  std::complex< double > zero(0,0);
+  std::complex< double > one(1,0);
+  out << std::showpos;
+  for(size_t row = 0; row < 4; row++)
+  {
+    for(size_t col = 0; col < 4; col++)
+      out << (col == row ? one : zero) << " ";
+    out << std::endl;
+  }
+  out << std::endl;
+  return out;
+}

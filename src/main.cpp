@@ -4,7 +4,7 @@
 
 int main(int argc, char **argv)
 {
-  Dirac::Gamma< -1 > ident = Dirac::Gamma< -1 >();
+//   Dirac::Gamma< -1 > ident = Dirac::Gamma< -1 >();
   Dirac::Gamma< 1 > g1 = Dirac::Gamma< 1 >();
   Dirac::Gamma< 2 > g2 = Dirac::Gamma< 2 >();
   Dirac::Gamma< 3 > g3 = Dirac::Gamma< 3 >();
@@ -18,7 +18,7 @@ int main(int argc, char **argv)
   Dirac::Gamma< 52 > g52 = Dirac::Gamma< 52 >();
   Dirac::Gamma< 53 > g53 = Dirac::Gamma< 53 >();
   Dirac::Gamma< 54 > g54 = Dirac::Gamma< 54 >();
-  std::cout << "Gamma< -1 >: identity\n" << ident;
+//   std::cout << "Gamma< -1 >: identity\n" << ident;
   std::cout << "Gamma< 1 >\n" << g1;
   std::cout << "Gamma< 2 >\n" << g2;
   std::cout << "Gamma< 3 >\n" << g3;
@@ -32,9 +32,9 @@ int main(int argc, char **argv)
   std::cout << "Gamma< 52 >\n" << g52;
   std::cout << "Gamma< 53 >\n" << g53;
   std::cout << "Gamma< 54 >\n" << g54;
-  
+
   SU3::Vector test = SU3::Vector::random();
   std::cout << test << std::endl;
-  
+
   return 0;
 }

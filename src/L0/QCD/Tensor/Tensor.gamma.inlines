@@ -43,8 +43,7 @@ namespace QCD
   }
 
 
-  template< >
-  inline void Tensor::operator*=(Dirac::Gamma< -1 > const &gamma)
+  inline void Tensor::operator*=(Dirac::Identity const &gamma)
   {
     // nothing to do
   }
@@ -68,8 +67,7 @@ namespace QCD
     return tmp;
   }
 
-  template< >
-  inline Tensor Tensor::operator*(Dirac::Gamma< -1 > const &gamma) const
+  inline Tensor Tensor::operator*(Dirac::Identity const &gamma) const
   {
     return Tensor(*this);
   }
@@ -87,8 +85,7 @@ namespace QCD
     }
   }
 
-  template< >
-  inline void operator*=(Dirac::Gamma< -1 > const &gamma, Tensor &tensor)
+  inline void operator*=(Dirac::Identity const &gamma, Tensor &tensor)
   {
     // nothing to do
   }
@@ -104,8 +101,7 @@ namespace QCD
     return tmp;
   }
 
-  template< >
-  inline Tensor operator*(Dirac::Gamma< -1 > const &gamma, Tensor const &tensor)
+  inline Tensor operator*(Dirac::Identity const &gamma, Tensor const &tensor)
   {
     return Tensor(tensor);
   }

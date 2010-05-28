@@ -10,6 +10,8 @@ inline Propagator::Propagator(Propagator const &other)
     d_components(other.d_components)
 {
   *d_references += 1;
+  d_components->refCountUp();
+  std::cout << "Propagator constructed:\nref = " << d_references << ": refCount (Propagator) = " << *d_references << std::endl;
 }
 
 inline Propagator::~Propagator()
@@ -17,15 +19,6 @@ inline Propagator::~Propagator()
   destroy();
 }
 
-inline void Propagator::destroy()
-{
-  *d_references -= 1;
-  if (*d_references == 0)
-  {
-    delete d_references;
-    delete d_components;
-  }
-}
 
 inline QCD::Tensor const &Propagator::operator[](size_t const localIndex) const
 {

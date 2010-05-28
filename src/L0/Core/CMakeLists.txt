@@ -7,6 +7,7 @@ SET(Sources_Propagator Propagator/StochasticPropagator.cpp
                        Propagator/Propagator_construct_baryon.cpp
                        Propagator/Propagator_construct_baryon_with_operator_insertion.cpp
                        Propagator/Propagator_contract_a.cpp
+                       Propagator/Propagator_destroy.cpp
                        Propagator/Propagator_diff.cpp
                        Propagator/Propagator_gaugeTransformation.cpp
                        Propagator/Propagator_isolate.cpp

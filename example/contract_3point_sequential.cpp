@@ -23,7 +23,7 @@
 
 
 // comment this if you don't want the twopoint function to be calculated
-#define __CALCULATE_TWOPOINT__
+// #define __CALCULATE_TWOPOINT__
 
 int main(int argc, char **argv)
 {

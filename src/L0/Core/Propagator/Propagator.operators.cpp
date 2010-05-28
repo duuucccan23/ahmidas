@@ -36,6 +36,34 @@ namespace Core
     }
   }
 
+  void Propagator::operator+=(Propagator const &other)
+  {
+    isolate();
+    Propagator::iterator I(begin());
+    Propagator::const_iterator I_other(other.begin());
+
+    while(I != end())
+    {
+      (*I) += (*I_other);
+      ++I;
+      ++I_other;
+    }
+  }
+
+  void Propagator::operator-=(Propagator const &other)
+  {
+    isolate();
+    Propagator::iterator I(begin());
+    Propagator::const_iterator I_other(other.begin());
+
+    while(I != end())
+    {
+      (*I) -= (*I_other);
+      ++I;
+      ++I_other;
+    }
+  }
+
   Field< Dirac::Matrix > *Propagator::operator*(Propagator const &other) const
   {
     assert (T()==other.T() && L()==other.L());

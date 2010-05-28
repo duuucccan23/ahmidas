@@ -48,4 +48,10 @@ namespace QCD
     std::transform(d_data, d_data + 144, other.d_data, d_data,
                    std::plus< std::complex< double > >());
   }
+
+  inline void Tensor::operator-=(Tensor const &other)
+  {
+    std::transform(d_data, d_data + 144, other.d_data, d_data,
+                   std::minus< std::complex< double > >());
+  }
 }

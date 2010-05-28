@@ -23,7 +23,7 @@
 
 
 // comment this if you don't want the twopoint function to be calculated
-// #define __CALCULATE_TWOPOINT__
+#define __CALCULATE_TWOPOINT__
 
 int main(int argc, char **argv)
 {
@@ -121,6 +121,9 @@ int main(int argc, char **argv)
 
   my_operators.push_back(Base::op_GAMMA_4);
   my_operators.push_back(Base::op_O44);
+  my_operators.push_back(Base::op_O11);
+  my_operators.push_back(Base::op_O22);
+  my_operators.push_back(Base::op_O33);
 
 
   std::vector< Core::Correlator > C3p = Contract::proton_threepoint_sequential(backwardProp_u, forwardProp_u,
@@ -143,6 +146,26 @@ int main(int argc, char **argv)
     std::cout << "\n dbar O44 d \n" << std::endl;
     std::cout << C3p[3] << std::endl;
     fout << C3p[3] << std::endl;
+
+    std::cout << "\n ubar O11 u \n" << std::endl;
+    std::cout << C3p[4] << std::endl;
+    fout << C3p[4] << std::endl;
+    std::cout << "\n dbar O11 d \n" << std::endl;
+    std::cout << C3p[5] << std::endl;
+    fout << C3p[5] << std::endl;
+    std::cout << "\n ubar O22 u \n" << std::endl;
+    std::cout << C3p[6] << std::endl;
+    fout << C3p[6] << std::endl;
+    std::cout << "\n dbar O22 d \n" << std::endl;
+    std::cout << C3p[7] << std::endl;
+    fout << C3p[7] << std::endl;
+    std::cout << "\n ubar O33 u \n" << std::endl;
+    std::cout << C3p[8] << std::endl;
+    fout << C3p[8] << std::endl;
+    std::cout << "\n dbar O33 d \n" << std::endl;
+    std::cout << C3p[9] << std::endl;
+    fout << C3p[9] << std::endl;
+
     fout.close();
   }
 

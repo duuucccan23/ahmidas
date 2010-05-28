@@ -192,6 +192,13 @@ namespace Core
   }
 
   template< typename Element >
+  inline void Field< Element >::refCountUp()
+  {
+    (*d_references) += 1;
+  }
+
+
+  template< typename Element >
   inline size_t Field< Element >::shiftIdxToZero(size_t const idx) const
   {
     return ((idx                                     % d_weave.localSize(Base::idx_X)) + d_weave.localSize(Base::idx_X)

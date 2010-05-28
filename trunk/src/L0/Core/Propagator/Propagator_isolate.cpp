@@ -4,6 +4,8 @@ namespace Core
 {
   void Propagator::isolate()
   {
+
+    // std::cout << "isolate:\nref = " << d_references << ": refCount (Propagator) = " << *d_references << std::endl;
     if (*d_references == 1)
       return;
 
@@ -12,16 +14,8 @@ namespace Core
     *d_references -= 1;
     d_references = new size_t(1);
 
-    Field< QCD::Tensor > *d_components_new = new Field< QCD::Tensor > (L(), T());
-    Field< QCD::Tensor >::const_iterator itOld = d_components->begin();
-    Field< QCD::Tensor >::iterator itNew = d_components_new->begin();
-    while(itOld != d_components->end())
-    {
-      *itNew = *itOld;
-      ++itOld;
-      ++itNew;
-    }
-    d_components = d_components_new;
+    d_components = new Field< QCD::Tensor > (*d_components);
+    (*d_components).isolate();
 
   }
 }

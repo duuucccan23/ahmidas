@@ -48,6 +48,8 @@ namespace QCD
       std::complex< double > &operator()(Base::DiracIndex const dir, Base::ColourIndex const col);
       std::complex< double > const &operator()(Base::DiracIndex const dir, Base::ColourIndex const col) const;
 
+      void leftMultiply(Dirac::Identity const);
+
       template< size_t Index >
       void leftMultiply(Dirac::Gamma< Index > const);
 

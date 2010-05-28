@@ -6,6 +6,7 @@
 
 namespace Dirac
 {
+
   template< size_t Index >
   class Gamma
   {

@@ -1,3 +1,18 @@
+inline Propagator &Propagator::operator=(Propagator const &rhs)
+{
+  std::cout << "calling assignment operator of class Propagator" << std::endl;
+  if (this != &rhs)
+  {
+    destroy();
+
+    d_references = rhs.d_references;
+    d_components = rhs.d_components;
+    *d_references += 1;
+    d_components->refCountUp();
+  }
+  return (*this);
+}
+
 template< size_t Index >
 void Propagator::operator*=(Dirac::Gamma< Index > const &gamma)
 {

@@ -40,8 +40,6 @@ namespace Core
       ~Propagator();
 
 
-      //Propagator &operator=(Propagator const &rhs);
-
       // return entry at particular lattice site, corresponding to the propagator sink
       // for parallelization reasons this does not return a reference
       QCD::Tensor operator()(size_t const* sinkSite) const;
@@ -50,7 +48,12 @@ namespace Core
       QCD::Tensor       &operator[](size_t const localIndex);
       QCD::Tensor const &operator[](size_t const localIndex) const;
 
+      Propagator &operator=(Propagator const &rhs);
+
       void operator*=(std::complex< double > const &factor);
+
+      void operator+=(Propagator const &other);
+      void operator-=(Propagator const &other);
 
       template< size_t Index >
       void operator*=(Dirac::Gamma< Index > const &gamma);

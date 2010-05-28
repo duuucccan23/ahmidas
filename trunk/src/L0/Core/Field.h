@@ -114,13 +114,13 @@ namespace Core
       size_t size() const;
       size_t spatialSize() const; // (for looping over a single timeslice)
       void isolate();
+      void refCountUp();
+      void destroy();
       void fill(Element const &element); // Flush a field with a constant quantity
 
     private:
       size_t shiftIdxToZero(size_t const idx) const;
       size_t shiftIdxToOffset(size_t const idx) const;
-
-      void destroy();
   };
 
   template< typename Element >

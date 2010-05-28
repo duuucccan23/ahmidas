@@ -1,8 +1,11 @@
 template< typename Element >
 void Core::Field< Element >::isolate()
 {
+  // std::cout << "isolate:\nref = " << d_references << ": refCount (Field) = " << *d_references << std::endl;
+
   if ((*d_references) == 1)
     return;
+  assert(*d_references > 1);
   (*d_references) -= 1;
   d_references = new size_t(1);
   Element *field = new Element[d_weave.localVolume()];

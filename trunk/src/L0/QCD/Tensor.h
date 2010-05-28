@@ -88,11 +88,15 @@ namespace QCD
       template< size_t Index >
       Tensor operator*(Dirac::Gamma< Index > const &gamma) const;
 
+      Tensor operator*(Dirac::Identity const &gamma) const;
+
       template< size_t Index >
       Tensor operator*(Dirac::Sigma< Index > const &gamma) const;
 
       template< size_t Index >
       void operator*=(Dirac::Gamma< Index > const &gamma);
+
+      void operator*=(Dirac::Identity const &gamma);
 
       template< size_t Index >
       void operator*=(Dirac::Sigma< Index > const &gamma);
@@ -100,6 +104,7 @@ namespace QCD
       void operator*=(std::complex< double > const &factor);
 
       void operator+=(Tensor const &other);
+      void operator-=(Tensor const &other);
 
       Tensor &leftMultiply(Tensor const &other);
       Tensor &rightMultiply(Tensor const &other);
@@ -149,6 +154,7 @@ namespace QCD
 
       template< size_t Index >
       friend Tensor operator*(Dirac::Gamma< Index > const &gamma, Tensor const &tensor);
+      friend Tensor operator*(Dirac::Identity const &gamma, Tensor const &tensor);
       template< size_t Index >
       friend Tensor operator*(Dirac::Sigma< Index > const &gamma, Tensor const &tensor);
 
@@ -170,6 +176,7 @@ namespace QCD
 
   template< size_t Index >
   QCD::Tensor operator*(Dirac::Gamma< Index > const &gamma, Tensor const &tensor);
+  QCD::Tensor operator*(Dirac::Identity const &gamma, Tensor const &tensor);
   template< size_t Index >
   QCD::Tensor operator*(Dirac::Sigma< Index > const &gamma, Tensor const &tensor);
 

@@ -22,8 +22,11 @@
 #define __COMPENSATE_UNIFORM_BOUNDARY_CONDITIONS__
 
 
+// comment this if you don't want the threepoint function to be calculated
+#define __CALCULATE_THREEPOINT__
+
 // comment this if you don't want the twopoint function to be calculated
-#define __CALCULATE_TWOPOINT__
+// #define __CALCULATE_TWOPOINT__
 
 int main(int argc, char **argv)
 {
@@ -31,7 +34,7 @@ int main(int argc, char **argv)
   size_t L_tmp = 0;
   size_t T_tmp = 0;
 
-  Input::FileReader reader("../example/contract_3point_sequential_input.xml");
+  Input::FileReader reader("./contract_3point_sequential_input.xml");
 
   std::map< std::string, double > floats;
   std::vector< size_t * > positions;
@@ -45,7 +48,7 @@ int main(int argc, char **argv)
 
   Base::Weave weave(L, T);
 
-  if (weave.isRoot());
+  if (weave.isRoot())
     std::cout << "Lattice size: " << L << "x" << L << "x" << L << "x" << T << std::endl;
 
   double kappa = floats["kappa"];
@@ -77,7 +80,7 @@ int main(int argc, char **argv)
   std::vector< std::string > const &seqPropFilesU(files[4]);
 
   Core::Field< QCD::Gauge > gauge_field(L, T);
-  if (weave.isRoot());
+  if (weave.isRoot())
     std::cout << "gauge field to be read from " << gaugeFieldFiles[0] << " ... ";
   Tool::IO::load(&gauge_field, gaugeFieldFiles[0], Tool::IO::fileILDG);
   if (weave.isRoot())
@@ -85,7 +88,7 @@ int main(int argc, char **argv)
 
   Core::Propagator forwardProp_u(L, T);
   Tool::IO::load(&forwardProp_u, propfilesU, Tool::IO::fileSCIDAC, 64);
-  if (weave.isRoot());
+  if (weave.isRoot())
     std::cout << "u quark forward propagator successfully loaded\n" << std::endl;
 
   Core::Propagator forwardProp_d(L, T);
@@ -95,9 +98,12 @@ int main(int argc, char **argv)
 
 
 #ifdef __COMPENSATE_UNIFORM_BOUNDARY_CONDITIONS__
-//   forwardProp_d.changeBoundaryConditions_uniformToFixed(timeslice_source, timeslice_boundary);
-//   forwardProp_u.changeBoundaryConditions_uniformToFixed(timeslice_source, timeslice_boundary);
+  forwardProp_d.changeBoundaryConditions_uniformToFixed(timeslice_source, timeslice_boundary);
+  forwardProp_u.changeBoundaryConditions_uniformToFixed(timeslice_source, timeslice_boundary);
 #endif
+
+
+#ifdef __CALCULATE_THREEPOINT__
 
   Core::Propagator backwardProp_u(L, T);
   Core::Propagator backwardProp_d(L, T);
@@ -121,15 +127,21 @@ int main(int argc, char **argv)
 
   my_operators.push_back(Base::op_GAMMA_4);
   my_operators.push_back(Base::op_O44);
-  my_operators.push_back(Base::op_O11);
-  my_operators.push_back(Base::op_O22);
-  my_operators.push_back(Base::op_O33);
+//   my_operators.push_back(Base::op_O11);
+//   my_operators.push_back(Base::op_O22);
+//   my_operators.push_back(Base::op_O33);
+
+  if (weave.isRoot())
+    std::cout << "\n calculating 3-point function(s) \n" << std::endl;
 
 
   std::vector< Core::Correlator > C3p = Contract::proton_threepoint_sequential(backwardProp_u, forwardProp_u,
                                                                                backwardProp_d, forwardProp_d,
                                                                                &gauge_field,
                                                                                my_operators);
+
+  for(size_t i=0; i<2*my_operators.size(); i++)
+    (C3p[i]).setOffset(timeslice_source);
 
   if (weave.isRoot())
   {
@@ -146,31 +158,35 @@ int main(int argc, char **argv)
     std::cout << "\n dbar O44 d \n" << std::endl;
     std::cout << C3p[3] << std::endl;
     fout << C3p[3] << std::endl;
-
-    std::cout << "\n ubar O11 u \n" << std::endl;
-    std::cout << C3p[4] << std::endl;
-    fout << C3p[4] << std::endl;
-    std::cout << "\n dbar O11 d \n" << std::endl;
-    std::cout << C3p[5] << std::endl;
-    fout << C3p[5] << std::endl;
-    std::cout << "\n ubar O22 u \n" << std::endl;
-    std::cout << C3p[6] << std::endl;
-    fout << C3p[6] << std::endl;
-    std::cout << "\n dbar O22 d \n" << std::endl;
-    std::cout << C3p[7] << std::endl;
-    fout << C3p[7] << std::endl;
-    std::cout << "\n ubar O33 u \n" << std::endl;
-    std::cout << C3p[8] << std::endl;
-    fout << C3p[8] << std::endl;
-    std::cout << "\n dbar O33 d \n" << std::endl;
-    std::cout << C3p[9] << std::endl;
-    fout << C3p[9] << std::endl;
+//     std::cout << "\n ubar O11 u \n" << std::endl;
+//     std::cout << C3p[4] << std::endl;
+//     fout << C3p[4] << std::endl;
+//     std::cout << "\n dbar O11 d \n" << std::endl;
+//     std::cout << C3p[5] << std::endl;
+//     fout << C3p[5] << std::endl;
+//     std::cout << "\n ubar O22 u \n" << std::endl;
+//     std::cout << C3p[6] << std::endl;
+//     fout << C3p[6] << std::endl;
+//     std::cout << "\n dbar O22 d \n" << std::endl;
+//     std::cout << C3p[7] << std::endl;
+//     fout << C3p[7] << std::endl;
+//     std::cout << "\n ubar O33 u \n" << std::endl;
+//     std::cout << C3p[8] << std::endl;
+//     fout << C3p[8] << std::endl;
+//     std::cout << "\n dbar O33 d \n" << std::endl;
+//     std::cout << C3p[9] << std::endl;
+//     fout << C3p[9] << std::endl;
 
     fout.close();
   }
 
+#endif
 
 #ifdef __CALCULATE_TWOPOINT__
+
+  if (weave.isRoot())
+    std::cout << "\n calculating 2-point function \n" << std::endl;
+
   double const APE_alpha      = floats["APE_param"];
   size_t const APE_iterations = size_t(floats["APE_steps"]);
   double const Jac_alpha      = floats["Jac_param"];
@@ -201,6 +217,8 @@ int main(int argc, char **argv)
     std::ofstream fout("output_2point.dat");
     std::cout << "proton two point" << std::endl;
     std::cout << C2_P << std::endl;
+    fout << C2_P << std::endl;
+    fout.close();
   }
 
 

@@ -9,6 +9,7 @@ std::ostream &Core::operator<<(std::ostream &out, Core::Correlator const &c)
   out << "T        real part   imaginary part\n";
   for (size_t t = 0; t < c.T(); t++)
   {
+    out.width(3);
     out << t << "  " << std::scientific << std::showpos << std::setprecision(8);
     out << (c[t]).trace().real() << "  " << (c[t]).trace().imag() << std::endl;
   }

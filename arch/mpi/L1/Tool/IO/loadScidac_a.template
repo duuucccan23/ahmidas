@@ -35,6 +35,12 @@ void Tool::IO::loadScidac(Core::Field< Element > *field, std::string const &file
   assert(elem_offset < weave.globalVolume());
 
   Lime::Reader reader(filename);
+  if(!reader.good())
+  {
+    if(weave.isRoot())
+      std::cerr << "Error occured trying to open file: " << filename << std::endl;
+  }
+  assert(reader.good());
 
   Scidacinfo *info = 0;
 

@@ -18,6 +18,8 @@ namespace Core
     Field < Dirac::Matrix > *d_data;
     Dirac::Matrix *d_sumTimeslice;
 
+    size_t d_offset;
+
     // for compatibility with parallel code
     Dirac::Matrix *d_sumTimeslice_global;
 
@@ -38,6 +40,9 @@ namespace Core
 
       void sumOverSpatialVolume();
       void sumOverSpatialVolume(size_t const *momentum);
+
+      // set offset (for conventional reasons one would often like to shift the source timeslice to 0)
+      void setOffset(size_t timeslice);
 
       std::complex <double> getTrSum(size_t const timeslice) const;
 

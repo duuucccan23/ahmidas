@@ -2,6 +2,13 @@ template< typename Element >
 void Tool::IO::loadScidac(Core::Field< Element > *field, std::string const &filename)
 {
   Lime::Reader reader(filename);
+
+  if(!reader.good())
+  {
+    std::cerr << "Error occured trying to open file: " << filename << std::endl;
+  }
+  assert(reader.good());
+
   Scidacinfo info(reader);
 
   reader.retrieveRecord(reader.findRecord("scidac-binary-data"));

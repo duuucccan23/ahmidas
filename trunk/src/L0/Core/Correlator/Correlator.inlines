@@ -1,7 +1,7 @@
 inline Correlator::Correlator(Correlator const &other)
   : d_weave(other.d_weave), d_data(other.d_data),
     d_sumTimeslice(other.d_sumTimeslice), d_sumTimeslice_global(other.d_sumTimeslice_global),
-    d_references(other.d_references)
+    d_references(other.d_references), d_offset(0)
 {
   *d_references += 1;
 }
@@ -9,7 +9,7 @@ inline Correlator::Correlator(Correlator const &other)
 inline Correlator::Correlator(size_t const L, size_t const T, Core::Field<Dirac::Matrix>* data)
   : d_weave(new Base::Weave(L, T)), d_data(data),
     d_sumTimeslice(new Dirac::Matrix[T]), d_sumTimeslice_global(new Dirac::Matrix[T]),
-    d_references(new size_t(1))
+    d_references(new size_t(1)), d_offset(0)
 {
 }
 
@@ -21,13 +21,13 @@ inline Correlator::~Correlator()
 inline Dirac::Matrix &Correlator::operator[](size_t const t)
 {
   assert(t < T());
-  return d_sumTimeslice_global[t];
+  return d_sumTimeslice_global[(t + d_offset) % T()];
 }
 
 inline Dirac::Matrix const &Correlator::operator[](size_t const t) const
 {
   assert(t < T());
-  return d_sumTimeslice_global[t];
+  return d_sumTimeslice_global[(t + d_offset) % T()];
 }
 
 inline void Correlator::operator*=(double const factor)

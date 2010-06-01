@@ -126,10 +126,13 @@ int main(int argc, char **argv)
   std::vector< Base::Operator > my_operators;
 
   my_operators.push_back(Base::op_GAMMA_4);
+  my_operators.push_back(Base::op_GAMMA_1);
+  my_operators.push_back(Base::op_GAMMA_2);
+  my_operators.push_back(Base::op_GAMMA_3);
   my_operators.push_back(Base::op_O44);
-//   my_operators.push_back(Base::op_O11);
-//   my_operators.push_back(Base::op_O22);
-//   my_operators.push_back(Base::op_O33);
+  my_operators.push_back(Base::op_O11);
+  my_operators.push_back(Base::op_O22);
+  my_operators.push_back(Base::op_O33);
 
   if (weave.isRoot())
     std::cout << "\n calculating 3-point function(s) \n" << std::endl;
@@ -146,36 +149,42 @@ int main(int argc, char **argv)
   if (weave.isRoot())
   {
     std::ofstream fout("output_3point.dat");
-    std::cout << "\n ubar gamma_0 u \n" << std::endl;
-    std::cout << C3p[0] << std::endl;
+//     std::cout << "\n ubar gamma_0 u \n" << std::endl;
+//     std::cout << C3p[0] << std::endl;
     fout << C3p[0] << std::endl;
-    std::cout << "\n dbar gamma_0 d \n" << std::endl;
-    std::cout << C3p[1] << std::endl;
+//     std::cout << "\n dbar gamma_0 d \n" << std::endl;
+//     std::cout << C3p[1] << std::endl;
     fout << C3p[1] << std::endl;
-    std::cout << "\n ubar O44 u \n" << std::endl;
-    std::cout << C3p[2] << std::endl;
+//     std::cout << "\n ubar O44 u \n" << std::endl;
+//     std::cout << C3p[2] << std::endl;
     fout << C3p[2] << std::endl;
-    std::cout << "\n dbar O44 d \n" << std::endl;
-    std::cout << C3p[3] << std::endl;
+//     std::cout << "\n dbar O44 d \n" << std::endl;
+//     std::cout << C3p[3] << std::endl;
     fout << C3p[3] << std::endl;
 //     std::cout << "\n ubar O11 u \n" << std::endl;
 //     std::cout << C3p[4] << std::endl;
-//     fout << C3p[4] << std::endl;
+    fout << C3p[4] << std::endl;
 //     std::cout << "\n dbar O11 d \n" << std::endl;
 //     std::cout << C3p[5] << std::endl;
-//     fout << C3p[5] << std::endl;
+    fout << C3p[5] << std::endl;
 //     std::cout << "\n ubar O22 u \n" << std::endl;
 //     std::cout << C3p[6] << std::endl;
-//     fout << C3p[6] << std::endl;
+    fout << C3p[6] << std::endl;
 //     std::cout << "\n dbar O22 d \n" << std::endl;
 //     std::cout << C3p[7] << std::endl;
-//     fout << C3p[7] << std::endl;
+    fout << C3p[7] << std::endl;
 //     std::cout << "\n ubar O33 u \n" << std::endl;
 //     std::cout << C3p[8] << std::endl;
-//     fout << C3p[8] << std::endl;
+    fout << C3p[8] << std::endl;
 //     std::cout << "\n dbar O33 d \n" << std::endl;
 //     std::cout << C3p[9] << std::endl;
-//     fout << C3p[9] << std::endl;
+    fout << C3p[9] << std::endl;
+    fout << C3p[10] << std::endl;
+    fout << C3p[11] << std::endl;
+    fout << C3p[12] << std::endl;
+    fout << C3p[13] << std::endl;
+    fout << C3p[14] << std::endl;
+    fout << C3p[15] << std::endl;
 
     fout.close();
   }
@@ -210,7 +219,7 @@ int main(int argc, char **argv)
     std::cout << "propagators and gauge field smeared successfully\n" << std::endl;
 
   Core::Correlator C2_P = Contract::proton_twopoint(forwardProp_u, forwardProp_u, forwardProp_d, Base::proj_PARITY_PLUS_TM);
-
+  C2_P.setOffset(timeslice_source);
 
   if (weave.isRoot())
   {

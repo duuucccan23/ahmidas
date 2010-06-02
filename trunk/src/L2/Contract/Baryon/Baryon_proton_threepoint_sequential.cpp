@@ -33,6 +33,7 @@ namespace Contract
 
       Core::Correlator p3p_tmp_u(L, T, bw_tmp_u.contract(fw_prop_u));
       p3p_tmp_u.sumOverSpatialVolume();
+      p3p_tmp_u.deleteField();
       p3p.push_back(p3p_tmp_u);
     }
 
@@ -51,6 +52,7 @@ namespace Contract
 
       Core::Correlator p3p_tmp_d(L, T, bw_tmp_d.contract(fw_prop_d));
       p3p_tmp_d.sumOverSpatialVolume();
+      p3p_tmp_d.deleteField();
       p3p.push_back(p3p_tmp_d);
     }
 

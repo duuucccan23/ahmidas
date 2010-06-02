@@ -42,7 +42,6 @@ namespace Core
         assert(gauge_field != NULL);
 
         Dirac::Gamma< 4 > gamma4;
-        std::complex< double > MINUS_ONE(-1, 0);
         std::complex< double > ZERO(0, 0);
 
         Propagator copy(*this);
@@ -69,7 +68,6 @@ namespace Core
         // part 2 : shift up and times U_mu^dagger
         tmp.shift(Base::idx_T, Base::dir_UP);
         (tmp.d_components)->leftMultiply((*gauge_field).component< SU3::Matrix >(Base::idx_T).dagger());
-        tmp *= MINUS_ONE;
         (*this) -= tmp;
         std::cout << "done." << std::endl;
         }
@@ -82,7 +80,6 @@ namespace Core
         // part 3 : shift down and times U_mu^dagger
         tmp.shift(Base::idx_T, Base::dir_DOWN);
         (tmp.d_components)->leftMultiply((*gauge_field).component< SU3::Matrix >(Base::idx_T).dagger());
-        tmp *= MINUS_ONE;
         (*this) -= tmp;
         std::cout << "done." << std::endl;
         }
@@ -105,7 +102,6 @@ namespace Core
         assert(gauge_field != NULL);
 
         Dirac::Gamma< 1 > gamma1;
-        std::complex< double > MINUS_ONE(-1, 0);
         std::complex< double > ZERO(0, 0);
 
         Propagator copy(*this);
@@ -125,7 +121,6 @@ namespace Core
         // part 2 : shift up and times U_mu^dagger
         tmp.shift(Base::idx_X, Base::dir_UP);
         (tmp.d_components)->leftMultiply((*gauge_field).component< SU3::Matrix >(Base::idx_X).dagger());
-        tmp *= MINUS_ONE;
         (*this) -= tmp;
         }
         {
@@ -134,7 +129,6 @@ namespace Core
         // part 3 : shift down and times U_mu^dagger
         tmp.shift(Base::idx_X, Base::dir_DOWN);
         (tmp.d_components)->leftMultiply((*gauge_field).component< SU3::Matrix >(Base::idx_X).dagger());
-        tmp *= MINUS_ONE;
         (*this) -= tmp;
         }
         {
@@ -153,7 +147,6 @@ namespace Core
         assert(gauge_field != NULL);
 
         Dirac::Gamma< 2 > gamma2;
-        std::complex< double > MINUS_ONE(-1, 0);
         std::complex< double > ZERO(0, 0);
 
         Propagator copy(*this);
@@ -174,7 +167,6 @@ namespace Core
         // part 2 : shift up and times U_mu^dagger
         tmp.shift(Base::idx_Y, Base::dir_UP);
         (tmp.d_components)->leftMultiply((*gauge_field).component< SU3::Matrix >(Base::idx_Y).dagger());
-        tmp *= MINUS_ONE;
         (*this) -= tmp;
         }
         {
@@ -183,7 +175,6 @@ namespace Core
         // part 3 : shift down and times U_mu^dagger
         tmp.shift(Base::idx_Y, Base::dir_DOWN);
         (tmp.d_components)->leftMultiply((*gauge_field).component< SU3::Matrix >(Base::idx_Y).dagger());
-        tmp *= MINUS_ONE;
         (*this) -= tmp;
         }
         {
@@ -201,7 +192,6 @@ namespace Core
         assert(gauge_field != NULL);
 
         Dirac::Gamma< 3 > gamma3;
-        std::complex< double > MINUS_ONE(-1, 0);
         std::complex< double > ZERO(0, 0);
 
         Propagator copy(*this);
@@ -221,7 +211,6 @@ namespace Core
         // part 2 : shift up and times U_mu^dagger
         tmp.shift(Base::idx_Z, Base::dir_UP);
         (tmp.d_components)->leftMultiply((*gauge_field).component< SU3::Matrix >(Base::idx_Z).dagger());
-        tmp *= MINUS_ONE;
         (*this) -= tmp;
         }
         {
@@ -230,7 +219,6 @@ namespace Core
         // part 3 : shift down and times U_mu^dagger
         tmp.shift(Base::idx_Z, Base::dir_DOWN);
         (tmp.d_components)->leftMultiply((*gauge_field).component< SU3::Matrix >(Base::idx_Z).dagger());
-        tmp *= MINUS_ONE;
         (*this) -= tmp;
         }
         {

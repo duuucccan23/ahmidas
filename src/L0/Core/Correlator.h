@@ -38,6 +38,9 @@ namespace Core
       void operator*=(Base::BaryonPropagatorProjector const projector);
       void operator+=(Correlator const &other);
 
+      void deleteField();
+
+
       void sumOverSpatialVolume();
       void sumOverSpatialVolume(size_t const *momentum);
 

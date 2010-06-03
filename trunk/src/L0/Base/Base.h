@@ -97,7 +97,7 @@ namespace Base
     op_GAMMA_1 = 1,
     op_GAMMA_2 = 2,
     op_GAMMA_3 = 3,
-    // op_CONSERVED_CURRENT_GAMMA_4 = 16,
+    op_CONSERVED_GAMMA_4 = 16,
     op_O44 = 32,
     op_O11 = 33,
     op_O22 = 34,

@@ -29,9 +29,9 @@ namespace Contract
       bw_tmp_u.dagger();
       bw_tmp_u *= gamma5;
 
-      bw_tmp_u.multiplyOperator(ops[iOp], gauge_field);
+//       bw_tmp_u.multiplyOperator(ops[iOp], gauge_field);
 
-      Core::Correlator p3p_tmp_u(L, T, bw_tmp_u.contract(fw_prop_u));
+      Core::Correlator p3p_tmp_u(L, T, bw_tmp_u.contractWithOperatorInsertion(ops[iOp], gauge_field, fw_prop_u));
       p3p_tmp_u.sumOverSpatialVolume();
       p3p_tmp_u.deleteField();
       p3p.push_back(p3p_tmp_u);
@@ -43,14 +43,14 @@ namespace Contract
       bw_tmp_d.dagger();
       bw_tmp_d *= gamma5;
 
-      bw_tmp_d.multiplyOperator(ops[iOp], gauge_field);
+//       bw_tmp_d.multiplyOperator(ops[iOp], gauge_field);
 
 //       // since we have to take the transpose later, we could replace the above expressions by:
 //       bw_tmp_d.rightMultiply(gamma5);
 //       bw_tmp_d.conjugate();
 
 
-      Core::Correlator p3p_tmp_d(L, T, bw_tmp_d.contract(fw_prop_d));
+      Core::Correlator p3p_tmp_d(L, T, bw_tmp_d.contractWithOperatorInsertion(ops[iOp], gauge_field, fw_prop_d));
       p3p_tmp_d.sumOverSpatialVolume();
       p3p_tmp_d.deleteField();
       p3p.push_back(p3p_tmp_d);

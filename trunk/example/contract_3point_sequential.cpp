@@ -126,10 +126,11 @@ int main(int argc, char **argv)
   std::vector< Base::Operator > my_operators;
 
   my_operators.push_back(Base::op_GAMMA_4);
+  my_operators.push_back(Base::op_CONSERVED_GAMMA_4);
+  my_operators.push_back(Base::op_O44);
   my_operators.push_back(Base::op_GAMMA_1);
   my_operators.push_back(Base::op_GAMMA_2);
   my_operators.push_back(Base::op_GAMMA_3);
-  my_operators.push_back(Base::op_O44);
   my_operators.push_back(Base::op_O11);
   my_operators.push_back(Base::op_O22);
   my_operators.push_back(Base::op_O33);

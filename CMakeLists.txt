@@ -7,18 +7,17 @@ PROJECT(Ahmidas CXX)
 OPTION(USE_MPI "Build Ahmidas for use on parallel systems, using MPI for parallelism." OFF)
 OPTION(USE_SCALAR "Build Ahmidas for use on scalar systems [default]." ON)
 
-IF(USE_MPI)
-FIND_PACKAGE(MPI REQUIRED)
-ENDIF(USE_MPI)
+# IF(USE_MPI)
+# FIND_PACKAGE(MPI REQUIRED)
+# ENDIF(USE_MPI)
 
 ENABLE_TESTING()
 
 INCLUDE_DIRECTORIES(BEFORE SYSTEM src)
-# SET(CMAKE_CXX_FLAGS "-O3 -pg -g -Wall -pedantic")
-SET(CMAKE_CXX_FLAGS "-O2  -Wall -pedantic")
+SET(CMAKE_CXX_FLAGS "-O2")
 
 IF(USE_MPI)
-SET(MPI_COMPILE_FLAGS "-O2 -Wall")
+SET(MPI_COMPILE_FLAGS "-O2")
 ENDIF(USE_MPI)
 
 IF(USE_SCALAR)

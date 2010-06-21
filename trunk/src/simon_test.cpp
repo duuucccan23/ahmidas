@@ -20,8 +20,8 @@
 #include <L1/Smear/Jacobi.h>
 #include <L2/Input/FileReader.h>
 
-#define __VINCENT__
-#define __SMEARING__
+// #define __VINCENT__
+// #define __SMEARING__
 
 int main(int argc, char **argv)
 {
@@ -90,9 +90,9 @@ int main(int argc, char **argv)
  std::vector< std::string > const &smearedPropFilesUSmeared(files[3]);
 #endif
 
-//   std::vector< std::string > const &stochasticPropFilesD(files[2]);
-//   std::vector< std::string > const &stochasticPropFilesU(files[3]);
-//   std::vector< std::string > const &stochasticSourceFiles(files[4]);
+  std::vector< std::string > const &stochasticPropFilesD(files[2]);
+  std::vector< std::string > const &stochasticPropFilesU(files[3]);
+  std::vector< std::string > const &stochasticSourceFiles(files[4]);
   std::vector< std::string > const &gaugeFieldFiles(files[11]);
   std::vector< std::string > const &smearedGaugeFieldFiles(files[14]);
   std::vector< std::string > const &sourceFiles(files[12]);
@@ -205,23 +205,23 @@ int main(int argc, char **argv)
 #endif
 
 
-//   Core::StochasticPropagator< 12 > stochastic_dProp(L, T);
-//   Core::StochasticPropagator< 12 > stochastic_uProp(L, T);
-//   Core::StochasticSource< 12 >     stochasticSource(L, T, Base::sou_FULLY_POLARIZED, Base::sou_PURE);
-// 
-//   // the load function with last parameter (size_t) precision is sort of a quick and dirty version
-//   // but it also reads files without a proper header
-//   Tool::IO::load(dynamic_cast< Core::Propagator *> (&stochastic_dProp),
-//                  stochasticPropFilesD, Tool::IO::fileSCIDAC, 64);
-//   std::cout << "stochastic d quark propagator successfully loaded\n" << std::endl;
-// 
-//   Tool::IO::load(dynamic_cast< Core::Propagator *> (&stochastic_uProp),
-//                  stochasticPropFilesU, Tool::IO::fileSCIDAC, 64);
-//   std::cout << "stochastic u quark propagator successfully loaded\n" << std::endl;
-// 
-//   Tool::IO::load(dynamic_cast< Core::Propagator *> (&stochasticSource),
-//                  stochasticSourceFiles, Tool::IO::fileSCIDAC, 64);
-//   std::cout << "stochastic source successfully loaded\n" << std::endl;
+  Core::StochasticPropagator< 12 > stochastic_dProp(L, T);
+  Core::StochasticPropagator< 12 > stochastic_uProp(L, T);
+  Core::StochasticSource< 12 >     stochasticSource(L, T, Base::sou_FULLY_POLARIZED, Base::sou_PURE, timeslice_stochSource);
+
+  // the load function with last parameter (size_t) precision is sort of a quick and dirty version
+  // but it also reads files without a proper header
+  Tool::IO::load(dynamic_cast< Core::Propagator *> (&stochastic_dProp),
+                 stochasticPropFilesD, Tool::IO::fileSCIDAC, 64);
+  std::cout << "stochastic d quark propagator successfully loaded\n" << std::endl;
+
+  Tool::IO::load(dynamic_cast< Core::Propagator *> (&stochastic_uProp),
+                 stochasticPropFilesU, Tool::IO::fileSCIDAC, 64);
+  std::cout << "stochastic u quark propagator successfully loaded\n" << std::endl;
+
+  Tool::IO::load(dynamic_cast< Core::Propagator *> (&stochasticSource),
+                 stochasticSourceFiles, Tool::IO::fileSCIDAC, 64);
+  std::cout << "stochastic source successfully loaded\n" << std::endl;
 
 
   std::vector< Base::Operator > my_operators;

@@ -41,16 +41,16 @@ namespace Base
   // Definitions to be used in the characterization of sources
   enum SourcePolarization
   {
-    sou_UNPOLARIZED,
-    sou_PARTLY_POLARIZED,
-    sou_FULLY_POLARIZED
+    sou_UNPOLARIZED      = 0,
+    sou_PARTLY_POLARIZED = 1,
+    sou_FULLY_POLARIZED  = 2
   };
 
   enum SourceColorState
   {
-    sou_WHITE,
-    sou_PURE,
-    sou_GENERIC
+    sou_WHITE   = 0,
+    sou_GENERIC = 1,
+    sou_PURE    = 2
   };
 
   enum SourceSpatialLayout

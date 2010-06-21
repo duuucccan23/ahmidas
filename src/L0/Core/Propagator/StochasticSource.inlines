@@ -5,14 +5,29 @@ inline StochasticSource< NComp >::StochasticSource(size_t const L, size_t const 
 
 template< size_t NComp >
 inline StochasticSource< NComp >::StochasticSource(size_t const L, size_t const T,
-                                  Base::SourcePolarization const pol, Base::SourceColorState const col)
+                                  Base::SourcePolarization const pol, Base::SourceColorState const col,
+                                  size_t const timeslice)
   : Propagator(L, T)
 {
-  Propagator::iterator I = begin();
-  while (I != end())
+  assert(timeslice < T);
+
+  Base::Weave weave(L, T);
+
+  size_t localIndex;
+  for(size_t idx_Z = 0; idx_Z < L; idx_Z++)
   {
-    (*I).setToRandom_Z4(pol, col);
-    ++I;
+    for(size_t idx_Y = 0; idx_Y < L; idx_Y++)
+    {
+      for(size_t idx_X = 0; idx_X < L; idx_X++)
+      {
+        localIndex = weave.globalCoordToLocalIndex(idx_X, idx_Y, idx_Z, timeslice);
+        /* globalCoordToLocalIndex returns local volume if local data is not available on this cpu */
+        if (localIndex == weave.localVolume())
+          continue;
+
+        ((*d_components)[localIndex]).setToRandom_Z4(pol, col);
+      }
+    }
   }
 }
 

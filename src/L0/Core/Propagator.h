@@ -163,7 +163,7 @@ namespace Core
 
       StochasticSource< NComp > (size_t const L, size_t const T);
       StochasticSource< NComp > (size_t const L, size_t const T,
-                                 Base::SourcePolarization const, Base::SourceColorState const);
+                                 Base::SourcePolarization const, Base::SourceColorState const, size_t const timeslice);
 
       explicit StochasticSource< NComp > (Propagator const &base);
       StochasticSource< NComp > (StochasticSource< NComp > const &other);

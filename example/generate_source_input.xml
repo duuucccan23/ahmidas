@@ -6,20 +6,25 @@
     <!-- -->
     <kappa> 0.177 </kappa>
     <mu> 1.41243 </mu>
+    <!-- -->
     <!-- this is the timeslice of the stochastic source -->
-    <timesliceSource> 1 </timesliceSource>
+    <timesliceSource> 3 </timesliceSource>
+    <!-- -->
+    <!-- this is the seed for the random number generator (type uint64_t, unsigned 64 bit integer)-->
+    <!-- note that 0 results in taking the current system time instead -->
+    <seed> 123456789 </seed>
+    <!-- -->
     <!-- this is the polarization of the source according to Base::SourcePolarization:               -->
     <!--   0: sou_UNPOLARIZED      = all 4 Dirac entries are the same                                   -->
     <!--   1: sou_PARTLY_POLARIZED = all 4 Dirac entries are different but non-zero                     -->
     <!--   2: sou_FULLY_POLARIZED  = only one of the entries is non-zero (a.k.a. Dirac or spin diluted) -->
-    <!-- -->
     <SourcePolarization> 2 </SourcePolarization>
+    <!-- -->
     <!-- this is the color state of the source according to Base::SourceColourState: -->
     <!--   0: sou_WHITE   = all 3 color entries are the same                            -->
     <!--   1: sou_GENERIC = all 3 color entries are different but non-zero              -->
     <!--   2: sou_PURE  = only one of the entries is non-zero (a.k.a. color diluted)    -->
-    <!-- -->
-    <SourceColorState> 2 </SourceColorState>
+    <SourceColorState> 1 </SourceColorState>
     <!-- -->
     <!-- if smearing is desired set the following 4 parameters to proper values -->
     <!-- APE smearing parameters -->
@@ -36,7 +41,7 @@
       <directory>../test</directory>
       <filenameBase>myStochasticSource.</filenameBase>
       <firstIndex>0</firstIndex>
-      <lastIndex>11</lastIndex>
+      <lastIndex>3</lastIndex>
       <indexWidth>2</indexWidth>
     </file>
     <!-- gauge field (input, only needed for smearing -->

@@ -255,25 +255,19 @@ namespace QCD
     std::fill_n(d_data, 144, std::complex< double >(0, 0));
     std::complex< double > tmp_data [12];
     std::generate_n(reinterpret_cast< double* >(tmp_data), 24, Base::Random::Z2);
+    double const norm = 1.0/sqrt(2.0);
+    std::transform(reinterpret_cast< double* >(tmp_data), reinterpret_cast< double* >(tmp_data) + 24,
+                   reinterpret_cast< double* >(tmp_data), std::bind2nd(std::multiplies< double >(), norm));
+
     switch (DState)
     {
       // case Base::sou_UNPOLARIZED:
       case Base::sou_PARTLY_POLARIZED:
         switch (CState)
         {
+          // in this case we have no dilution at all
           case Base::sou_GENERIC:
             std::copy(tmp_data, tmp_data + 12, d_data);
-            std::copy(tmp_data, tmp_data + 12, d_data +  12);
-            std::copy(tmp_data, tmp_data + 12, d_data +  24);
-            std::copy(tmp_data, tmp_data + 12, d_data +  36);
-            std::copy(tmp_data, tmp_data + 12, d_data +  48);
-            std::copy(tmp_data, tmp_data + 12, d_data +  60);
-            std::copy(tmp_data, tmp_data + 12, d_data +  72);
-            std::copy(tmp_data, tmp_data + 12, d_data +  84);
-            std::copy(tmp_data, tmp_data + 12, d_data +  96);
-            std::copy(tmp_data, tmp_data + 12, d_data + 108);
-            std::copy(tmp_data, tmp_data + 12, d_data + 120);
-            std::copy(tmp_data, tmp_data + 12, d_data + 132);
             break;
           default:
           std::cerr << "This Base::SourceColorState is not implemented in Tensor::setToRandom_Z4()\n";
@@ -287,17 +281,9 @@ namespace QCD
           // this is what is called spin diluted
           case Base::sou_GENERIC:
             std::copy(tmp_data,     tmp_data +  3, d_data);
-            std::copy(tmp_data,     tmp_data +  3, d_data +  12);
-            std::copy(tmp_data,     tmp_data +  3, d_data +  24);
-            std::copy(tmp_data + 3, tmp_data +  6, d_data +  39);
-            std::copy(tmp_data + 3, tmp_data +  6, d_data +  51);
-            std::copy(tmp_data + 3, tmp_data +  6, d_data +  63);
-            std::copy(tmp_data + 6, tmp_data +  9, d_data +  78);
-            std::copy(tmp_data + 6, tmp_data +  9, d_data +  90);
-            std::copy(tmp_data + 6, tmp_data +  9, d_data + 102);
+            std::copy(tmp_data + 3, tmp_data +  6, d_data + 39);
+            std::copy(tmp_data + 6, tmp_data +  9, d_data + 78);
             std::copy(tmp_data + 9, tmp_data + 12, d_data + 117);
-            std::copy(tmp_data + 9, tmp_data + 12, d_data + 129);
-            std::copy(tmp_data + 9, tmp_data + 12, d_data + 141);
             break;
           // this is what is called spin and color diluted
           case Base::sou_PURE:

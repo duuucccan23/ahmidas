@@ -8,6 +8,8 @@ namespace Tool
     void loadScidac(Core::Propagator *propagator, std::vector< std::string > const &filenames, size_t const precision);
     void loadScidac(Core::StochasticPropagator< 4 > *sPropagator, std::vector< std::string > const &filenames);
     void loadScidac(Core::StochasticPropagator< 4 > *sPropagator, std::vector< std::string > const &filenames, size_t const precision);
+    void loadScidac(Core::StochasticPropagator< 1 > *sPropagator, std::vector< std::string > const &filenames);
+    void loadScidac(Core::StochasticPropagator< 1 > *sPropagator, std::vector< std::string > const &filenames, size_t const precision);
 
     void load(Core::Field< QCD::Gauge > *field, std::string const &filename, filetype type)
     {
@@ -89,6 +91,27 @@ namespace Tool
       }
     }
 
+    void load(Core::StochasticPropagator< 1 > *sPropagator, std::vector< std::string> const &filenames, filetype type)
+    {
+      switch(type) {
+      case fileSCIDAC :
+          loadScidac(sPropagator, filenames);
+          break;
+      default :
+          break;
+      }
+    }
+
+    void load(Core::StochasticPropagator< 1 > *sPropagator, std::vector< std::string> const &filenames, filetype type, size_t const precision)
+    {
+      switch(type) {
+      case fileSCIDAC :
+          loadScidac(sPropagator, filenames, precision);
+          break;
+      default :
+          break;
+      }
+    }
 
     // a lot of data is copied back and forth - this has to be reviewed if more efficiency is desired
     void loadScidac(Core::Propagator *propagator, std::vector< std::string> const &filenames)
@@ -384,5 +407,133 @@ namespace Tool
         exit(1);
       }
     }
+  }
+}
+
+void Tool::IO::loadScidac(Core::StochasticPropagator< 1 > *sPropagator, std::vector< std::string> const &filenames)
+{
+  QCD::Spinor dummy;
+  dummy.setToZero();
+
+  if (filenames.size() == 1)
+  {
+    Core::Field< QCD::Spinor > tmp (sPropagator->L(), sPropagator->T());
+
+    Tool::IO::load(&tmp, filenames[0], Tool::IO::fileSCIDAC);
+
+    Core::Propagator::iterator itTensor = sPropagator->begin();
+    Core::Field< QCD::Spinor >::iterator itsSpinor = tmp.begin();
+
+    QCD::Spinor **spinors = new QCD::Spinor *[12];
+
+    spinors[0] = NULL;
+
+    spinors[ 1] = new QCD::Spinor(dummy);
+    spinors[ 2] = new QCD::Spinor(dummy);
+    spinors[ 3] = new QCD::Spinor(dummy);
+    spinors[ 4] = new QCD::Spinor(dummy);
+    spinors[ 5] = new QCD::Spinor(dummy);
+    spinors[ 6] = new QCD::Spinor(dummy);
+    spinors[ 7] = new QCD::Spinor(dummy);
+    spinors[ 8] = new QCD::Spinor(dummy);
+    spinors[ 9] = new QCD::Spinor(dummy);
+    spinors[10] = new QCD::Spinor(dummy);
+    spinors[11] = new QCD::Spinor(dummy);
+
+    while (itTensor != sPropagator->end())
+    {
+      spinors[0] = new QCD::Spinor(*itsSpinor);
+      ++itsSpinor;
+      (*itTensor) = QCD::Tensor(spinors);
+       delete spinors[0];
+      ++itTensor;
+    }
+
+    delete spinors[ 1];
+    delete spinors[ 2];
+    delete spinors[ 3];
+    delete spinors[ 4];
+    delete spinors[ 5];
+    delete spinors[ 6];
+    delete spinors[ 7];
+    delete spinors[ 8];
+    delete spinors[ 9];
+    delete spinors[10];
+    delete spinors[11];
+
+    delete [] spinors;
+
+  }
+  else
+  {
+    std::cerr << "Error in void Tool::IO::loadScidac(Core::StochasticsPropagator< 4 > *, std::vector< std::string> const &):"
+              << std::endl;
+    std::cerr << "filenames.size() should be 1" << std::endl;
+    exit(1);
+  }
+}
+
+
+
+void Tool::IO::loadScidac(Core::StochasticPropagator< 1 > *sPropagator, std::vector< std::string> const &filenames, size_t const precision)
+{
+  QCD::Spinor dummy;
+  dummy.setToZero();
+
+  if (filenames.size() == 1)
+  {
+    Core::Field< QCD::Spinor > tmp (sPropagator->L(), sPropagator->T());
+
+    Tool::IO::load(&tmp, filenames[0], Tool::IO::fileSCIDAC, precision);
+
+    Core::Propagator::iterator itTensor = sPropagator->begin();
+    Core::Field< QCD::Spinor >::iterator itsSpinor = tmp.begin();
+
+    QCD::Spinor **spinors = new QCD::Spinor *[12];
+
+    spinors[0] = NULL;
+
+    spinors[ 1] = new QCD::Spinor(dummy);
+    spinors[ 2] = new QCD::Spinor(dummy);
+    spinors[ 3] = new QCD::Spinor(dummy);
+    spinors[ 4] = new QCD::Spinor(dummy);
+    spinors[ 5] = new QCD::Spinor(dummy);
+    spinors[ 6] = new QCD::Spinor(dummy);
+    spinors[ 7] = new QCD::Spinor(dummy);
+    spinors[ 8] = new QCD::Spinor(dummy);
+    spinors[ 9] = new QCD::Spinor(dummy);
+    spinors[10] = new QCD::Spinor(dummy);
+    spinors[11] = new QCD::Spinor(dummy);
+
+    while (itTensor != sPropagator->end())
+    {
+      spinors[0] = new QCD::Spinor(*itsSpinor);
+      ++itsSpinor;
+      (*itTensor) = QCD::Tensor(spinors);
+       delete spinors[0];
+      ++itTensor;
+    }
+
+    delete spinors[ 1];
+    delete spinors[ 2];
+    delete spinors[ 3];
+    delete spinors[ 4];
+    delete spinors[ 5];
+    delete spinors[ 6];
+    delete spinors[ 7];
+    delete spinors[ 8];
+    delete spinors[ 9];
+    delete spinors[10];
+    delete spinors[11];
+
+    delete [] spinors;
+
+  }
+  else
+  {
+    std::cerr << "Error in void Tool::IO::loadScidac(Core::StochasticsPropagator< 4 > *, std::vector< std::string> const &):"
+              << std::endl;
+    std::cerr << "filenames.size() should be 1" << std::endl;
+    exit(1);
   }
 }

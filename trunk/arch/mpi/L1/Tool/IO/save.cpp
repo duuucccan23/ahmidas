@@ -6,6 +6,7 @@ namespace Tool
   {
     void saveScidac(Core::Propagator *propagator, std::vector< std::string > const &filenames);
     void saveScidac(Core::StochasticPropagator< 4 > *spropagator, std::vector< std::string > const &filenames);
+    void saveScidac(Core::StochasticPropagator< 1 > *spropagator, std::vector< std::string > const &filenames);
   }
 }
 
@@ -46,6 +47,17 @@ void Tool::IO::save(Core::Propagator *propagator, std::vector< std::string> cons
 }
 
 void Tool::IO::save(Core::StochasticPropagator< 4 > *sPropagator, std::vector< std::string> const &filenames, filetype type)
+{
+  switch(type) {
+    case fileSCIDAC :
+      saveScidac(sPropagator, filenames);
+      break;
+    default :
+      break;
+  }
+}
+
+void Tool::IO::save(Core::StochasticPropagator< 1 > *sPropagator, std::vector< std::string> const &filenames, filetype type)
 {
   switch(type) {
     case fileSCIDAC :
@@ -174,3 +186,34 @@ void Tool::IO::saveScidac(Core::StochasticPropagator<4> *spropagator, std::vecto
   }
 }
 
+void Tool::IO::saveScidac(Core::StochasticPropagator< 1 > *spropagator, std::vector< std::string> const &filenames)
+{
+  // would like to do this, but isolate is private
+  // propagator->isolate();
+
+  if (filenames.size() == 1)
+  {
+    Core::Field< QCD::Spinor > tmp(spropagator->L(), spropagator->T());
+
+    Core::StochasticPropagator< 1 >::iterator itTensor = spropagator->begin();
+    Core::Field< QCD::Spinor >::iterator itsSpinor = tmp.begin();
+
+    // would like to see for loop here
+    // but postfix Field::iterator operator++(int) is not implemented yet
+    while (itTensor != spropagator->end())
+    {
+      (*itsSpinor) = (*itTensor)[0];
+      ++itsSpinor;
+      ++itTensor;
+    }
+
+    Tool::IO::save(&tmp, filenames[0], Tool::IO::fileSCIDAC);
+  }
+  else
+  {
+    std::cerr << "Error in void Tool::IO::saveScidac(Core::Propagator *, std::vector< std::string> const &):"
+              << std::endl;
+    std::cerr << "filenames.size() should be 1" << std::endl;
+    exit(1);
+  }
+}

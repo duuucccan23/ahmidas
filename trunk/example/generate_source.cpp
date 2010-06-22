@@ -1,5 +1,5 @@
 /*
-   This piece of code generates stochastic sources with Z(4) noise
+   This piece of code generates stochastic timeslice sources with Z(4) noise
 */
 
 // C++ complex library
@@ -34,6 +34,10 @@
 // input file reader interface
 #include <L2/Input/FileReader.h>
 
+// needed for initialization of random number generator
+#include <L0/Base/Random.h>
+#include <L0/Base/Z2.h>
+
 // interfaces needed for smearing
 #include <L1/Smear.h>
 #include <L1/Smear/APE.h>
@@ -42,6 +46,7 @@
 
 int main(int argc, char **argv)
 {
+
 
   // lattice size, to be read from input file (and therefore initialized to zero)
   size_t L_tmp(0);
@@ -54,8 +59,6 @@ int main(int argc, char **argv)
   std::map< std::string, double > floats;
   // this one contains the file names (themselves stored in containers) of propagators (or sources, gauge fields, ...)
   std::vector< std::vector< std::string > > files;
-
-
 
 
   /* ****************************************** */
@@ -79,6 +82,20 @@ int main(int argc, char **argv)
   // one process in the parallel version
   Base::Weave weave(L, T);
 
+  // ############################################################################################
+  // ######### random number generation depend on the number of cores used ######################
+  // ######### safe though for timeslice sources if parallelization only in (eucl.) time ########
+  // ######### you can comment out the followind lines if you don't care ########################
+  // ############################################################################################
+
+  if(weave.isRoot())
+    std::cerr << "FIX THIS: random number generation is safe only for scalar code so far,\n";
+    std::cerr <<  "result would depend on the number of cores used!" << std::endl;
+  weave.barrier();
+  assert(weave.isRoot()); // this will fail if there's more than one process!
+
+  // ##########################################################################################
+  // ##########################################################################################
 
 
   // that's how writing to the standard output works in C++
@@ -94,6 +111,22 @@ int main(int argc, char **argv)
     std::cout << "kappa = " << kappa << ", mu = " << mu << std::endl;
 
   size_t t_src = size_t(floats["timesliceSource"]); 
+  if(weave.isRoot())
+    std::cout << "\nsource timeslice: " << t_src << std::endl;
+
+
+
+  uint64_t const rSeed = uint64_t(floats["seed"]);
+  if(weave.isRoot())
+    std::cout << "\nrandom seed: " << rSeed << std::endl;
+  Base::Z2::instance(1.0, rSeed);
+
+  if (rSeed > 0)
+  {
+    double *tmp = new double[512];
+    std::generate_n(tmp, 512, Base::Random::Z2);
+    delete [] tmp;
+  }
 
   if(weave.isRoot())
     std::cout << "\nThe following files are going to be created:" << std::endl;
@@ -110,6 +143,10 @@ int main(int argc, char **argv)
   {
     pol_tmp = Base::sou_FULLY_POLARIZED;
   }
+  else if(int(floats["SourcePolarization"]) == Base::sou_PARTLY_POLARIZED)
+  {
+    pol_tmp = Base::sou_PARTLY_POLARIZED;
+  }
   else
   {
     if(weave.isRoot())
@@ -122,6 +159,10 @@ int main(int argc, char **argv)
   if(int(floats["SourceColorState"]) == Base::sou_PURE)
   {
    col_tmp = Base::sou_PURE;
+  }
+  else if(int(floats["SourceColorState"]) == Base::sou_GENERIC)
+  {
+   col_tmp = Base::sou_GENERIC;
   }
   else
   {
@@ -165,7 +206,7 @@ int main(int argc, char **argv)
       std::cout << "gauge field smeared successfully\n" << std::endl;
   }
 
-
+  // version 1: spin (Dirac) and color dilution
   if(polarization == Base::sou_FULLY_POLARIZED && colorState == Base::sou_PURE)
   {
     Core::StochasticSource< 12 > stochastic_source(L, T, polarization, colorState, t_src);
@@ -174,12 +215,52 @@ int main(int argc, char **argv)
     {
       stochastic_source.smearJacobi(Jac_alpha, Jac_iterations, *gauge_field, t_src);
       delete gauge_field;
-      std::cout << "stochastic source smeared successfully\n" << std::endl;
+      if(weave.isRoot())
+        std::cout << "stochastic source smeared successfully\n" << std::endl;
     }
     Tool::IO::save(&stochastic_source, stochasticSourceFiles, Tool::IO::fileSCIDAC);
     if (weave.isRoot())
       std::cout << "stochastic source saved successfully\n" << std::endl;
   }
+  // version 2: spin (Dirac) dilution only
+  else if(polarization == Base::sou_FULLY_POLARIZED && colorState == Base::sou_GENERIC)
+  {
+    Core::StochasticSource< 4 > stochastic_source(L, T, polarization, colorState, t_src);
+
+    if (Jac_iterations > 0)
+    {
+      stochastic_source.smearJacobi(Jac_alpha, Jac_iterations, *gauge_field, t_src);
+      delete gauge_field;
+      if(weave.isRoot())
+        std::cout << "stochastic source smeared successfully\n" << std::endl;
+    }
+    Tool::IO::save(reinterpret_cast< Core::StochasticPropagator< 4 > * >(&stochastic_source), stochasticSourceFiles, Tool::IO::fileSCIDAC);
+    if (weave.isRoot())
+      std::cout << "stochastic source saved successfully\n" << std::endl;
+  }
+  // version 2: spin (Dirac) dilution only
+  else if(polarization == Base::sou_PARTLY_POLARIZED && colorState == Base::sou_GENERIC)
+  {
+    Core::StochasticSource< 1 > stochastic_source(L, T, polarization, colorState, t_src);
+
+    if (Jac_iterations > 0)
+    {
+      stochastic_source.smearJacobi(Jac_alpha, Jac_iterations, *gauge_field, t_src);
+      delete gauge_field;
+      if(weave.isRoot())
+        std::cout << "stochastic source smeared successfully\n" << std::endl;
+    }
+    Tool::IO::save(reinterpret_cast< Core::StochasticPropagator< 1 > * >(&stochastic_source), stochasticSourceFiles, Tool::IO::fileSCIDAC);
+    if (weave.isRoot())
+      std::cout << "stochastic source saved successfully\n" << std::endl;
+  }
+  else
+  {
+    if(weave.isRoot())
+      std::cerr << "source polarization and color state combination not implemented" << std::endl;
+    exit(1);
+  }
+
 
   // leave main function
   return EXIT_SUCCESS;

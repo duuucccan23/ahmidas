@@ -19,8 +19,9 @@
 
 // comment this in if propagators have uniform temporal boundary contitions
 // (e.g. the HMC inverter does this)
-#define __COMPENSATE_UNIFORM_BOUNDARY_CONDITIONS__
-
+// for forward and backward propagators separately
+#define __COMPENSATE_UNIFORM_BOUNDARY_CONDITIONS_FW__
+#define __COMPENSATE_UNIFORM_BOUNDARY_CONDITIONS_BW__
 
 // comment this if you don't want the threepoint function to be calculated
 #define __CALCULATE_THREEPOINT__
@@ -97,7 +98,7 @@ int main(int argc, char **argv)
     std::cout << "d quark forward propagator successfully loaded\n" << std::endl;
 
 
-#ifdef __COMPENSATE_UNIFORM_BOUNDARY_CONDITIONS__
+#ifdef __COMPENSATE_UNIFORM_BOUNDARY_CONDITIONS_FW__
   forwardProp_d.changeBoundaryConditions_uniformToFixed(timeslice_source, timeslice_boundary);
   forwardProp_u.changeBoundaryConditions_uniformToFixed(timeslice_source, timeslice_boundary);
 #endif
@@ -117,7 +118,7 @@ int main(int argc, char **argv)
     std::cout << "d quark backward propagator successfully loaded\n" << std::endl;
 
 
-#ifdef __COMPENSATE_UNIFORM_BOUNDARY_CONDITIONS__
+#ifdef __COMPENSATE_UNIFORM_BOUNDARY_CONDITIONS_BW__
   backwardProp_u.changeBoundaryConditions_uniformToFixed(timeslice_sink, timeslice_boundary);
   backwardProp_d.changeBoundaryConditions_uniformToFixed(timeslice_sink, timeslice_boundary);
 #endif

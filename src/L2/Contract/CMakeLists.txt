@@ -5,6 +5,7 @@ SET(Sources_Baryon Baryon.h
                    Baryon/Baryon_create_sequential_source_proton_d_b.cpp
                    Baryon/Baryon_create_sequential_source_proton_d_c.cpp
                    Baryon/Baryon_create_sequential_source_proton_d_d.cpp
+                   Baryon/Baryon_create_sequential_source_proton_fixed_insertion_timeslice.cpp
                    Baryon/Baryon_create_sequential_source_proton_u_a.cpp
                    Baryon/Baryon_create_sequential_source_proton_u_b.cpp
                    Baryon/Baryon_create_sequential_source_proton_u_c.cpp

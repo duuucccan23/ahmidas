@@ -88,6 +88,20 @@ namespace Contract
 
   /* ---------------------------------------------------------------------------------------------- */
 
+  // yet another version that creates the sequential source at the operator insertion timeslice, such that
+  // in the contraction, the sink timeslice is completely free
+
+  void create_sequential_source_proton_fixed_insertion_timeslice(Core:: Propagator *seqSrc_u,
+                                                                 Core:: Propagator *seqSrc_d,
+                                                                 Core::Propagator const &u,
+                                                                 Core::Propagator const &d,
+                                                                 size_t const t_op, Base::Operator op);
+
+
+
+  /* ---------------------------------------------------------------------------------------------- */
+
+
 
   std::vector< Core::Correlator > proton_threepoint_sequential(
     Core:: Propagator const &bw_prop_u, Core::Propagator const &fw_prop_u,

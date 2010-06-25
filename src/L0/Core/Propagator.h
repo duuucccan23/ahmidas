@@ -65,7 +65,8 @@ namespace Core
       void rightMultiply(Dirac::Gamma< Index > const& gamma);
 
       // multiplication by operator (this is multiplication from the right)
-      // void multiplyOperator(Base::Operator const O, Field< QCD::Gauge > * const gauge_field);
+      void rightMultiplyOperator(Base::Operator const O); // only for local operators
+      void leftMultiplyOperator(Base::Operator const O); // only for local operators
       Core::Field< Dirac::Matrix > *contractWithOperatorInsertion(Base::Operator const O, Field< QCD::Gauge > * const gauge_field, Propagator const &fromRight);
 
 

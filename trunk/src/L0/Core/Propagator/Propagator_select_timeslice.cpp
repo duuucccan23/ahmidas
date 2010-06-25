@@ -6,9 +6,9 @@ namespace Core
   Propagator &Propagator::select_timeslice(size_t const timeslice)
   {
     assert(timeslice >= 0 && timeslice < T());
-   
+
     isolate();
-    
+
     std::complex< double > ZERO(0,0);
 
     Base::Weave weave(L(), T());

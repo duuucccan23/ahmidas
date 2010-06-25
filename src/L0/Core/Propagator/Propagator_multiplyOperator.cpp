@@ -40,42 +40,106 @@ namespace Core
         result = contract(fromRight);
         break;
       }
-      case Base::op_CONSERVED_GAMMA_4:
+      case Base::op_GAMMA_45:
+      {
+        Dirac::Gamma< 45 > gamma4gamma5;
+        (*this) *= gamma4gamma5;
+        result = contract(fromRight);
+        break;
+      }
+      case Base::op_GAMMA_15:
+      {
+        Dirac::Gamma< 15 > gamma1gamma5;
+        (*this) *= gamma1gamma5;
+        result = contract(fromRight);
+        break;
+      }
+      case Base::op_GAMMA_25:
       {
 
+        Dirac::Gamma< 25 > gamma2gamma5;
+        (*this) *= gamma2gamma5;
+        result = contract(fromRight);
+        break;
+      }
+      case Base::op_GAMMA_35:
+      {
+        Dirac::Gamma< 35 > gamma3gamma5;
+        (*this) *= gamma3gamma5;
+        result = contract(fromRight);
+        break;
+      }
+      case Base::op_CONSERVED_GAMMA_4:
+      {
+        std::cout << "calculating (symmetrized) conserved vector current, temporal component ... " << std::endl;
+        
         assert(gauge_field != NULL);
-        // not implemented
-        result = new Core::Field< Dirac::Matrix >(L(), T());
-        // Dirac::Gamma< 4 > gamma4;
-        // std::complex< double > ZERO(0, 0);
-/*
-        Propagator copy(*this);
-        (*this) *= ZERO;
+
+        Dirac::Gamma< 4 > gamma4;
 
         {
-        Propagator tmp(copy);
+        Propagator tmp(fromRight);
+        std::cout << "part 1 ... ";
         std::cout.flush();
         tmp.isolate();
-        // part 1 : times U_mu and shift up
-        (tmp.d_components)->leftMultiply((*gauge_field).component< SU3::Matrix >(Base::idx_T));
-        tmp.shift(Base::idx_T, Base::dir_UP);
-        (*this) -= tmp;
-        tmp *= gamma4;
-        (*this) += tmp;
+        // part 1 : shift fromRight down and multiply it by U_mu from left ("Field<QCD::Tensor>::rightMultiply")
+        tmp.shift(Base::idx_T, Base::dir_DOWN);
+        (tmp.d_components)->rightMultiply((*gauge_field).component< SU3::Matrix >(Base::idx_T));
+        Propagator copy(*this);
+        // gamma_mu - identity
+        copy *= gamma4;
+        copy -= (*this);
+        result = copy.contract(tmp);
+        std::cout << "done." << std::endl;
         }
 
         {
-        Propagator tmp(copy);
+        Propagator tmp(fromRight);
         tmp.isolate();
+        std::cout << "part 2 ... ";
         std::cout.flush();
-        // part 2 : shift down and times U_mu^dagger
+        // part 2 : multiply fromRight by U_mu^dagger from left and shift it up
+        (tmp.d_components)->rightMultiply((*gauge_field).component< SU3::Matrix >(Base::idx_T).dagger());
+        tmp.shift(Base::idx_T, Base::dir_UP);
+        Propagator copy(*this);
+        // gamma_mu + identity
+        copy *= gamma4;
+        copy += (*this);
+        (*result) += (*(copy.contract(tmp)));
+        std::cout << "done." << std::endl;
+        }
+
+        {
+        Propagator tmp(*this);
+        tmp.isolate();
+        std::cout << "part 3 ... ";
+        std::cout.flush();
+        // gamma_mu + identity
+        tmp *= gamma4;
+        tmp += (*this);
+        // part 3 : shift this down and multiply it by U_mu^dagger from right ("Field<QCD::Tensor>::leftMultiply")
         tmp.shift(Base::idx_T, Base::dir_DOWN);
         (tmp.d_components)->leftMultiply((*gauge_field).component< SU3::Matrix >(Base::idx_T).dagger());
-        (*this) += tmp;
-        tmp *= gamma4;
-        (*this) += tmp;
+        (*result) += *(tmp.contract(fromRight));
+        std::cout << "done." << std::endl;
         }
-*/
+
+        {
+        Propagator tmp(*this);
+        tmp.isolate();
+        std::cout << "part 4 ... ";
+        std::cout.flush();
+        // gamma_mu - identity
+        tmp *= gamma4;
+        tmp -= (*this);
+        // part 4 : multiply this by U_mu from right and and shift it up
+        (tmp.d_components)->leftMultiply((*gauge_field).component< SU3::Matrix >(Base::idx_T));
+        tmp.shift(Base::idx_T, Base::dir_UP);
+        (*result) += *(tmp.contract(fromRight));
+        std::cout << "done." << std::endl;
+        }
+
+
         break;
       }
       case Base::op_O44:

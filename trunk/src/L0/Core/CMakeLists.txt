@@ -4,6 +4,7 @@ SET(Sources_Correlator Correlator/Correlator_sumOverSpatialVolume.cpp Correlator
                        Correlator/Correlator_setOffset.cpp)
 SET(Sources_Propagator Propagator/StochasticPropagator.cpp
                        Propagator/StochasticSource.cpp
+                       Propagator/Propagator_applyDiracOperator.cpp
                        Propagator/Propagator_changeBoundaryConditions.cpp
                        Propagator/Propagator_construct_baryon.cpp
                        Propagator/Propagator_construct_baryon_with_operator_insertion.cpp
@@ -13,6 +14,7 @@ SET(Sources_Propagator Propagator/StochasticPropagator.cpp
                        Propagator/Propagator_gaugeTransformation.cpp
                        Propagator/Propagator_isolate.cpp
                        Propagator/Propagator_multiplyOperator.cpp
+                       Propagator/Propagator_norm.cpp
                        Propagator/Propagator_revert.cpp
                        Propagator/Propagator_select_timeslice.cpp
                        Propagator/Propagator_shift.cpp

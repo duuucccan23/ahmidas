@@ -224,7 +224,13 @@ namespace QCD
     std::swap(*(d_data + 131), *(d_data + 142));
   }
 
-
+  inline double Tensor::norm() const
+  {
+    double result(0);
+    for (size_t idx=0; idx<144; idx++)
+      result += abs(d_data[idx]);
+    return result;
+  }
 
   inline std::complex< double > Tensor::trace() const
   {
@@ -338,10 +344,12 @@ namespace QCD
 
   inline std::ostream &operator<<(std::ostream &out, Tensor const &tensor)
   {
+    const size_t prec(out.precision());
     out <<  Spinor(tensor.d_data)       << Spinor(tensor.d_data +  12) << Spinor(tensor.d_data +  24);
     out <<  Spinor(tensor.d_data +  36) << Spinor(tensor.d_data +  48) << Spinor(tensor.d_data +  60);
     out <<  Spinor(tensor.d_data +  72) << Spinor(tensor.d_data +  84) << Spinor(tensor.d_data +  96);
     out <<  Spinor(tensor.d_data + 108) << Spinor(tensor.d_data + 120) << Spinor(tensor.d_data + 132) << std::endl;
+    out.precision(prec);
     return out;
   }
 

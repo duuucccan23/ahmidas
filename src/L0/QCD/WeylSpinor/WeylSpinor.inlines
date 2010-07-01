@@ -43,6 +43,7 @@ namespace QCD
   template< >
   inline void WeylSpinor::leftMultiply(Dirac::Pauli< 3 >, std::complex< double > const &factor)
   {
+    d_data[0] *=  factor;
     d_data[1] *= -factor;
   }
 

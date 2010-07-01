@@ -58,9 +58,13 @@ ADD_EXECUTABLE(smearing smearing.cpp)
 TARGET_LINK_LIBRARIES(smearing SU3 QCD IO Base Core Weave Smear)
 ADD_TEST(smearing_test smearing)
 
-ADD_EXECUTABLE(proton_3point_sequential proton_3point_sequential.cpp)
-TARGET_LINK_LIBRARIES(proton_3point_sequential SU3 QCD IO Base Core Weave Contract)
-ADD_TEST(proton_threepoint_sequential proton_3point_sequential)
+ADD_EXECUTABLE(dirac_operator dirac_operator.cpp)
+TARGET_LINK_LIBRARIES(dirac_operator SU3 QCD IO Base Core Weave)
+ADD_TEST(dirac_operator_test dirac_operator)
+
+# ADD_EXECUTABLE(proton_3point_sequential proton_3point_sequential.cpp)
+# TARGET_LINK_LIBRARIES(proton_3point_sequential SU3 QCD IO Base Core Weave Contract)
+# ADD_TEST(proton_threepoint_sequential proton_3point_sequential)
 
 # IF(USE_MPI)
 # ADD_EXECUTABLE(MPIstartstop MPIstartstop.cpp)

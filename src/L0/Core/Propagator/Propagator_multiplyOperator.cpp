@@ -419,7 +419,7 @@ namespace Core
         (*this) *= gamma3;
         break;
       }
-      case Base::op_GAMMA_4_GAMMA_5:
+      case Base::op_GAMMA_45:
       {
         Dirac::Gamma< 45 > gamma4gamma5;
         (*this) *= gamma4gamma5;
@@ -464,7 +464,7 @@ namespace Core
         (*this).rightMultiply(gamma3);
         break;
       }
-      case Base::op_GAMMA_4_GAMMA_5:
+      case Base::op_GAMMA_45:
       {
         Dirac::Gamma< 45 > gamma4gamma5;
         (*this).rightMultiply(gamma4gamma5);

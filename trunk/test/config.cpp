@@ -14,10 +14,20 @@ int main(int argc, char **argv)
   double stored = 0.5998194411656625;
   double prec = 1e-14;
   double plaqs = Tool::spatialPlaquette(myfield);
+  double plaqds = Tool::spatialDownPlaquette(myfield);
   double plaqt = Tool::temporalPlaquette(myfield);
+  double plaqdt = Tool::temporalDownPlaquette(myfield);
   double plaq = 0.5 * (plaqt + plaqs);
 
-  std::cout << "Summed plaquette value: " << std::setprecision(14) << plaq << std::endl;
+  std::cout << std::setprecision(14);
+  std::cout << "Spatial plaquette value using UP plaquettes: " << plaqs << std::endl;
+  std::cout << "Spatial plaquette value using DOWN plaquettes: " << plaqds << std::endl;
+  std::cout << "Temporal plaquette value using UP plaquettes: " << plaqt << std::endl;
+  std::cout << "Temporal plaquette value using DOWN plaquettes: " << plaqdt << std::endl;
+
+  std::cout << "Summed plaquette value: "  << plaq << std::endl;
+  std::cout << "Stored plaquette value: "  << stored << std::endl;
+
   bool plaqeq = (fabs(plaq/stored - 1) <= prec);
   std::cout << "This differs " << (plaqeq ? "less" : "more") << " then " << prec << " from the stored value.\n";
 

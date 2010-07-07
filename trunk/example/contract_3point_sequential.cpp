@@ -70,7 +70,7 @@ int main(int argc, char **argv)
     std::cout << "timeslice (sink) = " << timeslice_sink << std::endl;
 
   // make sure the boundary is not crossed by source-sink correlaton function
-  size_t const timeslice_boundary = timeslice_sink > timeslice_source ? (T-1) : timeslice_source-1;
+  size_t const timeslice_boundary = (timeslice_source + (T/2)) % T;
   if (weave.isRoot())
     std::cout << "timeslice (boundary) = " << timeslice_boundary << std::endl;
 

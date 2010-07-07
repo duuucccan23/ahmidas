@@ -66,7 +66,7 @@ int main(int argc, char **argv)
   /* ****************************************** */
 
   // create input file reader, the name of the input file has to be passed as a parameter
-  Input::FileReader reader("../example/generate_source_input.xml");
+  Input::FileReader reader("./generate_stochastic_source_input.xml");
 
   // get input parameters
   // note: this is how to invoke a member function of an object in C++:
@@ -85,7 +85,7 @@ int main(int argc, char **argv)
   // ############################################################################################
   // ######### random number generation depend on the number of cores used ######################
   // ######### safe though for timeslice sources if parallelization only in (eucl.) time ########
-  // ######### you can comment out the followind lines if you don't care ########################
+  // ######### you can comment out the following lines if you don't care ########################
   // ############################################################################################
 
   if(weave.isRoot())
@@ -201,7 +201,8 @@ int main(int argc, char **argv)
 
     // smear the gauge field
     Smear::APE APE_tool(APE_alpha);
-    APE_tool.smear(*gauge_field, APE_iterations, t_src);
+    //APE_tool.smear(*gauge_field, APE_iterations, t_src);
+    APE_tool.smear(*gauge_field, APE_iterations);
     if (weave.isRoot())
       std::cout << "gauge field smeared successfully\n" << std::endl;
   }
@@ -213,7 +214,8 @@ int main(int argc, char **argv)
 
     if (Jac_iterations > 0)
     {
-      stochastic_source.smearJacobi(Jac_alpha, Jac_iterations, *gauge_field, t_src);
+      //stochastic_source.smearJacobi(Jac_alpha, Jac_iterations, *gauge_field, t_src);
+      stochastic_source.smearJacobi(Jac_alpha, Jac_iterations, *gauge_field);
       delete gauge_field;
       if(weave.isRoot())
         std::cout << "stochastic source smeared successfully\n" << std::endl;
@@ -229,7 +231,8 @@ int main(int argc, char **argv)
 
     if (Jac_iterations > 0)
     {
-      stochastic_source.smearJacobi(Jac_alpha, Jac_iterations, *gauge_field, t_src);
+      //stochastic_source.smearJacobi(Jac_alpha, Jac_iterations, *gauge_field, t_src);
+      stochastic_source.smearJacobi(Jac_alpha, Jac_iterations, *gauge_field);
       delete gauge_field;
       if(weave.isRoot())
         std::cout << "stochastic source smeared successfully\n" << std::endl;
@@ -245,7 +248,8 @@ int main(int argc, char **argv)
 
     if (Jac_iterations > 0)
     {
-      stochastic_source.smearJacobi(Jac_alpha, Jac_iterations, *gauge_field, t_src);
+      //stochastic_source.smearJacobi(Jac_alpha, Jac_iterations, *gauge_field, t_src);
+      stochastic_source.smearJacobi(Jac_alpha, Jac_iterations, *gauge_field);
       delete gauge_field;
       if(weave.isRoot())
         std::cout << "stochastic source smeared successfully\n" << std::endl;

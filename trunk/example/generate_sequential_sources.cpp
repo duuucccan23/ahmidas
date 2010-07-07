@@ -66,7 +66,7 @@ int main(int argc, char **argv)
   std::cout << "timeslice (sink) = " << timeslice_sink << std::endl;
 
   // make sure the boundary is not crossed by source-sink correlaton function
-  size_t const timeslice_boundary = timeslice_sink > timeslice_source ? (T-1) : timeslice_source-1;
+  size_t const timeslice_boundary = (timeslice_source + (T/2)) % T;;
   std::cout << "timeslice (boundary) = " << timeslice_boundary << std::endl;
 
   std::vector< std::string > const &propfilesD(files[0]);
@@ -85,7 +85,7 @@ int main(int argc, char **argv)
   Smear::APE APE_tool(APE_alpha);
   Smear::Jacobi Jacobi_tool(Jac_alpha);
 
-  APE_tool.smear(gauge_field, APE_iterations, timeslice_sink);
+  APE_tool.smear(gauge_field, APE_iterations);
 
 
   Core::Propagator *uProp = new Core::Propagator(L, T);
@@ -106,8 +106,8 @@ int main(int argc, char **argv)
 #endif
 
 
-  uProp->smearJacobi(Jac_alpha, Jac_iterations, gauge_field, timeslice_sink);
-  dProp->smearJacobi(Jac_alpha, Jac_iterations, gauge_field, timeslice_sink);
+  uProp->smearJacobi(Jac_alpha, Jac_iterations, gauge_field);
+  dProp->smearJacobi(Jac_alpha, Jac_iterations, gauge_field);
 
   std::cout << "propagators smeared successfully\n" << std::endl;
 

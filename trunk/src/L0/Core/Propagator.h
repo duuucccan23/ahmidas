@@ -69,7 +69,7 @@ namespace Core
       void leftMultiplyOperator(Base::Operator const O); // only for local operators
       Core::Field< Dirac::Matrix > *contractWithOperatorInsertion(Base::Operator const O, Field< QCD::Gauge > * const gauge_field, Propagator const &fromRight);
 
-      Propagator applyDiracOperator(Field< QCD::Gauge > &gauge_field, double const kappa, double const mu, size_t const t_boundary) const;
+      Propagator applyDiracOperator(Field< QCD::Gauge > const &gauge_field, double const kappa, double const mu, size_t const t_boundary) const;
 
       Propagator &select_timeslice(size_t const timeslice);
 

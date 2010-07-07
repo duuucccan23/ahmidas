@@ -25,5 +25,8 @@ TARGET_LINK_LIBRARIES(prova_contraction Base Core IO Input)
 ADD_EXECUTABLE(prova_sequential_contraction prova_sequential_contraction.cpp)
 TARGET_LINK_LIBRARIES(prova_sequential_contraction Base Core IO Input)
 
-ADD_EXECUTABLE(generate_source generate_source.cpp)
-TARGET_LINK_LIBRARIES(generate_source SU3 IO Base Core Dirac Weave Input Smear)
+ADD_EXECUTABLE(generate_stochastic_source generate_stochastic_source.cpp)
+TARGET_LINK_LIBRARIES(generate_stochastic_source SU3 IO Base Core Dirac Weave Input Smear)
+
+ADD_EXECUTABLE(generate_point_source generate_point_source.cpp)
+TARGET_LINK_LIBRARIES(generate_point_source SU3 IO Base Core Dirac Weave Input Smear)

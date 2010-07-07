@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<ahmidas>
+  <params>
+    <L> 4 </L>
+    <T> 4 </T>
+    <!-- -->
+    <kappa> 0.177 </kappa>
+    <mu> 1.41243 </mu>
+    <!-- -->
+    <!-- this is the position of the point source -->
+    <position> x y z t </position>
+    <!-- -->
+    <!-- if smearing is desired set the following 4 parameters to proper values -->
+    <!-- APE smearing parameters -->
+    <APE_steps>  5   </APE_steps>
+    <APE_param>  0.5 </APE_param>
+    <!-- Gaussian/Jacobi smearing parameters -->
+    <Jac_steps>  10   </Jac_steps>
+    <Jac_param>  1.0 </Jac_param>
+  </params>
+  <files>
+    <!-- output file -->
+    <file>
+      <type>point_source</type>
+      <directory>./</directory>
+      <filenameBase>point_source.</filenameBase>
+      <firstIndex>0</firstIndex>
+      <lastIndex>11</lastIndex>
+      <indexWidth>2</indexWidth>
+    </file>
+    <!-- gauge field (input, only needed for smearing) -->
+    <file>
+      <type>gauge</type>
+      <directory>./</directory>
+      <filenameBase>conf.</filenameBase>
+      <firstIndex>0</firstIndex>
+      <lastIndex>0</lastIndex>
+      <indexWidth>4</indexWidth>
+    </file>
+  </files>
+</ahmidas>

@@ -4,7 +4,7 @@ namespace Smear
 {
   void APE::smear(Core::Field< QCD::Gauge > &field, size_t const iterations) const
   {
-    for (size_t ctr = 0; ctr < iterations; ++ctr)
+    for (size_t ctr = 0; ctr < iterations; ctr++)
       smear(field);
   }
 
@@ -36,7 +36,7 @@ namespace Smear
     }
 
 
-    for (size_t ctr = 0; ctr < iterations; ++ctr)
+    for (size_t ctr = 0; ctr < iterations; ctr++)
       smear(timeslice_field);
 
 

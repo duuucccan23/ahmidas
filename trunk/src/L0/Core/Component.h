@@ -27,7 +27,7 @@ namespace Core
 
       size_t L() const;
       size_t T() const;
-      size_t volume() const;
+      size_t localVolume() const;
 
       const_iterator begin() const;
       const_iterator end() const;
@@ -57,7 +57,7 @@ namespace Core
 
       size_t L() const;
       size_t T() const;
-      size_t volume() const;
+      size_t localVolume() const;
 
       typename Component< Element, Atom >::const_iterator &begin() const;
       typename Component< Element, Atom >::const_iterator &end() const;

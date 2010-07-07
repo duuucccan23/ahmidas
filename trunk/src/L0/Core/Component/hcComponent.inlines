@@ -42,9 +42,9 @@ namespace Core
   }
 
   template< typename Element, typename Atom >
-  inline size_t hcComponent< Element, Atom >::volume() const
+  inline size_t hcComponent< Element, Atom >::localVolume() const
   {
-    return d_parent.volume();
+    return d_parent.localVolume();
   }
 
 }

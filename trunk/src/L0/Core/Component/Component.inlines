@@ -36,9 +36,9 @@ namespace Core
   }
 
   template< typename Element, typename Atom >
-  inline size_t Component< Element, Atom >::volume() const
+  inline size_t Component< Element, Atom >::localVolume() const
   {
-    return d_parent.volume();
+    return d_parent.localVolume();
   }
 
   template< typename Element, typename Atom >
@@ -51,7 +51,7 @@ namespace Core
   template< typename Scalar >
   inline void Component< Element, Atom >::leftMultiply(Scalar const &other)
   {
-    for (size_t idx = 0; idx < volume(); ++idx)
+    for (size_t idx = 0; idx < localVolume(); ++idx)
       getMemoryIndex(idx).leftMultiply(other);
   }
 
@@ -59,7 +59,7 @@ namespace Core
   template< typename OtherElement >
   inline void Component< Element, Atom >::leftMultiply(Field< OtherElement > const &field)
   {
-    for (size_t idx = 0; idx < volume(); ++idx)
+    for (size_t idx = 0; idx < localVolume(); ++idx)
       getPhysicalIndex(idx).leftMultiply(field[idx]);
   }
 
@@ -68,7 +68,7 @@ namespace Core
   inline void Component< Element, Atom >::leftMultiply(hcField< OtherElement > const &field)
   {
     Field< OtherElement > const &parent(field.dagger());
-    for (size_t idx = 0; idx < volume(); ++idx)
+    for (size_t idx = 0; idx < localVolume(); ++idx)
       getPhysicalIndex(idx).leftMultiply(parent[idx].dagger());
   }
 
@@ -76,7 +76,7 @@ namespace Core
   template< typename OtherElement, typename OtherAtom >
   void Component< Element, Atom >::leftMultiply(Component< OtherElement, OtherAtom > const &other)
   {
-    for (size_t idx = 0; idx < volume(); ++idx)
+    for (size_t idx = 0; idx < localVolume(); ++idx)
       getPhysicalIndex(idx).leftMultiply(other[idx]);
   }
 
@@ -84,7 +84,7 @@ namespace Core
   template< typename Scalar >
   inline void Component< Element, Atom >::rightMultiply(Scalar const &other)
   {
-    for (size_t idx = 0; idx < volume(); ++idx)
+    for (size_t idx = 0; idx < localVolume(); ++idx)
       getMemoryIndex(idx).rightMultiply(other);
   }
 
@@ -92,7 +92,7 @@ namespace Core
   template< typename OtherElement >
   inline void Component< Element, Atom >::rightMultiply(Field< OtherElement > const &field)
   {
-    for (size_t idx = 0; idx < volume(); ++idx)
+    for (size_t idx = 0; idx < localVolume(); ++idx)
       getPhysicalIndex(idx).rightMultiply(field[idx]);
   }
 
@@ -101,7 +101,7 @@ namespace Core
   inline void Component< Element, Atom >::rightMultiply(hcField< OtherElement > const &field)
   {
     Field< OtherElement > const &parent(field.dagger());
-    for (size_t idx = 0; idx < volume(); ++idx)
+    for (size_t idx = 0; idx < localVolume(); ++idx)
       getPhysicalIndex(idx).rightMultiply(parent[idx].dagger());
   }
 
@@ -109,7 +109,7 @@ namespace Core
   template< typename OtherElement, typename OtherAtom  >
   inline void Component< Element, Atom >::rightMultiply(Component< OtherElement, OtherAtom > const &other)
   {
-    for (size_t idx = 0; idx < volume(); ++idx)
+    for (size_t idx = 0; idx < localVolume(); ++idx)
       getPhysicalIndex(idx).rightMultiply(other[idx]);
   }
 
@@ -117,7 +117,7 @@ namespace Core
   template< typename Scalar >
   inline Component< Element, Atom > &Component< Element, Atom >::operator+=(Scalar const &other)
   {
-    for (size_t idx = 0; idx < volume(); ++idx)
+    for (size_t idx = 0; idx < localVolume(); ++idx)
       getMemoryIndex(idx) += other;
     return *this;
   }
@@ -126,7 +126,7 @@ namespace Core
   template< typename OtherElement >
   inline Component< Element, Atom > &Component< Element, Atom >::operator+=(Field< OtherElement > const &field)
   {
-    for (size_t idx = 0; idx < volume(); ++idx)
+    for (size_t idx = 0; idx < localVolume(); ++idx)
       getPhysicalIndex(idx) += field[idx];
     return *this;
   }
@@ -135,7 +135,7 @@ namespace Core
   template< typename OtherElement, typename OtherAtom  >
   inline Component< Element, Atom > &Component< Element, Atom >::operator+=(Component< OtherElement, OtherAtom > const &other)
   {
-    for (size_t idx = 0; idx < volume(); ++idx)
+    for (size_t idx = 0; idx < localVolume(); ++idx)
       getPhysicalIndex(idx) += other[idx];
     return *this;
   }
@@ -144,7 +144,7 @@ namespace Core
   template< typename Scalar >
   inline Component< Element, Atom > &Component< Element, Atom >::operator-=(Scalar const &other)
   {
-    for (size_t idx = 0; idx < volume(); ++idx)
+    for (size_t idx = 0; idx < localVolume(); ++idx)
       getMemoryIndex(idx) -= other;
     return *this;
   }
@@ -153,7 +153,7 @@ namespace Core
   template< typename OtherElement >
   inline Component< Element, Atom > &Component< Element, Atom >::operator-=(Field< OtherElement > const &field)
   {
-    for (size_t idx = 0; idx < volume(); ++idx)
+    for (size_t idx = 0; idx < localVolume(); ++idx)
       getPhysicalIndex(idx) -= field[idx];
     return *this;
   }
@@ -162,7 +162,7 @@ namespace Core
   template< typename OtherElement, typename OtherAtom  >
   inline Component< Element, Atom > &Component< Element, Atom >::operator-=(Component< OtherElement, OtherAtom > const &other)
   {
-    for (size_t idx = 0; idx < volume(); ++idx)
+    for (size_t idx = 0; idx < localVolume(); ++idx)
       getPhysicalIndex(idx) -= other[idx];
     return *this;
   }
@@ -171,7 +171,7 @@ namespace Core
   template< typename Scalar >
   inline Component< Element, Atom > &Component< Element, Atom >::operator*=(Scalar const &other)
   {
-    for (size_t idx = 0; idx < volume(); ++idx)
+    for (size_t idx = 0; idx < localVolume(); ++idx)
       getMemoryIndex(idx) *= other;
     return *this;
   }
@@ -180,7 +180,7 @@ namespace Core
   template< typename OtherElement >
   inline Component< Element, Atom > &Component< Element, Atom >::operator*=(Field< OtherElement > const &field)
   {
-    for (size_t idx = 0; idx < volume(); ++idx)
+    for (size_t idx = 0; idx < localVolume(); ++idx)
       getPhysicalIndex(idx) *= field[idx];
     return *this;
   }
@@ -189,7 +189,7 @@ namespace Core
   template< typename OtherElement, typename OtherAtom >
   inline Component< Element, Atom > &Component< Element, Atom >::operator*=(Component< OtherElement, OtherAtom > const &other)
   {
-    for (size_t idx = 0; idx < volume(); ++idx)
+    for (size_t idx = 0; idx < localVolume(); ++idx)
       getPhysicalIndex(idx) *= other[idx];
     return *this;
   }
@@ -198,7 +198,7 @@ namespace Core
   template< typename Scalar >
   inline Component< Element, Atom > &Component< Element, Atom >::operator/=(Scalar const &other)
   {
-    for (size_t idx = 0; idx < volume(); ++idx)
+    for (size_t idx = 0; idx < localVolume(); ++idx)
       getMemoryIndex(idx) /= other;
     return *this;
   }
@@ -207,7 +207,7 @@ namespace Core
   template< typename OtherElement >
   inline Component< Element, Atom > &Component< Element, Atom >::operator/=(Field< OtherElement > const &field)
   {
-    for (size_t idx = 0; idx < volume(); ++idx)
+    for (size_t idx = 0; idx < localVolume(); ++idx)
       getPhysicalIndex(idx) /= field[idx];
     return *this;
   }
@@ -216,7 +216,7 @@ namespace Core
   template< typename OtherElement, typename OtherAtom >
   inline Component< Element, Atom > &Component< Element, Atom >::operator/=(Component< OtherElement, OtherAtom > const &other)
   {
-    for (size_t idx = 0; idx < volume(); ++idx)
+    for (size_t idx = 0; idx < localVolume(); ++idx)
       getPhysicalIndex(idx) /= other[idx];
     return *this;
   }

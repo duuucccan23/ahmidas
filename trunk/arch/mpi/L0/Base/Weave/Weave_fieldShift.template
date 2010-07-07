@@ -1,6 +1,9 @@
 template< typename Element >
 void Base::Weave::fieldShift(Base::SpaceTimeIndex const idx, Base::Direction const dir, Element *field, size_t const *offsets) const
 {
+  //std::cout << "call of Base::Weave::barrier() in Base::Weave::fieldShift(...)" << std::endl;
+  barrier();
+
   // Determine what to send
   // Create a basic datatype for the element -- we want to be agnostic about this
   MPI::Datatype etype(MPI::BYTE.Create_contiguous(sizeof(Element)));

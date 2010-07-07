@@ -31,6 +31,12 @@ namespace Core
   }
 
   template< typename Element >
+  inline size_t Field< Element >::localVolume() const
+  {
+    return d_weave.localVolume();
+  }
+
+  template< typename Element >
   inline typename Field< Element >::iterator Field< Element >::begin()
   {
     return iterator(*this, 0);

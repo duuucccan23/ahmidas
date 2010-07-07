@@ -26,27 +26,18 @@ int main(int argc, char **argv)
   const size_t T = 8;
 
   size_t const timeslice_boundary(T - 1);
-  size_t const timeslice_source(0);
+  // size_t const timeslice_source(0);
 
   const double kappa(0.1);
   const double mu(0.01);
 
-//   const std::string filename_gauge("../../test/conf.9999");
-//   const std::string filename_prop_u("../../test/source4x4_u");
-//   const std::string filename_prop_d("../../test/source4x4_d");
-//   const std::string filename_src("../../test/source4x4");
+  const std::string filename_gauge("../../test/conf48.0000");
+  const std::string filename_prop_u("../../test/source48_u");
+  const std::string filename_prop_d("../../test/source48_d");
+  const std::string filename_src("../../test/source48");
 
-  const std::string filename_gauge("../../../../crosscheck_dru/conf.0000");
-  const std::string filename_prop_u("../../../../crosscheck_dru/point_source_u_propagators/source");
-  const std::string filename_prop_d("../../../../crosscheck_dru/point_source_d_propagators/source");
-  const std::string filename_src("../../../../crosscheck_dru/point_sources/source");
 
-//   const std::string filename_gauge("../../test/conf.0000");
-//   const std::string filename_prop_u("../../test/simon/sequential_source_u");
-//   const std::string filename_prop_d("../../test/simon/sequential_source_d");
-//   const std::string filename_src("../../test/simon/sequential_source_u");
-
-  const std::string filename_src_out("../../test/my_test_output");
+  // const std::string filename_src_out("../../test/my_test_output");
 
 
   Base::Weave weave(L,T);
@@ -83,7 +74,7 @@ int main(int argc, char **argv)
     oss << f;
     oss.flush();
     sourcefiles.push_back(std::string(filename_src).append(oss.str()));
-    outputfiles.push_back(std::string(filename_src_out).append(oss.str()));
+    //outputfiles.push_back(std::string(filename_src_out).append(oss.str()));
   }
 
 
@@ -113,8 +104,10 @@ int main(int argc, char **argv)
   double const spatial_plaq  = Tool::spatialPlaquette(gauge_field);
 
 
-//   uProp.changeBoundaryConditions_uniformToFixed(timeslice_source, timeslice_boundary);
-//   dProp.changeBoundaryConditions_uniformToFixed(timeslice_source, timeslice_boundary);
+  // note: the boundary conditions are already the desired ones for the sources read
+  // therefore we don't need the following two function calls
+  // uProp.changeBoundaryConditions_uniformToFixed(timeslice_source, timeslice_boundary);
+  // dProp.changeBoundaryConditions_uniformToFixed(timeslice_source, timeslice_boundary);
 
 
 

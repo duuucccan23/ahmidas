@@ -92,7 +92,7 @@ int main(int argc, char **argv)
   if(weave.isRoot())
     std::cout << "kappa = " << kappa << ", mu = " << mu << std::endl;
 
-  size_t t_src = size_t(floats["timesliceSource"]); 
+//   size_t t_src = size_t(floats["timesliceSource"]); 
 
   if(weave.isRoot())
     std::cout << "\nThe following files are going to be read:" << std::endl;
@@ -137,8 +137,8 @@ int main(int argc, char **argv)
   */
  // here we declare a gamma-matrix
   Dirac::Gamma<5> gamma5;
-  Dirac::Gamma<45> gamma05;
-  
+//   Dirac::Gamma<45> gamma05;
+
   /* First of all we calculate gamma_5*S^dagger_u*gamma5 */
 
   // for that we need a copy of the up quark Propagator

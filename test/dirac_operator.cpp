@@ -20,10 +20,10 @@
 
 int main(int argc, char **argv)
 {
-  double const tolerance(1.e-15);
+  double const tolerance(1.e-13);
 
   const size_t L = 4;
-  const size_t T = 4;
+  const size_t T = 8;
 
   size_t const timeslice_boundary(T - 1);
   size_t const timeslice_source(0);
@@ -31,15 +31,15 @@ int main(int argc, char **argv)
   const double kappa(0.1);
   const double mu(0.01);
 
-  const std::string filename_gauge("../../test/conf.9999");
-  const std::string filename_prop_u("../../test/source4x4_u");
-  const std::string filename_prop_d("../../test/source4x4_d");
-  const std::string filename_src("../../test/source4x4");
+//   const std::string filename_gauge("../../test/conf.9999");
+//   const std::string filename_prop_u("../../test/source4x4_u");
+//   const std::string filename_prop_d("../../test/source4x4_d");
+//   const std::string filename_src("../../test/source4x4");
 
-//   const std::string filename_gauge("../../../../crosscheck_dru/conf.0000");
-//   const std::string filename_prop_u("../../../../crosscheck_dru/point_source_u_propagators/source");
-//   const std::string filename_prop_d("../../../../crosscheck_dru/point_source_d_propagators/source");
-//   const std::string filename_src("../../../../crosscheck_dru/point_sources/source");
+  const std::string filename_gauge("../../../../crosscheck_dru/conf.0000");
+  const std::string filename_prop_u("../../../../crosscheck_dru/point_source_u_propagators/source");
+  const std::string filename_prop_d("../../../../crosscheck_dru/point_source_d_propagators/source");
+  const std::string filename_src("../../../../crosscheck_dru/point_sources/source");
 
 //   const std::string filename_gauge("../../test/conf.0000");
 //   const std::string filename_prop_u("../../test/simon/sequential_source_u");
@@ -94,17 +94,17 @@ int main(int argc, char **argv)
 
 
   Core::Propagator source(L, T);
-  Tool::IO::load(&source, sourcefiles, Tool::IO::fileSCIDAC, 32);
+  Tool::IO::load(&source, sourcefiles, Tool::IO::fileSCIDAC, 64);
   if (weave.isRoot())
     std::cout << "source successfully loaded\n";
 
   Core::Propagator uProp(L, T);
-  Tool::IO::load(&uProp, propfilesU, Tool::IO::fileSCIDAC);
+  Tool::IO::load(&uProp, propfilesU, Tool::IO::fileSCIDAC, 64);
   if (weave.isRoot())
     std::cout << "u quark propagator successfully loaded\n";
 
   Core::Propagator dProp(L, T);
-  Tool::IO::load(&dProp, propfilesD, Tool::IO::fileSCIDAC);
+  Tool::IO::load(&dProp, propfilesD, Tool::IO::fileSCIDAC, 64);
   if (weave.isRoot())
     std::cout << "d quark propagator successfully loaded\n";
 
@@ -113,8 +113,8 @@ int main(int argc, char **argv)
   double const spatial_plaq  = Tool::spatialPlaquette(gauge_field);
 
 
-  uProp.changeBoundaryConditions_uniformToFixed(timeslice_source, timeslice_boundary);
-  dProp.changeBoundaryConditions_uniformToFixed(timeslice_source, timeslice_boundary);
+//   uProp.changeBoundaryConditions_uniformToFixed(timeslice_source, timeslice_boundary);
+//   dProp.changeBoundaryConditions_uniformToFixed(timeslice_source, timeslice_boundary);
 
 
 

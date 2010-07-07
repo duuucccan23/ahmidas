@@ -128,6 +128,23 @@ namespace Base
     (d_grid.grid()).Allreduce(data_send, data_recv, count * sizeof(Element), MPI::BYTE, MPI::SUM);
   }
 
+  inline void Weave::allReduce(std::complex< double > const *data_send, std::complex< double > *data_recv, size_t const count) const
+  {
+    // have to wait until all calculations are finished
+    d_grid.grid().Barrier();
+
+    // call MPI::Intracomm::Allreduce(...)
+    (d_grid.grid()).Allreduce(data_send, data_recv, count, MPI::DOUBLE_COMPLEX, MPI::SUM);
+  }
+
+  inline void Weave::allReduce(double const *data_send, double *data_recv, size_t const count) const
+  {
+    // have to wait until all calculations are finished
+    d_grid.grid().Barrier();
+
+    // call MPI::Intracomm::Allreduce(...)
+    (d_grid.grid()).Allreduce(data_send, data_recv, count, MPI::DOUBLE, MPI::SUM);
+  }
 
   inline size_t Weave::rank() const
   {

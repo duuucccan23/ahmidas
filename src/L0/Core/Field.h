@@ -69,6 +69,7 @@ namespace Core
 
       size_t L() const;
       size_t T() const;
+      size_t localVolume() const;
       size_t volume() const;
 
       double weave(Base::weaveOperator wea_OP, double nodeval) const;

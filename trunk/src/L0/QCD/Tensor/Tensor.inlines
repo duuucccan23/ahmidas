@@ -68,6 +68,12 @@ namespace QCD
   }
 
 
+  inline Tensor const &Tensor::identity()
+  {
+    return s_identity;
+  }
+
+
   inline void Tensor::leftMultiplySpinColorDilutedConj(Tensor const& xi)
   {
     std::transform(d_data      , d_data +  12, d_data,

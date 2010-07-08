@@ -41,6 +41,30 @@ void Tool::IO::saveScidac(Core::Field< Element > const &field, std::string const
   assert(writer.good());
 
   size_t pos = 0;
+  if (rank == root_rank)
+  {
+    // write header
+    writer.newRecord("etmc-propagator-format",pos);
+
+    std::string info_string;
+    {
+      std::ostringstream oss;
+      oss << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<etmcFormat>\n<field>diracFermion</field>\n";
+      oss << "<precision>64</precision>\n";
+      oss << "<flavours>1</flavours>\n";
+      oss << "<lx>" << field.L() << "</lx>\n";
+      oss << "<ly>" << field.L() << "</ly>\n";
+      oss << "<lz>" << field.L() << "</lz>\n";
+      oss << "<lt>" << field.T() << "</lt>\n";
+      oss << "</etmcFormat>";
+      info_string = oss.str();
+    }
+    writer.write(info_string.c_str(), info_string.length()*sizeof(char));
+    pos = writer.closeRecord();
+  }
+
+  weave.broadcast(&pos, 1, root_rank);
+
   writer.newRecord("scidac-binary-data", pos, weave.globalVolume() * sizeof(Element));
 
   weave.barrier();

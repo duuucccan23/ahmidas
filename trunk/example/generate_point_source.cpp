@@ -95,20 +95,21 @@ int main(int argc, char **argv)
 
   size_t const * const source_position = positions[0];
 
-  size_t t_src = size_t(floats["timesliceSource"]); 
   if(weave.isRoot())
     std::cout << "\nsource position: " << source_position[0] << " " << source_position[1] << " "
                                        << source_position[2] << " " << source_position[3] << std::endl;
 
 
   if(weave.isRoot())
+  {
     std::cout << "\nThe following files are going to be created:" << std::endl;
 
-  // there should only be one container in files, which can be accessed by files[0]
-  // (similar to accessing an object in a C array)
-  for (size_t fileIndex=0; fileIndex<files[0].size(); fileIndex++)
-  {
-    std::cout << (files[0])[fileIndex] << std::endl;
+    // there should only be one container in files, which can be accessed by files[0]
+    // (similar to accessing an object in a C array)
+    for (size_t fileIndex=0; fileIndex<files[0].size(); fileIndex++)
+    {
+      std::cout << (files[0])[fileIndex] << std::endl;
+    }
   }
 
 
@@ -141,7 +142,7 @@ int main(int argc, char **argv)
 
     // smear the gauge field
     Smear::APE APE_tool(APE_alpha);
-    APE_tool.smear(*gauge_field, APE_iterations, t_src);
+    APE_tool.smear(*gauge_field, APE_iterations);
     if (weave.isRoot())
       std::cout << "gauge field smeared successfully\n" << std::endl;
   }
@@ -156,20 +157,26 @@ int main(int argc, char **argv)
                                                     source_position[Base::idx_T]);
   if (localIndex != weave.localVolume())
   {
-//      point_source[localIndex]
-//      = Tensor;
-    std::cerr << "not implemented yet!!!\n" << std::endl;
-    exit(1);
+    point_source[localIndex] = QCD::Tensor::identity();
   }
-  point_source.smearJacobi(Jac_alpha, Jac_iterations, *gauge_field);
-  delete gauge_field;
-  if(weave.isRoot())
-    std::cout << "point source smeared successfully\n" << std::endl;
-
+  if (Jac_iterations > 0)
+  {
+    point_source.smearJacobi(Jac_alpha, Jac_iterations, *gauge_field);
+    delete gauge_field;
+    if(weave.isRoot())
+      std::cout << "point source smeared successfully\n" << std::endl;
+  }
   Tool::IO::save(&point_source, pointSourceFiles, Tool::IO::fileSCIDAC);
-    if (weave.isRoot())
-      std::cout << "point source saved successfully\n" << std::endl;
+  if (weave.isRoot())
+    std::cout << "point source saved successfully\n" << std::endl;
 
+  double norm(point_source.norm());
+
+  if (weave.isRoot())
+  {
+    std::cout.precision(10);
+    std::cout << std::scientific << "norm of point source:\n" << norm << std::endl;
+  }
   // leave main function
   return EXIT_SUCCESS;
 }

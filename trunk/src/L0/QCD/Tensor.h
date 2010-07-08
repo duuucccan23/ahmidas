@@ -40,6 +40,9 @@ namespace QCD
 
     std::complex< double > d_data[144];
 
+     // Some useful constant matrices
+    static const Tensor s_identity;
+
     public:
       Tensor();
       Tensor(Tensor const &other);
@@ -47,6 +50,9 @@ namespace QCD
       Tensor(std::complex< double > *data);
       Tensor(Dirac::Matrix const * const data[9]);
       explicit Tensor(hcTensor const &other);
+
+      static Tensor const &identity();
+
       Tensor &operator=(Tensor const &other);
       Tensor &operator=(hcTensor const &other);
 

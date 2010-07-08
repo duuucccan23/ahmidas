@@ -13,7 +13,7 @@ SET(Sources_Tensor     Tensor/Tensor_leftMultiply_a.cpp  Tensor/Tensor_leftMulti
                        Tensor/Tensor_make_sequential_u_a.cpp
                        Tensor/Tensor_make_sequential_u_b.cpp
                        Tensor/Tensor_multiplyOuterDiracIndices.cpp
-                       Tensor/Tensor_Tensor.cpp)
+                       Tensor/Tensor.cpp Tensor/Tensor_Tensor.cpp)
 SET(Sources_WeylSpinor WeylSpinor/WeylSpinor_leftMultiply_a.cpp WeylSpinor/WeylSpinor_leftMultiply_b.cpp
                        WeylSpinor/WeylSpinor_leftMultiply_c.cpp WeylSpinor/WeylSpinor_swap.cpp)
 ADD_LIBRARY(QCD ${Sources_Gauge} ${Sources_Spinor} ${Sources_Tensor} ${Sources_WeylSpinor})

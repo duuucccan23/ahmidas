@@ -118,24 +118,21 @@ int main(int argc, char **argv)
 #endif
 
 
-  uProp->smearJacobi(Jac_alpha, Jac_iterations, gauge_field);
-  dProp->smearJacobi(Jac_alpha, Jac_iterations, gauge_field);
+  {
 
-  if (weave.isRoot())
-    std::cout << "propagators smeared successfully\n" << std::endl;
+  Core::Propagator sequentialSource_u(L, T);
+  Core::Propagator sequentialSource_d(L, T);
 
-  Core::Propagator sequentialSource(L, T);
 
-  sequentialSource *= std::complex< double >(0, 0); // initialize with zero
+  Contract::create_sequential_source_proton_fixed_insertion_timeslice(&sequentialSource_u, &sequentialSource_d,
+                                                            uProp, dProp, t_op, Base::op_GAMMA_45);
 
-  Contract::create_sequential_source_proton_u(sequentialSource, *dProp, *uProp,
-                                              gauge_field, Smear::sm_Jacobi, Jac_iterations, Jac_alpha,
-                                              timeslice_sink, Base::proj_PARITY_PLUS_TM);
 
+  Tool::IO::save(&sequentialSource_d, seqSourceFilesD, Tool::IO::fileSCIDAC);
+  Tool::IO::save(&sequentialSource_u, seqSourceFilesU, Tool::IO::fileSCIDAC);
 
   delete dProp;
-
-  Tool::IO::save(&sequentialSource, seqSourceFilesU, Tool::IO::fileSCIDAC);
+  delete uProp;
 
   double norm_u(sequentialSource.norm());
 
@@ -145,16 +142,6 @@ int main(int argc, char **argv)
     std::cout << std::scientific << "norm of sequential source (u):\n" << norm_u << std::endl;
   }
 
-  sequentialSource *= std::complex< double >(0, 0); // initialize with zero
-
-  Contract::create_sequential_source_proton_d(sequentialSource, *uProp, *uProp,
-                                              gauge_field, Smear::sm_Jacobi, Jac_iterations, Jac_alpha,
-                                              timeslice_sink, Base::proj_PARITY_PLUS_TM);
-
-  delete uProp;
-
-  Tool::IO::save(&sequentialSource, seqSourceFilesD, Tool::IO::fileSCIDAC);
-  
   double norm_d(sequentialSource.norm());
 
   if (weave.isRoot())
@@ -166,5 +153,6 @@ int main(int argc, char **argv)
   if (weave.isRoot())
     std::cout << "sequential sources generated and saved successfully\n" << std::endl;
 
+  }
   return EXIT_SUCCESS;
 }

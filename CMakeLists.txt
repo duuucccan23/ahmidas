@@ -14,7 +14,7 @@ OPTION(USE_SCALAR "Build Ahmidas for use on scalar systems [default]." ON)
 ENABLE_TESTING()
 
 INCLUDE_DIRECTORIES(BEFORE SYSTEM src)
-SET(CMAKE_CXX_FLAGS "-g -Wall -pedantic")
+SET(CMAKE_CXX_FLAGS "-O3")
 
 IF(USE_MPI)
 SET(MPI_COMPILE_FLAGS "-O3")

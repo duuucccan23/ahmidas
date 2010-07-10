@@ -104,6 +104,8 @@ int main(int argc, char **argv)
 #endif
 
 
+  uProp.smearJacobi(Jac_alpha, Jac_iterations, gauge_field);
+  dProp.smearJacobi(Jac_alpha, Jac_iterations, gauge_field);
 #ifdef __CALCULATE_THREEPOINT__
 
   Core::Propagator backwardProp_u(L, T);
@@ -123,66 +125,53 @@ int main(int argc, char **argv)
   backwardProp_d.changeBoundaryConditions_uniformToFixed(timeslice_sink, timeslice_boundary);
 #endif
 
+  sequentialPropagator_u.smearJacobi(Jac_alpha, Jac_iterations, gauge_field);
+  sequentialPropagator_d.smearJacobi(Jac_alpha, Jac_iterations, gauge_field);
 
-  std::vector< Base::Operator > my_operators;
-
-  my_operators.push_back(Base::op_GAMMA_4);
-  my_operators.push_back(Base::op_GAMMA_1);
-  my_operators.push_back(Base::op_GAMMA_2);
-  my_operators.push_back(Base::op_GAMMA_3);
-//   my_operators.push_back(Base::op_GAMMA_45);
-//   my_operators.push_back(Base::op_GAMMA_15);
-//   my_operators.push_back(Base::op_GAMMA_25);
-//   my_operators.push_back(Base::op_GAMMA_35);
-  my_operators.push_back(Base::op_O44);
-  my_operators.push_back(Base::op_O11);
-  my_operators.push_back(Base::op_O22);
-  my_operators.push_back(Base::op_O33);
-  my_operators.push_back(Base::op_CONSERVED_GAMMA_4);
 
   if (weave.isRoot())
     std::cout << "\n calculating 3-point function(s) \n" << std::endl;
 
 
-  std::vector< Core::Correlator > C3p = Contract::proton_threepoint_sequential(backwardProp_u, forwardProp_u,
-                                                                               backwardProp_d, forwardProp_d,
-                                                                               &gauge_field,
-                                                                               my_operators);
+  Core::Correlator C3p_d1  = Contract::proton_twopoint(uProp, uProp, sequentialPropagator_d, Base::proj_NO_PROJECTOR);
+  Core::Correlator C3p_u1 = Contract::proton_twopoint(uProp, sequentialPropagator_u, dProp, Base::proj_NO_PROJECTOR);
+  Core::Correlator C3p_u2 = Contract::proton_twopoint(sequentialPropagator_u, uProp, dProp, Base::proj_NO_PROJECTOR);
 
-  for(size_t i=0; i<2*my_operators.size(); i++)
-    (C3p[i]).setOffset(timeslice_source);
+  C3p_u1 += C3p_u2;
+
+  C3p_u1.deleteField();
+  C3p_d1.deleteField();
+
+  Core::Correlator C3p_u_tmp(C3p_u1);
+  Core::Correlator C3p_d_tmp(C3p_ud);
+  
+  C3p_u_tmp *= Base::proj_1_PLUS_TM;
+  C3p_d_tmp *= Base::proj_1_MINuS_TM;
+  
+  Core::Correlator C3p_u(C3p_u_tmp);
+  Core::Correlator C3p_d(C3p_u_tmp);
+  
+  C3p_u_tmp *= Base::proj_2_PLUS_TM;
+  C3p_d_tmp *= Base::proj_2_MINuS_TM;
+  
+  C3p_u += C3p_u_tmp;
+  C3p_d += C3p_u_tmp;
+  
+  C3p_u_tmp *= Base::proj_3_PLUS_TM;
+  C3p_d_tmp *= Base::proj_3_MINuS_TM;
+
+  C3p_u += C3p_u_tmp;
+  C3p_d += C3p_u_tmp;
+
+  C3p_u.setOffset(timeslice_source);
 
   if (weave.isRoot())
   {
-    std::ofstream fout("output_3point_vector_uu.dat");
-    fout << C3p[0] << std::endl;
-    fout << C3p[2] << std::endl;
-    fout << C3p[4] << std::endl;
-    fout << C3p[6] << std::endl;
+    std::ofstream fout("output_3point_uu.dat");
+    fout << C3p_u << std::endl;
     fout.close();
-    fout.open("output_3point_vector_dd.dat");
-    fout << C3p[1] << std::endl;
-    fout << C3p[3] << std::endl;
-    fout << C3p[5] << std::endl;
-    fout << C3p[7] << std::endl;
-    fout.close();
-    fout.open("output_3point_derivative_uu.dat");
-    fout << C3p[ 8] << std::endl;
-    fout << C3p[10] << std::endl;
-    fout << C3p[12] << std::endl;
-    fout << C3p[14] << std::endl;
-    fout.close();
-    fout.open("output_3point_derivative_dd.dat");
-    fout << C3p[ 9] << std::endl;
-    fout << C3p[11] << std::endl;
-    fout << C3p[13] << std::endl;
-    fout << C3p[15] << std::endl;
-    fout.close();
-    fout.open("output_3point_conserved_vector_uu.dat");
-    fout << C3p[16] << std::endl;
-    fout.close();
-    fout.open("output_3point_conserved_vector_dd.dat");
-    fout << C3p[17] << std::endl;
+    std::ofstream fout("output_3point_dd.dat");
+    fout << C3p_d << std::endl;
     fout.close();
   }
 

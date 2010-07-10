@@ -87,6 +87,12 @@ namespace Base
     proj_PARITY_PLUS_TM,
     proj_PARITY_PLUS_TM_STAR,
     proj_PARITY_MINUS_TM,
+    proj_1_MINUS_TM, // 1/4(1+gamma0)*i*gamma5*gamma1 in twisted basis (for d quark): 1/4(i*gamma5*gamma1-gamma0*gamma1)
+    proj_1_PLUS_TM,  // 1/4(1+gamma0)*i*gamma5*gamma1 in twisted basis (for u quark): 1/4(i*gamma5*gamma1+gamma0*gamma1)
+    proj_2_MINUS_TM, // same as above but with gamma2
+    proj_2_PLUS_TM,
+    proj_3_MINUS_TM, // same as above but with gamma3
+    proj_3_PLUS_TM,
     proj_NO_PROJECTOR // this one does not do anything
   };
 

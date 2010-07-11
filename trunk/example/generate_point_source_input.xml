@@ -1,29 +1,29 @@
 <?xml version="1.0" encoding='UTF-8'?>
 <ahmidas>
   <params>
-    <L> 4 </L>
-    <T> 4 </T>
+    <L> 32 </L>
+    <T> 64 </T>
     <!-- -->
-    <kappa> 0.177 </kappa>
-    <mu> 1.41243 </mu>
+    <kappa> 0.161236 </kappa>
+    <mu> 0.0055 </mu>
     <!-- -->
     <!-- this is the position of the point source -->
-    <position> x y z t </position>
+    <position> XXX </position>
     <!-- -->
     <!-- if smearing is desired set the following 4 parameters to proper values -->
     <!-- APE smearing parameters -->
-    <APE_steps>  5   </APE_steps>
+    <APE_steps>  1   </APE_steps>
     <APE_param>  0.5 </APE_param>
     <!-- Gaussian/Jacobi smearing parameters -->
-    <Jac_steps>  10   </Jac_steps>
-    <Jac_param>  1.0 </Jac_param>
+    <Jac_steps>  1   </Jac_steps>
+    <Jac_param>  4.0 </Jac_param>
   </params>
   <files>
     <!-- output file -->
     <file>
-      <type>point_source</type>
+      <type>source</type>
       <directory>./</directory>
-      <filenameBase>point_source.</filenameBase>
+      <filenameBase>source.</filenameBase>
       <firstIndex>0</firstIndex>
       <lastIndex>11</lastIndex>
       <indexWidth>2</indexWidth>
@@ -33,8 +33,8 @@
       <type>gauge</type>
       <directory>./</directory>
       <filenameBase>conf.</filenameBase>
-      <firstIndex>0</firstIndex>
-      <lastIndex>0</lastIndex>
+      <firstIndex>9999</firstIndex>
+      <lastIndex>9999</lastIndex>
       <indexWidth>4</indexWidth>
     </file>
   </files>

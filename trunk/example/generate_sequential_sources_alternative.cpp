@@ -29,7 +29,7 @@ int main(int argc, char **argv)
   size_t T = 0;
 
 
-  Input::FileReader reader("./generate_sequential_sources_input.xml");
+  Input::FileReader reader("./generate_sequential_sources_alternative_input.xml");
 
   std::map< std::string, double > floats;
   std::vector< size_t * > positions;
@@ -55,7 +55,7 @@ int main(int argc, char **argv)
   double const Jac_alpha      = floats["Jac_param"];
   size_t const Jac_iterations = size_t(floats["Jac_steps"]);
 
-  size_t const sourceSinkSeparation = size_t(floats["sourceSinkSeparation"]);
+  size_t const sourceSinkSeparation = size_t(floats["t_insertion"]);
   assert(sourceSinkSeparation > 0 && sourceSinkSeparation < T-1);
 
   if (weave.isRoot())
@@ -68,9 +68,9 @@ int main(int argc, char **argv)
   size_t const timeslice_source = source_position[Base::idx_T];
   if (weave.isRoot())
     std::cout << "timeslice (source) = " << timeslice_source << std::endl;
-  size_t const timeslice_sink = (timeslice_source +  sourceSinkSeparation) % T;
+  size_t const t_op = (timeslice_source +  sourceSinkSeparation) % T;
   if (weave.isRoot())
-    std::cout << "timeslice (sink) = " << timeslice_sink << std::endl;
+    std::cout << "timeslice (operator insertion) = " << t_op << std::endl;
 
   // make sure the boundary is not crossed by source-sink correlaton function
   size_t const timeslice_boundary = (timeslice_source + (T/2)) % T;;
@@ -79,23 +79,23 @@ int main(int argc, char **argv)
 
   std::vector< std::string > const &propfilesD(files[0]);
   std::vector< std::string > const &propfilesU(files[1]);
-  std::vector< std::string > const &gaugeFieldFiles(files[2]);
+//   std::vector< std::string > const &gaugeFieldFiles(files[2]);
   std::vector< std::string > const &seqSourceFilesD(files[3]);
   std::vector< std::string > const &seqSourceFilesU(files[4]);
 
-  Core::Field< QCD::Gauge > gauge_field(L, T);
-
-  if (weave.isRoot())
-    std::cout << "gauge field to be read from " << gaugeFieldFiles[0] << " ... ";
-  Tool::IO::load(&gauge_field, gaugeFieldFiles[0], Tool::IO::fileILDG);
-  if (weave.isRoot())
-    std::cout << "done.\n" << std::endl;
-
-
-  Smear::APE APE_tool(APE_alpha);
-  Smear::Jacobi Jacobi_tool(Jac_alpha);
-
-  APE_tool.smear(gauge_field, APE_iterations);
+//   Core::Field< QCD::Gauge > gauge_field(L, T);
+// 
+//   if (weave.isRoot())
+//     std::cout << "gauge field to be read from " << gaugeFieldFiles[0] << " ... ";
+//   Tool::IO::load(&gauge_field, gaugeFieldFiles[0], Tool::IO::fileILDG);
+//   if (weave.isRoot())
+//     std::cout << "done.\n" << std::endl;
+// 
+// 
+//   Smear::APE APE_tool(APE_alpha);
+//   Smear::Jacobi Jacobi_tool(Jac_alpha);
+// 
+//   APE_tool.smear(gauge_field, APE_iterations);
 
 
   Core::Propagator *uProp = new Core::Propagator(L, T);
@@ -125,8 +125,7 @@ int main(int argc, char **argv)
 
 
   Contract::create_sequential_source_proton_fixed_insertion_timeslice(&sequentialSource_u, &sequentialSource_d,
-                                                            uProp, dProp, t_op, Base::op_GAMMA_45);
-
+                                                                        *uProp, *dProp, t_op, Base::op_GAMMA_45);
 
   Tool::IO::save(&sequentialSource_d, seqSourceFilesD, Tool::IO::fileSCIDAC);
   Tool::IO::save(&sequentialSource_u, seqSourceFilesU, Tool::IO::fileSCIDAC);
@@ -134,20 +133,20 @@ int main(int argc, char **argv)
   delete dProp;
   delete uProp;
 
-  double norm_u(sequentialSource.norm());
+  double norm_u(sequentialSource_u.norm());
 
   if (weave.isRoot())
   {
     std::cout.precision(10);
-    std::cout << std::scientific << "norm of sequential source (u):\n" << norm_u << std::endl;
+    std::cout << std::scientific << "norm of sequential source (u): " << norm_u << std::endl;
   }
 
-  double norm_d(sequentialSource.norm());
+  double norm_d(sequentialSource_d.norm());
 
   if (weave.isRoot())
   {
     std::cout.precision(10);
-    std::cout << std::scientific << "norm of sequential source (d):\n" << norm_d << std::endl;
+    std::cout << std::scientific << "norm of sequential source (d): " << norm_d << std::endl;
   }
 
   if (weave.isRoot())

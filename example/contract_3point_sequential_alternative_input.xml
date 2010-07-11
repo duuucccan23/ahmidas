@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding='UTF-8'?>
 <ahmidas>
   <params>
-    <L> 4 </L>
-    <T> 8 </T>
-    <!-- position of point source (x,y,z,t) -->
-    <position> 0 0 0 0 </position>
-    <sourceSinkSeparation> 4 </sourceSinkSeparation>
+    <L> 32 </L>
+    <T> 64 </T>
+    <!-- timeslice of point source  -->
+    <timesliceSource> XXX </timesliceSource>
+    <timesliceInsertion> XXXX </timesliceInsertion>
     <kappa> 0.161236 </kappa>
     <mu> 0.0055 </mu>
-    <APE_steps>  20  </APE_steps>
+    <APE_steps>  1  </APE_steps>
     <APE_param>  0.5 </APE_param>
-    <Jac_steps>  50   </Jac_steps>
+    <Jac_steps>  1   </Jac_steps>
     <Jac_param>  4.0 </Jac_param>
   </params>
   <files>
     <!-- u and d quark propagators -->
     <file>
       <type>propagator</type>
-      <directory>point_source_d_propagators/</directory>
+      <directory>./d_propagators/</directory>
       <filenameBase>source.</filenameBase>
       <filenameEnding>.inverted</filenameEnding>
       <firstIndex>0</firstIndex>
@@ -26,7 +26,7 @@
     </file>
     <file>
       <type>propagator</type>
-      <directory>point_source_u_propagators</directory>
+      <directory>./u_propagators</directory>
       <filenameBase>source.</filenameBase>
       <filenameEnding>.inverted</filenameEnding>
       <firstIndex>0</firstIndex>
@@ -38,15 +38,15 @@
       <type>gauge</type>
       <directory>./</directory>
       <filenameBase>conf.</filenameBase>
-      <firstIndex>0</firstIndex>
-      <lastIndex>0</lastIndex>
+      <firstIndex>9999</firstIndex>
+      <lastIndex>9999</lastIndex>
       <indexWidth>4</indexWidth>
     </file>
     <!-- sequential propagators -->
     <file>
       <type>source</type>
-      <directory>sequential_sources</directory>
-      <filenameBase>sequential_source_d.</filenameBase>
+      <directory>./sequential_sources_d</directory>
+      <filenameBase>source.</filenameBase>
       <filenameEnding>.inverted</filenameEnding>
       <firstIndex>0</firstIndex>
       <lastIndex>11</lastIndex>
@@ -54,8 +54,8 @@
     </file>
     <file>
       <type>source</type>
-      <directory>sequential_sources</directory>
-      <filenameBase>sequential_source_u.</filenameBase>
+      <directory>./sequential_sources_u</directory>
+      <filenameBase>source.</filenameBase>
       <filenameEnding>.inverted</filenameEnding>
       <firstIndex>0</firstIndex>
       <lastIndex>11</lastIndex>

@@ -9,7 +9,7 @@ namespace Core
     std::complex< double > phase;
     long idx_T_new;
 
-    std::cout << "Changing boundary conditions of propagator: uniform to fixed....";
+    //std::cout << "Changing boundary conditions of propagator: uniform to fixed....";
     assert(timesliceSource < T());
     assert(timesliceBoundary < T());
     isolate();
@@ -37,6 +37,7 @@ namespace Core
         }
       }
     }
-    std::cout << "Done.\n";
+    //std::cout << "Done.\n";
+    weave.barrier();
   }
 }

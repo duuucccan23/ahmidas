@@ -175,7 +175,7 @@ int main(int argc, char **argv)
   if (weave.isRoot())
   {
     std::cout.precision(10);
-    std::cout << std::scientific << "norm of point source:\n" << norm << std::endl;
+    std::cout << std::scientific << "norm of point source: " << norm << std::endl;
   }
   // leave main function
   return EXIT_SUCCESS;

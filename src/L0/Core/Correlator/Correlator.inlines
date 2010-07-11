@@ -1,7 +1,7 @@
 inline Correlator::Correlator(Correlator const &other)
   : d_weave(other.d_weave), d_data(other.d_data),
     d_sumTimeslice(other.d_sumTimeslice), d_sumTimeslice_global(other.d_sumTimeslice_global),
-    d_references(other.d_references), d_offset(0)
+    d_references(other.d_references), d_offset(other.d_offset)
 {
   *d_references += 1;
 }
@@ -33,11 +33,14 @@ inline Dirac::Matrix const &Correlator::operator[](size_t const t) const
 inline void Correlator::operator*=(double const factor)
 {
   isolate();
-  Core::Field< Dirac::Matrix >::iterator I = d_data->begin();
-  while(I != d_data->end())
+  if (d_data != NULL)
   {
-    (*I) *= factor;
-    ++I;
+    Core::Field< Dirac::Matrix >::iterator I = d_data->begin();
+    while(I != d_data->end())
+    {
+      (*I) *= factor;
+      ++I;
+    }
   }
   for (size_t t=0; t<T(); t++)
   {
@@ -49,11 +52,14 @@ inline void Correlator::operator*=(double const factor)
 inline void Correlator::operator*=(std::complex< double > const &factor)
 {
   isolate();
-  Core::Field< Dirac::Matrix >::iterator I = d_data->begin();
-  while(I != d_data->end())
+  if (d_data != NULL)
   {
-    (*I) *= factor;
-    ++I;
+    Core::Field< Dirac::Matrix >::iterator I = d_data->begin();
+    while(I != d_data->end())
+    {
+      (*I) *= factor;
+      ++I;
+    }
   }
   for (size_t t=0; t<T(); t++)
   {
@@ -65,13 +71,16 @@ inline void Correlator::operator*=(std::complex< double > const &factor)
 inline void Correlator::operator+=(Correlator const &other)
 {
   isolate();
-  Core::Field< Dirac::Matrix >::iterator I = d_data->begin();
-  Core::Field< Dirac::Matrix >::const_iterator J = other.d_data->begin();
-  while(I != d_data->end())
+  if (d_data != NULL && other.d_data != NULL)
   {
-    (*I) += (*J);
-    ++I;
-    ++J;
+    Core::Field< Dirac::Matrix >::iterator I = d_data->begin();
+    Core::Field< Dirac::Matrix >::const_iterator J = other.d_data->begin();
+    while(I != d_data->end())
+    {
+      (*I) += (*J);
+      ++I;
+      ++J;
+    }
   }
   for (size_t t=0; t<T(); t++)
   {

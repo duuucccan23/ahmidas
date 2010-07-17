@@ -44,6 +44,20 @@ void Tool::IO::saveScidac(Core::Field< Element > const &field, std::string const
   if (rank == root_rank)
   {
     // write header
+    writer.newRecord("propagator-type",pos);
+
+    std::string info_string("DiracFermion_Sink");
+
+    writer.write(info_string.c_str(), info_string.length()*sizeof(char));
+    pos = writer.closeRecord();
+  }
+
+  weave.broadcast(&pos, 1, root_rank);
+
+
+  if (rank == root_rank)
+  {
+    // write header
     writer.newRecord("etmc-propagator-format",pos);
 
     std::string info_string;
@@ -64,6 +78,7 @@ void Tool::IO::saveScidac(Core::Field< Element > const &field, std::string const
   }
 
   weave.broadcast(&pos, 1, root_rank);
+
 
 
   weave.barrier();

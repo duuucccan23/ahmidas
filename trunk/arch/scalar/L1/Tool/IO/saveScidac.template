@@ -6,7 +6,12 @@ void Tool::IO::saveScidac(Core::Field< Element > const &field, std::string const
 
   assert(writer.good());
 
-  // write header
+  // write info header
+  writer.newRecord("propagator-type");
+  std::string propagator_type_string("DiracFermion_Sink");
+  writer.write(propagator_type_string.c_str(), propagator_type_string.length()*sizeof(char));
+
+  // write format header
   writer.newRecord("etmc-propagator-format");
 
   std::string info_string;

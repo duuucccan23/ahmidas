@@ -5,7 +5,8 @@
     <T> 64 </T>
     <!-- position of point source -->
     <position> XXX </position>
-    <t_insertion> 9 </t_insertion>
+    <!-- source-operator insertion separation -->
+    <t_source_insertion> 9 </t_source_insertion>
     <kappa> 0.10 </kappa>
     <mu> 0.01 </mu>
     <APE_steps>  0   </APE_steps>

@@ -18,6 +18,26 @@ inline Correlator::~Correlator()
   destroy();
 }
 
+
+inline Correlator &Correlator::operator=(Correlator const &rhs)
+{
+  if (this != &rhs)
+  {
+    destroy();
+    d_weave = rhs.d_weave;
+    d_sumTimeslice = rhs.d_sumTimeslice;
+    d_sumTimeslice_global = rhs.d_sumTimeslice_global;
+    d_offset = rhs.d_offset;
+    d_references = rhs.d_references;
+    *d_references += 1;
+    if (d_data != NULL)
+      d_data->refCountUp();
+  }
+  return (*this);
+}
+
+
+
 inline Dirac::Matrix &Correlator::operator[](size_t const t)
 {
   assert(t < T());

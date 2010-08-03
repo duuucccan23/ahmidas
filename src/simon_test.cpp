@@ -67,7 +67,7 @@ int main(int argc, char **argv)
     std::cout << "timeslice (source) = " << timeslice_source << std::endl;
   // size_t const source_position[4] = {0,0,0,timeslice_source};
   size_t const timeslice_boundary(T-1);
-  size_t const t_op = floats["t_insertion"];
+  size_t const t_op = size_t(floats["t_insertion"]);
   if (weave.isRoot())
     std::cout << "timeslice (operator insertion) = " << t_op << std::endl;
 

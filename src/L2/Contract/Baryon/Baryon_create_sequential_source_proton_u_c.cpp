@@ -53,7 +53,7 @@ namespace Contract
     switch (smearing)
     {
       case Smear::sm_Jacobi:
-        seqSrc.smearJacobi(pSmear, nSmear, gauge_field, t_snk);
+        seqSrc.smearJacobi(pSmear, nSmear, gauge_field);
         break;
      default:
        std::cerr << "unknown smearing in function defined in create_sequential_source_proton_u_c.cpp" << std::endl;

@@ -50,5 +50,7 @@ void Tool::IO::Lime::Writer::finalize()
   d_stream.seekp(d_record.recOffset, std::ios::beg);
   d_stream.write(header.as8, 144);
 
+  d_stream.flush();
+
   d_stream.seekp(d_startOfNextRecord, std::ios::beg);
 }

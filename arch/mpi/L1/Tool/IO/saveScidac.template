@@ -54,6 +54,8 @@ void Tool::IO::saveScidac(Core::Field< Element > const &field, std::string const
 
   weave.broadcast(&pos, 1, root_rank);
 
+  weave.barrier();
+
 
   if (rank == root_rank)
   {

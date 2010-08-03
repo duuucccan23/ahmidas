@@ -30,6 +30,8 @@ namespace Core
 
       ~Correlator();
 
+      Correlator &operator=(Correlator const &rhs);
+
       Dirac::Matrix &operator[](size_t const idx);
       Dirac::Matrix const &operator[](size_t const idx) const;
 

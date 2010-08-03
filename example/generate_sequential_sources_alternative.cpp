@@ -55,7 +55,7 @@ int main(int argc, char **argv)
   double const Jac_alpha      = floats["Jac_param"];
   size_t const Jac_iterations = size_t(floats["Jac_steps"]);
 
-  size_t const sourceSinkSeparation = size_t(floats["t_insertion"]);
+  size_t const sourceSinkSeparation = size_t(floats["t_source_insertion"]);
   assert(sourceSinkSeparation > 0 && sourceSinkSeparation < T-1);
 
   if (weave.isRoot())
@@ -65,7 +65,7 @@ int main(int argc, char **argv)
   }
 
   size_t const * const source_position = positions[0];
-  size_t const timeslice_source = source_position[Base::idx_T];
+  size_t const timeslice_source = source_position[Base::idx_T] % T;
   if (weave.isRoot())
     std::cout << "timeslice (source) = " << timeslice_source << std::endl;
   size_t const t_op = (timeslice_source +  sourceSinkSeparation) % T;
@@ -79,23 +79,23 @@ int main(int argc, char **argv)
 
   std::vector< std::string > const &propfilesD(files[0]);
   std::vector< std::string > const &propfilesU(files[1]);
-//   std::vector< std::string > const &gaugeFieldFiles(files[2]);
+  std::vector< std::string > const &gaugeFieldFiles(files[2]);
   std::vector< std::string > const &seqSourceFilesD(files[3]);
   std::vector< std::string > const &seqSourceFilesU(files[4]);
 
-//   Core::Field< QCD::Gauge > gauge_field(L, T);
-// 
-//   if (weave.isRoot())
-//     std::cout << "gauge field to be read from " << gaugeFieldFiles[0] << " ... ";
-//   Tool::IO::load(&gauge_field, gaugeFieldFiles[0], Tool::IO::fileILDG);
-//   if (weave.isRoot())
-//     std::cout << "done.\n" << std::endl;
-// 
-// 
-//   Smear::APE APE_tool(APE_alpha);
-//   Smear::Jacobi Jacobi_tool(Jac_alpha);
-// 
-//   APE_tool.smear(gauge_field, APE_iterations);
+  Core::Field< QCD::Gauge > gauge_field(L, T);
+
+  if (weave.isRoot())
+    std::cout << "gauge field to be read from " << gaugeFieldFiles[0] << " ... ";
+  Tool::IO::load(&gauge_field, gaugeFieldFiles[0], Tool::IO::fileILDG);
+  if (weave.isRoot())
+    std::cout << "done.\n" << std::endl;
+
+
+  Smear::APE APE_tool(APE_alpha);
+  Smear::Jacobi Jacobi_tool(Jac_alpha);
+
+  APE_tool.smear(gauge_field, APE_iterations);
 
 
   Core::Propagator *uProp = new Core::Propagator(L, T);

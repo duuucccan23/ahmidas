@@ -126,19 +126,19 @@ int main(int argc, char **argv)
 
   std::vector< Base::Operator > my_operators;
 
-  my_operators.push_back(Base::op_GAMMA_4);
-  my_operators.push_back(Base::op_GAMMA_1);
-  my_operators.push_back(Base::op_GAMMA_2);
-  my_operators.push_back(Base::op_GAMMA_3);
-//   my_operators.push_back(Base::op_GAMMA_45);
+//   my_operators.push_back(Base::op_GAMMA_4);
+//   my_operators.push_back(Base::op_GAMMA_1);
+//   my_operators.push_back(Base::op_GAMMA_2);
+//   my_operators.push_back(Base::op_GAMMA_3);
+  my_operators.push_back(Base::op_GAMMA_45);
 //   my_operators.push_back(Base::op_GAMMA_15);
 //   my_operators.push_back(Base::op_GAMMA_25);
 //   my_operators.push_back(Base::op_GAMMA_35);
-  my_operators.push_back(Base::op_O44);
-  my_operators.push_back(Base::op_O11);
-  my_operators.push_back(Base::op_O22);
-  my_operators.push_back(Base::op_O33);
-  my_operators.push_back(Base::op_CONSERVED_GAMMA_4);
+//   my_operators.push_back(Base::op_O44);
+//   my_operators.push_back(Base::op_O11);
+//   my_operators.push_back(Base::op_O22);
+//   my_operators.push_back(Base::op_O33);
+//   my_operators.push_back(Base::op_CONSERVED_GAMMA_4);
 
   if (weave.isRoot())
     std::cout << "\n calculating 3-point function(s) \n" << std::endl;
@@ -154,36 +154,42 @@ int main(int argc, char **argv)
 
   if (weave.isRoot())
   {
-    std::ofstream fout("output_3point_vector_uu.dat");
-    fout << C3p[0] << std::endl;
-    fout << C3p[2] << std::endl;
-    fout << C3p[4] << std::endl;
-    fout << C3p[6] << std::endl;
-    fout.close();
-    fout.open("output_3point_vector_dd.dat");
-    fout << C3p[1] << std::endl;
-    fout << C3p[3] << std::endl;
-    fout << C3p[5] << std::endl;
-    fout << C3p[7] << std::endl;
-    fout.close();
-    fout.open("output_3point_derivative_uu.dat");
-    fout << C3p[ 8] << std::endl;
-    fout << C3p[10] << std::endl;
-    fout << C3p[12] << std::endl;
-    fout << C3p[14] << std::endl;
-    fout.close();
-    fout.open("output_3point_derivative_dd.dat");
-    fout << C3p[ 9] << std::endl;
-    fout << C3p[11] << std::endl;
-    fout << C3p[13] << std::endl;
-    fout << C3p[15] << std::endl;
-    fout.close();
-    fout.open("output_3point_conserved_vector_uu.dat");
-    fout << C3p[16] << std::endl;
-    fout.close();
-    fout.open("output_3point_conserved_vector_dd.dat");
-    fout << C3p[17] << std::endl;
-    fout.close();
+   std::ofstream fout("output_3point_axial_uu.dat");
+   fout << C3p[0] << std::endl;
+   fout.close();
+   fout.open("output_3point_axial_dd.dat");
+   fout << C3p[1] << std::endl;
+   fout.close();
+//     std::ofstream fout("output_3point_vector_uu.dat");
+//     fout << C3p[0] << std::endl;
+//     fout << C3p[2] << std::endl;
+//     fout << C3p[4] << std::endl;
+//     fout << C3p[6] << std::endl;
+//     fout.close();
+//     fout.open("output_3point_vector_dd.dat");
+//     fout << C3p[1] << std::endl;
+//     fout << C3p[3] << std::endl;
+//     fout << C3p[5] << std::endl;
+//     fout << C3p[7] << std::endl;
+//     fout.close();
+//     fout.open("output_3point_derivative_uu.dat");
+//     fout << C3p[ 8] << std::endl;
+//     fout << C3p[10] << std::endl;
+//     fout << C3p[12] << std::endl;
+//     fout << C3p[14] << std::endl;
+//     fout.close();
+//     fout.open("output_3point_derivative_dd.dat");
+//     fout << C3p[ 9] << std::endl;
+//     fout << C3p[11] << std::endl;
+//     fout << C3p[13] << std::endl;
+//     fout << C3p[15] << std::endl;
+//     fout.close();
+//     fout.open("output_3point_conserved_vector_uu.dat");
+//     fout << C3p[16] << std::endl;
+//     fout.close();
+//     fout.open("output_3point_conserved_vector_dd.dat");
+//     fout << C3p[17] << std::endl;
+//     fout.close();
   }
 
 #endif
@@ -207,10 +213,10 @@ int main(int argc, char **argv)
   Smear::APE APE_tool(APE_alpha);
   Smear::Jacobi Jacobi_tool(Jac_alpha);
 
-  APE_tool.smear(gauge_field, APE_iterations, timeslice_sink);
+  APE_tool.smear(gauge_field, APE_iterations);
 
-  forwardProp_u.smearJacobi(Jac_alpha, Jac_iterations, gauge_field, timeslice_sink);
-  forwardProp_d.smearJacobi(Jac_alpha, Jac_iterations, gauge_field, timeslice_sink);
+  forwardProp_u.smearJacobi(Jac_alpha, Jac_iterations, gauge_field);
+  forwardProp_d.smearJacobi(Jac_alpha, Jac_iterations, gauge_field);
 
   if (weave.isRoot())
     std::cout << "propagators and gauge field smeared successfully\n" << std::endl;

@@ -128,9 +128,13 @@ int main(int argc, char **argv)
 
   sequentialSource *= std::complex< double >(0, 0); // initialize with zero
 
+//   Contract::create_sequential_source_proton_u(sequentialSource, *dProp, *uProp,
+//                                               gauge_field, Smear::sm_Jacobi, Jac_iterations, Jac_alpha,
+//                                               timeslice_sink, Base::proj_PARITY_PLUS_TM);
+
   Contract::create_sequential_source_proton_u(sequentialSource, *dProp, *uProp,
                                               gauge_field, Smear::sm_Jacobi, Jac_iterations, Jac_alpha,
-                                              timeslice_sink, Base::proj_PARITY_PLUS_TM);
+                                              timeslice_sink, Base::proj_1_PLUS_TM);
 
 
   delete dProp;
@@ -149,12 +153,12 @@ int main(int argc, char **argv)
 
   Contract::create_sequential_source_proton_d(sequentialSource, *uProp, *uProp,
                                               gauge_field, Smear::sm_Jacobi, Jac_iterations, Jac_alpha,
-                                              timeslice_sink, Base::proj_PARITY_PLUS_TM);
+                                              timeslice_sink, Base::proj_1_MINUS_TM);
 
   delete uProp;
 
   Tool::IO::save(&sequentialSource, seqSourceFilesD, Tool::IO::fileSCIDAC);
-  
+
   double norm_d(sequentialSource.norm());
 
   if (weave.isRoot())

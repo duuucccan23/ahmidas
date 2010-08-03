@@ -63,6 +63,60 @@ namespace QCD
         alpha_f_perms.push_back(Base::gam_4);
         alpha_f_factors.push_back(0.5*COMPLEX_P_I);
       break;
+      case Base::proj_1_MINUS_TM:
+        alpha_f_perms.push_back(Base::gam_2);
+        alpha_f_factors.push_back(0.5*COMPLEX_M_I);
+        alpha_f_perms.push_back(Base::gam_1);
+        alpha_f_factors.push_back(0.5*COMPLEX_M_I);
+        alpha_f_perms.push_back(Base::gam_4);
+        alpha_f_factors.push_back(0.5*COMPLEX_P_I);
+        alpha_f_perms.push_back(Base::gam_3);
+        alpha_f_factors.push_back(0.5*COMPLEX_P_I);
+        alpha_f_perms.push_back(Base::gam_4);
+        alpha_f_factors.push_back(0.5*COMPLEX_P_1);
+        alpha_f_perms.push_back(Base::gam_3);
+        alpha_f_factors.push_back(0.5*COMPLEX_P_1);
+        alpha_f_perms.push_back(Base::gam_2);
+        alpha_f_factors.push_back(0.5*COMPLEX_P_1);
+        alpha_f_perms.push_back(Base::gam_1);
+        alpha_f_factors.push_back(0.5*COMPLEX_P_1);
+      break;
+      case Base::proj_2_MINUS_TM:
+        alpha_f_perms.push_back(Base::gam_2);
+        alpha_f_factors.push_back(0.5*COMPLEX_M_1);
+        alpha_f_perms.push_back(Base::gam_1);
+        alpha_f_factors.push_back(0.5*COMPLEX_P_1);
+        alpha_f_perms.push_back(Base::gam_4);
+        alpha_f_factors.push_back(0.5*COMPLEX_P_1);
+        alpha_f_perms.push_back(Base::gam_3);
+        alpha_f_factors.push_back(0.5*COMPLEX_M_1);
+        alpha_f_perms.push_back(Base::gam_4);
+        alpha_f_factors.push_back(0.5*COMPLEX_M_I);
+        alpha_f_perms.push_back(Base::gam_3);
+        alpha_f_factors.push_back(0.5*COMPLEX_P_I);
+        alpha_f_perms.push_back(Base::gam_2);
+        alpha_f_factors.push_back(0.5*COMPLEX_M_I);
+        alpha_f_perms.push_back(Base::gam_1);
+        alpha_f_factors.push_back(0.5*COMPLEX_P_I);
+      break;
+      case Base::proj_3_MINUS_TM:
+        alpha_f_perms.push_back(Base::gam_1);
+        alpha_f_factors.push_back(0.5*COMPLEX_M_I);
+        alpha_f_perms.push_back(Base::gam_2);
+        alpha_f_factors.push_back(0.5*COMPLEX_P_I);
+        alpha_f_perms.push_back(Base::gam_3);
+        alpha_f_factors.push_back(0.5*COMPLEX_P_I);
+        alpha_f_perms.push_back(Base::gam_4);
+        alpha_f_factors.push_back(0.5*COMPLEX_M_I);
+        alpha_f_perms.push_back(Base::gam_3);
+        alpha_f_factors.push_back(0.5*COMPLEX_P_1);
+        alpha_f_perms.push_back(Base::gam_4);
+        alpha_f_factors.push_back(0.5*COMPLEX_M_1);
+        alpha_f_perms.push_back(Base::gam_1);
+        alpha_f_factors.push_back(0.5*COMPLEX_P_1);
+        alpha_f_perms.push_back(Base::gam_2);
+        alpha_f_factors.push_back(0.5*COMPLEX_M_1);
+      break;
       default:
       std::cerr << "Unknown projector in QCD::make_sequential_d() " << std::endl;
     }

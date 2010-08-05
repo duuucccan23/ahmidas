@@ -65,7 +65,7 @@ int main(int argc, char **argv)
   }
 
   size_t const * const source_position = positions[0];
-  size_t const timeslice_source = source_position[Base::idx_T];
+  size_t const timeslice_source = source_position[Base::idx_T]  % T;
   if (weave.isRoot())
     std::cout << "timeslice (source) = " << timeslice_source << std::endl;
   size_t const timeslice_sink = (timeslice_source +  sourceSinkSeparation) % T;
@@ -99,13 +99,13 @@ int main(int argc, char **argv)
 
 
   Core::Propagator *uProp = new Core::Propagator(L, T);
-  Tool::IO::load(uProp, propfilesU, Tool::IO::fileSCIDAC, 64);
+  Tool::IO::load(uProp, propfilesU, Tool::IO::fileSCIDAC);
 
   if (weave.isRoot())
     std::cout << "u quark propagator successfully loaded\n" << std::endl;
 
   Core::Propagator *dProp = new Core::Propagator(L, T);
-  Tool::IO::load(dProp, propfilesD, Tool::IO::fileSCIDAC, 64);
+  Tool::IO::load(dProp, propfilesD, Tool::IO::fileSCIDAC);
 
 
   if (weave.isRoot())
@@ -128,14 +128,12 @@ int main(int argc, char **argv)
 
   sequentialSource *= std::complex< double >(0, 0); // initialize with zero
 
-//   Contract::create_sequential_source_proton_u(sequentialSource, *dProp, *uProp,
-//                                               gauge_field, Smear::sm_Jacobi, Jac_iterations, Jac_alpha,
-//                                               timeslice_sink, Base::proj_PARITY_PLUS_TM);
-
   Contract::create_sequential_source_proton_u(sequentialSource, *dProp, *uProp,
                                               gauge_field, Smear::sm_Jacobi, Jac_iterations, Jac_alpha,
                                               timeslice_sink, Base::proj_1_PLUS_TM);
-
+//   Contract::create_sequential_source_proton_u(sequentialSource, *dProp, *uProp,
+//                                               gauge_field, Smear::sm_Jacobi, Jac_iterations, Jac_alpha,
+//                                               timeslice_sink, Base::proj_PARITY_PLUS_TM);
 
   delete dProp;
 
@@ -146,7 +144,7 @@ int main(int argc, char **argv)
   if (weave.isRoot())
   {
     std::cout.precision(10);
-    std::cout << std::scientific << "norm of sequential source (u):\n" << norm_u << std::endl;
+    std::cout << std::scientific << "norm of sequential source (u): " << norm_u << std::endl;
   }
 
   sequentialSource *= std::complex< double >(0, 0); // initialize with zero
@@ -154,7 +152,9 @@ int main(int argc, char **argv)
   Contract::create_sequential_source_proton_d(sequentialSource, *uProp, *uProp,
                                               gauge_field, Smear::sm_Jacobi, Jac_iterations, Jac_alpha,
                                               timeslice_sink, Base::proj_1_MINUS_TM);
-
+//   Contract::create_sequential_source_proton_d(sequentialSource, *uProp, *uProp,
+//                                               gauge_field, Smear::sm_Jacobi, Jac_iterations, Jac_alpha,
+//                                               timeslice_sink, Base::proj_PARITY_PLUS_TM);
   delete uProp;
 
   Tool::IO::save(&sequentialSource, seqSourceFilesD, Tool::IO::fileSCIDAC);
@@ -164,7 +164,7 @@ int main(int argc, char **argv)
   if (weave.isRoot())
   {
     std::cout.precision(10);
-    std::cout << std::scientific << "norm of sequential source (d):\n" << norm_d << std::endl;
+    std::cout << std::scientific << "norm of sequential source (d): " << norm_d << std::endl;
   }
 
   if (weave.isRoot())

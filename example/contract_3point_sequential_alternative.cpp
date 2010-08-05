@@ -78,12 +78,12 @@ int main(int argc, char **argv)
     std::cout << "done.\n" << std::endl;
 
   Core::Propagator uProp(L, T);
-  Tool::IO::load(&uProp, propfilesU, Tool::IO::fileSCIDAC, 64);
+  Tool::IO::load(&uProp, propfilesU, Tool::IO::fileSCIDAC);
   if (weave.isRoot())
     std::cout << "u quark forward propagator successfully loaded\n" << std::endl;
 
   Core::Propagator dProp(L, T);
-  Tool::IO::load(&dProp, propfilesD, Tool::IO::fileSCIDAC, 64);
+  Tool::IO::load(&dProp, propfilesD, Tool::IO::fileSCIDAC);
   if (weave.isRoot())
     std::cout << "d quark forward propagator successfully loaded\n" << std::endl;
 
@@ -156,7 +156,7 @@ int main(int argc, char **argv)
     C3p_u_tmp *= Base::proj_1_PLUS_TM;
     C3p_d_tmp *= Base::proj_1_MINUS_TM;
     Core::Correlator C3p_u(C3p_u_tmp);
-    Core::Correlator C3p_d(C3p_u_tmp);
+    Core::Correlator C3p_d(C3p_d_tmp);
 
 //     C3p_u_tmp = C3p_u1;
 //     C3p_d_tmp = C3p_d1;
@@ -172,6 +172,11 @@ int main(int argc, char **argv)
 //     C3p_u += C3p_u_tmp;
 //     C3p_d += C3p_u_tmp;
 
+    // now we have multiplied the projector from the right which differs in sign
+    // from multiplication from the left for the projectors
+    // Base::proj_K_PLUS_TM or Base::proj_K_MINUS_TM (K=1,2,3)
+    C3p_u *= -1.0;
+    C3p_d *= -1.0;
     C3p_u.setOffset(timeslice_source);
     C3p_d.setOffset(timeslice_source);
 

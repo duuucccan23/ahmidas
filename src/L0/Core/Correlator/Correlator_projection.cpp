@@ -31,7 +31,7 @@ void Core::Correlator::operator*=(Base::BaryonPropagatorProjector const projecto
         second *= std::complex< double >(0, 1);
         d_sumTimeslice_global[t] = gamma_0 * (gamma_1 * d_sumTimeslice_global[t]);
         d_sumTimeslice_global[t] += second;
-        d_sumTimeslice_global[t] *= 0.25;
+        d_sumTimeslice_global[t] *= 0.5;
       }
       break;
     }
@@ -46,7 +46,7 @@ void Core::Correlator::operator*=(Base::BaryonPropagatorProjector const projecto
         d_sumTimeslice_global[t] = gamma_0 * (gamma_1 * d_sumTimeslice_global[t]);
         d_sumTimeslice_global[t] *= std::complex< double >(-1, 0);
         d_sumTimeslice_global[t] += second;
-        d_sumTimeslice_global[t] *= 0.25;
+        d_sumTimeslice_global[t] *= 0.5;
       }
       break;
     }
@@ -60,7 +60,7 @@ void Core::Correlator::operator*=(Base::BaryonPropagatorProjector const projecto
         second *= std::complex< double >(0, 1);
         d_sumTimeslice_global[t] = gamma_0 * (gamma_2 * d_sumTimeslice_global[t]);
         d_sumTimeslice_global[t] += second;
-        d_sumTimeslice_global[t] *= 0.25;
+        d_sumTimeslice_global[t] *= 0.5;
       }
       break;
     }
@@ -75,7 +75,7 @@ void Core::Correlator::operator*=(Base::BaryonPropagatorProjector const projecto
         d_sumTimeslice_global[t] = gamma_0 * (gamma_2 * d_sumTimeslice_global[t]);
         d_sumTimeslice_global[t] *= std::complex< double >(-1, 0);
         d_sumTimeslice_global[t] += second;
-        d_sumTimeslice_global[t] *= 0.25;
+        d_sumTimeslice_global[t] *= 0.5;
       }
       break;
     }
@@ -89,7 +89,7 @@ void Core::Correlator::operator*=(Base::BaryonPropagatorProjector const projecto
         second *= std::complex< double >(0, 1);
         d_sumTimeslice_global[t] = gamma_0 * (gamma_3 * d_sumTimeslice_global[t]);
         d_sumTimeslice_global[t] += second;
-        d_sumTimeslice_global[t] *= 0.25;
+        d_sumTimeslice_global[t] *= 0.5;
       }
       break;
     }
@@ -104,7 +104,7 @@ void Core::Correlator::operator*=(Base::BaryonPropagatorProjector const projecto
         d_sumTimeslice_global[t] = gamma_0 * (gamma_3 * d_sumTimeslice_global[t]);
         d_sumTimeslice_global[t] *= std::complex< double >(-1, 0);
         d_sumTimeslice_global[t] += second;
-        d_sumTimeslice_global[t] *= 0.25;
+        d_sumTimeslice_global[t] *= 0.5;
       }
       break;
     }

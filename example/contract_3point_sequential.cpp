@@ -62,7 +62,7 @@ int main(int argc, char **argv)
 
 
   size_t const * const source_position = positions[0];
-  size_t const timeslice_source = source_position[Base::idx_T];
+  size_t const timeslice_source = source_position[Base::idx_T] % T;
   if (weave.isRoot())
     std::cout << "timeslice (source) = " << timeslice_source << std::endl;
   size_t const timeslice_sink = (timeslice_source +  sourceSinkSeparation) % T;
@@ -88,12 +88,12 @@ int main(int argc, char **argv)
     std::cout << "done.\n" << std::endl;
 
   Core::Propagator forwardProp_u(L, T);
-  Tool::IO::load(&forwardProp_u, propfilesU, Tool::IO::fileSCIDAC, 64);
+  Tool::IO::load(&forwardProp_u, propfilesU, Tool::IO::fileSCIDAC);
   if (weave.isRoot())
     std::cout << "u quark forward propagator successfully loaded\n" << std::endl;
 
   Core::Propagator forwardProp_d(L, T);
-  Tool::IO::load(&forwardProp_d, propfilesD, Tool::IO::fileSCIDAC, 64);
+  Tool::IO::load(&forwardProp_d, propfilesD, Tool::IO::fileSCIDAC);
   if (weave.isRoot())
     std::cout << "d quark forward propagator successfully loaded\n" << std::endl;
 

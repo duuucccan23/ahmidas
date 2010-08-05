@@ -50,19 +50,9 @@ int main(int argc, char **argv)
     std::cout << "kappa = " << kappa << ", mu = " << mu << std::endl;
 
 
-  double const APE_alpha      = floats["APE_param"];
-  size_t const APE_iterations = size_t(floats["APE_steps"]);
-  double const Jac_alpha      = floats["Jac_param"];
-  size_t const Jac_iterations = size_t(floats["Jac_steps"]);
-
   size_t const sourceSinkSeparation = size_t(floats["t_source_insertion"]);
   assert(sourceSinkSeparation > 0 && sourceSinkSeparation < T-1);
 
-  if (weave.isRoot())
-  {
-    std::cout << "APE    smearing: parameter = " << APE_alpha << ", iterations = " << APE_iterations << std::endl;
-    std::cout << "Jacobi smearing: parameter = " << Jac_alpha << ", iterations = " << Jac_iterations << std::endl;
-  }
 
   size_t const * const source_position = positions[0];
   size_t const timeslice_source = source_position[Base::idx_T] % T;
@@ -92,20 +82,14 @@ int main(int argc, char **argv)
     std::cout << "done.\n" << std::endl;
 
 
-  Smear::APE APE_tool(APE_alpha);
-  Smear::Jacobi Jacobi_tool(Jac_alpha);
-
-  APE_tool.smear(gauge_field, APE_iterations);
-
-
   Core::Propagator *uProp = new Core::Propagator(L, T);
-  Tool::IO::load(uProp, propfilesU, Tool::IO::fileSCIDAC, 64);
+  Tool::IO::load(uProp, propfilesU, Tool::IO::fileSCIDAC);
 
   if (weave.isRoot())
     std::cout << "u quark propagator successfully loaded\n" << std::endl;
 
   Core::Propagator *dProp = new Core::Propagator(L, T);
-  Tool::IO::load(dProp, propfilesD, Tool::IO::fileSCIDAC, 64);
+  Tool::IO::load(dProp, propfilesD, Tool::IO::fileSCIDAC);
 
 
   if (weave.isRoot())

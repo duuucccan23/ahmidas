@@ -419,6 +419,24 @@ namespace Core
         (*this) *= gamma3;
         break;
       }
+      case Base::op_GAMMA_15:
+      {
+        Dirac::Gamma< 15 > gamma1gamma5;
+        (*this) *= gamma1gamma5;
+        break;
+      }
+      case Base::op_GAMMA_25:
+      {
+        Dirac::Gamma< 25 > gamma2gamma5;
+        (*this) *= gamma2gamma5;
+        break;
+      }
+      case Base::op_GAMMA_35:
+      {
+        Dirac::Gamma< 35 > gamma3gamma5;
+        (*this) *= gamma3gamma5;
+        break;
+      }
       case Base::op_GAMMA_45:
       {
         Dirac::Gamma< 45 > gamma4gamma5;
@@ -462,6 +480,24 @@ namespace Core
       {
         Dirac::Gamma< 3 > gamma3;
         (*this).rightMultiply(gamma3);
+        break;
+      }
+      case Base::op_GAMMA_15:
+      {
+        Dirac::Gamma< 15 > gamma1gamma5;
+        (*this).rightMultiply(gamma1gamma5);
+        break;
+      }
+      case Base::op_GAMMA_25:
+      {
+        Dirac::Gamma< 25 > gamma2gamma5;
+        (*this).rightMultiply(gamma2gamma5);
+        break;
+      }
+      case Base::op_GAMMA_35:
+      {
+        Dirac::Gamma< 35 > gamma3gamma5;
+        (*this).rightMultiply(gamma3gamma5);
         break;
       }
       case Base::op_GAMMA_45:

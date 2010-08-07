@@ -18,19 +18,28 @@ namespace Tool
       }
 
       inline Writer::Writer(std::string const &filename, bool const writeHeader)
-        : d_stream(filename.c_str()), d_hasWritten(false), d_messageRunning(false), d_writeHeader(writeHeader)
-      {}
+        : d_stream(), d_hasWritten(false), d_messageRunning(false), d_writeHeader(writeHeader)
+      {
+        d_stream.open(filename.c_str(), std::ios_base::out | std::ios_base::trunc);
+      }
 
       inline Writer::~Writer()
       {
         d_record.mesEnd = true;
+        d_messageRunning = false;
         finalize();
+        d_stream.flush();
+        d_stream.close();
       }
 
       template< typename DataType >
       inline void Writer::write(DataType const *buffer, uint64_t elements)
       {
+//         if (sizeof(DataType) == sizeof(char))
+//           std::cout << "Data: \"" << std::string(reinterpret_cast< const char* >(buffer), elements) << "\"" << std::endl;
         d_stream.write(reinterpret_cast< const char* >(buffer), elements * sizeof(DataType));
+        assert(!fail());
+        d_stream.flush();
       }
 
       template< typename DataType >
@@ -38,6 +47,7 @@ namespace Tool
       {
         for (DataType const *iter = buffer; buffer != finish; ++iter)
           d_stream.write(reinterpret_cast< const char* >(iter), sizeof(DataType));
+        d_stream.flush();
       }
 
       template< typename DataType >
@@ -45,6 +55,7 @@ namespace Tool
       {
         for (uint64_t ctr = 0; ctr < elements; ++ctr)
           d_stream.write(reinterpret_cast< const char* >(&buffer), sizeof(DataType));
+        d_stream.flush();
       }
 
       inline bool Writer::fail() const

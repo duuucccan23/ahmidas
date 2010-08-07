@@ -21,6 +21,15 @@
 // (e.g. the HMC inverter does this)
 #define __COMPENSATE_UNIFORM_BOUNDARY_CONDITIONS__
 
+// use operator involving gamma_1
+#define __GAMMA_1__
+// use operator involving gamma_2
+// #define __GAMMA_2__
+// use operator involving gamma_3
+// #define __GAMMA_3__
+// use operator involving gamma_4
+// #define __GAMMA_4__
+
 
 int main(int argc, char **argv)
 {
@@ -128,12 +137,29 @@ int main(int argc, char **argv)
 
   sequentialSource *= std::complex< double >(0, 0); // initialize with zero
 
+#ifdef __GAMMA_1__
   Contract::create_sequential_source_proton_u(sequentialSource, *dProp, *uProp,
                                               gauge_field, Smear::sm_Jacobi, Jac_iterations, Jac_alpha,
                                               timeslice_sink, Base::proj_1_PLUS_TM);
-//   Contract::create_sequential_source_proton_u(sequentialSource, *dProp, *uProp,
-//                                               gauge_field, Smear::sm_Jacobi, Jac_iterations, Jac_alpha,
-//                                               timeslice_sink, Base::proj_PARITY_PLUS_TM);
+#endif
+
+#ifdef __GAMMA_2__
+  Contract::create_sequential_source_proton_u(sequentialSource, *dProp, *uProp,
+                                              gauge_field, Smear::sm_Jacobi, Jac_iterations, Jac_alpha,
+                                              timeslice_sink, Base::proj_2_PLUS_TM);
+#endif
+
+#ifdef __GAMMA_3__
+  Contract::create_sequential_source_proton_u(sequentialSource, *dProp, *uProp,
+                                              gauge_field, Smear::sm_Jacobi, Jac_iterations, Jac_alpha,
+                                              timeslice_sink, Base::proj_3_PLUS_TM);
+#endif
+
+#ifdef __GAMMA_4__
+  Contract::create_sequential_source_proton_u(sequentialSource, *dProp, *uProp,
+                                              gauge_field, Smear::sm_Jacobi, Jac_iterations, Jac_alpha,
+                                              timeslice_sink, Base::proj_PARITY_PLUS_TM);
+#endif
 
   delete dProp;
 
@@ -149,12 +175,30 @@ int main(int argc, char **argv)
 
   sequentialSource *= std::complex< double >(0, 0); // initialize with zero
 
+#ifdef __GAMMA_1__
   Contract::create_sequential_source_proton_d(sequentialSource, *uProp, *uProp,
                                               gauge_field, Smear::sm_Jacobi, Jac_iterations, Jac_alpha,
                                               timeslice_sink, Base::proj_1_MINUS_TM);
-//   Contract::create_sequential_source_proton_d(sequentialSource, *uProp, *uProp,
-//                                               gauge_field, Smear::sm_Jacobi, Jac_iterations, Jac_alpha,
-//                                               timeslice_sink, Base::proj_PARITY_PLUS_TM);
+#endif
+
+#ifdef __GAMMA_2__
+  Contract::create_sequential_source_proton_d(sequentialSource, *uProp, *uProp,
+                                              gauge_field, Smear::sm_Jacobi, Jac_iterations, Jac_alpha,
+                                              timeslice_sink, Base::proj_2_MINUS_TM);
+#endif
+
+#ifdef __GAMMA_3__
+  Contract::create_sequential_source_proton_d(sequentialSource, *uProp, *uProp,
+                                              gauge_field, Smear::sm_Jacobi, Jac_iterations, Jac_alpha,
+                                              timeslice_sink, Base::proj_3_MINUS_TM);
+#endif
+
+#ifdef __GAMMA_4__
+  Contract::create_sequential_source_proton_d(sequentialSource, *uProp, *uProp,
+                                              gauge_field, Smear::sm_Jacobi, Jac_iterations, Jac_alpha,
+                                              timeslice_sink, Base::proj_PARITY_PLUS_TM);
+#endif
+
   delete uProp;
 
   Tool::IO::save(&sequentialSource, seqSourceFilesD, Tool::IO::fileSCIDAC);

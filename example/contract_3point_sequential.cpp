@@ -29,6 +29,15 @@
 // comment this if you don't want the twopoint function to be calculated
 #define __CALCULATE_TWOPOINT__
 
+// use operator involving gamma_1
+#define __GAMMA_1__
+// use operator involving gamma_2
+// #define __GAMMA_2__
+// use operator involving gamma_3
+// #define __GAMMA_3__
+// use operator involving gamma_4
+// #define __GAMMA_4__
+
 int main(int argc, char **argv)
 {
 
@@ -130,10 +139,18 @@ int main(int argc, char **argv)
 //   my_operators.push_back(Base::op_GAMMA_1);
 //   my_operators.push_back(Base::op_GAMMA_2);
 //   my_operators.push_back(Base::op_GAMMA_3);
+#ifdef __GAMMA_1__
+  my_operators.push_back(Base::op_GAMMA_15);
+#endif
+#ifdef __GAMMA_2__
+  my_operators.push_back(Base::op_GAMMA_25);
+#endif
+#ifdef __GAMMA_3__
+  my_operators.push_back(Base::op_GAMMA_35);
+#endif
+#ifdef __GAMMA_4__
   my_operators.push_back(Base::op_GAMMA_45);
-//   my_operators.push_back(Base::op_GAMMA_15);
-//   my_operators.push_back(Base::op_GAMMA_25);
-//   my_operators.push_back(Base::op_GAMMA_35);
+#endif
 //   my_operators.push_back(Base::op_O44);
 //   my_operators.push_back(Base::op_O11);
 //   my_operators.push_back(Base::op_O22);
@@ -154,42 +171,34 @@ int main(int argc, char **argv)
 
   if (weave.isRoot())
   {
-   std::ofstream fout("output_3point_axial_uu.dat");
+   #ifdef __GAMMA_1__
+   std::ofstream fout("output_3point_axial_1_uu.dat");
+   #endif
+   #ifdef __GAMMA_2__
+   std::ofstream fout("output_3point_axial_2_uu.dat");
+   #endif
+   #ifdef __GAMMA_3__
+   std::ofstream fout("output_3point_axial_3_uu.dat");
+   #endif
+   #ifdef __GAMMA_4__
+   std::ofstream fout("output_3point_axial_4_uu.dat");
+   #endif
    fout << C3p[0] << std::endl;
    fout.close();
-   fout.open("output_3point_axial_dd.dat");
+   #ifdef __GAMMA_1__
+   fout.open("output_3point_axial_1_dd.dat");
+   #endif
+   #ifdef __GAMMA_2__
+   fout.open("output_3point_axial_2_dd.dat");
+   #endif
+   #ifdef __GAMMA_3__
+   fout.open("output_3point_axial_3_dd.dat");
+   #endif
+   #ifdef __GAMMA_4__
+   fout.open("output_3point_axial_4_dd.dat");
+   #endif
    fout << C3p[1] << std::endl;
    fout.close();
-//     std::ofstream fout("output_3point_vector_uu.dat");
-//     fout << C3p[0] << std::endl;
-//     fout << C3p[2] << std::endl;
-//     fout << C3p[4] << std::endl;
-//     fout << C3p[6] << std::endl;
-//     fout.close();
-//     fout.open("output_3point_vector_dd.dat");
-//     fout << C3p[1] << std::endl;
-//     fout << C3p[3] << std::endl;
-//     fout << C3p[5] << std::endl;
-//     fout << C3p[7] << std::endl;
-//     fout.close();
-//     fout.open("output_3point_derivative_uu.dat");
-//     fout << C3p[ 8] << std::endl;
-//     fout << C3p[10] << std::endl;
-//     fout << C3p[12] << std::endl;
-//     fout << C3p[14] << std::endl;
-//     fout.close();
-//     fout.open("output_3point_derivative_dd.dat");
-//     fout << C3p[ 9] << std::endl;
-//     fout << C3p[11] << std::endl;
-//     fout << C3p[13] << std::endl;
-//     fout << C3p[15] << std::endl;
-//     fout.close();
-//     fout.open("output_3point_conserved_vector_uu.dat");
-//     fout << C3p[16] << std::endl;
-//     fout.close();
-//     fout.open("output_3point_conserved_vector_dd.dat");
-//     fout << C3p[17] << std::endl;
-//     fout.close();
   }
 
 #endif

@@ -3,8 +3,9 @@
 void Tool::IO::Lime::Writer::finalize()
 {
 
-  if(!d_writeHeader)
+  if(!d_writeHeader || d_hasWritten)
   {
+    d_stream.flush();
     // this process has done its duty
     return;
   }
@@ -12,11 +13,16 @@ void Tool::IO::Lime::Writer::finalize()
   assert(d_stream.tellp() >= d_record.recOffset);
   // size can be zero if only one process has written the current record
   // in that case we can ask the stream how many bytes have been written
-  uint64_t written = d_stream.tellp() - d_record.recOffset - std::streampos(s_headerSize);
+  uint64_t written = 0;
+  if (d_stream.tellp() > 0)
+    written = d_stream.tellp() - d_record.recOffset - std::streampos(s_headerSize);
+//   std::cout << "d_stream.tellp() = " << d_stream.tellp() << ", d_record.recOffset = " << d_record.recOffset << std::endl;
+//   std::cout << "d_record.size = " << d_record.size << ", written = " << written << std::endl;
   // in the other case the actual record size had to be passed and is stored in d_record.size
   written = d_record.size > written ? d_record.size : written;
 
   d_stream.write(s_padding, (8 - (written % 8)) % 8);
+  d_stream.flush();
   d_startOfNextRecord = d_stream.tellp();
 
   uHeader header;
@@ -48,9 +54,18 @@ void Tool::IO::Lime::Writer::finalize()
   // std::cout << "d_record.recOffset = " << d_record.recOffset << std::endl;
 
   d_stream.seekp(d_record.recOffset, std::ios::beg);
-  d_stream.write(header.as8, 144);
+  d_stream.write(header.as8, s_headerSize);
+  assert(!fail());
 
   d_stream.flush();
 
+  static int cnt(0);
+
+//   std::cout << "now I am going to write the actual header! ("  << cnt ++ << ")" << std::endl;
+//   std::cout << "---" << std::endl;
+//   std::cout << std::string(header.as8, s_headerSize) << std::endl;
+//   std::cout << "---" << std::endl;
+
   d_stream.seekp(d_startOfNextRecord, std::ios::beg);
+  d_hasWritten = true;
 }

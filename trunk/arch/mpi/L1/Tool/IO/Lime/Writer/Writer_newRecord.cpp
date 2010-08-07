@@ -2,9 +2,6 @@
 
 void Tool::IO::Lime::Writer::newRecord(std::string const &type, size_t const rOffset, size_t const size)
 {
-  if (!d_hasWritten)
-    finalize();
-  d_hasWritten = true;
 
   d_record = Record(rOffset, size);
   if (!d_messageRunning)
@@ -18,5 +15,4 @@ void Tool::IO::Lime::Writer::newRecord(std::string const &type, size_t const rOf
   d_stream.seekp(d_startOfNextRecord, std::ios::beg);
 
   reserveHeader();
-  d_hasWritten = false;
 }

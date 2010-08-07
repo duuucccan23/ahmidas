@@ -1,9 +1,7 @@
 #include "Writer.ih"
 size_t Tool::IO::Lime::Writer::closeRecord()
 {
-  if (!d_hasWritten)
-    finalize();
-  d_hasWritten = true;
+  finalize();
 
   if (d_writeHeader)
   {

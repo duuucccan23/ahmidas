@@ -3,6 +3,7 @@
 #include <stdint.h>
 #include <fstream>
 #include <string>
+#include <cassert>
 
 namespace Tool
 {
@@ -42,7 +43,7 @@ namespace Tool
         };
 
         private:
-          std::ofstream  d_stream;
+          std::fstream  d_stream;
           std::streampos d_startOfNextRecord;
           Record         d_record;
           bool           d_hasWritten;

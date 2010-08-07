@@ -23,6 +23,15 @@
 #define __COMPENSATE_UNIFORM_BOUNDARY_CONDITIONS_FW__
 #define __COMPENSATE_UNIFORM_BOUNDARY_CONDITIONS_BW__
 
+// use operator involving gamma_1
+#define __GAMMA_1__
+// use operator involving gamma_2
+// #define __GAMMA_2__
+// use operator involving gamma_3
+// #define __GAMMA_3__
+// use operator involving gamma_4
+// #define __GAMMA_4__
+
 int main(int argc, char **argv)
 {
 
@@ -151,43 +160,64 @@ int main(int argc, char **argv)
 
     C3p_u1 += C3p_u2;
 
-    Core::Correlator C3p_u_tmp(C3p_u1);
-    Core::Correlator C3p_d_tmp(C3p_d1);
-    C3p_u_tmp *= Base::proj_1_PLUS_TM;
-    C3p_d_tmp *= Base::proj_1_MINUS_TM;
-    Core::Correlator C3p_u(C3p_u_tmp);
-    Core::Correlator C3p_d(C3p_d_tmp);
+#ifdef __GAMMA_1__
+    Core::Correlator C3p_u(C3p_u1);
+    Core::Correlator C3p_d(C3p_d1);
+    C3p_u *= Base::proj_1_PLUS_TM;
+    C3p_d *= Base::proj_1_MINUS_TM;
+#endif
+#ifdef __GAMMA_2__
+    Core::Correlator C3p_u(C3p_u1);
+    Core::Correlator C3p_d(C3p_d1);
+    C3p_u *= Base::proj_2_PLUS_TM;
+    C3p_d *= Base::proj_2_MINUS_TM;
+#endif
+#ifdef __GAMMA_3__
+    Core::Correlator C3p_u(C3p_u1);
+    Core::Correlator C3p_d(C3p_d1);
+    C3p_u *= Base::proj_3_PLUS_TM;
+    C3p_d *= Base::proj_3_MINUS_TM;
+#endif
+#ifdef __GAMMA_4__
+    Core::Correlator C3p_u(C3p_u1);
+    Core::Correlator C3p_d(C3p_d1);
+    C3p_u *= Base::proj_PARITY_PLUS_TM;
+    C3p_d *= Base::proj_PARITY_PLUS_TM;
+#endif
 
-//     C3p_u_tmp = C3p_u1;
-//     C3p_d_tmp = C3p_d1;
-//     C3p_u_tmp *= Base::proj_2_PLUS_TM;
-//     C3p_d_tmp *= Base::proj_2_MINUS_TM;
-//     C3p_u += C3p_u_tmp;
-//     C3p_d += C3p_u_tmp;
-// 
-//     C3p_u_tmp = C3p_u1;
-//     C3p_d_tmp = C3p_d1;
-//     C3p_u_tmp *= Base::proj_3_PLUS_TM;
-//     C3p_d_tmp *= Base::proj_3_MINUS_TM;
-//     C3p_u += C3p_u_tmp;
-//     C3p_d += C3p_u_tmp;
-
-    // now we have multiplied the projector from the right which differs in sign
-    // from multiplication from the left for the projectors
-    // Base::proj_K_PLUS_TM or Base::proj_K_MINUS_TM (K=1,2,3)
-    C3p_u *= -1.0;
-    C3p_d *= -1.0;
     C3p_u.setOffset(timeslice_source);
     C3p_d.setOffset(timeslice_source);
 
     if (weave.isRoot())
     {
-      std::ofstream fout("output_3point_uu.dat");
-      fout << C3p_u << std::endl;
-      fout.close();
-      fout.open("output_3point_dd.dat");
-      fout << C3p_d << std::endl;
-      fout.close();
+     #ifdef __GAMMA_1__
+     std::ofstream fout("output_3point_axial_1_uu.dat");
+     #endif
+     #ifdef __GAMMA_2__
+     std::ofstream fout("output_3point_axial_2_uu.dat");
+     #endif
+     #ifdef __GAMMA_3__
+     std::ofstream fout("output_3point_axial_3_uu.dat");
+     #endif
+     #ifdef __GAMMA_4__
+     std::ofstream fout("output_3point_axial_4_uu.dat");
+     #endif
+     fout << C3p_u << std::endl;
+     fout.close();
+     #ifdef __GAMMA_1__
+     fout.open("output_3point_axial_1_dd.dat");
+     #endif
+     #ifdef __GAMMA_2__
+     fout.open("output_3point_axial_2_dd.dat");
+     #endif
+     #ifdef __GAMMA_3__
+     fout.open("output_3point_axial_3_dd.dat");
+     #endif
+     #ifdef __GAMMA_4__
+     fout.open("output_3point_axial_4_dd.dat");
+     #endif
+     fout << C3p_d << std::endl;
+     fout.close();
     }
   }
 

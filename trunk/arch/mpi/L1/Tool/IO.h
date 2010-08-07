@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include <iostream>
+#include <fstream>
 #include <L0/Base/Weave.h>
 #include <L0/Core/Field.h>
 #include <L0/Core/Propagator.h>

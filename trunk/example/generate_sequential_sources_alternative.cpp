@@ -21,6 +21,14 @@
 // (e.g. the HMC inverter does this)
 #define __COMPENSATE_UNIFORM_BOUNDARY_CONDITIONS__
 
+// use operator involving gamma_1
+#define __GAMMA_1__
+// use operator involving gamma_2
+// #define __GAMMA_2__
+// use operator involving gamma_3
+// #define __GAMMA_3__
+// use operator involving gamma_4
+// #define __GAMMA_4__
 
 int main(int argc, char **argv)
 {
@@ -108,8 +116,25 @@ int main(int argc, char **argv)
   Core::Propagator sequentialSource_d(L, T);
 
 
+#ifdef __GAMMA_1__
+  Contract::create_sequential_source_proton_fixed_insertion_timeslice(&sequentialSource_u, &sequentialSource_d,
+                                                                        *uProp, *dProp, t_op, Base::op_GAMMA_15);
+#endif  
+
+#ifdef __GAMMA_2__
+  Contract::create_sequential_source_proton_fixed_insertion_timeslice(&sequentialSource_u, &sequentialSource_d,
+                                                                        *uProp, *dProp, t_op, Base::op_GAMMA_25);
+#endif  
+
+#ifdef __GAMMA_3__
+  Contract::create_sequential_source_proton_fixed_insertion_timeslice(&sequentialSource_u, &sequentialSource_d,
+                                                                        *uProp, *dProp, t_op, Base::op_GAMMA_35);
+#endif  
+
+#ifdef __GAMMA_4__
   Contract::create_sequential_source_proton_fixed_insertion_timeslice(&sequentialSource_u, &sequentialSource_d,
                                                                         *uProp, *dProp, t_op, Base::op_GAMMA_45);
+#endif  
 
   Tool::IO::save(&sequentialSource_d, seqSourceFilesD, Tool::IO::fileSCIDAC);
   Tool::IO::save(&sequentialSource_u, seqSourceFilesU, Tool::IO::fileSCIDAC);

@@ -5,7 +5,7 @@ void Tool::IO::Lime::Writer::finalize()
 
   if(!d_writeHeader || d_hasWritten)
   {
-    d_stream.flush();
+    //d_stream.flush();
     // this process has done its duty
     return;
   }
@@ -22,7 +22,7 @@ void Tool::IO::Lime::Writer::finalize()
   written = d_record.size > written ? d_record.size : written;
 
   d_stream.write(s_padding, (8 - (written % 8)) % 8);
-  d_stream.flush();
+  //d_stream.flush();
   d_startOfNextRecord = d_stream.tellp();
 
   uHeader header;
@@ -57,7 +57,7 @@ void Tool::IO::Lime::Writer::finalize()
   d_stream.write(header.as8, s_headerSize);
   assert(!fail());
 
-  d_stream.flush();
+  //d_stream.flush();
 
   static int cnt(0);
 

@@ -2,7 +2,7 @@
 
 void Tool::IO::Lime::Writer::reserveHeader()
 {
-  if(!d_writeHeader)
+  if (!d_writeHeader)
   {
     // have to move pointer to position after record,
     // if not already done
@@ -21,7 +21,7 @@ void Tool::IO::Lime::Writer::reserveHeader()
 
   for (size_t ctr = 0; ctr < s_headerSize / 8; ++ctr)
     d_stream.write(s_padding, 8);
-  d_stream.flush();
+  //d_stream.flush();
 
   d_hasWritten = false;
 }

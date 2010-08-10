@@ -43,7 +43,7 @@ namespace Tool
         };
 
         private:
-          std::fstream  d_stream;
+          std::fstream   d_stream;
           std::streampos d_startOfNextRecord;
           Record         d_record;
           bool           d_hasWritten;

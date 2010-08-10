@@ -147,7 +147,6 @@ int main(int argc, char **argv)
       std::cout << "gauge field smeared successfully\n" << std::endl;
   }
 
-
   Core::Propagator point_source(L, T);
   point_source *= 0.0;
 
@@ -166,17 +165,20 @@ int main(int argc, char **argv)
     if(weave.isRoot())
       std::cout << "point source smeared successfully\n" << std::endl;
   }
-  Tool::IO::save(&point_source, pointSourceFiles, Tool::IO::fileSCIDAC);
-  if (weave.isRoot())
-    std::cout << "point source saved successfully\n" << std::endl;
-
+  // to prevent NANs in optimized code on timeslices where everything should be zero
+  point_source.select_timeslice(source_position[Base::idx_T]);
   double norm(point_source.norm());
-
   if (weave.isRoot())
   {
     std::cout.precision(10);
     std::cout << std::scientific << "norm of point source: " << norm << std::endl;
   }
+
+  Tool::IO::save(&point_source, pointSourceFiles, Tool::IO::fileSCIDAC);
+  if (weave.isRoot())
+    std::cout << "point source saved successfully\n" << std::endl;
+
+
   // leave main function
   return EXIT_SUCCESS;
 }

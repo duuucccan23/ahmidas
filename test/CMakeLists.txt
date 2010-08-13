@@ -62,6 +62,12 @@ ADD_EXECUTABLE(dirac_operator dirac_operator.cpp)
 TARGET_LINK_LIBRARIES(dirac_operator SU3 QCD IO Base Core Weave)
 ADD_TEST(dirac_operator_test dirac_operator)
 
+# IO test for parallel IO mainly
+# this is not made a test yet because it is unclear
+# if the lattice can be distributed to the number of processes specified
+ADD_EXECUTABLE(testIO testIO.cpp)
+TARGET_LINK_LIBRARIES(testIO IO Base Core Weave)
+
 # ADD_EXECUTABLE(proton_3point_sequential proton_3point_sequential.cpp)
 # TARGET_LINK_LIBRARIES(proton_3point_sequential SU3 QCD IO Base Core Weave Contract)
 # ADD_TEST(proton_threepoint_sequential proton_3point_sequential)

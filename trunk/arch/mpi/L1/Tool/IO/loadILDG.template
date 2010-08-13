@@ -1,42 +1,85 @@
 template< typename Element >
 void Tool::IO::loadILDG(Core::Field< Element > *field, std::string const &filename)
 {
+
   Base::Weave weave(field->L(), field->T());
 
-  weave.barrier();
-
-  if (weave.dim(Base::idx_X) > 1 ||
-      weave.dim(Base::idx_Y) > 1 ||
-      weave.dim(Base::idx_Z) > 1)
-  {
-    std::cerr << "parallel reading does not work for parallalization in spatial directions" << std::endl;
-    exit(1);
-  }
-
+  (weave.d_grid.grid()).Barrier();
 
   int nprocs((weave.d_grid.grid()).Get_size());
   int rank((weave.d_grid.grid()).Get_rank());
 
-  assert (nprocs == int(weave.dim(Base::idx_T)));
+  size_t const blockSize = (weave.d_grid).contiguousBlock();
+  size_t const numBlocks = weave.localVolume()/blockSize;
 
-  unsigned long elem_offset(weave.globalVolume());
+  size_t globalDimSize[4];
+  globalDimSize[Base::idx_T] = field->L()*field->L()*field->L();
+  globalDimSize[Base::idx_Z] = field->L()*field->L();
+  globalDimSize[Base::idx_Y] = field->L();
+  globalDimSize[Base::idx_X] = 1;
 
-  // each node has to find his own offset
-  for (size_t my_offset = 0; my_offset < weave.globalVolume();
-       my_offset += weave.localVolume())
+  size_t jumpS[4] = {0, 0, 0, 0}; // information where to jump
+  size_t jumpN[4] = {weave.localVolume(), weave.localVolume(),
+                     weave.localVolume(), weave.localVolume()}; // information when to perform which jump
+
+  if (numBlocks > 1)
   {
-    //if (rank == 0)
-    //  std::cout << "rank(" << my_offset << ") = " << weave.d_grid.rank(my_offset) << std::endl;
-    if ((unsigned int)(rank) == weave.d_grid.rank(my_offset))
+    // determine "lowest" dimension that is distributed to more than 1 process
+    size_t idx(0);
+    while (((weave.d_grid).dim(idx) == 1) && (idx < 4))
+      ++idx;
+    assert(idx < 3); // this should not happen, because there have to be at least
+    // two distributed dimensions for more than one contiguous block per process
+    if(idx == Base::idx_Z) // assume that the index is 2
     {
-      elem_offset = (unsigned long)(my_offset);
-      break;
+      jumpS[idx] = globalDimSize[Base::idx_T];
+      jumpN[idx] = 1;
+    }
+    else if(idx == Base::idx_Y) // assume that the index is 1
+    {
+      jumpS[idx  ] = globalDimSize[Base::idx_Z];
+      jumpS[idx+1] = globalDimSize[Base::idx_Z]*((((weave.d_grid).dim(Base::idx_Z)-1)*(weave.d_grid).size(Base::idx_Z))+1);
+      jumpN[idx  ] = 1;
+      jumpN[idx+1] = (weave.d_grid).size(idx+1);
+    }
+    else if(idx == Base::idx_X) // assume that the index is 0
+    {
+      jumpS[idx  ] = globalDimSize[Base::idx_Y];
+      jumpS[idx+1] = globalDimSize[Base::idx_Y]*((((weave.d_grid).dim(Base::idx_Y)-1)*(weave.d_grid).size(Base::idx_Y))+1);
+      jumpS[idx+2] = jumpS[idx+1]
+                   + globalDimSize[Base::idx_Z]*((((weave.d_grid).dim(Base::idx_Z)-1)*(weave.d_grid).size(Base::idx_Z)));
+      jumpN[idx  ] = 1;
+      jumpN[idx+1] = (weave.d_grid).size(idx+1);
+      jumpN[idx+2] = jumpN[idx+1]*(weave.d_grid).size(idx+2);
     }
   }
+
+
+  size_t const *coords = (weave.d_grid).coords();
+
+  unsigned long elem_offset(0);
+
+  // each node has to find his own offset
+  for (size_t idx = 0; idx < 4; idx++)
+  {
+    // offset in each dimension is the process' coordinate index times the
+    // global size of (one "slice" of) this direction times the local size in this direction
+    elem_offset += coords[idx] * globalDimSize[idx] * ((weave.d_grid).size(idx));
+  }
+
   assert(elem_offset < weave.globalVolume());
 
+  weave.barrier();
+
+
   Lime::Reader reader(filename);
+  if(!reader.good())
+  {
+    if(weave.isRoot())
+      std::cerr << "Error occured trying to open file: " << filename << std::endl;
+  }
   assert(reader.good());
+
   ILDGinfo *info = 0;
 
   // since this is causing problems in massive parallelization, the following block is
@@ -55,69 +98,51 @@ void Tool::IO::loadILDG(Core::Field< Element > *field, std::string const &filena
         return;
       }
       assert(reader.good());
-
-      //go to position from which the data is supposed to be read
-      if (info->precision.compare("64") == 0)
-        reader.seekg(elem_offset*sizeof(Element), reader.findRecord("ildg-binary-data"));
-      else
-        reader.seekg(elem_offset*sizeof(Element)/2, reader.findRecord("ildg-binary-data"));
     }
-    weave.barrier();
+    (weave.d_grid.grid()).Barrier();
   }
 
-  Element *dataPtr = field->raw(); //Starting memory address of the field.
+  assert(reader.good());
 
-  if (info->precision.compare("64") == 0)
+  Element *dataPtr;
+
+  for (size_t idxBlock = 0; idxBlock < numBlocks; idxBlock++)
   {
-    reader.read(dataPtr, field->size());
-    if (!Base::bigEndian)
-      Base::swapEndian(dataPtr, dataPtr + field->size(), sizeof(double));
 
-    // checksum calculation (is done serially)
-    // have to be careful about reordering of processes, which hopefully will not happen for the
-    // case of parallelization in one direction
-    weave.barrier();
+    dataPtr = field->raw() + idxBlock * blockSize;
 
-//     Tool::ScidacChecksum calc_global;
-//     for (int irank=0; irank<nprocs; irank++)
-//     {
-//       std::cerr << "parallel reading of gauge field: process " << irank << " is calculating ScidacChecksum"
-//                 << std::endl;
-//       Tool::ScidacChecksum calc(calc_global);
-//       if (rank == irank)
-//       {
-//         calc.aggregate(dataPtr, field->size());
-//         std::cerr << "Calculated contribution from this process: " << std::hex << calc.upper() << ' ' << calc.lower() << ".\n";
-//       }
-//       if(irank < (nprocs-1)) // last process doesn't need to send
-//       {
-//         weave.sendRecv(&calc, &calc_global, 1, irank, irank+1);
-//         std::cerr << "parallel reading of gauge field: process " << irank;
-//         std::cerr << " has sent the ScidacChecksum to process " << irank+1 << std::endl;
-//         std::cerr << "Calculated so far: " << std::hex << calc_global.upper() << ' ' << calc_global.lower() << ".\n";
-//       }
-//       else
-//       {
-//         std::cerr << "Checksums for file " << filename << ".\n";
-//         std::cerr << "Calculated: " << std::hex << calc.upper() << ' ' << calc.lower() << ".\n";
-//       }
-//     }
-    //weave.barrier();
-  }
-  else
-  {
-    size_t const elSize = sizeof(Element) / sizeof(double);
-    uint32_t elem32[elSize];
-    for (size_t ctr = 0; ctr < field->size(); ++ctr, ++dataPtr)
+    //go to position from which the data is supposed to be read
+    if (info->precision.compare("64") == 0)
+      reader.seekg(elem_offset*sizeof(Element), reader.findRecord("ildg-binary-data"));
+    else
+      reader.seekg(elem_offset*sizeof(Element)/2, reader.findRecord("ildg-binary-data"));
+
+
+    if (info->precision.compare("64") == 0)
     {
-      reader.read(elem32, elSize);
+      reader.read(dataPtr, blockSize);
       if (!Base::bigEndian)
-        Base::swapEndian(elem32, elem32 + elSize);
-      std::copy(reinterpret_cast< float* >(elem32), reinterpret_cast< float* >(elem32) + elSize,
-                reinterpret_cast< double* >(dataPtr));
+        Base::swapEndian(dataPtr, dataPtr + blockSize, sizeof(double));
     }
-    weave.barrier();
+    else
+    {
+      size_t const elSize = sizeof(Element) / sizeof(double);
+      uint32_t elem32[elSize];
+      for (size_t ctr = 0; ctr < blockSize; ++ctr, ++dataPtr)
+      {
+        reader.read(elem32, elSize);
+        if (!Base::bigEndian)
+          Base::swapEndian(elem32, elem32 + elSize);
+        std::copy(reinterpret_cast< float* >(elem32), reinterpret_cast< float* >(elem32) + elSize,
+                  reinterpret_cast< double* >(dataPtr));
+      }
+    }
+
+    elem_offset += (idxBlock+1) % jumpN[Base::idx_Z] == 0 ? jumpS[Base::idx_Z] :
+                        (idxBlock+1) % jumpN[Base::idx_Y] == 0 ? jumpS[Base::idx_Y] : jumpS[Base::idx_X];
   }
 
   delete info;
+
+  (weave.d_grid.grid()).Barrier();
 }

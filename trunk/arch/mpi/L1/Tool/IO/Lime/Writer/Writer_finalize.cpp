@@ -49,7 +49,8 @@ void Tool::IO::Lime::Writer::finalize()
 
   // offset is supposed to be zero or s_headerSize,
   // depending on whether Writer::seekp(streampos const) has been called
-  assert (d_record.offset == std::streampos(0) || d_record.offset == std::streampos(s_headerSize));
+  // not the case anymore for writing of non-contiguous data
+  // assert (d_record.offset == std::streampos(0) || d_record.offset == std::streampos(s_headerSize));
 
   // std::cout << "d_record.recOffset = " << d_record.recOffset << std::endl;
 

@@ -172,7 +172,11 @@ int main(int argc, char **argv)
   {
     std::cout.precision(10);
     std::cout << std::scientific << "norm of point source: " << norm << std::endl;
+    if(norm != norm) // happens if norm is 'nan'
+      exit(1);
   }
+
+  weave.barrier();
 
   Tool::IO::save(&point_source, pointSourceFiles, Tool::IO::fileSCIDAC);
   if (weave.isRoot())

@@ -164,19 +164,19 @@ int main(int argc, char **argv)
     Core::Correlator C3p_u(C3p_u1);
     Core::Correlator C3p_d(C3p_d1);
     C3p_u *= Base::proj_1_PLUS_TM;
-    C3p_d *= Base::proj_1_MINUS_TM;
+    C3p_d *= Base::proj_1_PLUS_TM;
 #endif
 #ifdef __GAMMA_2__
     Core::Correlator C3p_u(C3p_u1);
     Core::Correlator C3p_d(C3p_d1);
     C3p_u *= Base::proj_2_PLUS_TM;
-    C3p_d *= Base::proj_2_MINUS_TM;
+    C3p_d *= Base::proj_2_PLUS_TM;
 #endif
 #ifdef __GAMMA_3__
     Core::Correlator C3p_u(C3p_u1);
     Core::Correlator C3p_d(C3p_d1);
     C3p_u *= Base::proj_3_PLUS_TM;
-    C3p_d *= Base::proj_3_MINUS_TM;
+    C3p_d *= Base::proj_3_PLUS_TM;
 #endif
 #ifdef __GAMMA_4__
     Core::Correlator C3p_u(C3p_u1);

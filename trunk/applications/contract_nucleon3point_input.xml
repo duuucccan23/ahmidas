@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<ahmidas>
+  <params>
+    <L> 4 </L>
+    <T> 8 </T>
+    <!-- position of point source (x,y,z,t) -->
+    <position> 0 0 0 0 </position>
+    <sourceSinkSeparation> 4 </sourceSinkSeparation>
+    <kappa> 0.10 </kappa>
+    <mu> 0.10 </mu>
+    <APE_steps>  0  </APE_steps>
+    <APE_param>  0.5 </APE_param>
+    <Jac_steps>  0   </Jac_steps>
+    <Jac_param>  4.0 </Jac_param>
+  </params>
+  <files>
+    <!-- u and d quark propagators -->
+    <file>
+      <type>propagator</type>
+      <directory>d_propagators</directory>
+      <filenameBase>source.</filenameBase>
+      <filenameEnding>.inverted</filenameEnding>
+      <firstIndex>0</firstIndex>
+      <lastIndex>11</lastIndex>
+      <indexWidth>2</indexWidth>
+    </file>
+    <file>
+      <type>propagator</type>
+      <directory>u_propagators</directory>
+      <filenameBase>source.</filenameBase>
+      <filenameEnding>.inverted</filenameEnding>
+      <firstIndex>0</firstIndex>
+      <lastIndex>11</lastIndex>
+      <indexWidth>2</indexWidth>
+    </file>
+    <!-- gauge field -->
+    <file>
+      <type>gauge</type>
+      <directory>./</directory>
+      <filenameBase>conf.</filenameBase>
+      <firstIndex>0</firstIndex>
+      <lastIndex>0</lastIndex>
+      <indexWidth>4</indexWidth>
+    </file>
+    <!-- sequential propagators (4 projectors) -->
+    <file>
+      <type>source</type>
+      <directory>sequential_sources_d</directory>
+      <filenameBase>sequential_source_proj0.</filenameBase>
+      <filenameEnding>.inverted</filenameEnding>
+      <firstIndex>0</firstIndex>
+      <lastIndex>11</lastIndex>
+      <indexWidth>2</indexWidth>
+    </file>
+    <file>
+      <type>source</type>
+      <directory>sequential_sources_u</directory>
+      <filenameBase>sequential_source_proj0.</filenameBase>
+      <filenameEnding>.inverted</filenameEnding>
+      <firstIndex>0</firstIndex>
+      <lastIndex>11</lastIndex>
+      <indexWidth>2</indexWidth>
+    </file>
+    <file>
+      <type>source</type>
+      <directory>sequential_sources_d</directory>
+      <filenameBase>sequential_source_proj1.</filenameBase>
+      <filenameEnding>.inverted</filenameEnding>
+      <firstIndex>0</firstIndex>
+      <lastIndex>11</lastIndex>
+      <indexWidth>2</indexWidth>
+    </file>
+    <file>
+      <type>source</type>
+      <directory>sequential_sources_u</directory>
+      <filenameBase>sequential_source_proj1.</filenameBase>
+      <filenameEnding>.inverted</filenameEnding>
+      <firstIndex>0</firstIndex>
+      <lastIndex>11</lastIndex>
+      <indexWidth>2</indexWidth>
+    </file>
+    <file>
+      <type>source</type>
+      <directory>sequential_sources_d</directory>
+      <filenameBase>sequential_source_proj2.</filenameBase>
+      <filenameEnding>.inverted</filenameEnding>
+      <firstIndex>0</firstIndex>
+      <lastIndex>11</lastIndex>
+      <indexWidth>2</indexWidth>
+    </file>
+    <file>
+      <type>source</type>
+      <directory>sequential_sources_u</directory>
+      <filenameBase>sequential_source_proj2.</filenameBase>
+      <filenameEnding>.inverted</filenameEnding>
+      <firstIndex>0</firstIndex>
+      <lastIndex>11</lastIndex>
+      <indexWidth>2</indexWidth>
+    </file>
+    <file>
+      <type>source</type>
+      <directory>sequential_sources_d</directory>
+      <filenameBase>sequential_source_proj3.</filenameBase>
+      <filenameEnding>.inverted</filenameEnding>
+      <firstIndex>0</firstIndex>
+      <lastIndex>11</lastIndex>
+      <indexWidth>2</indexWidth>
+    </file>
+    <file>
+      <type>source</type>
+      <directory>sequential_sources_u</directory>
+      <filenameBase>sequential_source_proj3.</filenameBase>
+      <filenameEnding>.inverted</filenameEnding>
+      <firstIndex>0</firstIndex>
+      <lastIndex>11</lastIndex>
+      <indexWidth>2</indexWidth>
+    </file>
+  </files>
+</ahmidas>

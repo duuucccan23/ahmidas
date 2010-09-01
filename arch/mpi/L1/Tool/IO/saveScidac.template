@@ -35,7 +35,7 @@ void Tool::IO::saveScidac(Core::Field< Element > const &field, std::string const
 // 
 // 
 //   }
-  std::cout.flush();
+//   std::cout.flush();
   weave.barrier();
 
 
@@ -145,7 +145,7 @@ void Tool::IO::saveScidac(Core::Field< Element > const &field, std::string const
 
       if (rank == root_rank)
       {
-        std::cout << "writing file " << filename << "..." << std::endl;
+//         std::cout << "writing file " << filename << "..." << std::endl;
 
         writer.newRecord("propagator-type", pos, 0);
 
@@ -154,7 +154,7 @@ void Tool::IO::saveScidac(Core::Field< Element > const &field, std::string const
         writer.finishMessage();
         pos = writer.closeRecord();
 
-        std::cout << "record 1 (info) written, " << std::flush;
+//         std::cout << "record 1 (info) written, " << std::flush;
 
         writer.newRecord("etmc-propagator-format",pos, 0);
 
@@ -174,8 +174,8 @@ void Tool::IO::saveScidac(Core::Field< Element > const &field, std::string const
         writer.finishMessage();
         pos = writer.closeRecord();
 
-        std::cout << "record 2 (info) written,\n";
-        std::cout << "preparing for parallel writing of record 3 (data) ..." << std::flush;
+//         std::cout << "record 2 (info) written,\n";
+//         std::cout << "preparing for parallel writing of record 3 (data) ..." << std::flush;
 
         writer.newRecord("scidac-binary-data", pos, weave.globalVolume() * sizeof(Element));
         writer.seekp(0);
@@ -183,7 +183,7 @@ void Tool::IO::saveScidac(Core::Field< Element > const &field, std::string const
         std::fill_n(dummy, sizeof(Element), char(0));
         writer.fill(reinterpret_cast< Element &>(*dummy), weave.globalVolume());
         assert(writer.good());
-        std::cout << " done." << std::endl;
+//         std::cout << " done." << std::endl;
       }
       weave.broadcast(&pos, 1, root_rank);
       weave.barrier();
@@ -199,8 +199,8 @@ void Tool::IO::saveScidac(Core::Field< Element > const &field, std::string const
 
       size_t const elementSize = sizeof(Element) / sizeof(double);
 
-      if (weave.isRoot())
-        std::cout << "writing record 3 (data) ..." << std::flush;
+//       if (weave.isRoot())
+//         std::cout << "writing record 3 (data) ..." << std::flush;
 
       double buffer[elementSize];
 
@@ -232,8 +232,8 @@ void Tool::IO::saveScidac(Core::Field< Element > const &field, std::string const
     }
     weave.barrier();
 
-    if (weave.isRoot())
-      std::cout << " done.\nwill now check file ... " << std::flush;
+//     if (weave.isRoot())
+//       std::cout << " done.\nwill now check file ... " << std::flush;
 
     weave.barrier();
 
@@ -247,12 +247,12 @@ void Tool::IO::saveScidac(Core::Field< Element > const &field, std::string const
       fileChecker.close();
       OK = bool(dummy != 0 && dummyData == 'D');
 
-      if (OK)
-        std::cout << "OK!" << std::endl;
-      else
-      {
-        std::cerr << "not OK, trying again!" << std::endl;
-      }
+//       if (OK)
+//         std::cout << "OK!" << std::endl;
+//       else
+//       {
+//         std::cerr << "not OK, trying again!" << std::endl;
+//       }
     }
 
     weave.broadcast(&OK, 1, root_rank);

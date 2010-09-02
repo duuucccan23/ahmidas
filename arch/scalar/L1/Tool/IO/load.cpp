@@ -33,7 +33,7 @@ void Tool::IO::load(Core::Field< QCD::Spinor > *field, std::string const &filena
 {
    switch(type) {
    case Tool::IO::fileSCIDAC :
-      Tool::IO::loadScidac(field, filename, precision);
+      Tool::IO::loadScidacUnsafe(field, filename, precision);
       break;
    default :
       break;

@@ -94,9 +94,6 @@ namespace Tool
     void loadScidac(Core::Field< Element > *field, std::string const &filename);
 
     template< typename Element >
-    void loadScidac(Core::Field< Element > *field, std::string const &filename, size_t const precision);
-
-    template< typename Element >
     void loadScidacUnsafe(Core::Field< Element > *field, std::string const &filename, size_t const precision);
 
     template< typename Element >

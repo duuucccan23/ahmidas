@@ -14,15 +14,13 @@ void Tool::IO::loadScidac(Core::Field< Element > *field, std::string const &file
   reader.retrieveRecord(reader.findRecord("scidac-binary-data"));
   if (reader.fail())
   {
-    std::cerr << "Lime reader could not find the record, check path and file, and check lime contents of file.\nField unchanged!.\n";
-    std::cerr << "File: " << filename << std::endl;
+    std::cerr << "Lime reader could not find a scidac-binary-data record in file: " << filename << std::endl;
     exit(EXIT_FAILURE);
     return;
   }
+
   assert(reader.good());
-
   Element *dataPtr = field->raw(); //Starting memory address of the field.
-
   if (info.precision.compare("64") == 0)
   {
     reader.read(dataPtr, field->volume());
@@ -54,8 +52,7 @@ void Tool::IO::loadScidac(Core::Field< Element > *field, std::string const &file
   reader.retrieveRecord(reader.findRecord("scidac-binary-data"));
   if (reader.fail())
   {
-    std::cerr << "Lime reader could not find the record, check path and file, and check lime contents of file.\nField unchanged!.\n";
-    std::cerr << "File: " << filename << std::endl;
+    std::cerr << "Lime reader could not find a scidac-binary-data record in file: " << filename << std::endl;
     exit(EXIT_FAILURE);
     return;
   }

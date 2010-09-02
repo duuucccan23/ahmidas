@@ -13,6 +13,16 @@ inline size_t realLen(char *string)
 Tool::IO::Scidacinfo::Scidacinfo(Tool::IO::Lime::Reader &reader)
 {
   reader.retrieveRecord(reader.findRecord("etmc-propagator-format"));
+
+  if (reader.fail())
+  {
+    std::cerr << "Lime reader could not find a etmc-propagator-format record in file: " << reader.filename() << std::endl;
+    std::cerr << "The use of propagators without such a record is deprecated.\n";
+    std::cerr << "This program is unable to verify the size and precision of the supplied propagator file, and will therefore exit.\n";
+    std::cerr << "Ahmidas contains a tool which can be repair this: example/makeetmcprop.\n";
+    exit(EXIT_FAILURE);
+    return;
+  }
   assert(reader.good());
 
   char *scidacCStr = new char[reader.recordSize()];

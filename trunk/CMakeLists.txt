@@ -47,7 +47,7 @@ ADD_SUBDIRECTORY(example)
 ADD_SUBDIRECTORY(applications)
 
 ADD_EXECUTABLE(main src/main.cpp)
-TARGET_LINK_LIBRARIES(main Dirac SU3)
+TARGET_LINK_LIBRARIES(main Base IO Core SU3 QCD)
 
 ADD_EXECUTABLE(simon_test src/simon_test.cpp)
 TARGET_LINK_LIBRARIES(simon_test SU3 QCD IO Base Core Dirac Weave Contract Input Smear)

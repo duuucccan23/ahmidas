@@ -6,6 +6,8 @@ void Tool::IO::loadScidac(Core::Field< Element > *field, std::string const &file
   if(!reader.good())
   {
     std::cerr << "Error occured trying to open file: " << filename << std::endl;
+    exit(EXIT_FAILURE);
+    return;
   }
   assert(reader.good());
 

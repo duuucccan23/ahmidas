@@ -1,14 +1,22 @@
 template< typename Element >
 void Tool::IO::loadILDG(Core::Field< Element > *field, std::string const &filename)
 {
-
   Lime::Reader reader(filename);
+  if(!reader.good())
+  {
+    std::cerr << "Error occured trying to open file: " << filename << std::endl;
+    exit(EXIT_FAILURE);
+    return;
+  }
+  assert(reader.good());
+
   ILDGinfo info(reader);
 
   reader.retrieveRecord(reader.findRecord("ildg-binary-data"));
   if (reader.fail())
   {
-    std::cerr << "Lime reader could not find the record, check path and file, and check lime contents of file.\nField unchanged!.\n";
+    std::cerr << "Lime reader could not find a ildg-binary-data record in file: " << filename << std::endl;
+    exit(EXIT_FAILURE);
     return;
   }
   assert(reader.good());

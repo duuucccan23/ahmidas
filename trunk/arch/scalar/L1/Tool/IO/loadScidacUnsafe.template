@@ -5,6 +5,20 @@ void Tool::IO::loadScidacUnsafe(Core::Field< Element > *field, std::string const
   assert(precision == 32 || precision == 64);
   Lime::Reader reader(filename);
 
+  if(!reader.good())
+  {
+    std::cerr << "Error occured trying to open file: " << filename << std::endl;
+    exit(EXIT_FAILURE);
+    return;
+  }
+  assert(reader.good());
+
+  if (reader.findRecord("etmc-propagator-format") != reader.records())
+  {
+    std::cerr << "Unsafe function (Tool::IO::loadScidacUnsafe) used to read propagator: " << filename;
+    std::cerr << "\nSafe method may have been possible (etmc-propagator-format Lime record found in file).\n";
+  }
+
   reader.retrieveRecord(reader.findRecord("scidac-binary-data"));
   if (reader.fail())
   {

@@ -23,9 +23,14 @@ void Tool::IO::loadScidac(Core::Field< Element > *field, std::string const &file
 
   assert(reader.good());
   Element *dataPtr = field->raw(); //Starting memory address of the field.
+  
+  Tool::ScidacChecksum calc(0);
   if (info.precision.compare("64") == 0)
   {
     reader.read(dataPtr, field->volume());
+    calc.aggregate(dataPtr, field->volume(), 0);
+    std::cerr << "Checksums for file " << filename << ".\n";
+    std::cerr << "Calculated: " << std::hex << std::showbase << calc.lower() << ' ' << calc.upper() << ".\n";
     if (!Base::bigEndian)
       Base::swapEndian(dataPtr, dataPtr + field->volume(), sizeof(double));
     return;

@@ -213,7 +213,7 @@ void Tool::IO::loadScidac(Core::Propagator *propagator, std::vector< std::string
 
     for (size_t i=0; i<12; i++)
     {
-      Tool::IO::load(tmp+i,filenames[i], Tool::IO::fileSCIDAC, precision);
+      Tool::IO::loadScidac(tmp+i,filenames[i]);
     }
 
     Core::Propagator::iterator itTensor = propagator->begin();

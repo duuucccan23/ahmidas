@@ -1,4 +1,3 @@
-
 #include <cstring>
 #include <complex>
 #include <iomanip>
@@ -6,13 +5,11 @@
 #include <fstream>
 #include <sstream>
 
-
 #include <L1/Tool/IO.h>
 #include <L1/Smear/APE.h>
 #include <L1/Smear/Jacobi.h>
 #include <L0/QCD/Gauge.h>
 #include <L0/Base/Weave.h>
-
 
 int main(int argc, char **argv)
 {
@@ -37,7 +34,7 @@ int main(int argc, char **argv)
   Core::Field< QCD::Gauge > my_gauge_field(L, T);
   Tool::IO::load(&my_gauge_field, "../../test/conf.48", Tool::IO::fileILDG);
   Core::Field< QCD::Spinor > my_spinor_field(L, T);
-  Tool::IO::load(&my_spinor_field, "../../test/point_src.48", Tool::IO::fileSCIDAC, 64);
+  Tool::IO::load(&my_spinor_field, "../../test/point_src.48", Tool::IO::fileSCIDAC);
 
   weave.barrier();
 

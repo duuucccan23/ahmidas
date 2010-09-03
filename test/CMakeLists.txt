@@ -50,6 +50,10 @@ ADD_EXECUTABLE(proton proton.cpp)
 TARGET_LINK_LIBRARIES(proton SU3 QCD IO Base Core Weave Contract)
 ADD_TEST(proton_two_point proton)
 
+ADD_EXECUTABLE(scidacchecksum scidacchecksum.cpp)
+TARGET_LINK_LIBRARIES(scidacchecksum QCD IO)
+ADD_TEST(scidac_checksum scidacchecksum)
+
 ADD_EXECUTABLE(sequential_sources sequential_sources.cpp)
 TARGET_LINK_LIBRARIES(sequential_sources SU3 QCD IO Base Core Weave Contract)
 ADD_TEST(generate_sequential_source sequential_sources)

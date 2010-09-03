@@ -19,7 +19,7 @@ void Tool::IO::loadMILC(Core::Field< Element > *field, std::string const &filena
   input.read(reinterpret_cast< char* >(raw), field->volume() * elemSize * sizeof(uint32_t));
   Tool::reunitarize(field);
   Tool::ScidacChecksum calc;
-  calc.blockAggregate(raw, elemSize, field->volume());
+  calc.blockAggregate(raw, elemSize, field->volume(), 0);
   std::cerr << "Checksums for file " << filename << '.' << std::endl;
   std::cerr << "Calculated: " << std::hex << calc.upper() << ' ' << calc.lower() << ".\n";
   std::cerr << "Read:       " << std::hex << read.upper() << ' ' << read.lower() << ".\n";

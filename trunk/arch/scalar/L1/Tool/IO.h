@@ -9,7 +9,7 @@
 #include <L1/Tool.h>
 #include <L1/Tool/IO/Lime/Reader.h>
 #include <L1/Tool/IO/Lime/Writer.h>
-#include <L1/IO/ScidacChecksum.h>
+#include <L1/Tool/ScidacChecksum.h>
 
 namespace Tool
 {
@@ -28,6 +28,8 @@ namespace Tool
       std::string field;
       std::string precision;
       size_t      dims[4];
+
+      ILDGinfo(Lime::Reader &reader);
     };
 
     struct MILCinfo

@@ -1,5 +1,5 @@
 template< typename Element >
-void Tool::IO::loadScidac(Core::Field< Element > *field, std::string const &filename, size_t const precision = 64)
+void Tool::IO::loadScidac(Core::Field< Element > *field, std::string const &filename, size_t const precision)
 {
   assert(precision == 32 || precision == 64);
   Base::Weave weave(field->L(), field->T());

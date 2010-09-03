@@ -22,7 +22,6 @@ namespace Tool
       ScidacChecksum(uint64_t const &init);
       ScidacChecksum(ScidacChecksum const &other);
       void clear();
-      void parse(char *message);
 
       uint64_t checksum() const;
       uint32_t lower() const;

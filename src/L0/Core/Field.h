@@ -71,7 +71,6 @@ namespace Core
       size_t T() const;
       size_t localVolume() const;
       size_t volume() const;
-      void reset();
 
       double weave(Base::weaveOperator wea_OP, double nodeval) const;
       std::complex < double > weave(Base::weaveOperator wea_OP, std::complex < double > nodeval) const;

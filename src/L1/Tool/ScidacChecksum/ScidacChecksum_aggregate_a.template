@@ -3,7 +3,7 @@ size_t Tool::ScidacChecksum::aggregate(Element const *data, size_t elements, siz
 {
   for(size_t ctr = 0; ctr < elements; ++ctr, ++rank)
   {
-    uint32_t crcSum = crc32(data[ctr]);
+    uint32_t crcSum = crc32(data[ctr], 0);
     d_sum.as32[0] ^= crcSum << (rank % 29) | crcSum >> (32 - (rank % 29));
     d_sum.as32[1] ^= crcSum << (rank % 31) | crcSum >> (32 - (rank % 31));
   }

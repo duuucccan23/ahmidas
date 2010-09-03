@@ -34,13 +34,13 @@ namespace Tool
       size_t aggregate(Element const &data, size_t rank);
 
       template< typename Element >
-      size_t blockAggregate(Element const *data, size_t blockSize, size_t blocks = 1, size_t rank = 0);
+      size_t blockAggregate(Element const *data, size_t blockSize, size_t blocks, size_t rank);
 
       template< typename Element >
-      size_t blockAggregate(Element const *data, Element const *finish, size_t blockSize, size_t rank = 0);
+      size_t blockAggregate(Element const *data, Element const *finish, size_t blockSize, size_t rank);
 
       template< typename Element >
-      size_t blockAggregate(Element const &data, size_t blockSize, size_t blocks = 1, size_t rank = 0);
+      size_t blockAggregate(Element const &data, size_t blockSize, size_t blocks, size_t rank);
 
       template< typename Element >
       void calculate(Core::Field< Element > const &field);
@@ -49,10 +49,10 @@ namespace Tool
       void createTable();
 
       template< typename Element >
-      uint32_t crc32(Element const &buffer, uint32_t crc = 0);
+      uint32_t crc32(Element const &buffer, uint32_t crc);
 
       template< typename Element >
-      uint32_t crc32(Element const *buffer, size_t length, uint32_t crc = 0);
+      uint32_t crc32(Element const *buffer, size_t length, uint32_t crc);
   };
 }
 

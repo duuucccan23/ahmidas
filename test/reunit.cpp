@@ -9,10 +9,10 @@ int main(int argc, char **argv)
     out = new std::ofstream(argv[1]);
 
   bool problem = false;
-  for (size_t ctr = 0; ctr < 1000; ++ctr)
+  for (size_t ctr = 0; ctr < 10000; ++ctr)
   {
     SU3::Matrix mat = SU3::Matrix::random();
-    mat.reunitarize();
+    mat.polardecompose();
     SU3::hcMatrix hc = mat.dagger();
     mat.rightMultiply(hc);
     double error = 0.0;
@@ -28,7 +28,7 @@ int main(int argc, char **argv)
       problem = true;
     }
     
-    SU3::Matrix copy(mat);
+/*    SU3::Matrix copy(mat);
     mat.reunitarize();
     
     error = 0.0;
@@ -42,7 +42,7 @@ int main(int argc, char **argv)
       std::cout << "At matrix number " << ctr << ':' << std::endl;
       std::cout << "Stress test failed on double reunitarization with total deviation " << error << '!' << std::endl;
       problem = true;
-    }
+    }*/
   }
 
   if (out)

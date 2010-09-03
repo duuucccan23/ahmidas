@@ -1,148 +1,153 @@
+template < typename Element >
+int read_binary_gauge_data(LemonReader * reader, DML_Checksum * checksum)
+{
+  int t, x, y, z, status = 0;
+  int latticeSize[] = {T_global, L, L, L};
+  int scidacMapping[] = {0, 3, 2, 1};
+  int prec;
+  DML_SiteRank rank;
+  MPI_Offset bytes;
+  uint64_t fbsu3;
+  char * filebuffer = NULL, * current = NULL;
+  double tick = 0, tock = 0;
+  char measure[64];
+
+  bytes = lemonReaderBytes(reader);
+
+  if (bytes == (n_uint64_t)g_nproc * (n_uint64_t)VOLUME * 4 * (n_uint64_t)sizeof(su3)) {
+    prec = 64;
+  }
+  else {
+    if (bytes == (n_uint64_t)g_nproc * (n_uint64_t)VOLUME * 4 * (n_uint64_t)sizeof(su3) / 2) {
+      prec = 32;
+    }
+    else {
+      fprintf(stderr, "Probably wrong lattice size or precision (bytes=%lu).\n", (unsigned long)bytes);
+      return(-3);
+    }
+  }
+  if (g_cart_id == 0 && g_debug_level > 2) {
+    printf("# %d Bit precision read.\n", prec);
+  }
+
+  DML_checksum_init(checksum);
+
+  fbsu3 = sizeof(su3);
+  if (prec == 32) {
+    fbsu3 /= 2;
+  }
+  bytes = 4 * fbsu3;
+
+  if((void*)(filebuffer = malloc(VOLUME * bytes)) == NULL) {
+    printf ("malloc errno in read_binary_gauge_data_parallel: %d\n", errno);
+    errno = 0;
+    /* do we need to abort here? */
+    return(-1);
+  }
+
+  if (g_debug_level > 0)
+  {
+    MPI_Barrier(g_cart_grid);
+    tick = MPI_Wtime();
+  }
+  lemonReadLatticeParallelMapped(reader, filebuffer, bytes, latticeSize, scidacMapping);
+
+  if (g_debug_level > 0)
+  {
+    MPI_Barrier(g_cart_grid);
+    tock = MPI_Wtime();
+
+    if (g_cart_id == 0)
+    {
+      engineering(measure, L * L * L * T_global * bytes, "b");
+      fprintf(stdout, "Time spent reading %s ", measure);
+      engineering(measure, tock - tick, "s");
+      fprintf(stdout, "was %s.\n", measure);
+      engineering(measure, (L * L * L * T_global) * bytes / (tock - tick), "b/s");
+      fprintf(stdout, "Reading speed: %s", measure);
+      engineering(measure, (L * L * L * T_global) * bytes / (g_nproc * (tock - tick)), "b/s");
+      fprintf(stdout, " (%s per MPI process).\n", measure);
+      fflush(stdout);
+    }
+  }
+
+  if (status < 0 && status != LEMON_EOR)
+  {
+    free(filebuffer);
+    fprintf(stderr, "LEMON read error occured with status = %d while reading!\n", status);
+    return(-2);
+  }
+
+  for (t = 0; t < T; t++) {
+    for (z = 0; z < LZ; z++) {
+      for (y = 0; y < LY; y++) {
+        for (x = 0; x < LX; x++) {
+          rank = (DML_SiteRank)(g_proc_coords[1] * LX +
+                                (((g_proc_coords[0] * T + t) * g_nproc_z * LZ + g_proc_coords[3] * LZ + z) * g_nproc_y * LY
+                                 + g_proc_coords[2] * LY + y) * ((DML_SiteRank)LX * g_nproc_x) + x);
+          current = filebuffer + bytes * (x + (y + (t * LZ + z) * LY) * LX);
+          DML_checksum_accum(checksum, rank, current, bytes);
+          if (prec == 32) {
+            be_to_cpu_assign_single2double(&g_gauge_field[ g_ipt[t][x][y][z] ][1], current            , sizeof(su3) / 8);
+            be_to_cpu_assign_single2double(&g_gauge_field[ g_ipt[t][x][y][z] ][2], current +     fbsu3, sizeof(su3) / 8);
+            be_to_cpu_assign_single2double(&g_gauge_field[ g_ipt[t][x][y][z] ][3], current + 2 * fbsu3, sizeof(su3) / 8);
+            be_to_cpu_assign_single2double(&g_gauge_field[ g_ipt[t][x][y][z] ][0], current + 3 * fbsu3, sizeof(su3) / 8);
+          }
+          else {
+            be_to_cpu_assign(&g_gauge_field[ g_ipt[t][x][y][z] ][1], current            , sizeof(su3) / 8);
+            be_to_cpu_assign(&g_gauge_field[ g_ipt[t][x][y][z] ][2], current +     fbsu3, sizeof(su3) / 8);
+            be_to_cpu_assign(&g_gauge_field[ g_ipt[t][x][y][z] ][3], current + 2 * fbsu3, sizeof(su3) / 8);
+            be_to_cpu_assign(&g_gauge_field[ g_ipt[t][x][y][z] ][0], current + 3 * fbsu3, sizeof(su3) / 8);
+          }
+        }
+      }
+    }
+  }
+  DML_global_xor(&checksum->suma);
+  DML_global_xor(&checksum->sumb);
+  free(filebuffer);
+  return(0);
+}
+
 template< typename Element >
 void Tool::IO::loadScidac(Core::Field< Element > *field, std::string const &filename)
 {
+  // Clear whatever was hanging around in memory. Now we can just use raw for the buffer!
+  field->reset();
+  
+  // Open the file for reading with MPI.
+  MPI_File fp;
+  MPI_File_open(field->grid(), filename.cstr(), MPI_MODE_RDONLY, MPI_INFO_NULL, &fp)
+  
+  // Initialize a reader with the file pointer.
+  LemonReader *reader = lemonCreateReader(&fp, field->grid());
 
-  Base::Weave weave(field->L(), field->T());
-
-  (weave.d_grid.grid()).Barrier();
-
-  int nprocs((weave.d_grid.grid()).Get_size());
-  int rank((weave.d_grid.grid()).Get_rank());
-
-  size_t const blockSize = (weave.d_grid).contiguousBlock();
-  size_t const numBlocks = weave.localVolume()/blockSize;
-
-  size_t globalDimSize[4];
-  globalDimSize[Base::idx_T] = field->L()*field->L()*field->L();
-  globalDimSize[Base::idx_Z] = field->L()*field->L();
-  globalDimSize[Base::idx_Y] = field->L();
-  globalDimSize[Base::idx_X] = 1;
-
-  size_t jumpS[4] = {0, 0, 0, 0}; // information where to jump
-  size_t jumpN[4] = {weave.localVolume(), weave.localVolume(),
-                     weave.localVolume(), weave.localVolume()}; // information when to perform which jump
-
-  if (numBlocks > 1)
+  // Declare trackers for searching file
+  bool binaryReadFlag = false;
+  
+  // Look for the relevant records
+  while ((status = ReaderNextRecord(reader)) != LIME_EOF)
   {
-    // determine "lowest" dimension that is distributed to more than 1 process
-    size_t idx(0);
-    while (((weave.d_grid).dim(idx) == 1) && (idx < 4))
-      ++idx;
-    assert(idx < 3); // this should not happen, because there have to be at least
-    // two distributed dimensions for more than one contiguous block per process
-    if(idx == Base::idx_Z) // assume that the index is 2
+    if (status != LIME_SUCCESS)
     {
-      jumpS[idx] = globalDimSize[Base::idx_T];
-      jumpN[idx] = 1;
+      std::cerr << "ReaderNextRecord returned status " << status << std::endl;
+      break;
     }
-    else if(idx == Base::idx_Y) // assume that the index is 1
+    char *header_type = ReaderType(reader);
+    if (strcmp("ildg-binary-data", header_type) == 0)
     {
-      jumpS[idx  ] = globalDimSize[Base::idx_Z];
-      jumpS[idx+1] = globalDimSize[Base::idx_Z]*((((weave.d_grid).dim(Base::idx_Z)-1)*(weave.d_grid).size(Base::idx_Z))+1);
-      jumpN[idx  ] = 1;
-      jumpN[idx+1] = (weave.d_grid).size(idx+1);
+      // We'll need an integer dimension pointer, hence the array
+      lemonReadLatticeParallel(reader, field->raw(), (MPI_Offset)sizeof(Element), {field->L(), field->L(), field->L(), field->T()});
+      binaryReadFlag = true;
+      close_reader_record(reader);
+      continue;
     }
-    else if(idx == Base::idx_X) // assume that the index is 0
-    {
-      jumpS[idx  ] = globalDimSize[Base::idx_Y];
-      jumpS[idx+1] = globalDimSize[Base::idx_Y]*((((weave.d_grid).dim(Base::idx_Y)-1)*(weave.d_grid).size(Base::idx_Y))+1);
-      jumpS[idx+2] = jumpS[idx+1]
-                   + globalDimSize[Base::idx_Z]*((((weave.d_grid).dim(Base::idx_Z)-1)*(weave.d_grid).size(Base::idx_Z)));
-      jumpN[idx  ] = 1;
-      jumpN[idx+1] = (weave.d_grid).size(idx+1);
-      jumpN[idx+2] = jumpN[idx+1]*(weave.d_grid).size(idx+2);
-    }
+    close_reader_record(reader);
   }
+  
+  // Deal with the results of the parsing
+  if (!gauge_read_flag)
+    std::cerr << "Did not find a binary record in " << filename << std::endl;
 
-
-  size_t const *coords = (weave.d_grid).coords();
-
-  unsigned long elem_offset(0);
-
-  // each node has to find his own offset
-  for (size_t idx = 0; idx < 4; idx++)
-  {
-    // offset in each dimension is the process' coordinate index times the
-    // global size of (one "slice" of) this direction times the local size in this direction
-    elem_offset += coords[idx] * globalDimSize[idx] * ((weave.d_grid).size(idx));
-  }
-
-  assert(elem_offset < weave.globalVolume());
-
-  weave.barrier();
-
-
-  Lime::Reader reader(filename);
-  if(!reader.good())
-  {
-    if(weave.isRoot())
-      std::cerr << "Error occured trying to open file: " << filename << std::endl;
-  }
-  assert(reader.good());
-
-  Scidacinfo *info = 0;
-
-  // since this is causing problems in massive parallelization, the following block is
-  // processed serially
-  for (int irank=0; irank<nprocs; irank++)
-  {
-    if (rank == irank)
-    {
-      info = new Scidacinfo(reader);
-
-      reader.retrieveRecord(reader.findRecord("scidac-binary-data"));
-      if (reader.fail())
-      {
-        std::cerr << "Lime reader could not find the record, check path and file, and check lime contents of file.\nField unchanged!.\n";
-        exit(EXIT_FAILURE);
-        return;
-      }
-      assert(reader.good());
-    }
-    (weave.d_grid.grid()).Barrier();
-  }
-
-  assert(reader.good());
-
-  Element *dataPtr;
-
-  for (size_t idxBlock = 0; idxBlock < numBlocks; idxBlock++)
-  {
-
-    dataPtr = field->raw() + idxBlock * blockSize;
-
-    //go to position from which the data is supposed to be read
-    if (info->precision.compare("64") == 0)
-      reader.seekg(elem_offset*sizeof(Element), reader.findRecord("scidac-binary-data"));
-    else
-      reader.seekg(elem_offset*sizeof(Element)/2, reader.findRecord("scidac-binary-data"));
-
-
-    if (info->precision.compare("64") == 0)
-    {
-      reader.read(dataPtr, blockSize);
-      if (!Base::bigEndian)
-        Base::swapEndian(dataPtr, dataPtr + blockSize, sizeof(double));
-    }
-    else
-    {
-      size_t const elSize = sizeof(Element) / sizeof(double);
-      uint32_t elem32[elSize];
-      for (size_t ctr = 0; ctr < blockSize; ++ctr, ++dataPtr)
-      {
-        reader.read(elem32, elSize);
-        if (!Base::bigEndian)
-          Base::swapEndian(elem32, elem32 + elSize);
-        std::copy(reinterpret_cast< float* >(elem32), reinterpret_cast< float* >(elem32) + elSize,
-                  reinterpret_cast< double* >(dataPtr));
-      }
-    }
-
-    elem_offset += (idxBlock+1) % jumpN[Base::idx_Z] == 0 ? jumpS[Base::idx_Z] :
-                        (idxBlock+1) % jumpN[Base::idx_Y] == 0 ? jumpS[Base::idx_Y] : jumpS[Base::idx_X];
-  }
-
-  delete info;
-
-  (weave.d_grid.grid()).Barrier();
+  lemonDestroyReader(reader);
 }

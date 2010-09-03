@@ -203,6 +203,24 @@ namespace Core
     (*d_references) += 1;
   }
 
+  template< typename Element >
+  inline MPI_CartComm Field< Element >::communicator() const
+  {
+    return d_weave->d_grid->grid();
+  }
+
+  template< typename Element >
+  inline void Field< Element >::reset()
+  {
+    if (*d_references > 1)
+    {
+      destroy();
+      d_references = new size_t(1);
+      d_field = new Element[d_weave.localVolume()];
+      d_offsets = new size_t[4];
+    }
+    std::fill_n(d_offsets, 4, 0);
+  }
 
   template< typename Element >
   inline size_t Field< Element >::shiftIdxToZero(size_t const idx) const

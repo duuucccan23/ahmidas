@@ -1,0 +1,14 @@
+#include <L1/IO/Params.h>
+#include <cstdio>
+#include <cstring>
+#include <cstdlib>
+
+inline char *realFront(char *string)
+{
+  return string + std::strspn(string, " \t");
+}
+
+inline size_t realLen(char *string)
+{
+  return std::strcspn(realFront(string), " \t");
+}

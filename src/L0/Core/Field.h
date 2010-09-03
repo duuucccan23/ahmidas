@@ -45,7 +45,7 @@ namespace Core
     size_t                *d_references;
 
     Base::Weave            d_weave;
-    Element               *d_field;
+    std::valarray<Element> *d_field;
     size_t                *d_offsets;
 
     public:

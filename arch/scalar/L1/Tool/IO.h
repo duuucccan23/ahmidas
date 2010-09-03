@@ -9,7 +9,7 @@
 #include <L1/Tool.h>
 #include <L1/Tool/IO/Lime/Reader.h>
 #include <L1/Tool/IO/Lime/Writer.h>
-#include <L1/Tool/ScidacChecksum.h>
+#include <L1/IO/ScidacChecksum.h>
 
 namespace Tool
 {

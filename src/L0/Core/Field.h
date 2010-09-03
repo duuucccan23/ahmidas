@@ -45,7 +45,7 @@ namespace Core
     size_t                *d_references;
 
     Base::Weave            d_weave;
-    std::valarray<Element> *d_field;
+    Element               *d_field;
     size_t                *d_offsets;
 
     public:
@@ -71,6 +71,7 @@ namespace Core
       size_t T() const;
       size_t localVolume() const;
       size_t volume() const;
+      void reset();
 
       double weave(Base::weaveOperator wea_OP, double nodeval) const;
       std::complex < double > weave(Base::weaveOperator wea_OP, std::complex < double > nodeval) const;

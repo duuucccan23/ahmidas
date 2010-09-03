@@ -28,8 +28,6 @@ namespace Tool
       std::string field;
       std::string precision;
       size_t      dims[4];
-
-      ILDGinfo(Lime::Reader &reader);
     };
 
     struct MILCinfo

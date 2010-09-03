@@ -1,11 +1,10 @@
 template< typename Element >
-uint32_t Tool::ScidacChecksum::crc32(Element const &buffer, size_t length, uint32_t crc)
+uint32_t Tool::ScidacChecksum::crc32(Element const &buffer, uint32_t crc)
 {
   unsigned char const *cBuffer = reinterpret_cast< unsigned char const* >(&buffer);
 
   crc = ~crc;
-  for (size_t rep = 0; rep < length; ++rep)
-    for (size_t ctr = 0; ctr < sizeof(Element); ++ctr)
-      crc = d_crcTable[(crc ^ cBuffer[ctr]) & 0xff] ^ (crc >> 8);
+  for (size_t ctr = 0; ctr < sizeof(Element); ++ctr)
+    crc = d_crcTable[(crc ^ cBuffer[ctr]) & 0xff] ^ (crc >> 8);
   return ~crc;
 }

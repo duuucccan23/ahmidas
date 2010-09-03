@@ -204,12 +204,6 @@ namespace Core
   }
 
   template< typename Element >
-  inline MPI_CartComm Field< Element >::communicator() const
-  {
-    return d_weave->d_grid->grid();
-  }
-
-  template< typename Element >
   inline void Field< Element >::reset()
   {
     if (*d_references > 1)

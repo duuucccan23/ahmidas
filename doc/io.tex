@@ -1,0 +1,17 @@
+\documentclass[a4paper,10pt]{article}
+\begin{document}
+\section{Scidac Checksum}
+The Scidac CRC32 checksum implemented in the code dynamically generates the CRC table based on the CRC polynomial $(0, 1, 2, 4, 5, 7, 8, 10, 11, 12, 16, 22, 23, 26)$. This CRC table has been checked against the tmLQCD implementation and gives identical results. For reference, the table generated is listed in the code.
+
+The checksum itself comes in two parts, one with rank modulo $29$ and one with rank modulo $31$. These are named differently in our codes, so the following table is intended to give the proper correspondence:
+
+\begin{tabular}{|c|c|c|c|}
+\hline
+ mathematical & xlf-info & array & accessor \\
+\hline
+ rank$\%29$ & \verb|<suma>| & \verb|[0]| & \verb|lower()| \\
+ rank$\%31$ & \verb|<sumb>| & \verb|[1]| & \verb|upper()| \\
+\hline
+\end{tabular}
+
+\end{document}

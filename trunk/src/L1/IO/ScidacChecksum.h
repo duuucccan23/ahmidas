@@ -22,17 +22,16 @@ namespace Tool
       ScidacChecksum(uint64_t const &init);
       ScidacChecksum(ScidacChecksum const &other);
       void clear();
-      void parse(char const *message);
 
       uint64_t checksum() const;
       uint32_t lower() const;
       uint32_t upper() const;
 
       template< typename Element >
-      size_t aggregate(Element const *data, size_t elements, size_t rank = 0);
+      size_t aggregate(Element const *data, size_t elements, size_t rank);
 
       template< typename Element >
-      size_t aggregate(Element const &data, size_t elements, size_t rank = 0);
+      size_t aggregate(Element const &data, size_t rank);
 
       template< typename Element >
       size_t blockAggregate(Element const *data, size_t blockSize, size_t blocks = 1, size_t rank = 0);
@@ -50,10 +49,10 @@ namespace Tool
       void createTable();
 
       template< typename Element >
-      uint32_t crc32(Element const &buffer, size_t length = 1, uint32_t crc = 0);
+      uint32_t crc32(Element const &buffer, uint32_t crc = 0);
 
       template< typename Element >
-      uint32_t crc32(Element const *buffer, size_t length = 1, uint32_t crc = 0);
+      uint32_t crc32(Element const *buffer, size_t length, uint32_t crc = 0);
   };
 }
 

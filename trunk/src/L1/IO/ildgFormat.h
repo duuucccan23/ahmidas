@@ -1,27 +1,25 @@
 #pragma once
 
-#include <string>
-#include <L1/IO/Lime/Message.h>
+#include <L1/IO/Param.h>
 
 namespace IO
 {
-  namespace Lime
+  class ildgFormat : public Param
   {
-    class ildgFormat : public Message
-    {
-      static std::string s_start = "<ildgFormat xmlns=\"http://www.lqcd.org/ildg\"xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"        xsi:schemaLocation=\"http://www.lqcd.org/ildg filefmt.xsd\">";
-      static std::string s_end = "</ildgFormat>";
-      size_t      d_nx;
-      size_t      d_ny;
-      size_t      d_nz;
-      size_t      d_nt;
-      size_t      d_precision;
-      std::string d_field;
-      std::string d_version;
+    static char *s_start = "<ildgFormat xmlns=\"http://www.lqcd.org/ildg\"xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"        xsi:schemaLocation=\"http://www.lqcd.org/ildg filefmt.xsd\">";
+    static char *s_end = "</ildgFormat>";
+    public :
+      size_t       nx;
+      size_t       ny;
+      size_t       nz;
+      size_t       nt;
+      size_t       precision;
+      std::string *d_field;
+      std::string *d_version;
 
-      public:
-        ildgFormat();
 
-    }
+      virtual void parse();
+      virtual void generate() const;
+      char const *data() const;
   }
 }

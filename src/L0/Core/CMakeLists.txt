@@ -1,4 +1,8 @@
-SET(Sources_Correlator Correlator/Correlator_sumOverSpatialVolume.cpp Correlator/Correlator_projection.cpp
+SET(Sources_Correlator Correlator/Correlator.cpp
+                       Correlator/Correlator_sumOverSpatialVolume.cpp
+                       Correlator/Correlator_prepareMomentumProjection.cpp
+                       Correlator/Correlator_momentumProjection.cpp
+                       Correlator/Correlator_projection.cpp
                        Correlator/Correlator_cout_operator_lshift.cpp Correlator/Correlator_isolate.cpp
                        Correlator/Correlator_destroy.cpp Correlator/Correlator_deleteField.cpp
                        Correlator/Correlator_setOffset.cpp)

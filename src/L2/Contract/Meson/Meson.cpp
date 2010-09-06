@@ -59,7 +59,7 @@ namespace Contract
     twopoint->sumOverSpatialVolume();
     twopoints.push_back(*twopoint);
     delete twopoint;
-   
+
     // 3) ------ Gamma = gamma0gamma5, Gamma' = gamma5 ------
     gamma5_Gamma_psi1 = new Core::StochasticPropagator< 4 >(psi1);
     (*gamma5_Gamma_psi1) *= gamma0;
@@ -94,7 +94,7 @@ namespace Contract
     twopoint->sumOverSpatialVolume();
     twopoints.push_back(*twopoint);
     delete twopoint;
-    
+
     // 6) ------ Gamma = gamma5, Gamma' = gamma0 ------
     gamma5_Gamma_psi1 = new Core::StochasticPropagator< 4 >(psi1);
     gamma5_Gamma_psi2_dagger = new Core::StochasticPropagator< 4 >(psi2_dagger);
@@ -172,8 +172,8 @@ namespace Contract
     twopoint->sumOverSpatialVolume();
     twopoints.push_back(*twopoint);
     delete twopoint;
-    
-    
+
+
     // 11) ------ Gamma = gammai, Gamma' = gammai ------ (sum i=1,2,3)
     gamma5_Gamma_psi1 = new Core::StochasticPropagator< 4 >(psi1);
     (*gamma5_Gamma_psi1) *= gamma1gamma5;
@@ -283,7 +283,7 @@ namespace Contract
     twopoint->sumOverSpatialVolume();
     twopoints.push_back(*twopoint);
     delete twopoint;
-    
+
     // 15) ------ Gamma = gammaigamma0, Gamma' = gammaigamma5 ------ (sum i=1,2,3)
     gamma5_Gamma_psi1 = new Core::StochasticPropagator< 4 >(psi1);
     (*gamma5_Gamma_psi1) *= gamma1;
@@ -312,7 +312,7 @@ namespace Contract
     twopoint->sumOverSpatialVolume();
     twopoints.push_back(*twopoint);
     delete twopoint;
-    
+
     // 16) ------ Gamma = gammaigamma5, Gamma' = gammaigamma0 ------ (sum i=1,2,3)
     gamma5_Gamma_psi1 = new Core::StochasticPropagator< 4 >(psi1);
     (*gamma5_Gamma_psi1) *= gamma1;
@@ -437,7 +437,7 @@ namespace Contract
     twopoint->sumOverSpatialVolume();
     twopoints.push_back(*twopoint);
     delete twopoint;
-    
+
     return twopoints;
   }
 

@@ -94,8 +94,11 @@ int main(int argc, char **argv)
 
   double const TIME_FACTOR(1.0/CLOCKS_PER_SEC);
   double time_read;
-  double time_smear;
-  double time_write;
+  double time_smear_g;
+  double time_smear_p;
+  double time_contr;
+  double time_momProj;
+  // double time_write;
 
 
   Core::Field< QCD::Gauge > *gauge_field;
@@ -135,11 +138,11 @@ int main(int argc, char **argv)
     weave.barrier();
     double const time_2b = double(clock());
 
-    time_smear = (time_2b - time_2a) * TIME_FACTOR;
+    time_smear_g = (time_2b - time_2a) * TIME_FACTOR;
 
     if (weave.isRoot())
       std::cout << "gauge field smeared successfully in "
-                << std::scientific << time_smear
+                << std::scientific << time_smear_g
                 << " seconds\n" << std::endl;
   }
 
@@ -156,10 +159,22 @@ int main(int argc, char **argv)
   }
   if (Jac_iterations > 0)
   {
+    weave.barrier();
+    double const time_3a = double(clock());
+
+    point_source.smearJacobi(Jac_alpha, Jac_iterations, *gauge_field);
+
+    weave.barrier();
+    double const time_3b = double(clock());
+
+    time_smear_p = (time_3b - time_3a) * TIME_FACTOR;
+
     point_source.smearJacobi(Jac_alpha, Jac_iterations, *gauge_field);
     delete gauge_field;
     if(weave.isRoot())
-      std::cout << "point source smeared successfully\n" << std::endl;
+      std::cout << "point source smeared successfully in "
+                << std::scientific << time_smear_p
+                << " seconds\n" << std::endl;
   }
   // to prevent NANs in optimized code on timeslices where everything should be zero
   point_source.select_timeslice(source_position[Base::idx_T]);
@@ -173,6 +188,44 @@ int main(int argc, char **argv)
   }
 
 
+
+  weave.barrier();
+    double const time_4a = double(clock());
+
+  // of course this correlator has no physical meaning, it is just some alibi calculation for time measurement
+  Core::Correlator no_pion2point(L, T, point_source*point_source);
+
+  weave.barrier();
+    double const time_4b = double(clock());
+
+  time_contr = (time_4b - time_4a) * TIME_FACTOR;
+
+  if(weave.isRoot())
+    std::cout << "contraction done in "
+              << std::scientific << time_contr
+              << " seconds\n" << std::endl;
+
+
+  int const momentum[3]  = {1, 2, 1};
+  int const sourcePos[3] = {source_position[0], source_position[1], source_position[2]};
+  no_pion2point.prepareMomentumProjection(sourcePos);
+
+  weave.barrier();
+    double const time_5a = double(clock());
+
+  no_pion2point.momentumProjection(momentum);
+
+  weave.barrier();
+    double const time_5b = double(clock());
+
+  time_momProj = (time_5b - time_5a) * TIME_FACTOR;
+
+  if(weave.isRoot())
+    std::cout << "momentum projection done in "
+              << std::scientific << time_momProj
+              << " seconds\n" << std::endl;
+
+/*
   weave.barrier();
   double const time_3a = double(clock());
 
@@ -182,21 +235,23 @@ int main(int argc, char **argv)
   weave.barrier();
   double const time_3b = double(clock());
 
-  time_write = (time_3b - time_3a) * TIME_FACTOR;
+  //time_write = (time_3b - time_3a) * TIME_FACTOR;
 
   if (weave.isRoot())
     std::cout << "point source saved successfully in "
               << std::scientific << time_write
               << " seconds\n" << std::endl;
+*/
 
   if (weave.isRoot())
   {
     std::cerr.precision(2);
-    std::cerr << std::scientific << time_read  << "  "
-              << std::scientific << time_smear << "  "
-              << std::scientific << time_write << std::endl;
+    std::cerr << std::scientific << time_read    << "  "
+              << std::scientific << time_smear_g << "  "
+              << std::scientific << time_smear_p << "  "
+              << std::scientific << time_contr   << "  "
+              << std::scientific << time_momProj << std::endl;
   }
-
   // leave main function
   return EXIT_SUCCESS;
 }

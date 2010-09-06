@@ -1,0 +1,4 @@
+ADD_EXECUTABLE(generate_sequential_sources_nucleon generate_sequential_sources_nucleon.cpp)
+TARGET_LINK_LIBRARIES(generate_sequential_sources_nucleon SU3 QCD IO Base Core Dirac Weave Contract Input Smear)
+ADD_EXECUTABLE(contract_nucleon3point contract_nucleon3point.cpp)
+TARGET_LINK_LIBRARIES(contract_nucleon3point SU3 QCD IO Base Core Dirac Weave Contract Input Smear)

@@ -3,6 +3,7 @@
 
 #include <L0/Base/Weave.h>
 #include <L0/Core/Propagator.h>
+#include <L0/Core/Correlator.h>
 #include <L1/Tool/IO.h>
 #include <L2/Contract/Meson.h>
 

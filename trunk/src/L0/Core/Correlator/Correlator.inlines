@@ -4,6 +4,7 @@ inline Correlator::Correlator(Correlator const &other)
     d_references(other.d_references), d_offset(other.d_offset)
 {
   *d_references += 1;
+  d_data->refCountUp();
 }
 
 inline Correlator::Correlator(size_t const L, size_t const T, Core::Field<Dirac::Matrix>* data)
@@ -30,6 +31,7 @@ inline Correlator &Correlator::operator=(Correlator const &rhs)
     d_offset = rhs.d_offset;
     d_references = rhs.d_references;
     *d_references += 1;
+    d_data = rhs.d_data;
     if (d_data != NULL)
       d_data->refCountUp();
   }

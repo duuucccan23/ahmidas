@@ -1,8 +1,6 @@
 template< typename Element >
 void Core::Field< Element >::destroy()
 {
-
-  // std::cout << "ref = " << d_references << ": refCount (Field) = " << *d_references << std::endl;
   assert(*d_references > 0);
   (*d_references) -= 1;
   if ((*d_references) == 0)

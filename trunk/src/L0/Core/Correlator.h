@@ -1,5 +1,7 @@
 #pragma once
 
+#include <vector>
+
 #include <L0/Base/Weave.h>
 #include <L0/Dirac/Matrix.h>
 #include <L0/Core/Field.h>
@@ -23,6 +25,8 @@ namespace Core
     // for compatibility with parallel code
     Dirac::Matrix *d_sumTimeslice_global;
 
+    static Field< int * > *s_xRelative;
+
     public:
 
       Correlator(size_t const L, size_t const T, Field < Dirac::Matrix > *d_data);
@@ -42,9 +46,11 @@ namespace Core
 
       void deleteField();
 
-
+      // performs a summation over the volume of each individual timeslice (zero momentum projection)
       void sumOverSpatialVolume();
-      void sumOverSpatialVolume(size_t const *momentum);
+      // performs a summation over the volume of each individual timeslice including non-zero momentum projection
+      void momentumProjection(int const * const momentum);
+      void prepareMomentumProjection(int const * const position_offset);
 
       // set offset (for conventional reasons one would often like to shift the source timeslice to 0)
       void setOffset(size_t timeslice);

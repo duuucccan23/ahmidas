@@ -8,21 +8,17 @@
 
 void SU3::Matrix::reunitarize() 
 { 
-  double check;
+  double check = 0;
   do
   {
-    Matrix X_j = *this;
-    Matrix Xbuff = X_j.inverse();
-    double gamma = sqrt(Xbuff.norm()/Xbuff.norm());
+    Matrix old = *this;
+    Matrix inv = inverse();
+    double gamma = sqrt(inv.norm() / norm());
     operator*=(0.5 * gamma);
-    operator+=((0.5 / gamma) * Xbuff.dagger());
-    X_j -= *this;
-    check = sqrt(X_j.norm());
+    operator+=((0.5 / gamma) * inv.dagger());
+    old -= *this;
+    check = sqrt(old.norm());
   }
-  while(check > 1e-15);
+  while(check > 1E-15);
   operator/=(std::pow(det(), 1/3));
 }
-
-
-
-

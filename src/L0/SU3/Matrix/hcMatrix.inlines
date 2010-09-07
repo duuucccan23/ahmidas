@@ -1,0 +1,26 @@
+namespace SU3
+{
+  inline std::complex< double > det(hcMatrix const &mat)
+  {
+    return std::conj(det(mat.d_parent));
+  }
+  
+  inline std::complex< double > tr(hcMatrix const &mat)
+  {
+    return std::conj(tr(mat.d_parent));
+  }
+
+  inline hcMatrix::hcMatrix(Matrix const &parent)
+    : d_parent(parent)
+  {}
+  
+  inline Matrix const &hcMatrix::dagger() const
+  {
+    return d_parent;
+  }
+
+  inline size_t SU3::hcMatrix::size() const
+  {
+    return d_parent.size();
+  }
+}

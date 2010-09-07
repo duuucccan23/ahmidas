@@ -1,0 +1,32 @@
+template< typename T >
+Matrix &operator+=(T const &rhand);
+
+Matrix &operator+=(Matrix const &rhand);
+
+Matrix &operator+=(hcMatrix const &rhand);
+
+template< typename T >
+Matrix &operator-=(T const &rhand);
+
+Matrix &operator-=(Matrix const &rhand);
+
+Matrix &operator-=(hcMatrix const &rhand);
+
+template< typename T >
+Matrix &operator*=(T const &rhand);
+
+template< typename T >
+Matrix &operator/=(T const &rhand);
+
+void leftMultiply(Matrix const &other);
+void rightMultiply(Matrix const &other);
+
+void leftMultiply(hcMatrix const &other);
+void rightMultiply(hcMatrix const &other);
+
+void matrix_inv(Matrix const &other);
+double matrix_norm1(Matrix const &other);
+
+double matrix_normnfty(Matrix const &that);
+
+void ProjectSu3();

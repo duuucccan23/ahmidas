@@ -14,7 +14,7 @@ void SU3::Matrix::givens(std::complex< double > &c, std::complex< double > &s, s
     s = sign(conj(g));
     return;
   }
-  double inv_sqrt_nrm = 1 / (sqrt(norm(f) + norm(g)));
+  double inv_sqrt_nrm = 1 / (std::sqrt(std::norm(f) + std::norm(g)));
   c = abs(f) * inv_sqrt_nrm;
   s = sign(f) * conj(g) * inv_sqrt_nrm;
 }

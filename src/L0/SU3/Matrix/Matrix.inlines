@@ -181,9 +181,9 @@ namespace SU3
 
   inline double Matrix::norm() const
   {
-    return (norm(d_data[0])+norm(d_data[1])+norm(d_data[2])+
-           norm(d_data[3])+norm(d_data[4])+norm(d_data[5])+
-           norm(d_data[6])+norm(d_data[7])+norm(d_data[8]));
+    return (std::norm(d_data[0]) + std::norm(d_data[1]) + std::norm(d_data[2])+
+            std::norm(d_data[3]) + std::norm(d_data[4]) + std::norm(d_data[5])+
+            std::norm(d_data[6]) + std::norm(d_data[7]) + std::norm(d_data[8]));
   }
 
   template< typename Scalar >

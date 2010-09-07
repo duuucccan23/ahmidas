@@ -1,0 +1,237 @@
+namespace SU3
+{
+  inline Matrix::Matrix()
+  {}
+
+  inline Matrix::Matrix(double const *data)
+  {
+    std::copy(data, data + 18, reinterpret_cast< double* >(d_data));
+  }
+
+  inline Matrix::Matrix(std::complex< double > const &value)
+  {
+    std::fill_n(d_data, 9, value);
+  }
+
+  inline Matrix::Matrix(std::complex< double > const *data)
+  {
+    std::copy(data, data + 9, d_data);
+  }
+
+  inline Matrix::Matrix(Matrix const &other)
+  {
+    std::copy(other.d_data, other.d_data + 9, d_data);
+  }
+
+  inline Matrix &Matrix::operator=(Matrix const &other)
+  {
+    if (&other != this)
+      std::copy(other.d_data, other.d_data + 9, d_data);
+    return *this;
+  }
+
+  inline Matrix const &Matrix::identity()
+  {
+    return s_identity;
+  }
+
+  inline Matrix const &Matrix::zero()
+  {
+    return s_zero;
+  }
+
+  inline void SU3::Matrix::setToZero()
+  {
+    std::fill_n(reinterpret_cast< double* >(d_data), 18, 0.0);
+  }
+
+  inline void SU3::Matrix::setToIdentity()
+  {
+    std::copy(s_identity.d_data, s_identity.d_data + 9, d_data);
+  }
+
+  inline void SU3::Matrix::setToRandom()
+  {
+    std::generate_n(reinterpret_cast< double* >(d_data), 18, Base::Random::fastSymmetric);
+/*    reunitarize();*/
+  }
+
+  inline size_t SU3::Matrix::size() const
+  {
+    return 9;
+  }
+
+  inline Matrix::~Matrix()
+  {}
+
+  inline std::complex< double > &Matrix::operator()(int i, int j)
+  {
+    return d_data[i * 3 + j];
+  }
+
+  inline std::complex< double > const &Matrix::operator()(int i, int j) const
+  {
+    return d_data[i * 3 + j];
+  }
+
+  template< typename T >
+  inline Matrix &Matrix::operator+=(T const &rhand)
+  {
+    for (size_t ctr = 0; ctr < 9; ++ctr)
+      d_data[ctr] += rhand;
+    return *this;
+  }
+
+  inline Matrix &Matrix::operator+=(Matrix const &rhand)
+  {
+    for (size_t ctr = 0; ctr < 9; ++ctr)
+      d_data[ctr] += rhand.d_data[ctr];
+    return *this;
+  }
+
+  template< typename T >
+  inline Matrix &Matrix::operator-=(T const &rhand)
+  {
+    for (size_t ctr = 0; ctr < 9; ++ctr)
+      d_data[ctr] -= rhand;
+    return *this;
+  }
+
+  inline Matrix &Matrix::operator-=(Matrix const &rhand)
+  {
+    for (size_t ctr = 0; ctr < 9; ++ctr)
+      d_data[ctr] -= rhand.d_data[ctr];
+    return *this;
+  }
+
+  template< typename T >
+  inline Matrix &Matrix::operator*=(T const &rhand)
+  {
+    for (size_t ctr = 0; ctr < 9; ++ctr)
+      d_data[ctr] *= rhand;
+    return *this;
+  }
+
+  template< >
+  inline Matrix &Matrix::operator*=(Matrix const &rhand)
+  {
+    rightMultiply(rhand);
+    return *this;
+  }
+
+  template< >
+  inline Matrix &Matrix::operator*=(hcMatrix const &rhand)
+  {
+    rightMultiply(rhand);
+    return *this;
+  }
+
+  template< typename T >
+  inline Matrix &Matrix::operator/=(T const &rhand)
+  {
+    for (size_t ctr = 0; ctr < 9; ++ctr)
+      d_data[ctr] /= rhand;
+    return *this;
+  }
+
+  inline hcMatrix const Matrix::dagger() const
+  {
+    return hcMatrix(*this);
+  }
+
+  inline Matrix const  Matrix::transpose() const
+  {
+    Matrix mat_T(*this);
+    std::swap(*(mat_T.d_data + 1), *(mat_T.d_data + 3));
+    std::swap(*(mat_T.d_data + 2), *(mat_T.d_data + 6));
+    std::swap(*(mat_T.d_data + 5), *(mat_T.d_data + 7));
+    return mat_T;
+  }
+
+  inline std::complex < double > Matrix::sign(std::complex< double > const &x) const
+  {
+    return x / abs(x);
+  }
+
+  inline std::complex< double > Matrix::det() const
+  {
+    return   d_data[0] * (d_data[4] * d_data[8] - d_data[5] * d_data[7])
+           + d_data[1] * (d_data[5] * d_data[6] - d_data[3] * d_data[8])
+           + d_data[2] * (d_data[3] * d_data[7] - d_data[4] * d_data[6]);
+  }
+
+  inline Matrix const  Matrix::inverse() const
+  {
+    std::complex< double > b=1.0/det();
+    std::complex< double > temp[] = {(-d_data[5]*d_data[7]+d_data[4]*d_data[8])*b, (d_data[2]*d_data[7]-d_data[1]*d_data[8])*b, (-d_data[2]*d_data[4]+d_data[1]*d_data[5])*b,
+   				     (d_data[5]*d_data[6]-d_data[3]*d_data[8])*b,  (-d_data[2]*d_data[6]+d_data[0]*d_data[8])*b, (d_data[2]*d_data[3]-d_data[0]*d_data[5])*b,
+  				     (-d_data[4]*d_data[6]+d_data[3]*d_data[7])*b, (d_data[1]*d_data[6]-d_data[0]*d_data[7])*b, (-d_data[1]*d_data[3]+d_data[0]*d_data[4])*b };
+  return Matrix(temp);
+  }
+
+  inline std::complex< double > Matrix::tr() const
+  {
+    return d_data[0] + d_data[4] + d_data[8];
+  }
+
+  inline double Matrix::realtr() const
+  {
+    return d_data[0].real() + d_data[4].real() + d_data[8].real();
+  }
+
+  inline double Matrix::norm() const
+  {
+    return (norm(d_data[0])+norm(d_data[1])+norm(d_data[2])+
+           norm(d_data[3])+norm(d_data[4])+norm(d_data[5])+
+           norm(d_data[6])+norm(d_data[7])+norm(d_data[8]));
+  }
+
+  template< typename Scalar >
+  inline Matrix operator*(Matrix const &lhand, Scalar const &rhand)
+  {
+    Matrix result(lhand);
+    return result *= rhand;
+  }
+
+  template< typename Scalar >
+  inline Matrix operator*(Scalar const &lhand, Matrix const &rhand)
+  {
+    Matrix result(rhand);
+    return result *= lhand;
+  }
+
+  template< typename Scalar >
+  inline Matrix operator*(hcMatrix const &lhand, Scalar const &rhand)
+  {
+    Matrix result(lhand);
+    return result *= rhand;
+  }
+
+  template< typename Scalar >
+  inline Matrix operator*(Scalar const &lhand, hcMatrix const &rhand)
+  {
+    Matrix result(rhand);
+    return result *= lhand;
+  }
+
+  inline double realtr(Matrix const &mat)
+  {
+    return mat.realtr();
+  }
+
+  inline double realtr(hcMatrix const &mat)
+  {
+    return mat.dagger().realtr();
+  }
+
+  inline std::complex< double > det(Matrix const &mat)
+  {
+    return mat.det();
+  }
+
+  inline std::complex< double > tr(Matrix const &mat)
+  {
+    return mat.tr();
+  }
+
+}

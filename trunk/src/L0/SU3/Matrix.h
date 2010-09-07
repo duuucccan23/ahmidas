@@ -25,6 +25,8 @@ namespace SU3
   double realtr(Matrix const &mat);
   double realtr(hcMatrix const &mat);
 
+ // Matrix det(hcMatrix const &mat);
+
   std::ostream &operator<<(std::ostream &out, Matrix const &mat);
 
   class Matrix
@@ -69,10 +71,12 @@ namespace SU3
 
       hcMatrix const dagger() const;
       Matrix const transpose() const;
+      Matrix const inverse() const;
 
       void reunitarize();
 
       double realtr() const;
+      double norm() const; // Frobenius Matrix Norm
 
       std::complex< double > det() const;
       std::complex< double > tr() const;

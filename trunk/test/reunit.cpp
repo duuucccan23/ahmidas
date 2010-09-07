@@ -13,6 +13,8 @@ int main(int argc, char **argv)
   {
     SU3::Matrix mat = SU3::Matrix::random();
     mat.reunitarize();
+    SU3::Matrix copy(mat);
+
     SU3::hcMatrix hc = mat.dagger();
     mat.rightMultiply(hc);
     double error = 0.0;
@@ -28,13 +30,13 @@ int main(int argc, char **argv)
       problem = true;
     }
 
-    SU3::Matrix copy(mat);
-    mat.reunitarize();
+    SU3::Matrix copy2(copy);
+    copy.reunitarize();
 
     error = 0.0;
     for (size_t idx_x = 0; idx_x < 3; ++idx_x)
       for (size_t idx_y = 0; idx_y < 3; ++idx_y)
-        error += std::abs(mat(idx_x, idx_y) - copy(idx_x, idx_y));
+        error += std::abs(copy2(idx_x, idx_y) - copy(idx_x, idx_y));
     if (out)
       (*out) << "\t" << error << std::endl;
     if (std::abs(error) > 3e-15)

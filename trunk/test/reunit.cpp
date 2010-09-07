@@ -21,7 +21,7 @@ int main(int argc, char **argv)
         error = std::max((idx_x == idx_y) ? std::abs(1.0 - mat(idx_x, idx_y)) : std::abs(mat(idx_x, idx_y)), error);
     if (out)
       (*out) << error;
-    if (std::abs(error) > 1e-15)
+    if (std::abs(error) > 3e-15)
     {
       std::cout << "At matrix number " << ctr << ':' << std::endl;
       std::cout << "Stress test failed on unitarity with total deviation " << error << '!' << std::endl;
@@ -37,7 +37,7 @@ int main(int argc, char **argv)
         error += std::abs(mat(idx_x, idx_y) - copy(idx_x, idx_y));
     if (out)
       (*out) << "\t" << error << std::endl;
-    if (std::abs(error) > 1e-15)
+    if (std::abs(error) > 3e-15)
     {
       std::cout << "At matrix number " << ctr << ':' << std::endl;
       std::cout << "Stress test failed on double reunitarization with total deviation " << error << '!' << std::endl;

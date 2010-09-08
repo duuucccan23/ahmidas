@@ -66,6 +66,12 @@ ADD_EXECUTABLE(dirac_operator dirac_operator.cpp)
 TARGET_LINK_LIBRARIES(dirac_operator SU3 QCD IO Base Core Weave)
 ADD_TEST(dirac_operator_test dirac_operator)
 
+IF(EIGEN3_FOUND)
+  ADD_EXECUTABLE(reunit_algo_comp reunit_algo_comp.cpp)
+  TARGET_LINK_LIBRARIES(reunit_algo_comp SU3)
+  ADD_TEST(reunitarization_algorithm_comparison reunit_algo_comp)
+ENDIF(EIGEN3_FOUND)
+
 # IO test for parallel IO mainly
 # this is not made a test yet because it is unclear
 # if the lattice can be distributed to the number of processes specified

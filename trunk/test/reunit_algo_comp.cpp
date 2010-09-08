@@ -52,7 +52,7 @@ void reunitarize_new_method_through_eigen(SU3::Matrix &mat_SU3)
     mat = 0.5 * (gamma * mat + minv.conjugate().transpose() / gamma);
   }
   while ((mat - mold).norm() > 1E-15);
-  mat /= std::pow(mat.determinant(), 1/3);
+  mat /= std::pow(mat.determinant(), 1.0/3.0);
   mat_SU3 = toSU3(mat);
 }
 
@@ -64,7 +64,7 @@ void reunitarize_old_method_through_eigen(SU3::Matrix &mat_SU3)
   Eigen::Vector3d eigs = es.eigenvalues();
   eigs.array() = eigs.array().sqrt().inverse();
   mat = es.eigenvectors() * eigs.asDiagonal() * es.eigenvectors().transpose().conjugate() * mat;
-  mat /= std::pow(mat.determinant(), 1/3);
+  mat /= std::pow(mat.determinant(), 1.0/3.0);
   mat_SU3 = toSU3(mat);
 }
 
@@ -87,13 +87,13 @@ int main(int argc, char **argv)
     reunitarize_old_method_through_eigen(new_method_eigen);
     reunitarize_new_method_through_eigen(old_method_eigen);
     
-//     std::cout << "Old method (deprecated):\n" << old_method;
-//     std::cout << "New method:\n" << new_method;
-//     std::cout << "Eigen version old method:\n" << old_method_eigen;
-//     std::cout << "Eigen version new method:\n" << new_method_eigen;
+//    std::cout << "Old method (deprecated):\n" << old_method;
+//    std::cout << "New method:\n" << new_method;
+//    std::cout << "Eigen version old method:\n" << old_method_eigen;
+//    std::cout << "Eigen version new method:\n" << new_method_eigen;
     new_method -= old_method_eigen;
-//     std::cout << "Difference:\n" << new_method;
-//     std::cout << "Norm:\n" << new_method.norm() << "\n\n" << std::endl;
+//    std::cout << "Difference:\n" << new_method;
+//    std::cout << "Norm:\n" << new_method.norm() << "\n\n" << std::endl;
     
     problem = problem || (new_method.norm() > prec);
     

@@ -20,5 +20,5 @@ void SU3::Matrix::reunitarize()
     check = sqrt(old.norm());
   }
   while(check > 1E-15);
-  operator/=(std::pow(det(), 1/3));
+  operator/=(std::pow(det(), 1.0/3.0));
 }

@@ -22,8 +22,8 @@ int main(int argc, char **argv)
 
   Base::Weave weave(L, T);
 
-  double const precision_APE    = 1.e-5;
-  double const precision_Jacobi = 1.e-5;
+  double const precision_APE    = 1.e-14;
+  double const precision_Jacobi = 1.e-14;
 
   double const APE_alpha = 0.4;
   size_t const APE_iterations = 7;
@@ -87,35 +87,35 @@ int main(int argc, char **argv)
     // QCD::Gauge consists of 4 SU3::Matrix-es that in turn consist of of 9 std::complex< double >
     std::complex< double > const referenceValues[36] = {
      // mu = Base::idx_X
-      std::complex< double >(+3.4477029755409028e-01, -1.9888641589140504e-01),
-      std::complex< double >(-2.4382977498541045e-01, -5.0512987727987058e-01),
-      std::complex< double >(-7.2135340394014014e-01, +8.1349554590636572e-02),
-      std::complex< double >(-5.1366970220748243e-01, -1.0805505511375929e-01),
-      std::complex< double >(+6.7108235741315003e-01, -2.7912274789207958e-01),
-      std::complex< double >(-2.0267938681495259e-01, +3.9386237372556521e-01),
-      std::complex< double >(+7.0975195341343900e-01, +2.4959435534999930e-01),
-      std::complex< double >(+3.7087157542856919e-01, +1.3994314426545071e-01),
-      std::complex< double >(+1.0518940994962575e-01, +5.1551935109160107e-01),
+      std::complex< double >(+3.4668310958013260e-01, -1.9537274568075569e-01),
+      std::complex< double >(-2.3880598524204788e-01, -5.0755019874785234e-01),
+      std::complex< double >(-7.2216761643778793e-01, +7.4018529498815058e-02),
+      std::complex< double >(-5.1255498427208335e-01, -1.1318276494815946e-01),
+      std::complex< double >(+6.7380058064865644e-01, -2.7250810532068637e-01),
+      std::complex< double >(-2.0656395062741395e-01, +3.9184243538671593e-01),
+      std::complex< double >(+7.0724169299244544e-01, +2.5676165852152877e-01),
+      std::complex< double >(+3.6943967912988218e-01, +1.4356507479210701e-01),
+      std::complex< double >(+9.9929974390575743e-02, +5.1652689320992629e-01),
       // mu = Base::idx_Y
-      std::complex< double >(+4.7977975611333301e-01, -6.2659800402423693e-01),
-      std::complex< double >(+2.5765088495681366e-02, +4.9612932608136556e-01),
-      std::complex< double >(+2.6468188888744859e-01, +2.4560471634010850e-01),
-      std::complex< double >(+6.4838961420946251e-02, +5.1497588721321275e-01),
-      std::complex< double >(+2.5456280916019464e-01, +8.4404057504865015e-02),
-      std::complex< double >(+8.0175406042085084e-01, +1.2593610498455721e-01),
-      std::complex< double >(-8.8471461144364258e-02, -3.1615640466464051e-01),
-      std::complex< double >(-5.7289548750810093e-01, -5.9418544552934038e-01),
-      std::complex< double >(+4.2884555475076419e-01, +1.6445009953470077e-01),
+      std::complex< double >(+4.8152211313262633e-01, -6.2530493580424040e-01),
+      std::complex< double >(+2.4439045567515388e-02, +4.9612385598841346e-01),
+      std::complex< double >(+2.6403695281549389e-01, +2.4633012796243686e-01),
+      std::complex< double >(+6.3474816743433499e-02, +5.1513433485282190e-01),
+      std::complex< double >(+2.5421825129519737e-01, +8.5134629741020651e-02),
+      std::complex< double >(+8.0150234289120958e-01, +1.2777611107832770e-01),
+      std::complex< double >(-8.7469747883267987e-02, -3.1636497866153068e-01),
+      std::complex< double >(-5.7130253648657214e-01, -5.9582081190758762e-01),
+      std::complex< double >(+4.2837745332166677e-01, +1.6542663893448939e-01),
       // mu = Base::idx_Z
-      std::complex< double >(+1.1194757744614696e-02, -3.3994697992655774e-02),
-      std::complex< double >(-8.6493202735282881e-01, +1.8242113031241258e-01),
-      std::complex< double >(+1.1753030903372362e-01, -4.5113277828232695e-01),
-      std::complex< double >(-1.1833840603534554e-01, +3.5745791040506641e-01),
-      std::complex< double >(+2.7049028374277129e-01, -3.2482260851296552e-01),
-      std::complex< double >(-3.1486378927118375e-01, -7.6184377502952427e-01),
-      std::complex< double >(+5.2605949734513935e-01, -7.6170880729204093e-01),
-      std::complex< double >(+1.7677610370129626e-01, -9.3223429644285150e-02),
-      std::complex< double >(-4.5160974669460931e-02, -3.1793267501023753e-01),
+      std::complex< double >(+1.1273224981999440e-02, -3.3874845575700502e-02),
+      std::complex< double >(-8.6541876004954776e-01, +1.8024993255237626e-01),
+      std::complex< double >(+1.1865168963739542e-01, -4.5078544491929390e-01),
+      std::complex< double >(-1.1911462424999303e-01, +3.5715355606328147e-01),
+      std::complex< double >(+2.7128524522814523e-01, -3.2412892869008259e-01),
+      std::complex< double >(-3.1303561480323450e-01, -7.6263130073032070e-01),
+      std::complex< double >(+5.2789636636365289e-01, -7.6046293749065441e-01),
+      std::complex< double >(+1.7691571818651852e-01, -9.2768063122174199e-02),
+      std::complex< double >(-4.4293299640043901e-02, -3.1804805582371165e-01),
       // mu = Base::idx_T
       std::complex< double >(-2.0691771313139423e-01, -4.8421056686791669e-01),
       std::complex< double >(+2.9684056168679718e-01, -5.4882296015843846e-01),
@@ -181,9 +181,9 @@ int main(int argc, char **argv)
       std::complex< double >(+0.0, +0.0),
       std::complex< double >(+0.0, +0.0),
       std::complex< double >(+0.0, +0.0),
-      std::complex< double >(+4.79248576360632e-05, +1.65762039468414e-03),
-      std::complex< double >(-1.03132081855303e-03, +1.65690419920917e-04),
-      std::complex< double >(+5.12548418071813e-04, +1.47231641929049e-04)};
+      std::complex< double >(+6.1161734806701711e-05, +1.6548301203740594e-03),
+      std::complex< double >(-1.0343940850567506e-03, +1.5980327730610931e-04),
+      std::complex< double >(+5.0470395898905528e-04, +1.4899974883655540e-04)};
 
     QCD::Spinor const referenceSpinor(referenceValues);
 

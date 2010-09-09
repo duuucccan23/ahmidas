@@ -1,4 +1,4 @@
-inline Base::Knuth::Knuth(int const seed)
+inline Base::Knuth::Knuth(uint64_t const seed)
   : d_max(0x20000000000000), d_seed(2147483647)
 {
   initialize(seed);

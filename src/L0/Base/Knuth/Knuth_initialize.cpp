@@ -1,12 +1,12 @@
 #include "Knuth.ih"
 #include <iostream>
 
-void Base::Knuth::initialize(int seed)
+void Base::Knuth::initialize(uint64_t seed)
 {
   if (!seed)
     seed = std::time(0);
 
-  double filler = static_cast< double >(std::abs(d_seed - seed) % d_max) / d_max;
+  double filler = static_cast< double >(std::abs(static_cast< int64_t >(d_seed) - static_cast< int64_t >(seed)) % d_max) / d_max;
 
   d_state[55] = filler;
   double current = 1.0 / d_max;

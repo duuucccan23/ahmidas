@@ -1,6 +1,6 @@
 #include "Knuth.ih"
 
-Base::Knuth &Base::Knuth::instance(int seed)
+Base::Knuth &Base::Knuth::instance(uint64_t seed)
 {
   if (!Base::Knuth::s_instance)
     Base::Knuth::s_instance = new Base::Knuth(seed);

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdlib>
+#include <stdint.h>
 
 namespace Base
 {
@@ -11,20 +12,20 @@ namespace Base
     size_t d_next;
     size_t d_lag;
 
-    size_t const d_max;
-    int const d_seed;
+    uint64_t const d_max;
+    uint64_t const d_seed;
 
     double d_state[56];
 
     public:
-      static Knuth &instance(int seed = 0);
+      static Knuth &instance(uint64_t seed = 0);
       double operator()();
 
       ~Knuth();
 
     private:
-      Knuth(int const seed);
-      void initialize(int seed = 0);
+      Knuth(uint64_t const seed);
+      void initialize(uint64_t seed = 0);
   };
 }
 

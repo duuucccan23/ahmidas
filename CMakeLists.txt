@@ -1,6 +1,11 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
 PROJECT(Ahmidas CXX)
 
+MESSAGE(STATUS "Host system is " ${CMAKE_HOST_SYSTEM})
+MESSAGE(STATUS "Target system name is " ${CMAKE_SYSTEM_NAME})
+MESSAGE(STATUS "Target system version is " ${CMAKE_SYSTEM_VERSION})
+MESSAGE(STATUS "System processor is " ${CMAKE_SYSTEM_PROCESSOR})
+
 # SET(CMAKE_CXX_COMPILER "icpc")
 SET(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/CMakeModules)
 
@@ -22,6 +27,7 @@ ENDIF(EIGEN3_FOUND)
 OPTION(USE_MPI "Build Ahmidas for use on parallel systems, using MPI for parallelism." OFF)
 
 IF(USE_MPI)
+  SET(CMAKE_CXX_COMPILER "mpicxx") 
   FIND_PACKAGE(MPI REQUIRED)
   FIND_PACKAGE(LEMON)
   IF(LEMON_FOUND)
@@ -41,6 +47,8 @@ IF(BUILD_TESTS)
   ENABLE_TESTING()
   ADD_SUBDIRECTORY(test)
 ENDIF(BUILD_TESTS)
+MESSAGE(STATUS "Testing turned " ${BUILD_TESTS})
+
 ADD_SUBDIRECTORY(example EXCLUDE_FROM_ALL)
 ADD_SUBDIRECTORY(applications)
 
@@ -49,3 +57,16 @@ TARGET_LINK_LIBRARIES(main Debug)
 
 ADD_EXECUTABLE(simon_test src/simon_test.cpp)
 TARGET_LINK_LIBRARIES(simon_test SU3 QCD IO Base Core Dirac Weave Contract Input Smear)
+
+MESSAGE(STATUS "Compiler is " ${CMAKE_CXX_COMPILER})
+MESSAGE(STATUS "MPI is " ${USE_MPI})
+
+#Check for the availability of isnan()
+INCLUDE (CheckCXXSourceCompiles)
+CHECK_CXX_SOURCE_COMPILES(test/isnan.cpp HAVE_ISNAN)
+IF(HAVE_ISNAN)
+  MESSAGE(STATUS "Function isnan found")
+ELSE(HAVE_ISNAN)
+  MESSAGE(STATUS "Function isnan not found")
+ENDIF(HAVE_ISNAN)
+

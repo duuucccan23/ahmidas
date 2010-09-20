@@ -2,6 +2,10 @@ ADD_EXECUTABLE(endian endian.cpp)
 TARGET_LINK_LIBRARIES(endian Base)
 ADD_TEST(endianness endian)
 
+ADD_EXECUTABLE(isnan isnan.cpp)
+TARGET_LINK_LIBRARIES(isnan Base)
+ADD_TEST(isnan isnan)
+
 ADD_EXECUTABLE(reunit reunit.cpp)
 TARGET_LINK_LIBRARIES(reunit SU3)
 ADD_TEST(reunitarization_stress_test reunit)

@@ -60,13 +60,3 @@ TARGET_LINK_LIBRARIES(simon_test SU3 QCD IO Base Core Dirac Weave Contract Input
 
 MESSAGE(STATUS "Compiler is " ${CMAKE_CXX_COMPILER})
 MESSAGE(STATUS "MPI is " ${USE_MPI})
-
-#Check for the availability of isnan()
-INCLUDE (CheckCXXSourceCompiles)
-CHECK_CXX_SOURCE_COMPILES(test/isnan.cpp HAVE_ISNAN)
-IF(HAVE_ISNAN)
-  MESSAGE(STATUS "Function isnan found")
-ELSE(HAVE_ISNAN)
-  MESSAGE(STATUS "Function isnan not found")
-ENDIF(HAVE_ISNAN)
-

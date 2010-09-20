@@ -1,5 +1,11 @@
 namespace Base
 {
+  // Checks whether a double is a NaN.
+  inline bool isnan(double x)
+  {
+    return (x != x);
+  }
+
   // Reverses byteorder, STL version
   template< typename T >
   inline void swapEndian(T *begin, T *end, size_t block = sizeof(T))

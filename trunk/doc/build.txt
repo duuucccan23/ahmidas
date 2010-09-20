@@ -1,0 +1,79 @@
+# This is a compilation of what is necessary to build ahmidas on different mashines
+# Author:  Simon Dinter
+# Date:    2010-09-20
+
+# -------------------------------------
+# JuGene (BlueGene P)
+# -------------------------------------
+
+# build command:
+
+cmake \
+  -DUSE_MPI=on \
+  -DCMAKE_CXX_COMPILER=mpixlcxx \
+  -DMPI_LIBRARY=/bgsys/drivers/ppcfloor/comm/lib/libcxxmpich.cnk.a \
+  -DMPI_INCLUDE_PATH=/bgsys/drivers/ppcfloor/comm/include \
+  ..
+
+
+# recommended compiler options:
+# "-O3 -qstrict -qarch=450d -qtune=450"
+# (also try without "-qstrict", but check the result, because precision might be lost!) 
+
+
+
+# -------------------------------------
+# JuRoPA (Intel Xeon Cluster + Infiniband)
+# -------------------------------------
+
+# IMPORTANT NOTE:
+# the lustre file system currently does not support parallel output to one file
+
+
+# preparation: (load MPI libraries for use with Intel compiler)
+module load parastation/intel
+
+
+# build command:
+
+cmake \
+  -DUSE_MPI=on \
+  -DCMAKE_CXX_COMPILER=mpicxx \
+  ..
+
+
+# recommended compiler options:
+"-O3 -ipo -axSSE4.2"
+# note that "-ipo" significantly increases compilation time
+# so it might be worthwhile to check whether there is any 
+# performance enhancement for particular applications
+
+
+
+
+# -------------------------------------
+# Mare Nostrum (IBM PPC blade cluster + Infiniband)
+# -------------------------------------
+
+# IMPORTANT NOTE:
+# if you submit a job, make sure that
+# the following two lines appear in your batch script
+"# @ tracing = 1"
+"# @ mpi2 = 1"
+
+
+
+# build command:
+# NOTE: the problem here is that the OpenMPI implementation is GNU-based, 
+# which might not give the best performance.
+# I tested it successfully with an OpenMPI version compiled with XL
+
+cmake \
+  -DUSE_MPI=ON -DUSE_SCALAR=OFF \
+  -DCMAKE_CXX_COMPILER=/gpfs/apps/OPENMPI/1.4.1/32/bin/mpicxx \
+  -DMPI_INCLUDE_PATH=/gpfs/apps/OPENMPI/1.4.1/32/include/ \
+  -DMPI_LIBRARY=/gpfs/apps/OPENMPI/1.4.1/32/lib/ \
+  ..
+
+# recommended compiler options:
+"-O3 -qstrict -qtune=ppc970 -qarch=ppc970 -qcache=auto"

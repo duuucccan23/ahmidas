@@ -44,6 +44,34 @@ inline void Propagator::rightMultiply(Dirac::Gamma< Index > const& gamma)
 }
 
 
+inline void Propagator::leftMultiply(Propagator const & other)
+{
+  isolate();
+  Propagator::iterator it = begin();
+  Propagator::const_iterator it_other = other.begin();
+  while(it != end())
+  {
+    (*it).leftMultiply(*it_other);
+    ++it;
+    ++it_other;
+  }
+}
+
+
+inline void Propagator::rightMultiply(Propagator const & other)
+{
+  isolate();
+  Propagator::iterator it = begin();
+  Propagator::const_iterator it_other = other.begin();
+  while(it != end())
+  {
+    (*it).rightMultiply(*it_other);
+    ++it;
+    ++it_other;
+  }
+}
+
+
 inline Propagator &Propagator::dagger()
 {
   isolate();

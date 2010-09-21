@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<ahmidas>
+  <params>
+    <L> 4 </L>
+    <T> 8 </T>
+    <!-- timeslice of sources for first set of propagators (source) -->
+    <t_L> 0 </t_L>
+    <!-- timeslice of sources for second set of propagators (sink) -->
+    <t_R> 4 </t_R>
+    <kappa> 0.10 </kappa>
+    <!-- d and s quark twisting mass -->
+    <mu_d> 0.10 </mu_d>
+    <mu_s> 0.10 </mu_s>
+  </params>
+  <files>
+    <!-- d and s quark propagators -->
+    <file>
+      <type>propagator</type>
+      <directory>d_propagators_L</directory>
+      <filenameBase>source.</filenameBase>
+      <filenameEnding>.inverted</filenameEnding>
+      <firstIndex>0</firstIndex>
+      <lastIndex>11</lastIndex>
+      <indexWidth>2</indexWidth>
+    </file>
+    <file>
+      <type>propagator</type>
+      <directory>s_propagators_L</directory>
+      <filenameBase>source.</filenameBase>
+      <filenameEnding>.inverted</filenameEnding>
+      <firstIndex>0</firstIndex>
+      <lastIndex>11</lastIndex>
+      <indexWidth>2</indexWidth>
+    </file>
+    <file>
+      <type>propagator</type>
+      <directory>d_propagators_R</directory>
+      <filenameBase>source.</filenameBase>
+      <filenameEnding>.inverted</filenameEnding>
+      <firstIndex>0</firstIndex>
+      <lastIndex>11</lastIndex>
+      <indexWidth>2</indexWidth>
+    </file>
+    <file>
+      <type>propagator</type>
+      <directory>s_propagators_R</directory>
+      <filenameBase>source.</filenameBase>
+      <filenameEnding>.inverted</filenameEnding>
+      <firstIndex>0</firstIndex>
+      <lastIndex>11</lastIndex>
+      <indexWidth>2</indexWidth>
+    </file>
+    <!-- gauge field -->
+    <file>
+      <type>gauge</type>
+      <directory>./</directory>
+      <filenameBase>conf.</filenameBase>
+      <firstIndex>0</firstIndex>
+      <lastIndex>0</lastIndex>
+      <indexWidth>4</indexWidth>
+    </file>
+  </files>
+</ahmidas>

@@ -1,6 +1,7 @@
 #include "Correlator.ih"
 
-void Core::Correlator::destroy()
+template< typename Datatype >
+void Core::Correlator< Datatype >::destroy()
 {
   assert(*d_references > 0);
   *d_references -= 1;

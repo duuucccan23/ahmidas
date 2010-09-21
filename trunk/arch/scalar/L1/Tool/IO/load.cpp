@@ -120,8 +120,7 @@ void Tool::IO::load(Core::StochasticPropagator< 1 > *sPropagator, std::vector< s
 // a lot of data is copied back and forth - this has to be reviewed if more efficiency is desired
 void Tool::IO::loadScidac(Core::Propagator *propagator, std::vector< std::string> const &filenames)
 {
-  // would like to do this, but isolate is private
-  // propagator->isolate();
+  propagator->isolate();
 
   if (filenames.size() == 12)
   {
@@ -190,8 +189,7 @@ void Tool::IO::loadScidac(Core::Propagator *propagator, std::vector< std::string
 
 void Tool::IO::loadScidac(Core::Propagator *propagator, std::vector< std::string> const &filenames, size_t const precision)
 {
-  // would like to do this, but isolate is private
-  // propagator->isolate();
+  propagator->isolate();
 
   if (filenames.size() == 12)
   {
@@ -261,6 +259,7 @@ void Tool::IO::loadScidac(Core::Propagator *propagator, std::vector< std::string
 
 void Tool::IO::loadScidac(Core::StochasticPropagator< 4 > *sPropagator, std::vector< std::string> const &filenames)
 {
+  sPropagator->isolate();
   QCD::Spinor dummy;
   dummy.setToZero();
 
@@ -338,6 +337,7 @@ void Tool::IO::loadScidac(Core::StochasticPropagator< 4 > *sPropagator, std::vec
 
 void Tool::IO::loadScidac(Core::StochasticPropagator< 4 > *sPropagator, std::vector< std::string> const &filenames, size_t const precision)
 {
+  sPropagator->isolate();
   QCD::Spinor dummy;
   dummy.setToZero();
 
@@ -413,6 +413,7 @@ void Tool::IO::loadScidac(Core::StochasticPropagator< 4 > *sPropagator, std::vec
 
 void Tool::IO::loadScidac(Core::StochasticPropagator< 1 > *sPropagator, std::vector< std::string> const &filenames)
 {
+  sPropagator->isolate();
   QCD::Spinor dummy;
   dummy.setToZero();
 
@@ -478,6 +479,7 @@ void Tool::IO::loadScidac(Core::StochasticPropagator< 1 > *sPropagator, std::vec
 
 void Tool::IO::loadScidac(Core::StochasticPropagator< 1 > *sPropagator, std::vector< std::string> const &filenames, size_t const precision)
 {
+  sPropagator->isolate();
   QCD::Spinor dummy;
   dummy.setToZero();
 

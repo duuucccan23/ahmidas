@@ -2,13 +2,14 @@
 
 namespace Core
 {
-  void Correlator::sumOverSpatialVolume()
+  template< typename Datatype >
+  void Correlator< Datatype >::sumOverSpatialVolume()
   {
     isolate();
     size_t x1, x2, x3, x4, localIndex;
     for(x4=0; x4 < T(); x4++)
     {
-      d_sumTimeslice[x4] = Dirac::Matrix(std::complex< double >(0.0, 0.0));
+      d_sumTimeslice[x4] = Dataype(std::complex< double >(0.0, 0.0));
       for(x3=0; x3 < L(); x3++)
       {
         for(x2=0; x2 < L(); x2++)
@@ -27,6 +28,7 @@ namespace Core
       }
     }
     d_weave->sumOverTimeSlices(reinterpret_cast< std::complex< double> const * >(d_sumTimeslice),
-                               reinterpret_cast< std::complex< double> * >(d_sumTimeslice_global), 16);
+                               reinterpret_cast< std::complex< double> * >(d_sumTimeslice_global),
+                               sizeof(Dataype)/sizeof(std::complex< double >));
   }
 }

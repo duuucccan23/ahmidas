@@ -1,3 +1,4 @@
 #include "Correlator.ih"
 
-Core::Field< int * > * Core::Correlator::s_xRelative = NULL;
+template< typename Datatype >
+Core::Field< int * > * Core::Correlator< Datatype >::s_xRelative = NULL;

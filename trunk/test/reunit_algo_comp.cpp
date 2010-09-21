@@ -72,7 +72,7 @@ int main(int argc, char **argv)
 {
   double const prec = 1E-16;
   
-  std::ofstream *out = 0;
+//   std::ofstream *out = 0;
 
   bool problem = false;
   for (size_t ctr = 0; ctr < 100000; ++ctr)
@@ -84,8 +84,8 @@ int main(int argc, char **argv)
     
     new_method.reunitarize();
     old_method.DEPRECATED_reunitarize();
-    reunitarize_old_method_through_eigen(new_method_eigen);
-    reunitarize_new_method_through_eigen(old_method_eigen);
+    reunitarize_old_method_through_eigen(old_method_eigen);
+    reunitarize_new_method_through_eigen(new_method_eigen);
     
 //    std::cout << "Old method (deprecated):\n" << old_method;
 //    std::cout << "New method:\n" << new_method;

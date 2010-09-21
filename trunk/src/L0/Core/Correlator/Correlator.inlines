@@ -1,5 +1,7 @@
-inline Correlator::Correlator(Correlator const &other)
-  : d_weave(other.d_weave), d_data(other.d_data),
+template< typename Datatype >
+inline Correlator< Datatype >::Correlator(Correlator< Datatype > const &other)
+  : d_T(other.d_T), d_L(other.d_L),
+    d_weave(other.d_weave), d_data(other.d_data),
     d_sumTimeslice(other.d_sumTimeslice), d_sumTimeslice_global(other.d_sumTimeslice_global),
     d_references(other.d_references), d_offset(other.d_offset)
 {
@@ -7,20 +9,24 @@ inline Correlator::Correlator(Correlator const &other)
   d_data->refCountUp();
 }
 
-inline Correlator::Correlator(size_t const L, size_t const T, Core::Field<Dirac::Matrix>* data)
-  : d_weave(new Base::Weave(L, T)), d_data(data),
-    d_sumTimeslice(new Dirac::Matrix[T]), d_sumTimeslice_global(new Dirac::Matrix[T]),
+template< typename Datatype >
+inline Correlator< Datatype >::Correlator(Core::Field< Datatype >* data)
+  : d_T(data->T()), d_L(data->L()),
+    d_weave(new Base::Weave(d_L, d_T)), d_data(new Field< Datatype >(*data)),
+    d_sumTimeslice(new Datatype[d_T]), d_sumTimeslice_global(new Dirac::Matrix[d_T]),
     d_references(new size_t(1)), d_offset(0)
 {
 }
 
-inline Correlator::~Correlator()
+template< typename Datatype >
+inline Correlator< Datatype >::~Correlator()
 {
   destroy();
 }
 
 
-inline Correlator &Correlator::operator=(Correlator const &rhs)
+template< typename Datatype >
+inline Correlator< Datatype > &Correlator< Datatype >::operator=(Correlator< Datatype > const &rhs)
 {
   if (this != &rhs)
   {
@@ -39,25 +45,27 @@ inline Correlator &Correlator::operator=(Correlator const &rhs)
 }
 
 
-
-inline Dirac::Matrix &Correlator::operator[](size_t const t)
+template< typename Datatype >
+inline Datatype &Correlator< Datatype >::operator[](size_t const t)
 {
   assert(t < T());
   return d_sumTimeslice_global[(t + d_offset) % T()];
 }
 
-inline Dirac::Matrix const &Correlator::operator[](size_t const t) const
+template< typename Datatype >
+inline Datatype const &Correlator< Datatype >::operator[](size_t const t) const
 {
   assert(t < T());
   return d_sumTimeslice_global[(t + d_offset) % T()];
 }
 
-inline void Correlator::operator*=(double const factor)
+template< typename Datatype >
+inline void Correlator< Datatype >::operator*=(double const factor)
 {
   isolate();
   if (d_data != NULL)
   {
-    Core::Field< Dirac::Matrix >::iterator I = d_data->begin();
+    typename Field< Datatype >::iterator I(d_data->begin());
     while(I != d_data->end())
     {
       (*I) *= factor;
@@ -71,12 +79,13 @@ inline void Correlator::operator*=(double const factor)
   }
 }
 
-inline void Correlator::operator*=(std::complex< double > const &factor)
+template< typename Datatype >
+inline void Correlator< Datatype >::operator*=(std::complex< double > const &factor)
 {
   isolate();
   if (d_data != NULL)
   {
-    Core::Field< Dirac::Matrix >::iterator I = d_data->begin();
+    typename Field< Datatype >::iterator I = d_data->begin();
     while(I != d_data->end())
     {
       (*I) *= factor;
@@ -90,13 +99,14 @@ inline void Correlator::operator*=(std::complex< double > const &factor)
   }
 }
 
-inline void Correlator::operator+=(Correlator const &other)
+template< typename Datatype >
+inline void Correlator< Datatype >::operator+=(Correlator< Datatype > const &other)
 {
   isolate();
   if (d_data != NULL && other.d_data != NULL)
   {
-    Core::Field< Dirac::Matrix >::iterator I = d_data->begin();
-    Core::Field< Dirac::Matrix >::const_iterator J = other.d_data->begin();
+    typename Field< Datatype >::iterator I = d_data->begin();
+    typename Field< Datatype >::const_iterator J = other.d_data->begin();
     while(I != d_data->end())
     {
       (*I) += (*J);
@@ -111,28 +121,34 @@ inline void Correlator::operator+=(Correlator const &other)
   }
 }
 
-inline std::complex< double > Correlator::getTrSum(size_t const timeslice) const
-{
-  assert(timeslice < T());
-  return d_sumTimeslice_global[timeslice].trace();
-}
+// template<  >
+// inline std::complex< double > Correlator< Dirac::Matrix >::getTrSum(size_t const timeslice) const
+// {
+//   assert(timeslice < T());
+//   return d_sumTimeslice_global[timeslice].trace();
+// }
 
-inline size_t Correlator::T() const
+template< typename Datatype >
+inline size_t Correlator< Datatype >::T() const
 {
   return d_weave->T();
 }
 
-inline size_t Correlator::L() const
+template< typename Datatype >
+inline size_t Correlator< Datatype >::L() const
 {
   return d_weave->L();
 }
 
-inline size_t Correlator::size() const
+template< typename Datatype >
+inline size_t Correlator< Datatype >::size() const
 {
   return d_weave->localSize(Base::idx_T);
 }
 
-inline bool Correlator::isRoot() const
+template< typename Datatype >
+inline bool Correlator< Datatype >::isRoot() const
 {
   return d_weave->isRoot();
 }
+

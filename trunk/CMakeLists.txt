@@ -8,17 +8,19 @@ MESSAGE(STATUS "System processor is " ${CMAKE_SYSTEM_PROCESSOR})
 
 # SET(CMAKE_CXX_COMPILER "icpc")
 SET(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/CMakeModules)
+SET(CMAKE_INCLUDE_PATH ${PROJECT_SOURCE_DIR}/eigen)
 
 # Option for building the tests
 OPTION(BUILD_TESTS "Build all tests packaged with Ahmidas" ON)
 
 INCLUDE_DIRECTORIES(BEFORE SYSTEM src)
-SET(CMAKE_CXX_FLAGS "-O3")
+# SET(CMAKE_CXX_FLAGS "-O3 -Wall -pedantic")
+SET(CMAKE_CXX_FLAGS "-g -Wall -pedantic")
 
 FIND_PACKAGE(Eigen3)
 IF(EIGEN3_FOUND)
   MESSAGE(STATUS "Found Eigen3 header files, activating.")
-  INCLUDE_DIRECTORIES(BEFORE SYSTEM ${EIGEN3_INCLUDE_DIR})  
+  INCLUDE_DIRECTORIES(BEFORE SYSTEM ${EIGEN3_INCLUDE_DIR})
 ELSE(EIGEN3_FOUND)
   MESSAGE(STATUS "Did not find optional library Eigen3, tests will be deactivated.")
 ENDIF(EIGEN3_FOUND)

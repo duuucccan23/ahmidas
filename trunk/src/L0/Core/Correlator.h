@@ -10,6 +10,7 @@
 namespace Core
 {
 
+  template< typename Datatype >
   class Correlator
   {
 
@@ -17,32 +18,34 @@ namespace Core
 
     Base::Weave *d_weave;
     size_t *d_references;
-    Field < Dirac::Matrix > *d_data;
-    Dirac::Matrix *d_sumTimeslice;
+    Field < Datatype > *d_data;
+    Datatype *d_sumTimeslice;
 
+    size_t d_T;
+    size_t d_L;
     size_t d_offset;
 
     // for compatibility with parallel code
-    Dirac::Matrix *d_sumTimeslice_global;
+    Datatype *d_sumTimeslice_global;
 
     static Field< int * > *s_xRelative;
 
     public:
 
-      Correlator(size_t const L, size_t const T, Field < Dirac::Matrix > *d_data);
+      Correlator(Field < Datatype > *d_data);
       Correlator(Correlator const &other);
 
       ~Correlator();
 
       Correlator &operator=(Correlator const &rhs);
 
-      Dirac::Matrix &operator[](size_t const idx);
-      Dirac::Matrix const &operator[](size_t const idx) const;
+      Datatype &operator[](size_t const idx);
+      Datatype const &operator[](size_t const idx) const;
 
       void operator*=(double const factor);
       void operator*=(std::complex< double > const &factor);
       void operator*=(Base::BaryonPropagatorProjector const projector);
-      void operator+=(Correlator const &other);
+      void operator+=(Correlator< Datatype > const &other);
 
       void deleteField();
 
@@ -63,13 +66,18 @@ namespace Core
       size_t L() const;
       size_t size() const;
 
-      friend std::ostream &operator<<(std::ostream &out, Correlator const &c);
+      friend std::ostream &operator<<(std::ostream &out, Correlator< Datatype > const &c);
 
     private:
       void destroy();
       void isolate();
   };
 
-  std::ostream &operator<<(std::ostream &out, Correlator const &c);
+  template< typename Datatype >
+  std::ostream &operator<<(std::ostream &out, Correlator< Datatype > const &c);
+
   #include "Correlator/Correlator.inlines"
+
+  typedef Correlator< Dirac::Matrix > BaryonCorrelator;
+
 }

@@ -9,6 +9,21 @@ inline StochasticPropagator< NComp >::StochasticPropagator(StochasticPropagator<
 {}
 
 template< size_t NComp >
+inline void StochasticPropagator< NComp >::isolate()
+{
+  if (*d_references == 1)
+    return;
+
+  assert(*d_references > 1);
+
+  *d_references -= 1;
+  d_references = new size_t(1);
+
+  d_components = new Field< QCD::Tensor > (*d_components);
+  (*d_components).isolate();
+}
+
+template< size_t NComp >
 inline Propagator StochasticPropagator< NComp >::operator*(StochasticSource< NComp > const &sSource) const
 {
   return sSource*(*this);

@@ -116,8 +116,7 @@ namespace Tool
     // a lot of data is copied back and forth - this has to be reviewed if more efficiency is desired
     void loadScidac(Core::Propagator *propagator, std::vector< std::string> const &filenames)
     {
-      // would like to do this, but isolate is private
-      // propagator->isolate();
+      propagator->isolate();
 
       if (filenames.size() == 12)
       {
@@ -188,8 +187,7 @@ namespace Tool
     // a lot of data is copied back and forth - this has to be reviewed if more efficiency is desired
     void loadScidac(Core::Propagator *propagator, std::vector< std::string> const &filenames, size_t const precision)
     {
-      // would like to do this, but isolate is private
-      // propagator->isolate();
+      propagator->isolate();
 
       if (filenames.size() == 12)
       {
@@ -260,6 +258,7 @@ namespace Tool
 
     void loadScidac(Core::StochasticPropagator< 4 > *sPropagator, std::vector< std::string> const &filenames)
     {
+      sPropagator->isolate();
       QCD::Spinor dummy;
       dummy.setToZero();
 
@@ -335,6 +334,7 @@ namespace Tool
 
     void loadScidac(Core::StochasticPropagator< 4 > *sPropagator, std::vector< std::string> const &filenames, size_t const precision)
     {
+      sPropagator->isolate();
       QCD::Spinor dummy;
       dummy.setToZero();
 
@@ -412,6 +412,7 @@ namespace Tool
 
 void Tool::IO::loadScidac(Core::StochasticPropagator< 1 > *sPropagator, std::vector< std::string> const &filenames)
 {
+  sPropagator->isolate();
   QCD::Spinor dummy;
   dummy.setToZero();
 
@@ -477,6 +478,7 @@ void Tool::IO::loadScidac(Core::StochasticPropagator< 1 > *sPropagator, std::vec
 
 void Tool::IO::loadScidac(Core::StochasticPropagator< 1 > *sPropagator, std::vector< std::string> const &filenames, size_t const precision)
 {
+  sPropagator->isolate();
   QCD::Spinor dummy;
   dummy.setToZero();
 

@@ -37,5 +37,5 @@ TARGET_LINK_LIBRARIES(generate_stochastic_source SU3 IO Base Core Dirac Weave In
 ADD_EXECUTABLE(generate_point_source generate_point_source.cpp)
 TARGET_LINK_LIBRARIES(generate_point_source SU3 IO Base Core Dirac Weave Input Smear)
 
-ADD_EXECUTABLE(makeetmcprop makeetmcprop.cpp)
-TARGET_LINK_LIBRARIES(makeetmcprop IO Core)
+# ADD_EXECUTABLE(makeetmcprop makeetmcprop.cpp)
+# TARGET_LINK_LIBRARIES(makeetmcprop IO Core)

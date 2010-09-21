@@ -69,6 +69,15 @@ namespace Core
       void leftMultiplyOperator(Base::Operator const O); // only for local operators
       Core::Field< Dirac::Matrix > *contractWithOperatorInsertion(Base::Operator const O, Field< QCD::Gauge > * const gauge_field, Propagator const &fromRight);
 
+      void rightMultiply(Propagator const & other);
+      void leftMultiply(Propagator const & other);
+
+      // Dirac operators:
+      // fixed boundary conditions (light doublet)
+      Propagator applyDiracOperator(Field< QCD::Gauge > const &gauge_field, double const kappa, double const mu) const;
+      // uniform boundary conditions (heavy doublet)
+      Propagator applyDiracOperator(Field< QCD::Gauge > const &gauge_field, double const kappa, double const m0, double const mu_sigma, double const mu_delta, Propagator const &secondProp, bool sign) const;
+      // fixed boundary conditions (light doublet)
       Propagator applyDiracOperator(Field< QCD::Gauge > const &gauge_field, double const kappa, double const mu, size_t const t_boundary) const;
 
       Propagator &select_timeslice(size_t const timeslice);
@@ -113,6 +122,10 @@ namespace Core
       Propagator &dagger();
       Propagator &conjugate();
       Propagator &transpose();
+      
+      
+      Field< std::complex<double> > trace() const;
+            
 
       // average difference of two different propagators
       double diff(Propagator const& other) const;
@@ -121,6 +134,9 @@ namespace Core
       void setToRandom();
 
       void changeBoundaryConditions_uniformToFixed(size_t timesliceSource, size_t timesliceBoundary);
+      
+      void rotateToPhysicalBasis(bool const sign);
+      
 
       Propagator &shift(Base::SpaceTimeIndex const idx, Base::Direction const dir, size_t const times=1);
 
@@ -145,9 +161,11 @@ namespace Core
 
       friend std::ostream &operator<<(std::ostream &out, Propagator const &p);
 
+      void isolate();
+
     protected:
       void destroy();
-      void isolate();
+
 
   };
 
@@ -204,10 +222,7 @@ namespace Core
 
       Propagator operator*(StochasticSource< NComp > const &sSource) const;
 
-      private:
-        void isolate();
-
-
+      void isolate();
   };
 
   #include "Propagator/Propagator.inlines"

@@ -36,7 +36,7 @@ int main(int argc, char **argv)
   Tool::IO::load(uProp, propfilesU, Tool::IO::fileSCIDAC);
 
   //charged_pion
-  Core::Correlator C2 = Contract::light_meson_twopoint(uProp, 0, gamma5, gamma5);
+  Core::Correlator< Dirac::Matrix > C2 = Contract::light_meson_twopoint(uProp, 0, gamma5, gamma5);
 
   delete uProp;
 

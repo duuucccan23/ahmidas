@@ -257,7 +257,7 @@ int main(int argc, char **argv)
   uProp.changeBoundaryConditions_uniformToFixed(timeslice_source, timeslice_boundary);
   dProp.changeBoundaryConditions_uniformToFixed(timeslice_source, timeslice_boundary);
 
-  Core::Correlator C2_P = Contract::proton_twopoint(uProp, uProp, dProp, Base::proj_NO_PROJECTOR);
+  Core::BaryonCorrelator C2_P = Contract::proton_twopoint(uProp, uProp, dProp, Base::proj_NO_PROJECTOR);
   std::cout << "\nproton twopoint, full spin structure in twisted basis, at timeslice ";
   std::cout << T/2 << ":\n" << std::endl;
   Dirac::Matrix matrix_twopoint(C2_P[T/2]);
@@ -338,8 +338,8 @@ int main(int argc, char **argv)
 
   for(size_t idx_D = 0; idx_D < 16; idx_D++)
   {
-    Core::Correlator p2p_seqD(L, T, (sequentialSource_d[idx_D]).contract(dProp_mod));
-    Core::Correlator p2p_seqU(L, T, (sequentialSource_u[idx_D]).contract(uProp));
+    Core::BaryonCorrelator p2p_seqD((sequentialSource_d[idx_D]).contract(dProp_mod));
+    Core::BaryonCorrelator p2p_seqU((sequentialSource_u[idx_D]).contract(uProp));
     p2p_seqD.sumOverSpatialVolume();
     p2p_seqU.sumOverSpatialVolume();
     matrix_d[idx_D] = (p2p_seqD[2]).trace();
@@ -360,7 +360,7 @@ int main(int argc, char **argv)
   std::cout << matrix_d.trace().imag();
   std::cout << std::endl;
   std::cout << "\nproton twopoint from sequential source (d), fixed projector\n" << std::endl;
-  Core::Correlator p2p_seq(L, T, sequentialSource_fixedProjector_d.contract(dProp_mod));
+  Core::BaryonCorrelator p2p_seq(sequentialSource_fixedProjector_d.contract(dProp_mod));
   p2p_seq.sumOverSpatialVolume();
   std::cout << p2p_seq << "\n" << std::endl;
 
@@ -407,7 +407,7 @@ int main(int argc, char **argv)
   std::cout << matrix_u.trace().imag();
   std::cout << std::endl;
   std::cout << "\nproton twopoint from sequential source (u), fixed projector (times 1/2)\n" << std::endl;
-  Core::Correlator p2p_seq_u(L, T, sequentialSource_fixedProjector_u.contract(uProp));
+  Core::BaryonCorrelator p2p_seq_u(sequentialSource_fixedProjector_u.contract(uProp));
   p2p_seq_u.sumOverSpatialVolume();
 
   // see comment above, we expect two times the twopoint

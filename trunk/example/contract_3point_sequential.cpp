@@ -161,7 +161,7 @@ int main(int argc, char **argv)
     std::cout << "\n calculating 3-point function(s) \n" << std::endl;
 
 
-  std::vector< Core::Correlator > C3p = Contract::proton_threepoint_sequential(backwardProp_u, forwardProp_u,
+  std::vector< Core::BaryonCorrelator > C3p = Contract::proton_threepoint_sequential(backwardProp_u, forwardProp_u,
                                                                                backwardProp_d, forwardProp_d,
                                                                                &gauge_field,
                                                                                my_operators);
@@ -230,7 +230,7 @@ int main(int argc, char **argv)
   if (weave.isRoot())
     std::cout << "propagators and gauge field smeared successfully\n" << std::endl;
 
-  Core::Correlator C2_P = Contract::proton_twopoint(forwardProp_u, forwardProp_u, forwardProp_d, Base::proj_PARITY_PLUS_TM);
+  Core::BaryonCorrelator C2_P = Contract::proton_twopoint(forwardProp_u, forwardProp_u, forwardProp_d, Base::proj_PARITY_PLUS_TM);
   C2_P.setOffset(timeslice_source);
 
   if (weave.isRoot())

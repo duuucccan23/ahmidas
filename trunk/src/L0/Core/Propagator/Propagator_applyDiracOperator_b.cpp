@@ -11,14 +11,12 @@ namespace Core
                                             double const mu_sigma, double const mu_delta, Propagator const &secondProp, bool sign) const
   {
     Base::Weave weave(L(), T());
-    
+
     // mass of doublet is splitted via mu_delta
     double const mass = sign ? m0 + mu_delta : m0 - mu_delta; 
-    
+
     std::complex<double> const phaseFactor(exp(std::complex< double > (0.0, M_PI / double(T()))));
     std::complex<double> const phaseFactorReverse(exp(std::complex< double > (0.0, -M_PI / double(T()))));
-
-    size_t localIndex;
 
     for(Field< QCD::Gauge >::iterator I(const_cast< Field< QCD::Gauge > & >(gauge_field).begin()); 
         I != (const_cast< Field< QCD::Gauge > & >(gauge_field)).end(); ++I)
@@ -131,8 +129,9 @@ namespace Core
     {
       (*I) *= phaseFactorReverse;
     }
-    
+
     weave.barrier();
-    return result;
+    Dirac::Gamma< 5 > gamma5;
+    return result.rightMultiply(gamma5);
   }
 }

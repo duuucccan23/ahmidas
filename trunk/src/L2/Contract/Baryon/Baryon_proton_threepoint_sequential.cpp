@@ -3,7 +3,7 @@
 namespace Contract
 {
 
-  std::vector< Core::Correlator > proton_threepoint_sequential(
+  std::vector< Core::BaryonCorrelator > proton_threepoint_sequential(
     Core::Propagator const &bw_prop_u, Core::Propagator const &fw_prop_u,
     Core::Propagator const &bw_prop_d, Core::Propagator const &fw_prop_d,
     Core::Field< QCD::Gauge > * const gauge_field,
@@ -17,7 +17,7 @@ namespace Contract
     assert(L == bw_prop_d.L() && T == bw_prop_d.T());
     assert(L == fw_prop_d.L() && T == fw_prop_d.T());
 
-    std::vector< Core::Correlator > p3p;
+    std::vector< Core::BaryonCorrelator > p3p;
     Dirac::Gamma< 5 > gamma5;
 
     for (size_t iOp=0; iOp<ops.size(); iOp++)
@@ -31,7 +31,7 @@ namespace Contract
 
 //       bw_tmp_u.multiplyOperator(ops[iOp], gauge_field);
 
-      Core::Correlator p3p_tmp_u(L, T, bw_tmp_u.contractWithOperatorInsertion(ops[iOp], gauge_field, fw_prop_u));
+      Core::BaryonCorrelator p3p_tmp_u(bw_tmp_u.contractWithOperatorInsertion(ops[iOp], gauge_field, fw_prop_u));
       p3p_tmp_u.sumOverSpatialVolume();
       p3p_tmp_u.deleteField();
       p3p.push_back(p3p_tmp_u);
@@ -50,7 +50,7 @@ namespace Contract
 //       bw_tmp_d.conjugate();
 
 
-      Core::Correlator p3p_tmp_d(L, T, bw_tmp_d.contractWithOperatorInsertion(ops[iOp], gauge_field, fw_prop_d));
+      Core::BaryonCorrelator p3p_tmp_d(bw_tmp_d.contractWithOperatorInsertion(ops[iOp], gauge_field, fw_prop_d));
       p3p_tmp_d.sumOverSpatialVolume();
       p3p_tmp_d.deleteField();
       p3p.push_back(p3p_tmp_d);

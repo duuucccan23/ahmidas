@@ -21,7 +21,8 @@ namespace Tool
 //   void randomize(Core::Propagator *propagator);
 
   // print correlation functions in a quasi-standard ETMC format
-  void printLightMesonCorrelator(std::vector< Core::Correlator > const &correlator, std::string const filename = "output.txt");
+  void printLightMesonCorrelator(std::vector< Core::Correlator< Dirac::Matrix > > const &correlator,
+                                 std::string const filename = "output.txt");
 
   template< typename Element >
   void setToZero(Core::Field< Element > *field);

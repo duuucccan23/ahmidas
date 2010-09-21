@@ -150,9 +150,9 @@ int main(int argc, char **argv)
     if (weave.isRoot())
       std::cout << "\n calculating 3-point function(s) \n" << std::endl;
 
-    Core::Correlator C3p_d1 = Contract::proton_twopoint(uProp, uProp, seqProp_d, Base::proj_NO_PROJECTOR);
-    Core::Correlator C3p_u1 = Contract::proton_twopoint(uProp, seqProp_u, dProp, Base::proj_NO_PROJECTOR);
-    Core::Correlator C3p_u2 = Contract::proton_twopoint(seqProp_u, uProp, dProp, Base::proj_NO_PROJECTOR);
+    Core::BaryonCorrelator C3p_d1 = Contract::proton_twopoint(uProp, uProp, seqProp_d, Base::proj_NO_PROJECTOR);
+    Core::BaryonCorrelator C3p_u1 = Contract::proton_twopoint(uProp, seqProp_u, dProp, Base::proj_NO_PROJECTOR);
+    Core::BaryonCorrelator C3p_u2 = Contract::proton_twopoint(seqProp_u, uProp, dProp, Base::proj_NO_PROJECTOR);
 
     C3p_u1.deleteField();
     C3p_d1.deleteField();
@@ -161,26 +161,26 @@ int main(int argc, char **argv)
     C3p_u1 += C3p_u2;
 
 #ifdef __GAMMA_1__
-    Core::Correlator C3p_u(C3p_u1);
-    Core::Correlator C3p_d(C3p_d1);
+    Core::BaryonCorrelator C3p_u(C3p_u1);
+    Core::BaryonCorrelator C3p_d(C3p_d1);
     C3p_u *= Base::proj_1_PLUS_TM;
     C3p_d *= Base::proj_1_PLUS_TM;
 #endif
 #ifdef __GAMMA_2__
-    Core::Correlator C3p_u(C3p_u1);
-    Core::Correlator C3p_d(C3p_d1);
+    Core::BaryonCorrelator C3p_u(C3p_u1);
+    Core::BaryonCorrelator C3p_d(C3p_d1);
     C3p_u *= Base::proj_2_PLUS_TM;
     C3p_d *= Base::proj_2_PLUS_TM;
 #endif
 #ifdef __GAMMA_3__
-    Core::Correlator C3p_u(C3p_u1);
-    Core::Correlator C3p_d(C3p_d1);
+    Core::BaryonCorrelator C3p_u(C3p_u1);
+    Core::BaryonCorrelator C3p_d(C3p_d1);
     C3p_u *= Base::proj_3_PLUS_TM;
     C3p_d *= Base::proj_3_PLUS_TM;
 #endif
 #ifdef __GAMMA_4__
-    Core::Correlator C3p_u(C3p_u1);
-    Core::Correlator C3p_d(C3p_d1);
+    Core::BaryonCorrelator C3p_u(C3p_u1);
+    Core::BaryonCorrelator C3p_d(C3p_d1);
     C3p_u *= Base::proj_PARITY_PLUS_TM;
     C3p_d *= Base::proj_PARITY_PLUS_TM;
 #endif
@@ -226,7 +226,7 @@ int main(int argc, char **argv)
     if (weave.isRoot())
       std::cout << "\n calculating 2-point function \n" << std::endl;
 
-    Core::Correlator C2_P = Contract::proton_twopoint(uProp, uProp, dProp, Base::proj_PARITY_PLUS_TM);
+    Core::BaryonCorrelator C2_P = Contract::proton_twopoint(uProp, uProp, dProp, Base::proj_PARITY_PLUS_TM);
     C2_P.setOffset(timeslice_source);
     if (weave.isRoot())
     {

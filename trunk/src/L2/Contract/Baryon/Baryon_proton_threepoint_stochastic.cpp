@@ -3,7 +3,7 @@
 namespace Contract
 {
 
-  std::vector< Core::Correlator > proton_threepoint_stochastic(Core::Propagator const &u,
+  std::vector< Core::BaryonCorrelator > proton_threepoint_stochastic(Core::Propagator const &u,
                                                 Core::Propagator const &d,
                                                 Core::StochasticPropagator <12> const &phi_u,
                                                 Core::StochasticPropagator <12> const &phi_d,
@@ -37,12 +37,12 @@ namespace Contract
 
     assert(threepoint.size() == my_operators.size()*2);
 
-    std::vector< Core::Correlator > allthreepoints;
+    std::vector< Core::BaryonCorrelator > allthreepoints;
 
     for (size_t opIdx=0; opIdx<my_operators.size(); opIdx++)
     {
-      Core::Correlator threepoint_UU(u.L(), u.T(), threepoint[2*opIdx  ]);
-      Core::Correlator threepoint_DD(u.L(), u.T(), threepoint[2*opIdx+1]);
+      Core::BaryonCorrelator threepoint_UU(threepoint[2*opIdx  ]);
+      Core::BaryonCorrelator threepoint_DD(threepoint[2*opIdx+1]);
       threepoint_UU.sumOverSpatialVolume();
       threepoint_DD.sumOverSpatialVolume();
 

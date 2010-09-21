@@ -13,11 +13,9 @@ namespace Core
   {
 
     Base::Weave weave(L(), T());
-    
+
     std::complex<double> const phaseFactor(exp(std::complex< double > (0.0, M_PI / double(T()))));
     std::complex<double> const phaseFactorReverse(exp(std::complex< double > (0.0, -M_PI / double(T()))));
-
-    size_t localIndex;
 
     // temporal links at timeslice t_boundary pick up a factor exp(i/T)
     for(Field< QCD::Gauge >::iterator I(const_cast< Field< QCD::Gauge > & >(gauge_field).begin());
@@ -133,6 +131,8 @@ namespace Core
     }
 
     weave.barrier();
-    return result;
+    // one Gamma5 is still missing
+    Dirac::Gamma< 5 > gamma5;
+    return result.rightMultiply(gamma5);
   }
 }

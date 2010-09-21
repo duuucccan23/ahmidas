@@ -8,12 +8,12 @@
 namespace Contract
 {
   template< size_t IndexSrc, size_t IndexSnk >
-  Core::Correlator light_meson_twopoint(Core::Propagator const *u, Core::Propagator const *d,
+  Core::Correlator< Dirac::Matrix > light_meson_twopoint(Core::Propagator const *u, Core::Propagator const *d,
                                         Dirac::Gamma< IndexSrc > const &interpolSrc,
                                         Dirac::Gamma< IndexSnk > const &interpolSnk);
 
   template< size_t IndexSrc, size_t IndexSnk >
-  Core::Correlator light_meson_twopoint(Core::Propagator const *u, Core::Propagator const *d,
+  Core::Correlator< Dirac::Matrix > light_meson_twopoint(Core::Propagator const *u, Core::Propagator const *d,
                                         Dirac::Gamma< IndexSrc > const &interpolSrc,
                                         Dirac::Gamma< IndexSnk > const &interpolSnk,
                                         size_t const *momentum);
@@ -23,7 +23,7 @@ namespace Contract
   // gamma5, gamma0, gamma1, gamma2, gamma3, unity,
   // gamma5*gamma0, gamma5*gamma1, gamma5*gamma2, gamma5*gamma3,
   // sigma01, sigma02, sigma03, sigma12, sigma13, sigma23
-  std::vector< Core::Correlator > light_meson_twopoint_stochastic(Core::StochasticPropagator< 4 > const &psi1,
+  std::vector< Core::Correlator< Dirac::Matrix > > light_meson_twopoint_stochastic(Core::StochasticPropagator< 4 > const &psi1,
                                                                   Core::StochasticPropagator< 4 > const &psi2);
 }
 

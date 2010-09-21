@@ -130,7 +130,7 @@ int main(int argc, char **argv)
 
   // Core::Correlator is the structure representing a correlation function
   // note: this is just a declaration of a pointer, no object is created yet;
-  Core::Correlator *pion_twopoint;
+  Core::Correlator< Dirac::Matrix > *pion_twopoint;
 
 
 
@@ -178,7 +178,7 @@ int main(int argc, char **argv)
   // create the Correlator object
   // note: multiplying the two Propagator objects already performs the colour trace,
   // the full Dirac structure is kept for a reason
-  pion_twopoint = new Core::Correlator(L, T, (*u_propagator)*(*d_bar_propagator));
+  pion_twopoint = new Core::Correlator< Dirac::Matrix >((*u_propagator)*(*d_bar_propagator));
 
 
   // this does the zero-momentum projection

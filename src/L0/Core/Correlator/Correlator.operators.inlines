@@ -1,0 +1,75 @@
+template< typename Datatype >
+inline Datatype &Correlator< Datatype >::operator[](size_t const t)
+{
+  assert(t < T());
+  return d_sumTimeslice_global[(t + d_offset) % T()];
+}
+
+template< typename Datatype >
+inline Datatype const &Correlator< Datatype >::operator[](size_t const t) const
+{
+  assert(t < T());
+  return d_sumTimeslice_global[(t + d_offset) % T()];
+}
+
+template< typename Datatype >
+inline void Correlator< Datatype >::operator*=(double const factor)
+{
+  isolate();
+  if (d_data != NULL)
+  {
+    typename Field< Datatype >::iterator I(d_data->begin());
+    while(I != d_data->end())
+    {
+      (*I) *= factor;
+      ++I;
+    }
+  }
+  for (size_t t=0; t<T(); t++)
+  {
+      d_sumTimeslice[t]        *= factor;
+      d_sumTimeslice_global[t] *= factor;
+  }
+}
+
+template< typename Datatype >
+inline void Correlator< Datatype >::operator*=(std::complex< double > const &factor)
+{
+  isolate();
+  if (d_data != NULL)
+  {
+    typename Field< Datatype >::iterator I = d_data->begin();
+    while(I != d_data->end())
+    {
+      (*I) *= factor;
+      ++I;
+    }
+  }
+  for (size_t t=0; t<T(); t++)
+  {
+      d_sumTimeslice[t]        *= factor;
+      d_sumTimeslice_global[t] *= factor;
+  }
+}
+
+template< typename Datatype >
+inline void Correlator< Datatype >::operator+=(Correlator< Datatype > const &other)
+{
+  isolate();
+  if (d_data != NULL && other.d_data != NULL)
+  {
+    typename Field< Datatype >::iterator I = d_data->begin();
+    typename Field< Datatype >::const_iterator J = other.d_data->begin();
+    while(I != d_data->end())
+    {
+      (*I) += (*J);
+      ++I;
+      ++J;
+    }
+  }
+  for (size_t t=0; t<T(); t++)
+  {
+      d_sumTimeslice[t]        += other.d_sumTimeslice[t];
+      d_sumTimeslice_global[t] += other.d_sumTimeslice_global[t];
+  }
+}

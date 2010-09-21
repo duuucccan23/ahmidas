@@ -57,7 +57,7 @@ int main(int argc, char **argv)
   uProp->changeBoundaryConditions_uniformToFixed(timeslice_source, timeslice_boundary);
   dProp->changeBoundaryConditions_uniformToFixed(timeslice_source, timeslice_boundary);
 
-  Core::Correlator C2_P = Contract::proton_twopoint(*uProp, *uProp, *dProp, Base::proj_PARITY_PLUS_TM);
+  Core::BaryonCorrelator C2_P = Contract::proton_twopoint(*uProp, *uProp, *dProp, Base::proj_PARITY_PLUS_TM);
 
   std::cout << C2_P << std::endl;
 
@@ -92,7 +92,7 @@ int main(int argc, char **argv)
     dProp->gaugeTransform_fixedSource(randomGaugeTrafo, source_position);
     Core::Field< SU3::Matrix >::iterator I_rgt_new = randomGaugeTrafo.begin();
     uProp->gaugeTransform_fixedSource(randomGaugeTrafo, source_position);
-    Core::Correlator C2_P_gt = Contract::proton_twopoint(*uProp, *uProp, *dProp, Base::proj_PARITY_PLUS_TM);
+    Core::BaryonCorrelator C2_P_gt = Contract::proton_twopoint(*uProp, *uProp, *dProp, Base::proj_PARITY_PLUS_TM);
     if    (C2_P_gt[0].trace().imag() < (-7.64689531e-05 + tolerance) && C2_P_gt[0].trace().imag() > (-7.64689531e-05 - tolerance)
         && C2_P_gt[1].trace().imag() < (-1.02786839e-05 + tolerance) && C2_P_gt[1].trace().imag() > (-1.02786839e-05 - tolerance)
         && C2_P_gt[2].trace().imag() < ( 3.89420319e-08 + tolerance) && C2_P_gt[2].trace().imag() > ( 3.89420319e-08 - tolerance)

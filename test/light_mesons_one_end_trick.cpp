@@ -42,7 +42,7 @@ int main(int argc, char **argv)
     std::cout << "propagator successfully loaded\n" << std::endl;
 
 
-  std::vector< Core::Correlator > C2 = Contract::light_meson_twopoint_stochastic(*uProp, *uProp);
+  std::vector< Core::Correlator< Dirac::Matrix > > C2 = Contract::light_meson_twopoint_stochastic(*uProp, *uProp);
 
   delete uProp;
 

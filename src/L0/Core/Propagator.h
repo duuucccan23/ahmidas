@@ -62,7 +62,7 @@ namespace Core
       Propagator operator*(Dirac::Gamma< Index > const &gamma) const;
 
       template < size_t Index >
-      void rightMultiply(Dirac::Gamma< Index > const& gamma);
+      Propagator &rightMultiply(Dirac::Gamma< Index > const& gamma);
 
       // multiplication by operator (this is multiplication from the right)
       void rightMultiplyOperator(Base::Operator const O); // only for local operators

@@ -1,0 +1,9 @@
+#include "Correlator.ih"
+
+
+template< typename Datatype >
+void Correlator< Datatype >::setOffset(size_t timeslice)
+{
+  isolate();
+  d_offset = timeslice % T();
+}

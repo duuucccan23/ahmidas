@@ -196,7 +196,7 @@ int main(int argc, char **argv)
 // 
 //     operators.push_back(Base::op_UNITY);
 // 
-//     std::vector< Core::Correlator > C3p =
+//     std::vector< Core::BaryonCorrelator > C3p =
 //       Contract::proton_threepoint_sequential(backwardProp_u_proj0, forwardProp_u,
 //                                              backwardProp_d_proj0, forwardProp_d,
 //                                              &gauge_field,
@@ -231,22 +231,22 @@ int main(int argc, char **argv)
 // => use one std::vector< Base::Operator > for each projector
 
 
-  std::vector< Core::Correlator > C3p_proj0
+  std::vector< Core::BaryonCorrelator > C3p_proj0
     = Contract::proton_threepoint_sequential(backwardProp_u_proj0, forwardProp_u,
                                              backwardProp_d_proj0, forwardProp_d,
                                              &gauge_field, my_operators);
 
-  std::vector< Core::Correlator > C3p_proj1
+  std::vector< Core::BaryonCorrelator > C3p_proj1
     = Contract::proton_threepoint_sequential(backwardProp_u_proj1, forwardProp_u,
                                              backwardProp_d_proj1, forwardProp_d,
                                              &gauge_field, my_operators);
 
-  std::vector< Core::Correlator > C3p_proj2
+  std::vector< Core::BaryonCorrelator > C3p_proj2
     = Contract::proton_threepoint_sequential(backwardProp_u_proj2, forwardProp_u,
                                              backwardProp_d_proj2, forwardProp_d,
                                              &gauge_field, my_operators);
 
-  std::vector< Core::Correlator > C3p_proj3
+  std::vector< Core::BaryonCorrelator > C3p_proj3
     = Contract::proton_threepoint_sequential(backwardProp_u_proj3, forwardProp_u,
                                              backwardProp_d_proj3, forwardProp_d,
                                              &gauge_field, my_operators);
@@ -499,7 +499,7 @@ int main(int argc, char **argv)
   if (weave.isRoot())
     std::cout << "propagators and gauge field smeared successfully\n" << std::endl;
 
-  Core::Correlator C2_P = Contract::proton_twopoint(forwardProp_u, forwardProp_u, forwardProp_d, Base::proj_PARITY_PLUS_TM);
+  Core::BaryonCorrelator C2_P = Contract::proton_twopoint(forwardProp_u, forwardProp_u, forwardProp_d, Base::proj_PARITY_PLUS_TM);
   C2_P.setOffset(timeslice_source);
 
   if (weave.isRoot())

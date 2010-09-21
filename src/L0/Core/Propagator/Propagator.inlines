@@ -32,7 +32,7 @@ inline QCD::Tensor &Propagator::operator[](size_t const localIndex)
 }
 
 template < size_t Index >
-inline void Propagator::rightMultiply(Dirac::Gamma< Index > const& gamma)
+inline Propagator &Propagator::rightMultiply(Dirac::Gamma< Index > const& gamma)
 {
   isolate();
   Propagator::iterator it = begin();
@@ -41,6 +41,7 @@ inline void Propagator::rightMultiply(Dirac::Gamma< Index > const& gamma)
     (*it).rightMultiply(gamma);
     ++it;
   }
+  return *this;
 }
 
 

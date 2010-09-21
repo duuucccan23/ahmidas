@@ -193,7 +193,7 @@ int main(int argc, char **argv)
     double const time_4a = double(clock());
 
   // of course this correlator has no physical meaning, it is just some alibi calculation for time measurement
-  Core::Correlator no_pion2point(L, T, point_source*point_source);
+  Core::Correlator< Dirac::Matrix > no_pion2point(point_source*point_source);
 
   weave.barrier();
     double const time_4b = double(clock());

@@ -9,6 +9,12 @@
 
 namespace Core
 {
+  template< typename Datatype >
+  class Correlator;
+
+  template< typename Datatype >
+  std::ostream &operator<<(std::ostream &out, Correlator< Datatype > const &c);
+
 
   template< typename Datatype >
   class Correlator
@@ -66,17 +72,24 @@ namespace Core
       size_t L() const;
       size_t size() const;
 
-      friend std::ostream &operator<<(std::ostream &out, Correlator< Datatype > const &c);
+      friend std::ostream &operator<< < Datatype >(std::ostream &out, Correlator< Datatype > const &c);
 
     private:
       void destroy();
       void isolate();
   };
 
-  template< typename Datatype >
-  std::ostream &operator<<(std::ostream &out, Correlator< Datatype > const &c);
 
   #include "Correlator/Correlator.inlines"
+  #include "Correlator/Correlator.operators.inlines"
+
+  #include "Correlator/Correlator_deleteField.template"
+  #include "Correlator/Correlator_destroy.template"
+  #include "Correlator/Correlator_isolate.template"
+  #include "Correlator/Correlator_momentumProjection.template"
+  #include "Correlator/Correlator_prepareMomentumProjection.template"
+  #include "Correlator/Correlator_setOffset.template"
+  #include "Correlator/Correlator_sumOverSpatialVolume.template"
 
   typedef Correlator< Dirac::Matrix > BaryonCorrelator;
 

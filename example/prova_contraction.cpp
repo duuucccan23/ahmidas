@@ -155,7 +155,7 @@ int main(int argc, char **argv)
   // create the Correlator object
   // note: multiplying the two Propagator objects already performs the colour trace,
   // the full Dirac structure is kept for a reason
-  Core::Correlator ps_3point(L, T, sequential_propagator * stoc_bar_propagator);
+  Core::Correlator< Dirac::Matrix > ps_3point(sequential_propagator * stoc_bar_propagator);
 
   // this does the zero-momentum projection
   // note: the same function with an argument projects to any momentum

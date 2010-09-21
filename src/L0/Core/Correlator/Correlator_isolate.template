@@ -1,7 +1,7 @@
 #include "Correlator.ih"
 
 template< typename Datatype >
-void Core::Correlator< Datatype >::isolate()
+void Correlator< Datatype >::isolate()
 {
   if (*d_references == 1)
     return;

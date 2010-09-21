@@ -1,7 +1,8 @@
 #include "Tool.ih"
 
 // print correlation functions in a quasi-standard ETMC format
-void Tool::printLightMesonCorrelator(std::vector< Core::Correlator > const &correlator, std::string const filename)
+
+void Tool::printLightMesonCorrelator(std::vector< Core::Correlator< Dirac::Matrix > > const &correlator, std::string const filename)
 {
 
   if (correlator.size() == 0)

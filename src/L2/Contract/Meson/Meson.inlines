@@ -5,7 +5,7 @@ namespace Contract
 {
 
   template< size_t IndexSrc, size_t IndexSnk >
-  Core::Correlator light_meson_twopoint(Core::Propagator const *u, Core::Propagator const *d,
+  Core::Correlator< Dirac::Matrix > light_meson_twopoint(Core::Propagator const *u, Core::Propagator const *d,
                                         Dirac::Gamma< IndexSrc > const &interpolSrc,
                                         Dirac::Gamma< IndexSnk > const &interpolSnk,
                                         size_t const *momentum)
@@ -22,7 +22,7 @@ namespace Contract
 #ifdef __NO_INTERPOLATING_FIELD__
     d_bar = new Core::Propagator(*u);
     d_bar->dagger();
-    Core::Correlator twopoint_nif(u->L(), u->T(), (*u)*(*d_bar));
+    Core::Correlator< Dirac::Matrix > twopoint_nif((*u)*(*d_bar));
     twopoint_nif.sumOverSpatialVolume();
     if (twopoint_nif.isRoot())
     {
@@ -51,7 +51,7 @@ namespace Contract
 
     delete d_bar;
 
-    Core::Correlator twopoint(u->L(), u->T(), tmpU*tmpD);
+    Core::Correlator< Dirac::Matrix > twopoint(tmpU*tmpD);
 
     twopoint.sumOverSpatialVolume();
 
@@ -73,7 +73,7 @@ namespace Contract
 
 
   template< size_t IndexSrc, size_t IndexSnk >
-  inline Core::Correlator light_meson_twopoint(Core::Propagator const *u, Core::Propagator const *d,
+  inline Core::Correlator< Dirac::Matrix > light_meson_twopoint(Core::Propagator const *u, Core::Propagator const *d,
                                                Dirac::Gamma< IndexSrc > const &interpolSrc,
                                                Dirac::Gamma< IndexSnk > const &interpolSnk)
   {

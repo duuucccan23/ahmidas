@@ -3,7 +3,7 @@
 namespace Contract
 {
 
-  Core::Correlator proton_twopoint(Core::Propagator const &u1, Core::Propagator const &u2, Core::Propagator const &d,
+  Core::BaryonCorrelator proton_twopoint(Core::Propagator const &u1, Core::Propagator const &u2, Core::Propagator const &d,
                                    Base::BaryonPropagatorProjector const projector)
   {
     assert(u1.L() == d.L() && u1.T() == d.T() && u2.L() == d.L() && u2.T() == d.T());
@@ -21,7 +21,7 @@ namespace Contract
     }
 
     // order of d and u in Propagator::construct_baryon is important!
-    Core::Correlator twopoint(u1.L(), u1.T(),  u1.construct_baryon(d, u2, Base::bar_PROTON));
+    Core::BaryonCorrelator twopoint(u1.construct_baryon(d, u2, Base::bar_PROTON));
     twopoint.sumOverSpatialVolume();
 //     std::cout << "\nFull proton two point function:\n" << std::endl;
 //     for (size_t t=0; t<u1.T(); t++)

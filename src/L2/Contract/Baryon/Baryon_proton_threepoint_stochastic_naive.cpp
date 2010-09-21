@@ -4,7 +4,7 @@
 
 namespace Contract
 {
-  std::vector< Core::Correlator > proton_threepoint_stochastic_naive(Core::Propagator const &u,
+  std::vector< Core::BaryonCorrelator > proton_threepoint_stochastic_naive(Core::Propagator const &u,
                                                           Core::Propagator const &d,
                                                           Core::StochasticPropagator<12> const &u_stoch_at_sink,
                                                           Core::StochasticPropagator<12> const &d_stoch_at_sink,
@@ -20,7 +20,7 @@ namespace Contract
     size_t const L(d.L());
     size_t const T(d.T());
 
-    std::vector< Core::Correlator > threepoints_all;
+    std::vector< Core::BaryonCorrelator > threepoints_all;
 
     if (ops.size() == 0)
       return threepoints_all;;
@@ -161,8 +161,8 @@ namespace Contract
         ++count;
       }
 
-      Core::Correlator tp_dd(u.L(), u.T(), field_dd);
-      Core::Correlator tp_uu(u.L(), u.T(), field_uu);
+      Core::BaryonCorrelator tp_dd(field_dd);
+      Core::BaryonCorrelator tp_uu(field_uu);
       tp_dd.sumOverSpatialVolume();
       tp_uu.sumOverSpatialVolume();
       threepoints_all.push_back(tp_dd);

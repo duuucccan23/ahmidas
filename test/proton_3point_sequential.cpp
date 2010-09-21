@@ -82,7 +82,7 @@ int main(int argc, char **argv)
   operators.push_back(Base::op_GAMMA_4);
 
   // the actual contraction
-  std::vector< Core::Correlator > threepoint =
+  std::vector< Core::BaryonCorrelator > threepoint =
     Contract::proton_threepoint_sequential(uBwProp, uProp, dBwProp, dProp, NULL, operators);
 
 

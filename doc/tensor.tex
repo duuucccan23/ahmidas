@@ -1,0 +1,24 @@
+\documentclass[a4paper,10pt]{article}
+\usepackage[utf8x]{inputenc}
+
+%opening
+\title{Tensor calculus and data structures}
+\author{Ahmidas dev team}
+
+\begin{document}
+
+\section{Introduction}
+The most mathematically complex part of Ahmidas involves contractions, where objects such as propagators have both spacetime indices and gauge (colour) indices. Because keeping track of these indices can be a programmatical nightmare, we try to clearly separate them in the code. The way this is done is by using the Field construction. A field is a well defined C++ object that has a certain element at every lattice site. This element is the first part of a choice, and we have chosen to have the gauge (colour) indices all contained at a single lattice site. Dirac or spacetime indices are external to the Field, such that in essence to describe fully a Gauge Field, one needs 4 Fields of $SU(3)$ matrices. And more precisely, to fully describe a Propagator with two spacetime indices and 2 colour indices, one needs 4x4=16 Fields each having a 3x3 2-Tensor of colour at every lattice site. The aim of this document is to describe the mathematical properties of these objects, and to link those to the used data structures.
+\section{Mathematical objects}
+$SU(N)$ Matrix: is a N by N complex valued matrix, to be distinguished from a 2-Tensor.
+An m-Tensor has both a rank ($m$) and a dimension ($N$). It has $m^{N}$ components.
+A 1-Tensor is also known as a Vector.
+Scalar: complex number, this is NOT called a 0-Tensor for reasons that will become clear.
+
+\section{Mathematical operations}
+\subsection{Contraction}
+\section{Data structures}
+
+\section{Functions}
+
+\end{document}

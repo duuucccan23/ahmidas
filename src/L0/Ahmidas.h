@@ -3,6 +3,6 @@
 class Ahmidas
 {
   public:
-    Ahmidas(int &argc, char **&argv);
+    Ahmidas(int *argc, char ***argv);
     ~Ahmidas();
 };

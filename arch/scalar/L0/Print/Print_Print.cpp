@@ -1,6 +1,6 @@
 #include "Print.ih"
 
-Print::Print(std::ostream *strm, std::string printstr)
+Print::Print(std::string const &printstr, std::ostream &strm)
 {
-  *strm << printstr << std::endl;
+  strm << printstr << std::endl;
 }

@@ -3,7 +3,7 @@
 
 int main(int argc, char **argv)
 {
-  Ahmidas start(argc, argv);
-  Print(&std::cout, "Hello");
+  Ahmidas start(&argc, &argv);
+  Print("Hello");
   return 0;
 }

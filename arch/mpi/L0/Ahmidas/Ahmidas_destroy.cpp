@@ -2,5 +2,5 @@
 
 Ahmidas::~Ahmidas()
 {
-  MPI::Finalize();
+  MPI_Finalize();
 }

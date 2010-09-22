@@ -1,6 +1,6 @@
 #include "Ahmidas.ih"
 
-Ahmidas::Ahmidas(int &argc, char **&argv)
+Ahmidas::Ahmidas(int *argc, char ***argv)
 {
-  MPI::Init(argc, argv);
+  MPI_Init(argc, argv);
 }

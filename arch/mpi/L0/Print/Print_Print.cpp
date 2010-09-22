@@ -1,7 +1,9 @@
 #include "Print.ih"
 
-Print::Print(std::ostream *strm, std::string printstr)
+Print::Print(std::string const &printstr, std::ostream &strm)
 {
-  if (!MPI::COMM_WORLD.Get_rank())
-    *strm << printstr << std::endl;
+  int rank;
+  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+  if (rank == 0)
+    strm << printstr << std::endl;
 }

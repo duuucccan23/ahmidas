@@ -55,7 +55,7 @@ ADD_SUBDIRECTORY(example EXCLUDE_FROM_ALL)
 ADD_SUBDIRECTORY(applications)
 
 ADD_EXECUTABLE(main src/main.cpp)
-TARGET_LINK_LIBRARIES(main Print Ahmidas)
+TARGET_LINK_LIBRARIES(main Debug Print Ahmidas)
 
 ADD_EXECUTABLE(simon_test src/simon_test.cpp)
 TARGET_LINK_LIBRARIES(simon_test SU3 QCD IO Base Core Dirac Weave Contract Input Smear)

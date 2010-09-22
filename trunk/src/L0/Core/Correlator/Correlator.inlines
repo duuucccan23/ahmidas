@@ -1,50 +1,9 @@
-template< typename Datatype >
-inline Correlator< Datatype >::Correlator(Correlator< Datatype > const &other)
-  : d_T(other.d_T), d_L(other.d_L),
-    d_weave(other.d_weave), d_data(other.d_data),
-    d_sumTimeslice(other.d_sumTimeslice), d_sumTimeslice_global(other.d_sumTimeslice_global),
-    d_references(other.d_references), d_offset(other.d_offset)
-{
-  *d_references += 1;
-  if (d_data != NULL)
-    d_data->refCountUp();
-}
-
-template< typename Datatype >
-inline Correlator< Datatype >::Correlator(Core::Field< Datatype >* data)
-  : d_T(data->T()), d_L(data->L()),
-    d_weave(new Base::Weave(d_L, d_T)), d_data(new Field< Datatype >(*data)),
-    d_sumTimeslice(new Datatype[d_T]), d_sumTimeslice_global(new Dirac::Matrix[d_T]),
-    d_references(new size_t(1)), d_offset(0)
-{
-}
 
 template< typename Datatype >
 inline Correlator< Datatype >::~Correlator()
 {
   destroy();
 }
-
-
-template< typename Datatype >
-inline Correlator< Datatype > &Correlator< Datatype >::operator=(Correlator< Datatype > const &rhs)
-{
-  if (this != &rhs)
-  {
-    destroy();
-    d_weave = rhs.d_weave;
-    d_sumTimeslice = rhs.d_sumTimeslice;
-    d_sumTimeslice_global = rhs.d_sumTimeslice_global;
-    d_offset = rhs.d_offset;
-    d_references = rhs.d_references;
-    *d_references += 1;
-    d_data = rhs.d_data;
-    if (d_data != NULL)
-      d_data->refCountUp();
-  }
-  return (*this);
-}
-
 
 
 template<  >

@@ -1,19 +1,39 @@
+
 template< typename Datatype >
-inline Datatype &Correlator< Datatype >::operator[](size_t const t)
+Correlator< Datatype > &Correlator< Datatype >::operator=(Correlator< Datatype > const &rhs)
+{
+  if (this != &rhs)
+  {
+    destroy();
+    d_weave = rhs.d_weave;
+    d_sumTimeslice = rhs.d_sumTimeslice;
+    d_sumTimeslice_global = rhs.d_sumTimeslice_global;
+    d_offset = rhs.d_offset;
+    d_references = rhs.d_references;
+    *d_references += 1;
+    d_data = rhs.d_data;
+    if (d_data != NULL)
+      d_data->refCountUp();
+  }
+  return (*this);
+}
+
+template< typename Datatype >
+Datatype &Correlator< Datatype >::operator[](size_t const t)
 {
   assert(t < T());
   return d_sumTimeslice_global[(t + d_offset) % T()];
 }
 
 template< typename Datatype >
-inline Datatype const &Correlator< Datatype >::operator[](size_t const t) const
+Datatype const &Correlator< Datatype >::operator[](size_t const t) const
 {
   assert(t < T());
   return d_sumTimeslice_global[(t + d_offset) % T()];
 }
 
 template< typename Datatype >
-inline void Correlator< Datatype >::operator*=(double const factor)
+void Correlator< Datatype >::operator*=(double const factor)
 {
   isolate();
   if (d_data != NULL)
@@ -33,7 +53,7 @@ inline void Correlator< Datatype >::operator*=(double const factor)
 }
 
 template< typename Datatype >
-inline void Correlator< Datatype >::operator*=(std::complex< double > const &factor)
+void Correlator< Datatype >::operator*=(std::complex< double > const &factor)
 {
   isolate();
   if (d_data != NULL)
@@ -53,7 +73,7 @@ inline void Correlator< Datatype >::operator*=(std::complex< double > const &fac
 }
 
 template< typename Datatype >
-inline void Correlator< Datatype >::operator+=(Correlator< Datatype > const &other)
+void Correlator< Datatype >::operator+=(Correlator< Datatype > const &other)
 {
   isolate();
   if (d_data != NULL && other.d_data != NULL)

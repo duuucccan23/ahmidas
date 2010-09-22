@@ -81,7 +81,10 @@ namespace Core
 
 
   #include "Correlator/Correlator.inlines"
-  #include "Correlator/Correlator.operators.inlines"
+
+  #include "Correlator/Correlator_Correlator_a.template"
+  #include "Correlator/Correlator_Correlator_b.template"
+  #include "Correlator/Correlator.operators.template"
 
   #include "Correlator/Correlator_deleteField.template"
   #include "Correlator/Correlator_destroy.template"

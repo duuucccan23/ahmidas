@@ -132,7 +132,8 @@ namespace Core
 
     weave.barrier();
     // one Gamma5 is still missing
-    Dirac::Gamma< 5 > gamma5;
-    return result.rightMultiply(gamma5);
+//     Dirac::Gamma< 5 > gamma5;
+//     return result.rightMultiply(gamma5);
+    return result;
   }
 }

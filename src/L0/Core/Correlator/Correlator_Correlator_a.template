@@ -1,0 +1,13 @@
+template< typename Datatype >
+Correlator< Datatype >::Correlator(Correlator< Datatype > const &other)
+  : d_T(other.d_T), d_L(other.d_L),
+    d_weave(other.d_weave), d_data(other.d_data),
+    d_sumTimeslice(other.d_sumTimeslice), d_sumTimeslice_global(other.d_sumTimeslice_global),
+    d_references(other.d_references), d_offset(other.d_offset)
+{
+  *d_references += 1;
+  if (d_data != NULL)
+    d_data->refCountUp();
+}
+
+

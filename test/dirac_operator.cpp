@@ -136,7 +136,7 @@ int main(int argc, char **argv)
 
   // apply Dirac operator to u and d propagator
 
-//   Core::Propagator solution_u(uProp.applyDiracOperator(gauge_field, kappa, mu, timeslice_boundary));
+
 
   Core::Propagator solution_u(uProp.applyDiracOperator(gauge_field, kappa, mu, timeslice_boundary));
   double const solNorm_u = solution_u.norm();

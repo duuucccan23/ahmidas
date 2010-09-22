@@ -47,7 +47,6 @@
 int main(int argc, char **argv)
 {
 
-
   // lattice size, to be read from input file (and therefore initialized to zero)
   size_t L_tmp(0);
   size_t T_tmp(0);
@@ -82,17 +81,6 @@ int main(int argc, char **argv)
   // one process in the parallel version
   Base::Weave weave(L, T);
 
-  // ############################################################################################
-  // ######### random number generation depend on the number of cores used ######################
-  // ######### safe though for timeslice sources if parallelization only in (eucl.) time ########
-  // ######### you can comment out the following lines if you don't care ########################
-  // ############################################################################################
-
-  if(weave.isRoot())
-    std::cerr << "FIX THIS: random number generation is safe only for scalar code so far,\n";
-    std::cerr <<  "result would depend on the number of cores used!" << std::endl;
-  weave.barrier();
-  assert(weave.isRoot()); // this will fail if there's more than one process!
 
   // ##########################################################################################
   // ##########################################################################################
@@ -110,7 +98,7 @@ int main(int argc, char **argv)
   if(weave.isRoot())
     std::cout << "kappa = " << kappa << ", mu = " << mu << std::endl;
 
-  size_t t_src = size_t(floats["timesliceSource"]); 
+  size_t const t_src = size_t(floats["timesliceSource"]); 
   if(weave.isRoot())
     std::cout << "\nsource timeslice: " << t_src << std::endl;
 
@@ -121,12 +109,40 @@ int main(int argc, char **argv)
     std::cout << "\nrandom seed: " << rSeed << std::endl;
   Base::Z2::instance(1.0, rSeed);
 
+
+  // this is necessary to have reproducible results for different parallelizations
+  Core::Field < uint64_t > seeds(L, T);
+
+
   if (rSeed > 0)
   {
     double *tmp = new double[512];
     std::generate_n(tmp, 512, Base::Random::Z2);
     delete [] tmp;
   }
+
+  // here we assign a seed to each lattice site
+  {
+    size_t const increment(17);
+    size_t localIndex(0);
+    size_t globalIndex(0);
+    size_t localVolume = weave.localVolume();
+    for(size_t idx_Z = 0; idx_Z < L; idx_Z++)
+    {
+      for(size_t idx_Y = 0; idx_Y < L; idx_Y++)
+      {
+        for(size_t idx_X = 0; idx_X < L; idx_X++)
+        {
+          globalIndex += increment;
+          localIndex = weave.globalCoordToLocalIndex(idx_X, idx_Y, idx_Z, t_src);
+          if (localIndex == localVolume)
+            continue;
+
+          seeds[localIndex] = rSeed + uint64_t(globalIndex);
+        }
+      }
+    }
+   }
 
   if(weave.isRoot())
     std::cout << "\nThe following files are going to be created:" << std::endl;
@@ -172,6 +188,33 @@ int main(int argc, char **argv)
   }
   Base::SourceColorState const colorState(col_tmp);
 
+  Base::SourceStochasticTypeFlag type_tmp;
+  if(int(floats["SourceStochasticTypeFlag"]) == Base::sou_Z4)
+  {
+   type_tmp = Base::sou_Z4;
+  }
+  else if(int(floats["SourceStochasticTypeFlag"]) == Base::sou_Z2)
+  {
+   type_tmp = Base::sou_Z2;
+  }
+  else if(int(floats["SourceStochasticTypeFlag"]) == Base::sou_P1)
+  {
+   type_tmp = Base::sou_P1;
+  }
+  else if(int(floats["SourceStochasticTypeFlag"]) == Base::sou_M1)
+  {
+   type_tmp = Base::sou_M1;
+  }
+  else
+  {
+    if(weave.isRoot())
+      std::cerr << "SourceStochasticTypeFlag " << floats["SourceStochasticTypeFlag"]
+                << " unknown or not implemented" << std::endl;
+    exit(1);
+  }
+  Base::SourceStochasticTypeFlag type(type_tmp);
+
+
   double const APE_alpha      = floats["APE_param"];
   size_t const APE_iterations = size_t(floats["APE_steps"]);
   double const Jac_alpha      = floats["Jac_param"];
@@ -210,7 +253,7 @@ int main(int argc, char **argv)
   // version 1: spin (Dirac) and color dilution
   if(polarization == Base::sou_FULLY_POLARIZED && colorState == Base::sou_PURE)
   {
-    Core::StochasticSource< 12 > stochastic_source(L, T, polarization, colorState, t_src);
+    Core::StochasticSource< 12 > stochastic_source(L, T, polarization, colorState, t_src, seeds, type);
 
     if (Jac_iterations > 0)
     {
@@ -227,7 +270,7 @@ int main(int argc, char **argv)
   // version 2: spin (Dirac) dilution only
   else if(polarization == Base::sou_FULLY_POLARIZED && colorState == Base::sou_GENERIC)
   {
-    Core::StochasticSource< 4 > stochastic_source(L, T, polarization, colorState, t_src);
+    Core::StochasticSource< 4 > stochastic_source(L, T, polarization, colorState, t_src, seeds, type);
 
     if (Jac_iterations > 0)
     {
@@ -237,14 +280,15 @@ int main(int argc, char **argv)
       if(weave.isRoot())
         std::cout << "stochastic source smeared successfully\n" << std::endl;
     }
-    Tool::IO::save(reinterpret_cast< Core::StochasticPropagator< 4 > * >(&stochastic_source), stochasticSourceFiles, Tool::IO::fileSCIDAC);
+    Tool::IO::save(reinterpret_cast< Core::StochasticPropagator< 4 > * >(&stochastic_source),
+                   stochasticSourceFiles, Tool::IO::fileSCIDAC);
     if (weave.isRoot())
       std::cout << "stochastic source saved successfully\n" << std::endl;
   }
   // version 2: spin (Dirac) dilution only
   else if(polarization == Base::sou_PARTLY_POLARIZED && colorState == Base::sou_GENERIC)
   {
-    Core::StochasticSource< 1 > stochastic_source(L, T, polarization, colorState, t_src);
+    Core::StochasticSource< 1 > stochastic_source(L, T, polarization, colorState, t_src, seeds, type);
 
     if (Jac_iterations > 0)
     {

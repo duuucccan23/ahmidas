@@ -60,6 +60,15 @@ namespace Base
     sou_WALL
   };
 
+  enum SourceStochasticTypeFlag
+  {
+    sou_Z4 =  4, // this is Z(2) x Z(2) = 1/sqrt(2) *std::complex< double >(+/-1 , +/-1)
+    sou_Z2 =  2, // Z(2) = +/-1
+    sou_P1 =  1, // for test cases: all entries +1
+    sou_M1 = -1  // for test cases: all entries -1
+  };
+
+
   enum weaveOperator
   {
     wea_SUM,

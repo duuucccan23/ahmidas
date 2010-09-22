@@ -2,6 +2,7 @@
 
 namespace Core
 {
+
   template<>
   Propagator StochasticSource< 4 >::operator*(StochasticPropagator< 4 > const &sPropagator) const
   {

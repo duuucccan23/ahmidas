@@ -145,7 +145,8 @@ namespace QCD
       double norm() const;
       void setToRandom();
       // this produces tensor filled with random Z(4) elements
-      void setToRandom_Z4(Base::SourcePolarization const, Base::SourceColorState const);
+      void setToRandom(Base::SourcePolarization const, Base::SourceColorState const,
+                       Base::SourceStochasticTypeFlag const type);
 
   #include "Tensor/Tensor.iterator"
 

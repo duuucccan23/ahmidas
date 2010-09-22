@@ -184,7 +184,10 @@ namespace Core
 
       StochasticSource< NComp > (size_t const L, size_t const T);
       StochasticSource< NComp > (size_t const L, size_t const T,
-                                 Base::SourcePolarization const, Base::SourceColorState const, size_t const timeslice);
+                                 Base::SourcePolarization const pol, Base::SourceColorState const col,
+                                 size_t const timeslice,
+                                 Field< uint64_t > const &seeds,
+                                 Base::SourceStochasticTypeFlag const type);
 
       explicit StochasticSource< NComp > (Propagator const &base);
       StochasticSource< NComp > (StochasticSource< NComp > const &other);
@@ -227,9 +230,10 @@ namespace Core
 
   #include "Propagator/Propagator.inlines"
   #include "Propagator/StochasticPropagator.inlines"
-  #include "Propagator/StochasticSource.inlines"
   #include "Propagator/Propagator.iterator.inlines"
   #include "Propagator/Propagator.const_iterator.inlines"
   #include "Propagator/Propagator.operators.inlines"
 
 }
+#include "Propagator/StochasticSource.template"
+

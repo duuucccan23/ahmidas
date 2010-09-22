@@ -1,0 +1,79 @@
+#include <L0/Base/Random.h>
+#include <L0/Base/Z2.h>
+
+
+template< size_t NComp >
+Core::StochasticSource< NComp >::StochasticSource(size_t const L, size_t const T)
+  : Core::Propagator(L, T)
+{}
+
+// template< size_t NComp >
+// inline StochasticSource< NComp >::StochasticSource(size_t const L, size_t const T,
+//                                   Base::SourcePolarization const pol, Base::SourceColorState const col,
+//                                   size_t const timeslice)
+//   : Propagator(L, T)
+// {
+//   assert(timeslice < T);
+// 
+//   Base::Weave weave(L, T);
+// 
+//   size_t localIndex;
+//   for(size_t idx_Z = 0; idx_Z < L; idx_Z++)
+//   {
+//     for(size_t idx_Y = 0; idx_Y < L; idx_Y++)
+//     {
+//       for(size_t idx_X = 0; idx_X < L; idx_X++)
+//       {
+//         localIndex = weave.globalCoordToLocalIndex(idx_X, idx_Y, idx_Z, timeslice);
+//         /* globalCoordToLocalIndex returns local volume if local data is not available on this cpu */
+//         if (localIndex == weave.localVolume())
+//           continue;
+// 
+//         ((*d_components)[localIndex]).setToRandom_Z4(pol, col);
+//       }
+//     }
+//   }
+// }
+
+template< size_t NComp >
+Core::StochasticSource< NComp >::StochasticSource(size_t const L, size_t const T,
+                                  Base::SourcePolarization const pol, Base::SourceColorState const col,
+                                  size_t const timeslice,
+                                  Core::Field< uint64_t > const &seeds,
+                                  Base::SourceStochasticTypeFlag const type)
+  : Core::Propagator(L, T)
+{
+  assert(timeslice < T);
+
+  Base::Weave weave(L, T);
+
+  size_t localIndex;
+  for(size_t idx_Z = 0; idx_Z < L; idx_Z++)
+  {
+    for(size_t idx_Y = 0; idx_Y < L; idx_Y++)
+    {
+      for(size_t idx_X = 0; idx_X < L; idx_X++)
+      {
+        localIndex = weave.globalCoordToLocalIndex(idx_X, idx_Y, idx_Z, timeslice);
+        /* globalCoordToLocalIndex returns local volume if local data is not available on this cpu */
+        if (localIndex == weave.localVolume())
+          continue;
+
+        Base::Z2::instance(1.0, seeds[localIndex]);
+
+        ((*d_components)[localIndex]).setToRandom(pol, col, type);
+      }
+    }
+  }
+}
+
+template< size_t NComp >
+Core::StochasticSource< NComp >::StochasticSource(Core::Propagator const &base) : Core::Propagator(base)
+{
+  // maybe we should do some check here (e.g. zero entries at correct positions?)
+}
+
+template< size_t NComp >
+Core::StochasticSource< NComp >::StochasticSource(Core::StochasticSource< NComp > const &other)
+  : Core::Propagator(dynamic_cast< Core::Propagator const &>(other))
+{}

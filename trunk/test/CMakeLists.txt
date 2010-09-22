@@ -1,5 +1,5 @@
 ADD_EXECUTABLE(endian endian.cpp)
-TARGET_LINK_LIBRARIES(endian Base)
+TARGET_LINK_LIBRARIES(endian Base Ahmidas Print)
 ADD_TEST(endianness endian)
 
 ADD_EXECUTABLE(isnan isnan.cpp)

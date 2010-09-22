@@ -1,9 +1,9 @@
-// #include <L0/Debug.h>
-// #include <mpi.h>
+#include <L0/Print.h>
+#include <L0/Ahmidas.h>
 
 int main(int argc, char **argv)
 {
-//  typedef long long BLA;
-//  BLA test = 5;
+  Ahmidas start(argc, argv);
+  Print(&std::cout, "Hello");
   return 0;
 }

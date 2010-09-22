@@ -6,5 +6,5 @@
 class Print
 {
   public:
-    Print(std::ostream *strm, std::string printstr);
+    Print(std::string const &printstr, std::ostream &strm = std::cout);
 };

@@ -1,4 +1,4 @@
 #include "Ahmidas.ih"
 
-Ahmidas::Ahmidas(int &argc, char **&argv)
+Ahmidas::Ahmidas(int *argc, char ***argv)
 {}

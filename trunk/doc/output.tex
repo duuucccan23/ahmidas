@@ -1,0 +1,32 @@
+\documentclass[a4paper,10pt]{article}
+\usepackage[utf8x]{inputenc}
+
+%opening
+\title{Controlling output}
+\author{Ahmidas dev team}
+
+\begin{document}
+\section{Introduction}
+Ahmidas can be built both parallel and serial. In most parallel systems, every computing node/cpu/thread has access to the standard streams \verb|std::cout| and \verb|std::cerr|. As a consequence, writing output directly to one of these streams can result in an overload of messages on a parallel build. Sometimes this is desired, sometimes not. The normal workaround is to let only node 0 do output. But the standard way of asking for the rank will of course not compile in an MPI environment. To prevent repetitive checking against the current build and the current node, Ahmidas contains two very simple classes that are intended to simplify output of both normal and debugging information. Those classes are \verb|Print| and \verb|Debug|.
+\section{Print}
+The \verb|Print| class is intended for normal output, where the actual operation of separate nodes is irrelevant. It is output of the program, not of the nodes. As such, for the scalar case, this is simply an insertion of the print string into \verb|std::cout|, unless specifically asked for another stream. In order to use \verb|Print|, \verb|#include <L0/Print.h>|. The usage of \verb|Print| is as follows:\\
+\verb|  Print("Hello, I should be on std::cout.");|\\
+Be aware that here an anonymous object is made and immediately destroyed afterwards. All functionality is handled in the constructor. For an MPI build, only the node with rank 0 will be writing. \verb|Print| can be passed an extra argument which identifies the stream to be used. In principle this could be \verb|std::cerr|, but in that case still only the node with rank 0 would be writing.
+\section{Debug}
+The \verb|Debug| class is intended for debugging output, where the actual operation of separate nodes is relevant. All output is sent to the standard error stream. For the scalar case, this is simply an insertion of the debug string into \verb|std::cerr|, unless specifically asked for another stream. In order to use \verb|Debug|, \verb|#include <L0/Debug.h>|. The usage of \verb|Debug| is as follows:\\
+\verb|  Debug("MESSAGE, should be on std::cerr.");|\\
+Be aware that also here an anonymous object is made and immediately destroyed afterwards. All functionality is again handled in the constructor. For an MPI build, all nodes will be writing, and identify themselves accordingly. The actual information to be written is built up of several pieces: a default starting string \verb|"[DEBUG] "|, some information on the rank and the actual output string. On a parallel build, with all nodes writing to the same stream, there is no control over the order of messages (unless explicitly programmed, which is usually undesirable for debugging). When a single message is build up of parts, and those arrive separately from another, it is possible to mix messages with eachother, leading to unreadable output. Therefore, inside \verb|Debug|, first the full message is constructed, and then written in one go. \verb|Debug| can be passed an extra argument which identifies the stream to be used. In principle this could be \verb|std::cout|, but in that case still all nodes will be writing.
+\section{Example program}
+\verb|#include <L0/Debug.h>|\\
+\verb|#include <L0/Print.h>|\\
+\verb|#include <L0/Ahmidas.h>|\\
+\verb||\\
+\verb|int main(int argc, char **argv)|\\
+\verb|{|\\
+\verb|  Ahmidas start(&argc, &argv);|\\
+\verb|  Print("Hello, I should be on std::cout.");|\\
+\verb|  Debug("MESSAGE, should be on std::cerr.");|\\
+\verb|  return 0;|\\
+\verb|}|\\
+
+\end{document}

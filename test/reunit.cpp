@@ -1,10 +1,14 @@
-#include <iostream>
+#include <L0/Ahmidas.h>
+#include <L0/Debug.h>
+#include <L0/Print.h>
 #include <fstream>
 #include <L0/SU3/Matrix.h>
 
 int main(int argc, char **argv)
 {
+  Ahmidas start(&argc, &argv);
   std::ofstream *out = 0;
+  std::ostringstream ostr("", std::ios::ate);
   if (argc > 1)
     out = new std::ofstream(argv[1]);
 
@@ -25,8 +29,9 @@ int main(int argc, char **argv)
       (*out) << error;
     if (std::abs(error) > 3e-15)
     {
-      std::cout << "At matrix number " << ctr << ':' << std::endl;
-      std::cout << "Stress test failed on unitarity with total deviation " << error << '!' << std::endl;
+      ostr.str("At matrix number ");
+      ostr << ctr << ":\nStress test failed on unitarity with total deviation " << error << '!';
+      Debug(ostr.str());
       problem = true;
     }
 
@@ -41,8 +46,9 @@ int main(int argc, char **argv)
       (*out) << "\t" << error << std::endl;
     if (std::abs(error) > 3e-15)
     {
-      std::cout << "At matrix number " << ctr << ':' << std::endl;
-      std::cout << "Stress test failed on double reunitarization with total deviation " << error << '!' << std::endl;
+      ostr.str("At matrix number ");
+      ostr << ctr << ":\nStress test failed on double reunitarization with total deviation " << error << '!';
+      Debug(ostr.str());
       problem = true;
     }
   }
@@ -56,6 +62,6 @@ int main(int argc, char **argv)
   if (problem)
     return 1;
 
-  std::cout << "All matrices properly reunitarized in stress test." << std::endl;
+  Print("All matrices properly reunitarized in stress test.");
   return 0;
 }

@@ -1,19 +1,16 @@
-#include <iostream>
 #include <L0/Base/Base.h>
 #include <L0/Base/Weave.h>
+#include <L0/Debug.h>
 
 int main(int argc, char **argv)
 {
-  std::cout << "Weaving\n";
+  std::ostringstream ostr("Weaving\n", std::ios::ate);
   Base::Weave myWeave = Base::Weave(4, 8);
-  std::cout << myWeave.localVolume() << std::endl;
-  std::cout << myWeave.dim(Base::idx_X) << '\t';
-  std::cout << myWeave.dim(Base::idx_Y) << '\t';
-  std::cout << myWeave.dim(Base::idx_Z) << '\t';
-  std::cout << myWeave.dim(Base::idx_T) << std::endl;
-  std::cout << myWeave.localSize(Base::idx_X) << '\t';
-  std::cout << myWeave.localSize(Base::idx_Y) << '\t';
-  std::cout << myWeave.localSize(Base::idx_Z) << '\t';
-  std::cout << myWeave.localSize(Base::idx_T) << std::endl;
+  ostr << "LocalVolume() " << myWeave.localVolume() << std::endl << myWeave.dim(Base::idx_X) << '\t'
+       << myWeave.dim(Base::idx_Y) << '\t' << myWeave.dim(Base::idx_Z) << '\t'
+       << myWeave.dim(Base::idx_T) << std::endl << myWeave.localSize(Base::idx_X) << '\t'
+       << myWeave.localSize(Base::idx_Y) << '\t' << myWeave.localSize(Base::idx_Z) << '\t'
+       << myWeave.localSize(Base::idx_T);
+  Debug(ostr.str(), std::cout);
   return 0;
 }

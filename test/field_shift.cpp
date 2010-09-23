@@ -1,4 +1,3 @@
-
 #include <complex>
 #include <iomanip>
 #include <iostream>
@@ -13,15 +12,13 @@ int main(int argc, char **argv)
 {
 
   size_t errors(0);
-
-  size_t const L =  4;
-  size_t const T = 2;
+  size_t idx(0);
+  size_t const L(4);
+  size_t const T(2);
 
   Base::Weave weave(L, T);
 
   Core::Field< QCD::Gauge > gauge_field(L, T);
-
-  size_t idx(0);
 
   SU3::Matrix links[4];
 

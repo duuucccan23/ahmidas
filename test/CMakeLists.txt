@@ -3,15 +3,15 @@ TARGET_LINK_LIBRARIES(endian Base Ahmidas Print)
 ADD_TEST(endianness endian)
 
 ADD_EXECUTABLE(isnan isnan.cpp)
-TARGET_LINK_LIBRARIES(isnan Base)
+TARGET_LINK_LIBRARIES(isnan Base Ahmidas Print)
 ADD_TEST(isnan isnan)
 
 ADD_EXECUTABLE(reunit reunit.cpp)
-TARGET_LINK_LIBRARIES(reunit SU3)
+TARGET_LINK_LIBRARIES(reunit SU3 Ahmidas Print Debug)
 ADD_TEST(reunitarization_stress_test reunit)
 
 ADD_EXECUTABLE(weave weave.cpp)
-TARGET_LINK_LIBRARIES(weave Base Weave)
+TARGET_LINK_LIBRARIES(weave Base Weave Debug)
 ADD_TEST(weave_initialization weave)
 
 ADD_EXECUTABLE(field_shift field_shift.cpp)
@@ -26,20 +26,16 @@ ADD_EXECUTABLE(readFile readFile.cpp)
 TARGET_LINK_LIBRARIES(readFile Input)
 ADD_TEST(read_input_file readFile)
 
-ADD_EXECUTABLE(fieldcomponent fieldcomponent.cpp)
-TARGET_LINK_LIBRARIES(fieldcomponent Weave)
-ADD_TEST(fieldcomponent_setup fieldcomponent)
-
 ADD_EXECUTABLE(loadMILC loadMILC.cpp)
 TARGET_LINK_LIBRARIES(loadMILC Base IO SU3)
 ADD_TEST(load_MILC_lattice loadMILC)
 
 ADD_EXECUTABLE(random random.cpp)
-TARGET_LINK_LIBRARIES(random Base)
+TARGET_LINK_LIBRARIES(random Base Print Ahmidas)
 ADD_TEST(random_performance random)
 
 ADD_EXECUTABLE(config config.cpp)
-TARGET_LINK_LIBRARIES(config Base IO SU3)
+TARGET_LINK_LIBRARIES(config Base IO SU3 Print)
 ADD_TEST(basic_config_stuff config)
 
 ADD_EXECUTABLE(light_mesons light_mesons.cpp)
@@ -55,7 +51,7 @@ TARGET_LINK_LIBRARIES(proton SU3 QCD IO Base Core Weave Contract)
 ADD_TEST(proton_two_point proton)
 
 ADD_EXECUTABLE(scidacchecksum scidacchecksum.cpp)
-TARGET_LINK_LIBRARIES(scidacchecksum QCD IO)
+TARGET_LINK_LIBRARIES(scidacchecksum QCD IO Print)
 ADD_TEST(scidac_checksum scidacchecksum)
 
 ADD_EXECUTABLE(sequential_sources sequential_sources.cpp)

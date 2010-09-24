@@ -74,11 +74,21 @@ namespace Core
 
       // Dirac operators:
       // fixed boundary conditions (light doublet)
-      Propagator applyDiracOperator(Field< QCD::Gauge > const &gauge_field, double const kappa, double const mu) const;
+      // the boundary conditions (if no theta-parameter is given) are periodic in space and antiperiodic in time
+      Propagator applyDiracOperator(Field< QCD::Gauge > const &gauge_field, double const kappa, double const mu,
+                                    double const thetaT = 1.0, double const thetaX = 0.0,
+                                    double const thetaY = 0.0, double const thetaZ = 0.0) const;
       // uniform boundary conditions (heavy doublet)
       Propagator applyDiracOperator(Field< QCD::Gauge > const &gauge_field, double const kappa, double const m0, double const mu_sigma, double const mu_delta, Propagator const &secondProp, bool sign) const;
       // fixed boundary conditions (light doublet)
       Propagator applyDiracOperator(Field< QCD::Gauge > const &gauge_field, double const kappa, double const mu, size_t const t_boundary) const;
+
+      // this function reconstructs the doublet propagators from  the (Q^+Q^-)^-1 output of the tmLQCD multi-mas-solver
+      // the boundary conditions (if no theta-parameter is given) are periodic in space and antiperiodic in time
+      void reconstruct_doublet(Propagator &propPlus, Propagator &propMinus,
+                              Field< QCD::Gauge > const &gauge_field,
+                              double const kappa, double const mu, double const thetaT = 1.0,
+                              double const thetaX = 0.0, double const thetaY = 0.0, double const thetaZ = 0.0) const;
 
       Propagator &select_timeslice(size_t const timeslice);
 
@@ -122,10 +132,10 @@ namespace Core
       Propagator &dagger();
       Propagator &conjugate();
       Propagator &transpose();
-      
-      
+
+
       Field< std::complex<double> > trace() const;
-            
+
 
       // average difference of two different propagators
       double diff(Propagator const& other) const;
@@ -134,9 +144,9 @@ namespace Core
       void setToRandom();
 
       void changeBoundaryConditions_uniformToFixed(size_t timesliceSource, size_t timesliceBoundary);
-      
+
       void rotateToPhysicalBasis(bool const sign);
-      
+
 
       Propagator &shift(Base::SpaceTimeIndex const idx, Base::Direction const dir, size_t const times=1);
 
@@ -165,7 +175,6 @@ namespace Core
 
     protected:
       void destroy();
-
 
   };
 

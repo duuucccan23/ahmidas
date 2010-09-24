@@ -6,11 +6,13 @@
 
 namespace Core
 {
-  // applies the (twisted Mass) Dirac operator with uniform boundary conditions
+  // applies the (twisted Mass) Dirac operator with uniform boundary conditions and also its hermitian  conjugate,
+  // in order to reconstruct the propagators of the doublet from a combined propagator of the kind (DD^dagger)^-1
 
-  // this is for the light doublet in twisted mass formulation: u quark: mu > 0, d quark: mu < 0
-  Propagator Propagator::applyDiracOperator(Field< QCD::Gauge > const &gauge_field, double const kappa, double const mu,
-                                            double const thetaT, double const thetaX, double const thetaY, double const thetaZ) const
+  void Propagator::reconstruct_doublet(Propagator &propPlus, Propagator &propMinus,
+                                         Field< QCD::Gauge > const &gauge_field,
+                                         double const kappa, double const mu, double const thetaT,
+                                         double const thetaX, double const thetaY, double const thetaZ) const
   {
 
     Base::Weave weave(L(), T());
@@ -28,22 +30,8 @@ namespace Core
     Field< QCD::Gauge > gauge_field_copy(gauge_field);
     gauge_field_copy.isolate();
 
-//  // temporal links pick up a factor exp(i*theta*pi/T)
-//  // spatial links pick up a factor exp(i*theta*pi/L)
-
-//     for(Field< QCD::Gauge >::iterator I(const_cast< Field< QCD::Gauge > & >(gauge_field).begin());
-//         I != (const_cast< Field< QCD::Gauge > & >(gauge_field)).end(); ++I)
-//     {
-//       if(thetaT != 0.0)
-//         (*I)[Base::idx_T] *= phaseFactorT;
-//       if(thetaX != 0.0)
-//         (*I)[Base::idx_X] *= phaseFactorX;
-//       if(thetaY != 0.0)
-//         (*I)[Base::idx_Y] *= phaseFactorY;
-//       if(thetaZ != 0.0)
-//         (*I)[Base::idx_Z] *= phaseFactorZ;
-//     }
-
+    // temporal links pick up a factor exp(i*theta*pi/T)
+    // spatial links pick up a factor exp(i*theta*pi/L)
     for(Field< QCD::Gauge >::iterator I(gauge_field_copy.begin()); I != gauge_field_copy.end(); ++I)
     {
       if(thetaT != 0.0)
@@ -57,8 +45,7 @@ namespace Core
     }
 
 
-    Propagator result(L(), T());
-    result *= std::complex<double>(0.0, 0.0);
+    propPlus *= std::complex<double>(0.0, 0.0);
 
     {
       Dirac::Gamma< 4 > gamma4;
@@ -69,15 +56,15 @@ namespace Core
       // same procedure as in Transport::step(..., Base::dir_UP)
       (neighbors.d_components)->rightMultiply(gauge_field_copy.component< SU3::Matrix >(Base::idx_T).dagger());
       neighbors.shift(Base::idx_T, Base::dir_UP);
-      result += neighbors;
-      // positive t-direction
+      propPlus += neighbors;
+      // poitive t-direction
       neighbors = (*this);
       neighbors.isolate();
       neighbors -= gamma4*neighbors;
       // same procedure as in Transport::step(..., Base::dir_DOWN)
       neighbors.shift(Base::idx_T, Base::dir_DOWN);
       (neighbors.d_components)->rightMultiply(gauge_field_copy.component< SU3::Matrix >(Base::idx_T));
-      result += neighbors;
+      propPlus += neighbors;
     }
 
     {
@@ -89,7 +76,7 @@ namespace Core
       // same procedure as in Transport::step(..., Base::dir_UP)
       (neighbors.d_components)->rightMultiply(gauge_field_copy.component< SU3::Matrix >(Base::idx_X).dagger());
       neighbors.shift(Base::idx_X, Base::dir_UP);
-      result += neighbors;
+      propPlus += neighbors;
       // positive x-direction
       neighbors = (*this);
       neighbors.isolate();
@@ -97,7 +84,7 @@ namespace Core
       // same procedure as in Transport::step(..., Base::dir_DOWN)
       neighbors.shift(Base::idx_X, Base::dir_DOWN);
       (neighbors.d_components)->rightMultiply(gauge_field_copy.component< SU3::Matrix >(Base::idx_X));
-      result += neighbors;
+      propPlus += neighbors;
     }
 
     {
@@ -109,7 +96,7 @@ namespace Core
       // same procedure as in Transport::step(..., Base::dir_UP)
       (neighbors.d_components)->rightMultiply(gauge_field_copy.component< SU3::Matrix >(Base::idx_Y).dagger());
       neighbors.shift(Base::idx_Y, Base::dir_UP);
-      result += neighbors;
+      propPlus += neighbors;
       // positive y-direction
       neighbors = (*this);
       neighbors.isolate();
@@ -117,7 +104,7 @@ namespace Core
       // same procedure as in Transport::step(..., Base::dir_DOWN)
       neighbors.shift(Base::idx_Y, Base::dir_DOWN);
       (neighbors.d_components)->rightMultiply(gauge_field_copy.component< SU3::Matrix >(Base::idx_Y));
-      result += neighbors;
+      propPlus += neighbors;
     }
 
    {
@@ -129,7 +116,7 @@ namespace Core
       // same procedure as in Transport::step(..., Base::dir_UP)
       (neighbors.d_components)->rightMultiply(gauge_field_copy.component< SU3::Matrix >(Base::idx_Z).dagger());
       neighbors.shift(Base::idx_Z, Base::dir_UP);
-      result += neighbors;
+      propPlus += neighbors;
       // positive z-direction
       neighbors = (*this);
       neighbors.isolate();
@@ -137,43 +124,28 @@ namespace Core
       // same procedure as in Transport::step(..., Base::dir_DOWN)
       neighbors.shift(Base::idx_Z, Base::dir_DOWN);
       (neighbors.d_components)->rightMultiply(gauge_field_copy.component< SU3::Matrix >(Base::idx_Z));
-      result += neighbors;
+      propPlus += neighbors;
     }
 
-    result *= std::complex<double>(-0.5, 0.0);
+    propPlus *= std::complex<double>(-0.5, 0.0);
 
 
     // diagonal contribution
+    Dirac::Gamma< 5 > gamma5;
     {
-      Dirac::Gamma< 5 > gamma5;
       Propagator tmp(*this);
       tmp *= std::complex<double>(0.5/kappa, 0.0);
-      result += tmp;
+      propPlus += tmp;
       // twisted mass term ~ i*mu*gamma5
       tmp = gamma5*(*this);
       tmp *= std::complex<double>(0.0, mu);
-      result += tmp;
+      propMinus = propPlus; // at this point the calculations for the "plus" and "minus" propagators differ
+      propPlus += tmp;
+      propMinus -= tmp;
     }
 
-
- /* don't need this any longer since we have cpoied the gauge field */
-
-//     // we want to leave the gauge field "untouched"
-//     for(Field< QCD::Gauge >::iterator I(const_cast< Field< QCD::Gauge > & >(gauge_field).begin()); 
-//         I != (const_cast< Field< QCD::Gauge > & >(gauge_field)).end(); ++I)
-//     {
-//       (*I)[Base::idx_T] *= phaseFactorReverse;
-//       if(thetaT != 0.0)
-//         (*I)[Base::idx_T] *= phaseFactorReverseT;
-//       if(thetaX != 0.0)
-//         (*I)[Base::idx_X] *= phaseFactorReverseX;
-//       if(thetaY != 0.0)
-//         (*I)[Base::idx_Y] *= phaseFactorReverseY;
-//       if(thetaZ != 0.0)
-//         (*I)[Base::idx_Z] *= phaseFactorReverseZ;
-//     }
-
+    propPlus.rightMultiply(gamma5);
+    propMinus.rightMultiply(gamma5);
     weave.barrier();
-    return result;
   }
 }

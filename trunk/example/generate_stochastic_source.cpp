@@ -123,7 +123,7 @@ int main(int argc, char **argv)
 
   // here we assign a seed to each lattice site
   {
-    size_t const increment(17);
+    size_t const increment(17U);
     size_t localIndex(0);
     size_t globalIndex(0);
     size_t localVolume = weave.localVolume();
@@ -133,12 +133,13 @@ int main(int argc, char **argv)
       {
         for(size_t idx_X = 0; idx_X < L; idx_X++)
         {
-          globalIndex += increment;
+          weave.barrier();
           localIndex = weave.globalCoordToLocalIndex(idx_X, idx_Y, idx_Z, t_src);
           if (localIndex == localVolume)
             continue;
 
           seeds[localIndex] = rSeed + uint64_t(globalIndex);
+          globalIndex += increment;
         }
       }
     }

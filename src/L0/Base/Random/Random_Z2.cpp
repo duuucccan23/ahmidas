@@ -2,6 +2,6 @@
 
 double Base::Random::Z2()
 {
-  static Base::Z2 &generator(Base::Z2::instance());
+  static Base::Z2 &generator(Base::Z2::global());
   return generator();
 }

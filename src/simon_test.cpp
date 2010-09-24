@@ -8,7 +8,7 @@ int main(int argc, char **argv)
 {
   Ahmidas start(&argc, &argv);
   size_t samples = 100;
-  Base::Z2::instance(1.0, 123456789);
+  Base::Z2::global(1.0, 123456789);
   std::ostringstream ostr("Generating ", std::ios::ate);
   ostr << samples << " random numbers.";
   Print(ostr.str());

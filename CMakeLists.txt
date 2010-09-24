@@ -58,7 +58,7 @@ ADD_EXECUTABLE(main src/main.cpp)
 TARGET_LINK_LIBRARIES(main Debug Print Ahmidas)
 
 ADD_EXECUTABLE(simon_test src/simon_test.cpp)
-TARGET_LINK_LIBRARIES(simon_test SU3 QCD IO Base Core Dirac Weave Contract Input Smear)
+TARGET_LINK_LIBRARIES(simon_test Print Ahmidas SU3 QCD IO Base Core Dirac Weave Contract Input)
 
 MESSAGE(STATUS "Compiler is " ${CMAKE_CXX_COMPILER})
 MESSAGE(STATUS "MPI is " ${USE_MPI})

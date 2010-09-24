@@ -60,7 +60,6 @@ Core::StochasticSource< NComp >::StochasticSource(size_t const L, size_t const T
           continue;
 
         Base::Z2::instance(1.0, seeds[localIndex]);
-
         ((*d_components)[localIndex]).setToRandom(pol, col, type);
       }
     }

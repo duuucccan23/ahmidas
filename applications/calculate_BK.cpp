@@ -96,16 +96,18 @@ int main(int argc, char **argv)
   if (weave.isRoot())
     std::cout << "1st propagator successfully loaded\n" << std::endl;
 
-  Core::Propagator dProp_plus_L(tmpProp->applyDiracOperator(gauge_field, kappa, mu_d));
-  Core::Propagator dProp_minus_L(tmpProp->applyDiracOperator(gauge_field, kappa, -mu_d));
-    
+  Core::Propagator dProp_plus_L(L, T);
+  Core::Propagator dProp_minus_L(L, T);
+  // reconstruct the full doublet from the combined MMS output, being ~ (DD^dagger)^-1
+  tmpProp->reconstruct_doublet(dProp_plus_L, dProp_minus_L, gauge_field, kappa, mu_d);
+
   Tool::IO::load(tmpProp, propfilesS_L, Tool::IO::fileSCIDAC);
   if (weave.isRoot())
     std::cout << "2nd propagator successfully loaded\n" << std::endl;
 
-  Core::Propagator sProp_plus_L(tmpProp->applyDiracOperator(gauge_field, kappa, mu_s));
-  Core::Propagator sProp_minus_L(tmpProp->applyDiracOperator(gauge_field, kappa, -mu_s));
-
+  Core::Propagator sProp_plus_L(L, T);
+  Core::Propagator sProp_minus_L(L, T);
+  tmpProp->reconstruct_doublet(sProp_plus_L, sProp_minus_L, gauge_field, kappa, mu_s);
 
 /* ******************************************************************************* */
 /* ******** load and prepare propagators from timeslice t_R ********************** */
@@ -116,15 +118,17 @@ int main(int argc, char **argv)
   if (weave.isRoot())
       std::cout << "3rd propagator successfully loaded\n" << std::endl;
 
-  Core::Propagator dProp_plus_R(tmpProp->applyDiracOperator(gauge_field, kappa, mu_d));
-  Core::Propagator dProp_minus_R(tmpProp->applyDiracOperator(gauge_field, kappa, -mu_d));
+  Core::Propagator dProp_plus_R(L, T);
+  Core::Propagator dProp_minus_R(L, T);
+  tmpProp->reconstruct_doublet(dProp_plus_R, dProp_minus_R, gauge_field, kappa, mu_d);
 
   Tool::IO::load(tmpProp, propfilesS_R, Tool::IO::fileSCIDAC);
   if (weave.isRoot())
     std::cout << "4th propagator successfully loaded\n" << std::endl;
 
-  Core::Propagator sProp_plus_R(tmpProp->applyDiracOperator(gauge_field, kappa, mu_s));
-  Core::Propagator sProp_minus_R(tmpProp->applyDiracOperator(gauge_field, kappa, -mu_s));
+  Core::Propagator sProp_plus_R(L, T);
+  Core::Propagator sProp_minus_R(L, T);
+  tmpProp->reconstruct_doublet(sProp_plus_R, sProp_minus_R, gauge_field, kappa, mu_s);
 
   delete tmpProp;
 

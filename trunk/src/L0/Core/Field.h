@@ -66,6 +66,8 @@ namespace Core
 
 #include "Field/Field.iterator"
 #include "Field/Field.const_iterator"
+// #include "Field/Field.timesliceIterator"
+// #include "Field/Field.const_timesliceIterator"
 
       size_t L() const;
       size_t T() const;
@@ -78,8 +80,14 @@ namespace Core
       iterator begin();
       iterator end();
 
+//      timesliceIterator begin(size_t const t);
+//      timesliceIterator end(size_t const t);
+
       const_iterator begin() const;
       const_iterator end() const;
+
+//      const_timesliceIterator begin(size_t const t) const;
+//      const_timesliceIterator end(size_t const t) const;
 
       template< typename Atom >
       Component< Element, Atom > component(size_t const component);
@@ -144,6 +152,8 @@ namespace Core
 #include "Field/Field.inlines"
 #include "Field/Field.iterator.inlines"
 #include "Field/Field.const_iterator.inlines"
+// #include "Field/Field.timesliceIterator.inlines"
+// #include "Field/Field.const_timesliceIterator.inlines"
 #include "Field/Field_Field_a.template"
 #include "Field/Field_Field_b.template"
 #include "Field/Field_Field_c.template"

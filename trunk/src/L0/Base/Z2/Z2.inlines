@@ -1,9 +1,13 @@
 inline double Base::Z2::operator()()
 {
   if (d_state & s_mask64)
-    d_state = ((d_state ^ s_maskPoly) << 1 | 1);
+  {
+    d_state = ((d_state ^ s_maskPoly) << uint64_t(1) | uint64_t(1));
+  }
   else
-    d_state <<= 1;
+  {
+    d_state <<= uint64_t(1);
+  }
   d_scale.asUInt ^= (d_state & s_mask64);
   return d_scale.asDouble;
 }

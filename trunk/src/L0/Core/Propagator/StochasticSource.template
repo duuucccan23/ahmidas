@@ -59,8 +59,7 @@ Core::StochasticSource< NComp >::StochasticSource(size_t const L, size_t const T
         if (localIndex == weave.localVolume())
           continue;
 
-        Base::Z2::global(1.0, seeds[localIndex]);
-        ((*d_components)[localIndex]).setToRandom(pol, col, type);
+        ((*d_components)[localIndex]).setToRandom(pol, col, type, seeds[localIndex]);
       }
     }
   }

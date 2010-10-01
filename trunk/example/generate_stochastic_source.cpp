@@ -107,26 +107,26 @@ int main(int argc, char **argv)
   uint64_t const rSeed = uint64_t(floats["seed"]);
   if(weave.isRoot())
     std::cout << "\nrandom seed: " << rSeed << std::endl;
-  Base::Z2::instance(1.0, rSeed);
 
 
   // this is necessary to have reproducible results for different parallelizations
   Core::Field < uint64_t > seeds(L, T);
 
 
-  if (rSeed > 0)
-  {
-    double *tmp = new double[512];
-    std::generate_n(tmp, 512, Base::Random::Z2);
-    delete [] tmp;
-  }
+//   if (rSeed > 0)
+//   {
+//     double *tmp = new double[512];
+//     std::generate_n(tmp, 512, Base::Random::Z2);
+//     delete [] tmp;
+//   }
 
   // here we assign a seed to each lattice site
   {
-    size_t const increment(17U);
+    uint64_t const increment(17);
     size_t localIndex(0);
     size_t globalIndex(0);
     size_t localVolume = weave.localVolume();
+    size_t ctr(0);
     for(size_t idx_Z = 0; idx_Z < L; idx_Z++)
     {
       for(size_t idx_Y = 0; idx_Y < L; idx_Y++)
@@ -134,16 +134,19 @@ int main(int argc, char **argv)
         for(size_t idx_X = 0; idx_X < L; idx_X++)
         {
           weave.barrier();
+          globalIndex += increment;
           localIndex = weave.globalCoordToLocalIndex(idx_X, idx_Y, idx_Z, t_src);
           if (localIndex == localVolume)
             continue;
 
-          seeds[localIndex] = rSeed + uint64_t(globalIndex);
-          globalIndex += increment;
+          seeds[localIndex] = /*uint64_t(1.e18) **/ (rSeed + uint64_t(globalIndex));
+          std::cout << "I am lattice site no. " << ctr++ << " and I get a seed of " << seeds[localIndex] << std::endl;
         }
       }
     }
    }
+// ###############################################################################################
+   // let's do it in scalar, even though this is not very elegant!
 
   if(weave.isRoot())
     std::cout << "\nThe following files are going to be created:" << std::endl;

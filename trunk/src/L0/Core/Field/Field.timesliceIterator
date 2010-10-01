@@ -1,0 +1,38 @@
+class const_timesliceIterator;
+
+class timesliceIterator : public std::iterator< std::bidirectional_iterator_tag, Element >
+{
+  friend class Field< Element >;
+  friend class const_timesliceIterator;
+
+  private:
+   Field< Element >  &d_parent;
+
+  protected:
+   size_t d_timeslice;
+   size_t d_idx;
+
+   timesliceIterator(Field< Element > &parent, size_t const idx, size_t const timeslice);
+
+  public:
+    timesliceIterator(timesliceIterator const &other);
+
+    bool operator==(timesliceIterator const &other) const;
+    bool operator==(const_timesliceIterator const &other) const;
+
+    bool operator!=(timesliceIterator const &other) const;
+    bool operator!=(const_timesliceIterator const &other) const;
+
+    Element &operator*();
+    Element const &operator*() const;
+
+    Element *operator->();
+    Element const *operator->() const;
+
+    timesliceIterator &operator--();
+    timesliceIterator operator--(int);
+
+    timesliceIterator &operator++();
+    timesliceIterator operator++(int);
+};
+

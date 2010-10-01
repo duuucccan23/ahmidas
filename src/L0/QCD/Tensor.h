@@ -6,6 +6,7 @@
 
 #include <L0/Base/Base.h>
 #include <L0/Base/Random.h>
+#include <L0/Base/Z2.h>
 #include <L0/Dirac/Gamma.h>
 #include <L0/Dirac/Matrix.h>
 #include <L0/QCD/Spinor.h>
@@ -146,7 +147,7 @@ namespace QCD
       void setToRandom();
       // this produces tensor filled with random Z(4) elements
       void setToRandom(Base::SourcePolarization const, Base::SourceColorState const,
-                       Base::SourceStochasticTypeFlag const type);
+                       Base::SourceStochasticTypeFlag const type, uint64_t seed = 0);
 
   #include "Tensor/Tensor.iterator"
 

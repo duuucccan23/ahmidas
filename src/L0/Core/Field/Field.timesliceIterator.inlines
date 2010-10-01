@@ -1,0 +1,75 @@
+namespace Core
+{
+  template< typename Element >
+  inline Field< Element >::timesliceIterator::timesliceIterator(Field< Element > &parent, size_t const idx, size_t const timeslice)
+    : d_parent(parent), d_idx(idx)
+  {}
+
+  template< typename Element >
+  inline Field< Element >::timesliceIterator::timesliceIterator(typename Field< Element >::timesliceIterator const &other)
+    : d_parent(other.d_parent), d_idx(other.d_idx)
+  {}
+
+  template< typename Element >
+  inline bool Field< Element >::timesliceIterator::operator==(timesliceIterator const &other) const
+  {
+    return ((&d_parent == &(other.d_parent)) && (d_timeslice == other.d_timeslice) && (d_idx == other.d_idx));
+  }
+
+  template< typename Element >
+  inline bool Field< Element >::timesliceIterator::operator==(const_timesliceIterator const &other) const
+  {
+    return ((&d_parent == &(other.d_parent)) && (d_timeslice == other.d_timeslice) && (d_idx == other.d_idx));
+  }
+
+  template< typename Element >
+  inline bool Field< Element >::timesliceIterator::operator!=(timesliceIterator const &other) const
+  {
+    return ((&d_parent != &(other.d_parent)) || (d_timeslice == other.d_timeslice) || (d_idx != other.d_idx));
+  }
+
+  template< typename Element >
+  inline bool Field< Element >::timesliceIterator::operator!=(const_timesliceIterator const &other) const
+  {
+    return ((&d_parent != &(other.d_parent)) || (d_timeslice == other.d_timeslice) || (d_idx != other.d_idx));
+  }
+
+  template< typename Element >
+  inline Element &Field< Element >::timesliceIterator::operator*()
+  {
+    return d_parent[d_idx];
+  }
+
+  template< typename Element >
+  inline Element const &Field< Element >::timesliceIterator::operator*() const
+  {
+    // need something different here like d_parent(d_idx, d_timeslice);
+    return d_parent[d_idx];
+  }
+
+  template< typename Element >
+  inline Element *Field< Element >::timesliceIterator::operator->()
+  {
+    return &d_parent[d_idx];
+  }
+
+  template< typename Element >
+  inline Element const *Field< Element >::timesliceIterator::operator->() const
+  {
+    return &d_parent[d_idx];
+  }
+
+  template< typename Element >
+  inline typename Field< Element >::timesliceIterator &Field< Element >::timesliceIterator::operator++()
+  {
+    ++d_idx;
+    return *this;
+  }
+
+  template< typename Element >
+  inline typename Field< Element >::timesliceIterator &Field< Element >::timesliceIterator::operator--()
+  {
+    --d_idx;
+    return *this;
+  }
+}

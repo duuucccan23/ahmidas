@@ -4,42 +4,81 @@ namespace QCD
 {
 
   void Tensor::setToRandom(Base::SourcePolarization const DState, Base::SourceColorState const CState,
-                           Base::SourceStochasticTypeFlag const type)
+                           Base::SourceStochasticTypeFlag const type, uint64_t seed)
   {
     std::fill_n(d_data, 144, std::complex< double >(0, 0));
     std::complex< double > tmp_data [12];
-    switch (type)
+    if (seed == 0)
     {
-      case Base::sou_Z4:
+      switch (type)
       {
-        std::generate_n(reinterpret_cast< double* >(tmp_data), 24, Base::Random::Z2);
-        double const norm = 1.0/sqrt(2.0);
-        std::transform(reinterpret_cast< double* >(tmp_data), reinterpret_cast< double* >(tmp_data) + 24,
-                      reinterpret_cast< double* >(tmp_data), std::bind2nd(std::multiplies< double >(), norm));
-        break;
+        case Base::sou_Z4:
+        {
+          std::generate_n(reinterpret_cast< double* >(tmp_data), 24, Base::Random::Z2);
+          double const norm = 1.0/sqrt(2.0);
+          std::transform(reinterpret_cast< double* >(tmp_data), reinterpret_cast< double* >(tmp_data) + 24,
+                        reinterpret_cast< double* >(tmp_data), std::bind2nd(std::multiplies< double >(), norm));
+          break;
+        }
+        case Base::sou_Z2:
+        {
+          std::generate_n(tmp_data, 12, Base::Random::Z2);
+  //         std::generate_n(reinterpret_cast< double* >(tmp_data), 24, Base::Random::Z2);
+  //         for (size_t idx=1; idx<24, idx+=2)
+  //           (reinterpret_cast< double* >(tmp_data))[idx] = 0.0; // set imaginary parts to zero
+          break;
+        }
+        case Base::sou_P1:
+        {
+          std::fill_n(tmp_data, 12, std::complex< double >(1, 0));
+          break;
+        }
+        case Base::sou_M1:
+        {
+          std::fill_n(tmp_data, 12, std::complex< double >(-1, 0));
+          break;
+        }
+        default:
+          std::cerr << "This Base::SourceColorState is not implemented in Tensor::setToRandom_Z4()\n";
+          std::cerr << "Aborting ..." << std::endl;
+          exit(1);
       }
-      case Base::sou_Z2:
+    }
+    else
+    {
+      switch (type)
       {
-        std::generate_n(tmp_data, 12, Base::Random::Z2);
-//         std::generate_n(reinterpret_cast< double* >(tmp_data), 24, Base::Random::Z2);
-//         for (size_t idx=1; idx<24, idx+=2)
-//           (reinterpret_cast< double* >(tmp_data))[idx] = 0.0; // set imaginary parts to zero
-        break;
+        case Base::sou_Z4:
+        {
+          std::generate_n(reinterpret_cast< double* >(tmp_data), 24, Base::Z2(1.0, seed));
+          double const norm = 1.0/sqrt(2.0);
+          std::transform(reinterpret_cast< double* >(tmp_data), reinterpret_cast< double* >(tmp_data) + 24,
+                        reinterpret_cast< double* >(tmp_data), std::bind2nd(std::multiplies< double >(), norm));
+          break;
+        }
+        case Base::sou_Z2:
+        {
+          std::generate_n(tmp_data, 12, Base::Z2(1.0, seed));
+  //         std::generate_n(reinterpret_cast< double* >(tmp_data), 24, Base::Random::Z2);
+  //         for (size_t idx=1; idx<24, idx+=2)
+  //           (reinterpret_cast< double* >(tmp_data))[idx] = 0.0; // set imaginary parts to zero
+          break;
+        }
+        case Base::sou_P1:
+        {
+          std::fill_n(tmp_data, 12, std::complex< double >(1, 0));
+          break;
+        }
+        case Base::sou_M1:
+        {
+          std::fill_n(tmp_data, 12, std::complex< double >(-1, 0));
+          break;
+        }
+        default:
+          std::cerr << "This Base::SourceColorState is not implemented in Tensor::setToRandom_Z4()\n";
+          std::cerr << "Aborting ..." << std::endl;
+          exit(1);
       }
-      case Base::sou_P1:
-      {
-        std::fill_n(tmp_data, 12, std::complex< double >(1, 0));
-        break;
-      }
-      case Base::sou_M1:
-      {
-        std::fill_n(tmp_data, 12, std::complex< double >(-1, 0));
-        break;
-      }
-      default:
-        std::cerr << "This Base::SourceColorState is not implemented in Tensor::setToRandom_Z4()\n";
-        std::cerr << "Aborting ..." << std::endl;
-        exit(1);
     }
     switch (DState)
     {

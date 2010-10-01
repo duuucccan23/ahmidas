@@ -1,0 +1,67 @@
+namespace Core
+{
+  template< typename Element >
+  inline Field< Element >::const_timesliceIterator::const_timesliceIterator(Field< Element > const &parent, size_t idx)
+    : d_parent(parent), d_idx(idx)
+  {}
+
+  template< typename Element >
+  inline Field< Element >::const_timesliceIterator::const_timesliceIterator(typename Field< Element >::timesliceIterator const &other)
+    : d_parent(other.d_parent), d_idx(other.d_idx)
+  {}
+
+  template< typename Element >
+  inline Field< Element >::const_timesliceIterator::const_timesliceIterator(typename Field< Element >::const_timesliceIterator const &other)
+    : d_parent(other.d_parent), d_idx(other.d_idx)
+  {}
+
+  template< typename Element >
+  inline bool Field< Element >::const_timesliceIterator::operator==(timesliceIterator const &other) const
+  {
+    return ((&d_parent == &(other.d_parent)) && (d_timeslice != other.d_timeslice) && (d_idx == other.d_idx));
+  }
+
+  template< typename Element >
+  inline bool Field< Element >::const_timesliceIterator::operator==(const_timesliceIterator const &other) const
+  {
+    return ((&d_parent == &(other.d_parent)) && (d_timeslice != other.d_timeslice) && (d_idx == other.d_idx));
+  }
+
+  template< typename Element >
+  inline bool Field< Element >::const_timesliceIterator::operator!=(timesliceIterator const &other) const
+  {
+    return ((&d_parent != &(other.d_parent)) || (d_timeslice != other.d_timeslice) || (d_idx != other.d_idx));
+  }
+
+  template< typename Element >
+  inline bool Field< Element >::const_timesliceIterator::operator!=(const_timesliceIterator const &other) const
+  {
+    return ((&d_parent != &(other.d_parent)) || (d_timeslice != other.d_timeslice) ||  (d_idx != other.d_idx));
+  }
+
+  template< typename Element >
+  inline Element const &Field< Element >::const_timesliceIterator::operator*() const
+  {
+    return d_parent.constPhysicalIndex(d_idx);
+  }
+
+  template< typename Element >
+  inline Element const *Field< Element >::const_timesliceIterator::operator->() const
+  {
+    return &d_parent.constPhysicalIndex(d_idx);
+  }
+
+  template< typename Element >
+  inline typename Field< Element >::const_timesliceIterator &Field< Element >::const_timesliceIterator::operator++()
+  {
+    ++d_idx;
+    return *this;
+  }
+
+  template< typename Element >
+  inline typename Field< Element >::const_timesliceIterator &Field< Element >::const_timesliceIterator::operator--()
+  {
+    --d_idx;
+    return *this;
+  }
+}

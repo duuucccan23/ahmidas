@@ -8,7 +8,15 @@ inline double Base::Z2::operator()()
   {
     d_state <<= uint64_t(1);
   }
+
+
   d_scale.asUInt ^= (d_state & s_mask64);
+
+  double tmp(d_scale.asDouble);
+
+  if (Base::bigEndian)
+    Base::swapEndian(tmp);
+
   return d_scale.asDouble;
 }
 

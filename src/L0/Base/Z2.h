@@ -4,14 +4,16 @@
 #include <iostream>
 #include <iomanip>
 
+#include <L0/Base/Base.h>
+
 namespace Base
 {
   class Z2
   {
     static Z2 *s_instance;
 
-    static uint64_t const s_mask64 = uint64_t(0x8000000000000000);
-    static uint64_t const s_maskPoly = uint64_t(0x56C9E91ACA649B2C); // More dense polynomial
+    static uint64_t const s_mask64 = uint64_t(0x8000000000000000LLU);
+    static uint64_t const s_maskPoly = uint64_t(0x56C9E91ACA649B2CLLU); // More dense polynomial
 
     uint64_t  d_state;
 

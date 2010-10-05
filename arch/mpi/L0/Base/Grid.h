@@ -31,7 +31,7 @@ namespace Base
 
     MPI::Cartcomm d_grid;
     MPI::Cartcomm d_timeSlice;
-    MPI::Cartcomm d_backbone;
+    // MPI::Cartcomm d_backbone;
 
     size_t d_L;
     size_t d_T;
@@ -53,7 +53,7 @@ namespace Base
 
       MPI::Cartcomm const &grid() const; //NOTE: world? AD: No, Cartesian communicator with content of world...
       MPI::Cartcomm &timeSlice();
-      MPI::Cartcomm &backbone();
+      // MPI::Cartcomm &backbone();
 
       size_t rank() const; // rank of this node
       size_t rank(size_t index) const; // rank of the node holding the lattice site with index index

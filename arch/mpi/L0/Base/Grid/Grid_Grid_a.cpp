@@ -63,7 +63,7 @@ namespace Base
       bool boolGrid[4] = {false, false, false, false};
       boolGrid[idx_T] = true;
       d_timeSlice = d_grid.Sub(boolGrid);
-      d_backbone = d_grid.Split(d_timeSlice.Get_rank(), 0); // We'll leave the rank in standard order
+      // d_backbone = d_grid.Split(d_timeSlice.Get_rank(), 0); // We'll leave the rank in standard order
 
       d_grid.Get_coords(d_grid.Get_rank(), 4, intGrid);
       for (size_t idx = 0; idx < 4; ++idx)

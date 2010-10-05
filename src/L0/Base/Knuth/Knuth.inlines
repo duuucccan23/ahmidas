@@ -1,5 +1,5 @@
 inline Base::Knuth::Knuth(uint64_t const seed)
-  : d_max(0x20000000000000), d_seed(2147483647)
+  : d_max(0x20000000000000LLU), d_seed(2147483647)
 {
   initialize(seed);
 }

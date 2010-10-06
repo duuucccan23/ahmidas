@@ -1,5 +1,7 @@
 #include "Propagator.ih"
 
+//multply by left and right by (1+-g5)/sqrt(2)
+
 namespace Core
 {
   void Propagator::rotateToPhysicalBasis(bool const sign)
@@ -18,5 +20,7 @@ namespace Core
     tmp.rightMultiply(gamma5);
     tmp *= Ifactor;
     (*this) += tmp;
+
+    (*this) *= 0.5; //this is (1/sqrt(2))^2
   }
 }

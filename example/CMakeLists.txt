@@ -40,5 +40,8 @@ TARGET_LINK_LIBRARIES(generate_point_source SU3 IO Base Core Dirac Weave Input S
 ADD_EXECUTABLE(output output.cpp)
 TARGET_LINK_LIBRARIES(output Ahmidas Debug Print)
 
+ADD_EXECUTABLE(reconstruct_doublet reconstruct_doublet.cpp)
+TARGET_LINK_LIBRARIES(reconstruct_doublet IO Input Core Ahmidas)
+
 # ADD_EXECUTABLE(makeetmcprop makeetmcprop.cpp)
 # TARGET_LINK_LIBRARIES(makeetmcprop IO Core)

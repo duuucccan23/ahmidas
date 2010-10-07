@@ -58,7 +58,7 @@ int main(int argc, char **argv)
   std::vector< std::vector< std::string > > files;
 
   std::vector< size_t * > positions;
-  std::map< std::string, int > operators;
+  std::vector< int > operators;
 
   /* ****************************************** */
   /* ****** reading the input file ************ */

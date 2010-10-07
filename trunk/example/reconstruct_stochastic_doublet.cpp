@@ -1,6 +1,6 @@
 //this version will reconstruct the Up and Down doublet of a
-//non-stochastic propagator
+//stochastic propagator
 
-#define PropagatorType Core::Propagator
+#define PropagatorType Core::StochasticPropagator<4>
 
 #include "reconstruct_doublet_common.cpp"

@@ -1,4 +1,5 @@
 #include "Propagator.ih"
+#include <L0/Base/Weave.h>
 
 namespace Core
 {

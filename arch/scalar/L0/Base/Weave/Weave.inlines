@@ -66,6 +66,7 @@ namespace Base
   }
 
 
+  // we need to change this!!! The naming is misleading, it is supposed to do what its name indicates!
   inline void Weave::sumOverTimeSlices(std::complex< double > const *data_send,
                                        std::complex< double > *data_recv, size_t const count) const
   {

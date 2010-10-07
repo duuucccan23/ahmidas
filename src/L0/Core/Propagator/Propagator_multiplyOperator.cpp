@@ -463,6 +463,12 @@ namespace Core
         (*this).rightMultiply(gamma4);
         break;
       }
+      case Base::op_GAMMA_5:
+      {
+        Dirac::Gamma< 5 > gamma5;
+        (*this).rightMultiply(gamma5);
+        break;
+      }
       case Base::op_GAMMA_1:
       {
         Dirac::Gamma< 1 > gamma1;

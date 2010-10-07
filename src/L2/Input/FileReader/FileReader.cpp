@@ -135,7 +135,7 @@ namespace Input
                                         std::vector< std::vector< std::string > > &filenames,
                                         std::map< std::string, double > &floats,
                                         std::vector< size_t * > &positions,
-                                        std::map< std::string, int > &operators) const
+                                        std::vector< int > &operators) const
   {
     for (size_t iF=0; iF<filenames.size(); iF++)
       filenames[iF].clear();
@@ -169,6 +169,14 @@ namespace Input
         iss >> pos[2];
         iss >> pos[3];
         positions.push_back(pos);
+        continue;
+      }
+      if((*It).first == "operator")
+      {
+        int int_tmp;
+        std::istringstream iss((*It).second);
+        iss >> int_tmp;
+        operators.push_back(int_tmp);
         continue;
       }
       double tmp;

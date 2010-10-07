@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<ahmidas>
+  <params>
+    <L> 16 </L>
+    <T> 32 </T>
+    <kappa> 0.160856 </kappa>
+    <mu_1> 0.0040 </mu_1>
+    <mu_2> 0.0040 </mu_2>
+    <thetax> 0 </thetax>
+    <thetay> 0 </thetay>
+    <thetaz> 0 </thetaz>
+    <thetat> 1 </thetat>
+    <phys_base> 0 </phys_base>
+    <!-- timeslice of sources for first set of propagators (source) -->
+    <timeslice> 0 </timeslice>
+    <!-- operators will be taken pairwise (i.e. 1st and 2nd, then 3rd and 4th) as operator combinations -->
+    <!-- this should give the pion if the two propagators are equal -->
+    <operator> -1 </operator>
+    <operator> -1 </operator>
+    <operator> 5 </operator>
+    <operator> 5 </operator>
+  </params>
+  <files>
+    <file>
+      <type>gauge</type>
+      <directory>.</directory>
+      <filenameBase>conf.</filenameBase>
+      <firstIndex>9999</firstIndex>
+      <lastIndex>9999</lastIndex>
+      <indexWidth>4</indexWidth>
+    </file>
+    <file>
+      <type>propagator</type>
+      <directory>.</directory>
+      <filenameBase>source1.</filenameBase>
+      <filenameEnding>.inverted</filenameEnding>
+      <firstIndex>0</firstIndex>
+      <lastIndex>3</lastIndex>
+      <indexWidth>2</indexWidth>
+    </file>
+    <file>
+      <type>propagator</type>
+      <directory>.</directory>
+      <filenameBase>source2.</filenameBase>
+      <filenameEnding>.inverted</filenameEnding>
+      <firstIndex>0</firstIndex>
+      <lastIndex>3</lastIndex>
+      <indexWidth>2</indexWidth>
+    </file>
+  </files>
+</ahmidas>

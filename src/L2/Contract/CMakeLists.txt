@@ -1,4 +1,6 @@
-SET(Sources_Meson Meson.h Meson/Meson.cpp)
+SET(Sources_Meson Meson.h
+                  Meson/Meson_light_meson_twopoint_stochastic_a.cpp
+                  Meson/Meson_light_meson_twopoint_stochastic_b.cpp)
 SET(Sources_Baryon Baryon.h
                    Baryon/Baryon_proton_twopoint.cpp
                    Baryon/Baryon_create_sequential_source_proton_d_a.cpp

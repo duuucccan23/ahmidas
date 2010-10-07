@@ -70,6 +70,7 @@ namespace Base
       bool isLocallyAvailable(size_t const x, size_t const y, size_t const z, size_t const t) const;
 
       bool isRoot() const;
+      bool timesliceAvailable(size_t const timeslice) const;
 
     private:
       size_t fromGlobal(size_t const x, Base::SpaceTimeIndex const idx) const;

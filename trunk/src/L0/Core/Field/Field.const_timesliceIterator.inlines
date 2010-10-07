@@ -1,8 +1,8 @@
 namespace Core
 {
   template< typename Element >
-  inline Field< Element >::const_timesliceIterator::const_timesliceIterator(Field< Element > const &parent, size_t idx)
-    : d_parent(parent), d_idx(idx)
+  inline Field< Element >::const_timesliceIterator::const_timesliceIterator(Field< Element > const &parent, size_t const idx, size_t const timeslice)
+    : d_parent(parent), d_idx(idx), d_timeslice(timeslice)
   {}
 
   template< typename Element >

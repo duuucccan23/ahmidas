@@ -2,12 +2,12 @@ namespace Core
 {
   template< typename Element >
   inline Field< Element >::timesliceIterator::timesliceIterator(Field< Element > &parent, size_t const idx, size_t const timeslice)
-    : d_parent(parent), d_idx(idx)
+    : d_parent(parent), d_idx(idx), d_timeslice(timeslice)
   {}
 
   template< typename Element >
   inline Field< Element >::timesliceIterator::timesliceIterator(typename Field< Element >::timesliceIterator const &other)
-    : d_parent(other.d_parent), d_idx(other.d_idx)
+    : d_parent(other.d_parent), d_idx(other.d_idx), d_timeslice(other.d_timeslice)
   {}
 
   template< typename Element >

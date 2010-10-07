@@ -145,7 +145,9 @@ namespace Core
 
       void changeBoundaryConditions_uniformToFixed(size_t timesliceSource, size_t timesliceBoundary);
 
-      void rotateToPhysicalBasis(bool const sign);
+      // sign = true  <=> positive tau_3 entry
+      // sign = false <=> negative tau_3 entry
+      void rotateToPhysicalBasis(bool const sign = true);
 
 
       Propagator &shift(Base::SpaceTimeIndex const idx, Base::Direction const dir, size_t const times=1);

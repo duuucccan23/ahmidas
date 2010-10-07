@@ -60,6 +60,38 @@ namespace Core
     return const_iterator(*this, d_weave.localVolume());
   }
 
+
+  template< typename Element >
+  inline typename Field< Element >::timesliceIterator Field< Element >::begin(size_t const timeslice)
+  {
+    size_t const t_offset = timeslice % d_weave.dim(Base::idx_T)
+                          + (d_weave.timesliceAvailable(timeslice) ? 0 : 1);
+    return iterator(*this, t_offset * d_weave.localVolume() / d_weave.dim(Base::idx_T), timeslice);
+  }
+
+  template< typename Element >
+  inline typename Field< Element >::timesliceIterator Field< Element >::end(size_t const timeslice)
+  {
+    size_t const t_offset = (timeslice % d_weave.dim(Base::idx_T)) + 1;
+    return timesliceIterator(*this, t_offset * d_weave.localVolume() / d_weave.dim(Base::idx_T), timeslice);
+  }
+
+  template< typename Element >
+  inline typename Field< Element >::const_timesliceIterator Field< Element >::begin(size_t const timeslice) const
+  {
+    size_t const t_offset = timeslice % d_weave.dim(Base::idx_T)
+                          + (d_weave.timesliceAvailable(timeslice) ? 0 : 1);
+    return const_iterator(*this, 0, timeslice);
+  }
+
+  template< typename Element >
+  inline typename Field< Element >::const_timesliceIterator Field< Element >::end(size_t const timeslice) const
+  {
+   size_t const t_offset = (timeslice % d_weave.dim(Base::idx_T)) + 1;
+    return const_iterator(*this, d_weave.localVolume(), timeslice);
+  }
+
+
   template< typename Element >
   template< typename Atom >
   inline Component< Element, Atom > Field< Element >::component(size_t const idx)

@@ -3,6 +3,7 @@
 #include <vector>
 #include <string>
 
+#include <L0/Base/Base.h>
 #include <L0/Core/Field.h>
 #include <L0/Core/Correlator.h>
 #include <L0/QCD/Gauge.h>
@@ -47,6 +48,9 @@ namespace Tool
   std::complex < double > innerProduct(Core::Field< QCD::Spinor > const &left,
                                        Core::Field< QCD::Spinor > const &right,
                                        const size_t tslice);
+
+  Base::Operator convertIntToOperator(int const input);
+
 }
 
 #include "Tool/Tool_randomize.template"

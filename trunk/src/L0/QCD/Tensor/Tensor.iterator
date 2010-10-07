@@ -1,6 +1,6 @@
 
 
-class iterator : std::iterator< std::bidirectional_iterator_tag, Spinor >
+class iterator : private std::iterator< std::bidirectional_iterator_tag, Spinor >
 {
   friend class Tensor;
   //friend class Tensor::const_iterator;

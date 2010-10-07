@@ -19,6 +19,8 @@
 #include <fstream>
 #include <sstream>
 
+#include <L0/Print.h>
+#include <L0/Ahmidas.h>
 #include <L0/QCD/Gauge.h>
 #include <L0/Core/Propagator.h>
 #include <L1/Tool/IO.h>
@@ -35,7 +37,7 @@ int main(int argc, char **argv)
 
   std::map< std::string, double > floats;
   std::vector< size_t * > positions;
-  std::map< std::string, int > operators;
+  std::vector< int > operators;
   std::vector< std::vector< std::string > > files;
 
   reader.initializeParameters(L_tmp, T_tmp, files, floats, positions, operators);

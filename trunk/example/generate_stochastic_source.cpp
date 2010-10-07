@@ -140,7 +140,7 @@ int main(int argc, char **argv)
             continue;
 
           seeds[localIndex] = /*uint64_t(1.e18) **/ (rSeed + uint64_t(globalIndex));
-          std::cout << "I am lattice site no. " << ctr++ << " and I get a seed of " << seeds[localIndex] << std::endl;
+          // std::cout << "I am lattice site no. " << ctr++ << " and I get a seed of " << seeds[localIndex] << std::endl;
         }
       }
     }

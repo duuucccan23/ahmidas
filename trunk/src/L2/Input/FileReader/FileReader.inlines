@@ -22,7 +22,7 @@ namespace Input
                          std::map< std::string, double > &floats) const
   {
     // dummy containers
-    std::map< std::string, int > dummy_ops;
+    std::vector< int > dummy_ops;
     std::vector< size_t * > dummy_pos;
     initializeParameters(L, T, filenames, floats, dummy_pos, dummy_ops);
     for (size_t i=0; i<dummy_pos.size(); i++)
@@ -40,7 +40,7 @@ namespace Input
   {
     d_firstIndex = atoi (firstIndex.c_str());
     d_lastIndex  = atoi (lastIndex.c_str());
-    d_indexWidth = atoi (indexWidth.c_str());;  
+    d_indexWidth = atoi (indexWidth.c_str());
   }
 
 }

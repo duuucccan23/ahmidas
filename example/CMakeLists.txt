@@ -43,5 +43,8 @@ TARGET_LINK_LIBRARIES(output Ahmidas Debug Print)
 ADD_EXECUTABLE(reconstruct_doublet reconstruct_doublet.cpp)
 TARGET_LINK_LIBRARIES(reconstruct_doublet IO Input Core Ahmidas)
 
+ADD_EXECUTABLE(reconstruct_stochastic_doublet reconstruct_stochastic_doublet.cpp)
+TARGET_LINK_LIBRARIES(reconstruct_stochastic_doublet IO Input Core Ahmidas)
+
 # ADD_EXECUTABLE(makeetmcprop makeetmcprop.cpp)
 # TARGET_LINK_LIBRARIES(makeetmcprop IO Core)

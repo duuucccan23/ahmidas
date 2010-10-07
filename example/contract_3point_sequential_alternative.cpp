@@ -42,7 +42,7 @@ int main(int argc, char **argv)
 
   std::map< std::string, double > floats;
   std::vector< size_t * > positions;
-  std::map< std::string, int > operators;
+  std::vector< int > operators;
   std::vector< std::vector< std::string > > files;
 
   reader.initializeParameters(L_tmp, T_tmp, files, floats, positions, operators);

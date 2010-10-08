@@ -8,7 +8,6 @@
 // the isospin components have to be reconstructed 
 // by application of D or D^{dagger}, respectively.
 
-// personal note: replace Core::Propagator by Core::StochasticPropagator<4> in the future
 
 #include <cstring>
 #include <vector>
@@ -92,14 +91,14 @@ int main(int argc, char **argv)
 /* ******************************************************************************* */
 
   // temporary Propagator just just for loading the MMSolver output
-  Core::Propagator *tmpProp = new Core::Propagator(L, T);
+  Core::StochasticPropagator< 4 >  *tmpProp = new Core::StochasticPropagator< 4 > (L, T);
 
   Tool::IO::load(tmpProp, propfilesD_L, Tool::IO::fileSCIDAC);
   if (weave.isRoot())
     std::cout << "1st propagator successfully loaded\n" << std::endl;
 
-  Core::Propagator dProp_plus_L(L, T);
-  Core::Propagator dProp_minus_L(L, T);
+  Core::StochasticPropagator< 4 >  dProp_plus_L(L, T);
+  Core::StochasticPropagator< 4 >  dProp_minus_L(L, T);
   // reconstruct the full doublet from the combined MMS output, being ~ (DD^dagger)^-1
   tmpProp->reconstruct_doublet(dProp_plus_L, dProp_minus_L, gauge_field, kappa, mu_d);
 
@@ -107,8 +106,8 @@ int main(int argc, char **argv)
   if (weave.isRoot())
     std::cout << "2nd propagator successfully loaded\n" << std::endl;
 
-  Core::Propagator sProp_plus_L(L, T);
-  Core::Propagator sProp_minus_L(L, T);
+  Core::StochasticPropagator< 4 >  sProp_plus_L(L, T);
+  Core::StochasticPropagator< 4 >  sProp_minus_L(L, T);
   tmpProp->reconstruct_doublet(sProp_plus_L, sProp_minus_L, gauge_field, kappa, mu_s);
 
 /* ******************************************************************************* */
@@ -120,16 +119,16 @@ int main(int argc, char **argv)
   if (weave.isRoot())
       std::cout << "3rd propagator successfully loaded\n" << std::endl;
 
-  Core::Propagator dProp_plus_R(L, T);
-  Core::Propagator dProp_minus_R(L, T);
+  Core::StochasticPropagator< 4 >  dProp_plus_R(L, T);
+  Core::StochasticPropagator< 4 >  dProp_minus_R(L, T);
   tmpProp->reconstruct_doublet(dProp_plus_R, dProp_minus_R, gauge_field, kappa, mu_d);
 
   Tool::IO::load(tmpProp, propfilesS_R, Tool::IO::fileSCIDAC);
   if (weave.isRoot())
     std::cout << "4th propagator successfully loaded\n" << std::endl;
 
-  Core::Propagator sProp_plus_R(L, T);
-  Core::Propagator sProp_minus_R(L, T);
+  Core::StochasticPropagator< 4 >  sProp_plus_R(L, T);
+  Core::StochasticPropagator< 4 >  sProp_minus_R(L, T);
   tmpProp->reconstruct_doublet(sProp_plus_R, sProp_minus_R, gauge_field, kappa, mu_s);
 
   delete tmpProp;
@@ -147,13 +146,13 @@ int main(int argc, char **argv)
   // note: worry about efficiency when it works, maybe first taking 
   // the dagger of the d propagator might be advantageous, 
   // since we actually never need the undaggered propagator
-  Core::Propagator O_R = gamma4 * dProp_plus_R;
+  Core::StochasticPropagator< 4 >  O_R = gamma4 * dProp_plus_R;
   O_R += gamma5gamma4 * dProp_plus_R;
   O_R.dagger();
   O_R.rightMultiply(sProp_plus_R); // actually, is it right or left here? check again!
 
 
-  Core::Propagator O_L = gamma4 * dProp_minus_L;
+  Core::StochasticPropagator< 4 >  O_L = gamma4 * dProp_minus_L;
   O_L += gamma5gamma4 * dProp_minus_L;
   O_L.dagger();
   O_L.rightMultiply(sProp_plus_L); // actually, is it right or left here? check again!

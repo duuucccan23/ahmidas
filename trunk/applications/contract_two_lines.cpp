@@ -15,7 +15,7 @@
 
 int main(int argc, char **argv)
 {
-  Ahmidas start(&argc, &argv);
+  // Ahmidas start(&argc, &argv);
 
   size_t L_tmp(0);
   size_t T_tmp(0);
@@ -33,6 +33,8 @@ int main(int argc, char **argv)
 
   size_t const L = L_tmp;
   size_t const T = T_tmp;
+
+  Base::Weave weave(L, T);
 
   double const kappa   = floats["kappa"];
   double const mu_1    = floats["mu_1"];

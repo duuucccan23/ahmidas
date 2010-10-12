@@ -83,4 +83,47 @@ namespace QCD
   {
     upper().swap(1, lower(), -1);
   }
+
+  template< >
+  inline void Spinor::leftMultiply(Dirac::Gamma< 12 > const)
+  {
+    upper().leftMultiply(Dirac::Pauli< 3 >(), std::complex< double >(0,1));
+    lower().leftMultiply(Dirac::Pauli< 3 >(), std::complex< double >(0,1));
+  }
+
+  template< >
+  inline void Spinor::leftMultiply(Dirac::Gamma< 13 > const)
+  {
+    upper().leftMultiply(Dirac::Pauli< 2 >(), std::complex< double >(0,-1));
+    lower().leftMultiply(Dirac::Pauli< 2 >(), std::complex< double >(0,-1));
+  }
+
+  template< >
+  inline void Spinor::leftMultiply(Dirac::Gamma< 14 > const)
+  {
+    upper().leftMultiply(Dirac::Pauli< 1 >(), std::complex< double >(0,+1));
+    lower().leftMultiply(Dirac::Pauli< 1 >(), std::complex< double >(0,-1));
+  }
+
+  template< >
+  inline void Spinor::leftMultiply(Dirac::Gamma< 23 > const)
+  {
+    upper().leftMultiply(Dirac::Pauli< 1 >(), std::complex< double >(0,+1));
+    lower().leftMultiply(Dirac::Pauli< 1 >(), std::complex< double >(0,+1));
+  }
+
+  template< >
+  inline void Spinor::leftMultiply(Dirac::Gamma< 24 > const)
+  {
+    upper().leftMultiply(Dirac::Pauli< 2 >(), std::complex< double >(0,+1));
+    lower().leftMultiply(Dirac::Pauli< 2 >(), std::complex< double >(0,-1));
+  }
+
+  template< >
+  inline void Spinor::leftMultiply(Dirac::Gamma< 34 > const)
+  {
+    upper().leftMultiply(Dirac::Pauli< 3 >(), std::complex< double >(0,+1));
+    lower().leftMultiply(Dirac::Pauli< 3 >(), std::complex< double >(0,-1));
+  }
+
 }

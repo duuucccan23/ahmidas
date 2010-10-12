@@ -37,6 +37,24 @@ Base::Operator Tool::convertIntToOperator(int const input)
     case Base::op_GAMMA_45:
       return Base::op_GAMMA_45;
       break;
+    case Base::op_GAMMA_12:
+      return Base::op_GAMMA_12;
+      break;
+    case Base::op_GAMMA_13:
+      return Base::op_GAMMA_13;
+      break;
+    case Base::op_GAMMA_14:
+      return Base::op_GAMMA_14;
+      break;
+    case Base::op_GAMMA_23:
+      return Base::op_GAMMA_23;
+      break;
+    case Base::op_GAMMA_24:
+      return Base::op_GAMMA_24;
+      break;
+    case Base::op_GAMMA_34:
+      return Base::op_GAMMA_34;
+      break;
     case Base::op_CONSERVED_GAMMA_4:
       return Base::op_CONSERVED_GAMMA_4;
       break;

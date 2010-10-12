@@ -74,4 +74,34 @@ namespace Dirac
   template< >
   std::complex< double > const Gamma< 54 >::s_sign[4] = {-1, -1, 1, 1};
 
+  template< >
+  size_t const Gamma< 12 >::s_perm[4] = {0, 1, 2, 3};
+  template< >
+  std::complex< double > const Gamma< 12 >::s_sign[4] = {I, -I, I, -I};
+
+  template< >
+  size_t const Gamma< 13 >::s_perm[4] = {1, 0, 3, 2};
+  template< >
+  std::complex< double > const Gamma< 13 >::s_sign[4] = {-1, +1, -1, +1};
+
+  template< >
+  size_t const Gamma< 14 >::s_perm[4] = {1, 0, 3, 2};
+  template< >
+  std::complex< double > const Gamma< 14 >::s_sign[4] = {I, I, -I, -I};
+
+  template< >
+  size_t const Gamma< 23 >::s_perm[4] = {1, 0, 3, 2};
+  template< >
+  std::complex< double > const Gamma< 23 >::s_sign[4] = {I, I, I, I};
+
+  template< >
+  size_t const Gamma< 24 >::s_perm[4] = {1, 0, 3, 2};
+  template< >
+  std::complex< double > const Gamma< 24 >::s_sign[4] = {+1, -1, -1, +1};
+
+  template< >
+  size_t const Gamma< 34 >::s_perm[4] = {0, 1, 2, 3};
+  template< >
+  std::complex< double > const Gamma< 34 >::s_sign[4] = {I, -I, -I, I};
+
 }

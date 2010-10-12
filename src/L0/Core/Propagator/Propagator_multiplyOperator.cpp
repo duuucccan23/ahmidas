@@ -69,6 +69,48 @@ namespace Core
         result = contract(fromRight);
         break;
       }
+      case Base::op_GAMMA_12:
+      {
+        Dirac::Gamma< 12 > gamma1gamma2;
+        (*this) *= gamma1gamma2;
+        result = contract(fromRight);
+        break;
+      }
+      case Base::op_GAMMA_13:
+      {
+        Dirac::Gamma< 13 > gamma1gamma3;
+        (*this) *= gamma1gamma3;
+        result = contract(fromRight);
+        break;
+      }
+      case Base::op_GAMMA_14:
+      {
+        Dirac::Gamma< 14 > gamma1gamma4;
+        (*this) *= gamma1gamma4;
+        result = contract(fromRight);
+        break;
+      }
+      case Base::op_GAMMA_23:
+      {
+        Dirac::Gamma< 23 > gamma2gamma3;
+        (*this) *= gamma2gamma3;
+        result = contract(fromRight);
+        break;
+      }
+      case Base::op_GAMMA_24:
+      {
+        Dirac::Gamma< 24 > gamma2gamma4;
+        (*this) *= gamma2gamma4;
+        result = contract(fromRight);
+        break;
+      }
+      case Base::op_GAMMA_34:
+      {
+        Dirac::Gamma< 34 > gamma3gamma4;
+        (*this) *= gamma3gamma4;
+        result = contract(fromRight);
+        break;
+      }
       case Base::op_CONSERVED_GAMMA_4:
       {
         std::cout << "calculating (symmetrized) conserved vector current, temporal component ... " << std::endl;
@@ -443,6 +485,42 @@ namespace Core
         (*this) *= gamma4gamma5;
         break;
       }
+      case Base::op_GAMMA_12:
+      {
+        Dirac::Gamma< 12 > gamma1gamma2;
+        (*this) *= gamma1gamma2;
+        break;
+      }
+      case Base::op_GAMMA_13:
+      {
+        Dirac::Gamma< 13 > gamma1gamma3;
+        (*this) *= gamma1gamma3;
+        break;
+      }
+      case Base::op_GAMMA_14:
+      {
+        Dirac::Gamma< 14 > gamma1gamma4;
+        (*this) *= gamma1gamma4;
+        break;
+      }
+      case Base::op_GAMMA_23:
+      {
+        Dirac::Gamma< 23 > gamma2gamma3;
+        (*this) *= gamma2gamma3;
+        break;
+      }
+      case Base::op_GAMMA_24:
+      {
+        Dirac::Gamma< 24 > gamma2gamma4;
+        (*this) *= gamma2gamma4;
+        break;
+      }
+      case Base::op_GAMMA_34:
+      {
+        Dirac::Gamma< 34 > gamma3gamma4;
+        (*this) *= gamma3gamma4;
+        break;
+      }
       default:
         std::cerr << "Error in void Propagator::multiplyOperator(Base::Operator const& O)\n";
         std::cerr << "Operator with no. " << O << " not implemented!" << std::endl;
@@ -510,6 +588,42 @@ namespace Core
       {
         Dirac::Gamma< 45 > gamma4gamma5;
         (*this).rightMultiply(gamma4gamma5);
+        break;
+      }
+      case Base::op_GAMMA_12:
+      {
+        Dirac::Gamma< 12 > gamma1gamma2;
+        (*this).rightMultiply(gamma1gamma2);
+        break;
+      }
+      case Base::op_GAMMA_13:
+      {
+        Dirac::Gamma< 13 > gamma1gamma3;
+        (*this).rightMultiply(gamma1gamma3);
+        break;
+      }
+      case Base::op_GAMMA_14:
+      {
+        Dirac::Gamma< 14 > gamma1gamma4;
+        (*this).rightMultiply(gamma1gamma4);
+        break;
+      }
+      case Base::op_GAMMA_23:
+      {
+        Dirac::Gamma< 23 > gamma2gamma3;
+        (*this).rightMultiply(gamma2gamma3);
+        break;
+      }
+      case Base::op_GAMMA_24:
+      {
+        Dirac::Gamma< 24 > gamma2gamma4;
+        (*this).rightMultiply(gamma2gamma4);
+        break;
+      }
+      case Base::op_GAMMA_34:
+      {
+        Dirac::Gamma< 34 > gamma3gamma4;
+        (*this).rightMultiply(gamma3gamma4);
         break;
       }
       default:

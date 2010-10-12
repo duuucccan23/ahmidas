@@ -14,7 +14,7 @@ namespace Contract
     std::vector< Core::Correlator< Dirac::Matrix > > twopoints;
 
     Core::StochasticPropagator< 4 > psi2_dagger(psi2);
-    psi2_dagger.dagger();
+    psi2_dagger.revert();
 
     // loop over all operator combinations
     for (size_t iOp = 0; iOp < operator_combinations.size(); iOp++)

@@ -1,4 +1,5 @@
 SET(Sources_Meson Meson.h
+                  Meson/Meson_light_meson_twopoint_alternative.cpp
                   Meson/Meson_light_meson_twopoint_stochastic_a.cpp
                   Meson/Meson_light_meson_twopoint_stochastic_b.cpp)
 SET(Sources_Baryon Baryon.h

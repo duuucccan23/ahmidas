@@ -19,6 +19,10 @@ namespace Contract
                                         Dirac::Gamma< IndexSnk > const &interpolSnk,
                                         size_t const *momentum);
 
+  std::vector< Core::Correlator< Dirac::Matrix > > light_meson_twopoint(
+    Core::Propagator const &psi1, Core::Propagator const &psi2,
+    std::vector< std::pair< Base::Operator, Base::Operator > > const &operator_combinations);
+
   // this works using the one-end trick and gives all 16 gamma-combinations
   // return value: Array of 16 Core::Correlator arranged as follows:
   // gamma5, gamma0, gamma1, gamma2, gamma3, unity,

@@ -78,6 +78,7 @@ namespace Core
       Dirac::Gamma< 5 > gamma5;
       Dirac::Gamma< 4 > gamma0;
 
+      // just check that we have an operator that is implemented
       switch (ops[opNo])
       {
         case Base::op_GAMMA_4:
@@ -137,11 +138,13 @@ namespace Core
         QCD::make_sequential_u(tmp_u_ti_xi, S_d_xf, S_u_xf, Base::proj_PARITY_PLUS_TM);
 
         xi_d_snk.right_multiply_proton();
-        xi_d_snk *= -1.0;
+//         xi_d_snk *= -1.0;
 
-        tmp_d_ti_xi.leftMultiply(xi_d_snk);
+
+        //tmp_d_ti_xi.leftMultiply(xi_d_snk);
+        xi_d_snk.transposeFull();
+        tmp_d_ti_xi.rightMultiply(xi_d_snk);
         tmp_u_ti_xi.leftMultiply(xi_u_snk);
-
 
         dd_part2_local += tmp_d_ti_xi;
         uu_part2_local += tmp_u_ti_xi;
@@ -172,7 +175,9 @@ namespace Core
         QCD::Tensor tmp(gamma0*S_d_y);
         tmp.left_multiply_proton();
         tmp.rightMultiply(phi_d_y);
-        tmp.rightMultiply(dd_part2);
+        tmp.transposeFull();
+        tmp.leftMultiply(dd_part2);
+        //tmp.rightMultiply(dd_part2);
 
         tmp.getDiracMatrix((*It_dd),  Base::col_RED,   Base::col_RED);
         tmp.getDiracMatrix(colorDiag, Base::col_GREEN, Base::col_GREEN);

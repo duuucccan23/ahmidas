@@ -8,7 +8,7 @@ namespace Core
   {
     isolate();
 
-    std::complex< double > const Ifactor = sign ?  std::complex< double >(0,1) : std::complex< double >(0,-1);
+    std::complex< double > const Ifactor = sign ?  std::complex< double >(0,-1) : std::complex< double >(0,+1);
     Dirac::Gamma< 5 > gamma5;
 
     Propagator tmp(*this);

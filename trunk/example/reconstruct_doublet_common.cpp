@@ -1,8 +1,14 @@
-//File0: configuration, needed to produce the r=+-1 propagator from DD^-1
+//File0: configuration, needed to produce the two propagators from DD^-1
 //File1: input propagator
 
-//output propagators file names are created automatically adding ".0" or ".1"
-//to filenames
+//output propagators file names are created automatically adding ".0"
+//or ".1" to filenames. These follow APE naming scheme. The 0 is the
+//solution of the Dirac Operator containing: -i*mu*g5, which rotate to
+//physical basis as (1+ig5)/sqrt(2). The 1 is the other.
+// 0 is sometimes reffered as up in the following.
+//
+// Note that the Dirac Operator and the relative propagator rotate one
+// the opposite than the other
 
 #include <complex>
 #include <cstring>
@@ -92,17 +98,28 @@ int main(int narg,char **arg)
 
   //prduce the u and d propagator from the D+D-
   //we have defined 0 as up, which requires the application of Q-
-  PropagatorType ud_prop[2]={PropagatorType(L,T),PropagatorType(L,T)};
-  DD_prop.reconstruct_doublet(ud_prop[1],ud_prop[0],gauge_field,kappa,mu,thetat,thetax,thetay,thetaz); //this include the gamma5
+  PropagatorType *ud_prop[2];
+  ud_prop[0]=new PropagatorType(L,T);
+  ud_prop[1]=new PropagatorType(L,T);
+
+  //The first is the solution of D- (that with -i*mu*g5), the second of D+.
+  //This is obtained multiplying bi D+,D-
+  //The function reconstruct doublet is the full Dirac Operatorm, which include also the gamma5
+  DD_prop.reconstruct_doublet(*(ud_prop[0]),*(ud_prop[1]),gauge_field,kappa,mu,thetat,thetax,thetay,thetaz); 
+  
   for(size_t iud=0;iud<2;iud++)
     { 
       if(phys_base)
 	{
-	  ud_prop[iud].rotateToPhysicalBasis(iud); //0,1 = +- inside routine
+	  ud_prop[iud]->rotateToPhysicalBasis(iud); //0,1 = (1-+ig5)/sqrt(2) inside the routine
+	  //note that this is propagator so it rotate the opposite way of the Dirac Operator
+
 	  if(debug and weave.isRoot()) std::cout<<"quark "<<iud<<" rotated"<<std::endl;
 	}
-      Tool::IO::save(&(ud_prop[iud]),file_out[iud],Tool::IO::fileSCIDAC);
+      Tool::IO::save(ud_prop[iud],file_out[iud],Tool::IO::fileSCIDAC);
       if(weave.isRoot()) std::cout<<"quark "<<iud<<" file successfully saved"<<std::endl;
+
+      delete ud_prop[iud];
     }
 
   if(weave.isRoot()) std::cout<<std::endl<<"everything ok so exiting!"<<std::endl<<std::endl;

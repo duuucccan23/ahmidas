@@ -135,19 +135,20 @@ int main(int argc, char **argv)
   std::vector< Core::Correlator< Dirac::Matrix > > C2(Contract::light_meson_twopoint(prop1, prop2, operator_combinations));
 #endif
 
-  {
-    std::ofstream fout("correlators.dat");
-    std::ostringstream out;
-    out.flush();
-    for (size_t iCorr = 0; iCorr < C2.size(); iCorr++)
+  if(weave.isRoot())
     {
-      C2[iCorr].setOffset(timeslice_source);
-      out << C2[iCorr];
+      std::ofstream fout("correlators.dat");
+      std::ostringstream out;
+      out.flush();
+      for (size_t iCorr = 0; iCorr < C2.size(); iCorr++)
+	{
+	  C2[iCorr].setOffset(timeslice_source);
+	  out << C2[iCorr];
+	}
+      out.flush();
+      Print(out.str(), fout);
+      fout.close();
     }
-    out.flush();
-    Print(out.str(), fout);
-    fout.close();
-  }
-
+  
   return EXIT_SUCCESS;
 }

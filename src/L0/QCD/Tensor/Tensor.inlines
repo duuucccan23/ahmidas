@@ -109,6 +109,18 @@ namespace QCD
     return hcTensor(*this);
   }
 
+  inline const Tensor &Tensor::spinDilutedDagger() const
+  {
+    std::complex<double> out[144];
+    
+    for (size_t sourceSpin = 0; sourceSpin < 4; ++sourceSpin)
+      for (size_t sinkSpin = 0; sinkSpin < 4; ++sinkSpin)
+        for (size_t sinkColor = 0; sinkColor < 3; ++sinkColor)
+          out[36*sourceSpin + 3*sinkSpin + sinkColor] = std::conj(d_data[36*sinkSpin + 3*sourceSpin + sinkColor]);
+
+    return QCD::Tensor(out);
+  }
+
   inline void Tensor::conjugate()
   {
     for(size_t i=0; i < 144; i++)
@@ -117,6 +129,14 @@ namespace QCD
     // std::transform(d_data, d_data + 144, d_data, std::ptr_fun(&conj));
   }
 
+
+  inline void Tensor::spinDilutedConjugate()
+  {
+    for (size_t sourceSpin = 0; sourceSpin < 4; ++sourceSpin)
+      for (size_t sinkSpin = 0; sinkSpin < 4; ++sinkSpin)
+        for (size_t sinkColor = 0; sinkColor < 3; ++sinkColor)
+          d_data[36*sourceSpin + 3*sinkSpin + sinkColor] = std::conj(d_data[36*sourceSpin + 3*sinkSpin + sinkColor]);
+  }
 
   inline void Tensor::transposeDirac()
   {
@@ -230,11 +250,32 @@ namespace QCD
     std::swap(*(d_data + 131), *(d_data + 142));
   }
 
+  inline void Tensor::spinDilutedTransposeFull()
+  {
+    for (size_t sourceSpin = 0; sourceSpin < 4; ++sourceSpin)
+      for (size_t sinkSpin = 0; sinkSpin < 4; ++sinkSpin)
+	if(sourceSpin!=sinkSpin)
+          for (size_t sinkColor = 0; sinkColor < 3; ++sinkColor)
+            d_data[36*sourceSpin + 3*sinkSpin + sinkColor] = d_data[36*sinkSpin + 3*sourceSpin + sinkColor];
+  }
+
   inline double Tensor::norm() const
   {
     double result(0);
     for (size_t idx=0; idx<144; idx++)
       result += abs(d_data[idx]);
+    return result;
+  }
+
+  inline double Tensor::normq() const
+  {
+    double result(0);
+    for (size_t idx=0; idx<144; idx++)
+    {
+      double re=d_data[idx].real();
+      double im=d_data[idx].imag();
+      result += re*re+im*im;
+    }
     return result;
   }
 

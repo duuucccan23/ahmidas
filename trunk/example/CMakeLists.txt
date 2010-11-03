@@ -46,5 +46,13 @@ TARGET_LINK_LIBRARIES(reconstruct_doublet IO Input Core Ahmidas)
 ADD_EXECUTABLE(reconstruct_stochastic_doublet reconstruct_stochastic_doublet.cpp)
 TARGET_LINK_LIBRARIES(reconstruct_stochastic_doublet IO Input Core Ahmidas)
 
+ADD_EXECUTABLE(check_meson_stochastic_3pts check_meson_stochastic_3pts.cpp)
+TARGET_LINK_LIBRARIES(check_meson_stochastic_3pts IO Input Core Ahmidas)
+
+ADD_EXECUTABLE(check_meson_3pts check_meson_3pts.cpp)
+TARGET_LINK_LIBRARIES(check_meson_3pts IO Input Core Ahmidas)
+
+ADD_EXECUTABLE(propagator_dump propagator_dump.cpp)
+TARGET_LINK_LIBRARIES(propagator_dump IO Input Core Ahmidas)
 # ADD_EXECUTABLE(makeetmcprop makeetmcprop.cpp)
 # TARGET_LINK_LIBRARIES(makeetmcprop IO Core)

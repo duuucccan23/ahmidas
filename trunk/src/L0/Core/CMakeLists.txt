@@ -16,6 +16,7 @@ SET(Sources_Propagator Propagator/StochasticPropagator.cpp
                        Propagator/Propagator_isolate.cpp
                        Propagator/Propagator_multiplyOperator.cpp
                        Propagator/Propagator_norm.cpp
+                       Propagator/Propagator_normq.cpp
                        Propagator/Propagator_reconstruct_doublet.cpp
                        Propagator/Propagator_revert.cpp
                        Propagator/Propagator_rotateToPhysicalBasis.cpp

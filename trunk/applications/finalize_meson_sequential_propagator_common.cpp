@@ -118,6 +118,7 @@ int main(int narg,char **arg)
   //you want in the s1 line, so the same of s0_flav (0->-,1->+)
   if(s0_flav==0) prop_out=DD_prop.applyDiracOperator(gauge_field,kappa,-mu,thetat,thetax,thetay,thetaz); 
   else           prop_out=DD_prop.applyDiracOperator(gauge_field,kappa,+mu,thetat,thetax,thetay,thetaz); 
+
   prop_out.rightMultiply(gamma5); //this is required because D=Q*g5 and g5 is not put by applyDiracOperator
   
   //Now rotate on the source as s0 (0->-,1->+)

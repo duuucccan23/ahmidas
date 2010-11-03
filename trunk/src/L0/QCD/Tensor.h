@@ -136,6 +136,10 @@ namespace QCD
 
 
       hcTensor dagger() const;
+      const Tensor &spinDilutedDagger() const;
+      void spinDilutedConjugate();
+      void spinDilutedTransposeFull();
+
       void conjugate();
       void transposeDirac();
       void transposeFull();
@@ -144,6 +148,7 @@ namespace QCD
       size_t size() const;
       std::complex< double > diff(Tensor const &other) const;
       double norm() const;
+      double normq() const;
       void setToRandom();
       // this produces tensor filled with random Z(4) elements
       void setToRandom(Base::SourcePolarization const, Base::SourceColorState const,

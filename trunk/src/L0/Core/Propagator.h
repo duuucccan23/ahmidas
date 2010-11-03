@@ -164,6 +164,7 @@ namespace Core
       const_iterator end() const;
 
       double norm() const;
+      double normq() const;
       size_t const size() const;
       size_t const L() const;
       size_t const T() const;
@@ -236,6 +237,11 @@ namespace Core
 
       Propagator operator*(StochasticSource< NComp > const &sSource) const;
 
+      StochasticPropagator< 4 > &revert();
+      StochasticPropagator< 4 > &dagger();
+      StochasticPropagator< 4 > &conjugate();
+      StochasticPropagator< 4 > &transpose();
+
       void isolate();
   };
 
@@ -244,7 +250,6 @@ namespace Core
   #include "Propagator/Propagator.iterator.inlines"
   #include "Propagator/Propagator.const_iterator.inlines"
   #include "Propagator/Propagator.operators.inlines"
-
 }
 #include "Propagator/StochasticSource.template"
 

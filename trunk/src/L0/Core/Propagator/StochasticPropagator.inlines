@@ -40,13 +40,13 @@ inline StochasticPropagator< 4 >::StochasticPropagator(Propagator const &other)
     (*Inew)[ 0] = (*Iold)[0];
     (*Inew)[ 1].setToZero();
     (*Inew)[ 2].setToZero();
-    (*Inew)[ 3] = (*Iold)[1];
+    (*Inew)[ 3] = (*Iold)[3];
     (*Inew)[ 4].setToZero();
     (*Inew)[ 5].setToZero();
-    (*Inew)[ 6] = (*Iold)[2];
+    (*Inew)[ 6] = (*Iold)[6];
     (*Inew)[ 7].setToZero();
     (*Inew)[ 8].setToZero();
-    (*Inew)[ 9] = (*Iold)[3];
+    (*Inew)[ 9] = (*Iold)[9];
     (*Inew)[10].setToZero();
     (*Inew)[11].setToZero();
     ++Inew;
@@ -68,7 +68,7 @@ inline Field< Dirac::Matrix > *StochasticPropagator< 4 >::operator*(StochasticPr
 
   while(Ia != end())
   {
-    QCD::getDiracMatrix((*Ic), (*Ia),(*Ib));
+    QCD::getDiracMatrix((*Ic), (*Ia),(*Ib),0);
     ++Ia;
     ++Ib;
     ++Ic;
@@ -77,4 +77,64 @@ inline Field< Dirac::Matrix > *StochasticPropagator< 4 >::operator*(StochasticPr
   assert(Ib==other.end());
   assert(Ic==field->end());
   return field;
+}
+
+template <>
+inline StochasticPropagator< 4 > &StochasticPropagator< 4 >::dagger()
+{
+  StochasticPropagator<4>::iterator it = begin();
+  isolate();
+  while(it != end())
+  {
+    (*it) = QCD::Tensor((*it).spinDilutedDagger());
+    ++it;
+  }
+
+  return *this;
+}
+
+template <>
+inline StochasticPropagator< 4 > &StochasticPropagator< 4 >::revert()
+{
+  Dirac::Gamma<5> gamma5 = Dirac::Gamma<5>();
+  isolate();
+  StochasticPropagator<4>::iterator it = begin();
+  while(it != end())
+  {
+      QCD::Tensor tmp((*it).spinDilutedDagger());
+      tmp *= gamma5;
+      (*it) = gamma5*tmp;
+      ++it;
+  }
+
+  return *this;
+}
+
+template <>
+inline StochasticPropagator< 4 > &StochasticPropagator< 4 >::conjugate()
+{
+  StochasticPropagator<4>::iterator it = begin();
+  isolate();
+  while(it != end())
+  {
+    (*it).spinDilutedConjugate();
+    ++it;
+  }
+
+  return *this;
+}
+
+
+template <>
+inline StochasticPropagator< 4 > &StochasticPropagator< 4 >::transpose()
+{
+  StochasticPropagator<4>::iterator it = begin();
+  isolate();
+  while(it != end())
+  {
+    (*it).spinDilutedTransposeFull();
+    ++it;
+  }
+
+  return *this;
 }

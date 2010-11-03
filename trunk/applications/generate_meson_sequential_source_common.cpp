@@ -89,7 +89,20 @@ int main(int narg, char **arg)
   //if it have to be specified to take a slice, take it
   if(take_slice)
     {
-      prop.select_timeslice(tslice); 
+      for(size_t idx_T = 0; idx_T < T; idx_T++)
+	if(idx_T!=tslice)
+	  for(size_t idx_Z = 0; idx_Z < L; idx_Z++)
+	    for(size_t idx_Y = 0; idx_Y < L; idx_Y++)
+	      for(size_t idx_X = 0; idx_X < L; idx_X++)
+		{
+		  size_t localIndex = weave.globalCoordToLocalIndex(idx_X, idx_Y, idx_Z, idx_T);
+		  if (localIndex != weave.localVolume())
+		    for(size_t id1=0;id1<4;id1++) 
+		      for(size_t ic1=0;ic1<3;ic1++) 
+			for(size_t id2=0;id2<4;id2++) 
+			  for(size_t ic2=0;ic2<3;ic2++) 
+			    prop[localIndex][id1*3+ic1][id2][ic2] = 0;
+		}
       if(weave.isRoot()) std::cout<<"timeslice "<<tslice<<" selected\n"<<std::endl;
     }
 

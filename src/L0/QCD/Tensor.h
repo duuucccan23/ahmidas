@@ -173,7 +173,7 @@ namespace QCD
       friend Tensor operator*(Dirac::Sigma< Index > const &gamma, Tensor const &tensor);
 
       friend void getDiracMatrix(Dirac::Matrix &dMatrix, Tensor const &A, Tensor const &B);
-      friend void getDiracMatrix(Dirac::Matrix &dMatrix, Tensor const &A, Tensor const &B, bool const colourDilutedSource);
+      friend void getSpinDilutedDiracMatrix(Dirac::Matrix &dMatrix, Tensor const &A, Tensor const &B);
       friend void getDiracMatrix(Dirac::Matrix &dMatrix, Tensor const &A, Tensor const &B, Tensor const &C, Base::BaryonInterpolatingField const iPol);
       friend void getDiracMatrix_alternative(Dirac::Matrix &dMatrix, Tensor const &A, Tensor const &B, Tensor const &C, Base::BaryonInterpolatingField const iPol);
 
@@ -195,7 +195,7 @@ namespace QCD
   QCD::Tensor operator*(Dirac::Sigma< Index > const &gamma, Tensor const &tensor);
 
   void getDiracMatrix(Dirac::Matrix &dMatrix, Tensor const &A, Tensor const &B);
-  void getDiracMatrix(Dirac::Matrix &dMatrix, Tensor const &A, Tensor const &B, bool const colourDilutedSource);
+  void getSpinDilutedDiracMatrix(Dirac::Matrix &dMatrix, Tensor const &A, Tensor const &B);
   void getDiracMatrix(Dirac::Matrix &dMatrix, Tensor const &A, Tensor const &B, Tensor const &C, Base::BaryonInterpolatingField const iPol);
   // alternative version, gives the same result as function above if Tensors A and C are equal
   // note: one should worry about the correct convention here. Still, both functions give the same result for a proton tow point,

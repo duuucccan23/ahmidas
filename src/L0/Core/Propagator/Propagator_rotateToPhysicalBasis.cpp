@@ -8,17 +8,18 @@ namespace Core
   {
     isolate();
 
-    std::complex< double > const Ifactor = sign ?  std::complex< double >(0,-1) : std::complex< double >(0,+1);
     Dirac::Gamma< 5 > gamma5;
 
     Propagator tmp(*this);
     tmp *= gamma5;
-    tmp *= Ifactor;
+    if(sign==0) tmp *= std::complex< double >(0,-1);
+    else tmp *= std::complex< double >(0,+1);
     (*this) += tmp;
 
     tmp = (*this);
     tmp.rightMultiply(gamma5);
-    tmp *= Ifactor;
+    if(sign==0) tmp *= std::complex< double >(0,-1);
+    else tmp *= std::complex< double >(0,+1);
     (*this) += tmp;
 
     (*this) *= 0.5; //this is (1/sqrt(2))^2

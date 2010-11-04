@@ -68,7 +68,7 @@ inline Field< Dirac::Matrix > *StochasticPropagator< 4 >::operator*(StochasticPr
 
   while(Ia != end())
   {
-    QCD::getDiracMatrix((*Ic), (*Ia),(*Ib),0);
+    QCD::getSpinDilutedDiracMatrix((*Ic), (*Ia),(*Ib));
     ++Ia;
     ++Ib;
     ++Ic;

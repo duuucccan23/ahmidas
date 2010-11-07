@@ -138,6 +138,7 @@ namespace QCD
       hcTensor dagger() const;
       const Tensor &spinDilutedDagger() const;
       void spinDilutedConjugate();
+      void undilutedConjugate();
       void spinDilutedTransposeFull();
 
       void conjugate();
@@ -174,6 +175,7 @@ namespace QCD
 
       friend void getDiracMatrix(Dirac::Matrix &dMatrix, Tensor const &A, Tensor const &B);
       friend void getSpinDilutedDiracMatrix(Dirac::Matrix &dMatrix, Tensor const &A, Tensor const &B);
+      friend void getUndilutedDiracMatrix(Dirac::Matrix &dMatrix, Tensor const &A, Tensor const &B);
       friend void getDiracMatrix(Dirac::Matrix &dMatrix, Tensor const &A, Tensor const &B, Tensor const &C, Base::BaryonInterpolatingField const iPol);
       friend void getDiracMatrix_alternative(Dirac::Matrix &dMatrix, Tensor const &A, Tensor const &B, Tensor const &C, Base::BaryonInterpolatingField const iPol);
 
@@ -196,6 +198,7 @@ namespace QCD
 
   void getDiracMatrix(Dirac::Matrix &dMatrix, Tensor const &A, Tensor const &B);
   void getSpinDilutedDiracMatrix(Dirac::Matrix &dMatrix, Tensor const &A, Tensor const &B);
+  void getUndilutedDiracMatrix(Dirac::Matrix &dMatrix, Tensor const &A, Tensor const &B);
   void getDiracMatrix(Dirac::Matrix &dMatrix, Tensor const &A, Tensor const &B, Tensor const &C, Base::BaryonInterpolatingField const iPol);
   // alternative version, gives the same result as function above if Tensors A and C are equal
   // note: one should worry about the correct convention here. Still, both functions give the same result for a proton tow point,

@@ -56,6 +56,32 @@ inline StochasticPropagator< 4 >::StochasticPropagator(Propagator const &other)
 
 
 template< >
+inline StochasticPropagator< 1 >::StochasticPropagator(Propagator const &other)
+  : Propagator(other.L(), other.T())
+{
+  Propagator::const_iterator Iold = other.begin();
+  Propagator::iterator Inew = begin();
+  while(Inew != end())
+  {
+    (*Inew)[ 0] = (*Iold)[0];
+    (*Inew)[ 1].setToZero();
+    (*Inew)[ 2].setToZero();
+    (*Inew)[ 3].setToZero();
+    (*Inew)[ 4].setToZero();
+    (*Inew)[ 5].setToZero();
+    (*Inew)[ 6].setToZero();
+    (*Inew)[ 7].setToZero();
+    (*Inew)[ 8].setToZero();
+    (*Inew)[ 9].setToZero();
+    (*Inew)[10].setToZero();
+    (*Inew)[11].setToZero();
+    ++Inew;
+    ++Iold;
+  }
+}
+
+
+template< >
 inline Field< Dirac::Matrix > *StochasticPropagator< 4 >::operator*(StochasticPropagator< 4 > const &other) const
 {
   assert (T()==other.T() && L()==other.L());
@@ -69,6 +95,30 @@ inline Field< Dirac::Matrix > *StochasticPropagator< 4 >::operator*(StochasticPr
   while(Ia != end())
   {
     QCD::getSpinDilutedDiracMatrix((*Ic), (*Ia),(*Ib));
+    ++Ia;
+    ++Ib;
+    ++Ic;
+  }
+  assert(Ia==end());
+  assert(Ib==other.end());
+  assert(Ic==field->end());
+  return field;
+}
+
+template< >
+inline Field< Dirac::Matrix > *StochasticPropagator< 1 >::operator*(StochasticPropagator< 1 > const &other) const
+{
+  assert (T()==other.T() && L()==other.L());
+  Field< Dirac::Matrix > *field = new Field< Dirac::Matrix > (L(), T());
+
+  Propagator::const_iterator Ia(begin());
+  Propagator::const_iterator Ib(other.begin());
+
+  Field< Dirac::Matrix >::iterator Ic(field->begin());
+
+  while(Ia != end())
+  {
+    QCD::getUndilutedDiracMatrix((*Ic), (*Ia),(*Ib));
     ++Ia;
     ++Ib;
     ++Ic;
@@ -110,20 +160,20 @@ inline StochasticPropagator< 4 > &StochasticPropagator< 4 >::revert()
   return *this;
 }
 
-template <>
+template<>
 inline StochasticPropagator< 4 > &StochasticPropagator< 4 >::conjugate()
 {
   StochasticPropagator<4>::iterator it = begin();
   isolate();
-  while(it != end())
-  {
-    (*it).spinDilutedConjugate();
-    ++it;
-  }
+
+    while(it != end())
+    {
+      (*it).spinDilutedConjugate();
+      ++it;
+    }
 
   return *this;
 }
-
 
 template <>
 inline StochasticPropagator< 4 > &StochasticPropagator< 4 >::transpose()
@@ -136,5 +186,60 @@ inline StochasticPropagator< 4 > &StochasticPropagator< 4 >::transpose()
     ++it;
   }
 
+  return *this;
+}
+
+template <>
+inline StochasticPropagator< 1 > &StochasticPropagator< 1 >::revert()
+{
+  Dirac::Gamma<5> gamma5 = Dirac::Gamma<5>();
+
+  StochasticPropagator<1>::iterator it = begin();
+  isolate();
+
+  while(it != end())
+    {
+      (*it).undilutedConjugate();
+      ++it;
+    }
+
+  (*this).rightMultiply(gamma5);
+
+  return *this;
+}
+
+template <>
+inline StochasticPropagator< 1 > &StochasticPropagator< 1 >::dagger()
+{
+  StochasticPropagator<1>::iterator it = begin();
+  isolate();
+
+  while(it != end())
+    {
+      (*it).undilutedConjugate();
+      ++it;
+    }
+
+  return *this;
+}
+
+template< >
+inline StochasticPropagator< 1 > &StochasticPropagator< 1 >::conjugate()
+{
+  StochasticPropagator<1>::iterator it = begin();
+  isolate();
+
+    while(it != end())
+    {
+      (*it).undilutedConjugate();
+      ++it;
+    }
+
+  return *this;
+}
+
+template <>
+inline StochasticPropagator< 1 > &StochasticPropagator< 1 >::transpose()
+{
   return *this;
 }

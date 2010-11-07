@@ -206,7 +206,7 @@ namespace Core
 
       // ~StochasticSource< NComp > ();
 
-      // void conjugate();
+      //void conjugate();
 
       Propagator operator*(StochasticPropagator< NComp > const &sPropagator) const;
 
@@ -237,12 +237,14 @@ namespace Core
 
       Propagator operator*(StochasticSource< NComp > const &sSource) const;
 
-      StochasticPropagator< 4 > &revert();
-      StochasticPropagator< 4 > &dagger();
-      StochasticPropagator< 4 > &conjugate();
-      StochasticPropagator< 4 > &transpose();
+      StochasticPropagator< NComp > &revert();
+      StochasticPropagator< NComp > &dagger();
+      StochasticPropagator< NComp > &conjugate();
+      StochasticPropagator< NComp > &transpose();
 
       void isolate();
+
+      void rotateToPhysicalBasis(bool const sign);
   };
 
   #include "Propagator/Propagator.inlines"

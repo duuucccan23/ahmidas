@@ -59,28 +59,13 @@ int main(int argc, char **argv)
   Dirac::Gamma<5> gamma5;
   prop1.rightMultiply(gamma5);
 
+#ifdef UltraStocCase
+  //This have to be done because ultra-stochastic source are not flavor indipendent
+  size_t s0=floats["S0_flav"];
+  prop1.rotateToPhysicalBasis(!s0);
+#endif
   prop2.dagger();
-  //std::cout<<(prop1*prop2)<<std::endl;
-  std::cout<<"Fuffa"<<std::endl;
-  for(size_t idx_T = 0; idx_T < T; idx_T++)
-    {
-      std::complex<double> sum;
-      sum=0;
-      for(size_t idx_Z = 0; idx_Z < L; idx_Z++)
-	for(size_t idx_Y = 0; idx_Y < L; idx_Y++)
-	  for(size_t idx_X = 0; idx_X < L; idx_X++)
-	    {
-	      localIndex = weave.globalCoordToLocalIndex(idx_X, idx_Y, idx_Z, idx_T);
-	      if (localIndex != weave.localVolume())
-		{
-		  for(size_t iD1=0;iD1<4;iD1++)
-		    for(size_t iD2=0;iD2<4;iD2++)
-		      for(size_t iC1=0;iC1<3;iC1++)
-			sum+=prop1[localIndex][iD1*3][iD2][iC1]*prop2[localIndex][iD2*3][iD1][iC1];
-		}
-	    }
-      std::cout<<idx_T<<" "<<sum<<std::endl;
-    }
+  
   Core::Correlator<Dirac::Matrix> check(prop1 * prop2);
 
   check.sumOverSpatialVolume();

@@ -34,6 +34,10 @@ namespace Contract
   std::vector< Core::Correlator< Dirac::Matrix > > light_meson_twopoint_stochastic(
     Core::StochasticPropagator< 4 > const &psi1, Core::StochasticPropagator< 4 > const &psi2,
     std::vector< std::pair< Base::Operator, Base::Operator > > const &operator_combinations);
+
+  std::vector< Core::Correlator< Dirac::Matrix > > light_meson_twopoint_ultrastochastic(
+    Core::StochasticPropagator< 1 > const &psi1, Core::StochasticPropagator< 1 > const &psi2,
+    std::vector< std::pair< Base::Operator, Base::Operator > > const &operator_combinations);
 }
 
 #include "Meson/Meson.inlines"

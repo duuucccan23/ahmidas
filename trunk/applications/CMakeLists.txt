@@ -1,18 +1,40 @@
 ADD_EXECUTABLE(generate_sequential_sources_nucleon generate_sequential_sources_nucleon.cpp)
 TARGET_LINK_LIBRARIES(generate_sequential_sources_nucleon SU3 QCD IO Base Core Dirac Weave Contract Input Smear)
+
 ADD_EXECUTABLE(contract_nucleon3point contract_nucleon3point.cpp)
 TARGET_LINK_LIBRARIES(contract_nucleon3point SU3 QCD IO Base Core Dirac Weave Contract Input Smear)
+
+
 ADD_EXECUTABLE(contract_two_lines contract_two_lines.cpp)
 TARGET_LINK_LIBRARIES(contract_two_lines SU3 QCD IO Base Core Dirac Contract Input Ahmidas Print)
+
 ADD_EXECUTABLE(contract_two_stochastic_lines contract_two_stochastic_lines.cpp)
 TARGET_LINK_LIBRARIES(contract_two_stochastic_lines SU3 QCD IO Base Core Dirac Contract Input Ahmidas Print)
+
+ADD_EXECUTABLE(contract_two_ultrastochastic_lines contract_two_ultrastochastic_lines.cpp)
+TARGET_LINK_LIBRARIES(contract_two_ultrastochastic_lines SU3 QCD IO Base Core Dirac Contract Input Ahmidas Print)
+
+
 ADD_EXECUTABLE(calculate_BK calculate_BK.cpp)
 TARGET_LINK_LIBRARIES(calculate_BK SU3 QCD IO Base Core Dirac Weave Contract Input Ahmidas Print)
+
+
 ADD_EXECUTABLE(generate_meson_sequential_source generate_meson_sequential_source.cpp)
 TARGET_LINK_LIBRARIES(generate_meson_sequential_source IO Input Core Ahmidas)
+
 ADD_EXECUTABLE(generate_meson_sequential_stochastic_source generate_meson_sequential_stochastic_source.cpp)
 TARGET_LINK_LIBRARIES(generate_meson_sequential_stochastic_source IO Input Core Ahmidas)
-ADD_EXECUTABLE(finalize_meson_sequential_stochastic_propagator finalize_meson_sequential_stochastic_propagator.cpp)
-TARGET_LINK_LIBRARIES(finalize_meson_sequential_stochastic_propagator IO Input Core Ahmidas)
+
+ADD_EXECUTABLE(generate_meson_sequential_ultrastochastic_source generate_meson_sequential_ultrastochastic_source.cpp)
+TARGET_LINK_LIBRARIES(generate_meson_sequential_ultrastochastic_source IO Input Core Ahmidas)
+
+
 ADD_EXECUTABLE(finalize_meson_sequential_propagator finalize_meson_sequential_propagator.cpp)
 TARGET_LINK_LIBRARIES(finalize_meson_sequential_propagator IO Input Core Ahmidas)
+
+ADD_EXECUTABLE(finalize_meson_sequential_stochastic_propagator finalize_meson_sequential_stochastic_propagator.cpp)
+TARGET_LINK_LIBRARIES(finalize_meson_sequential_stochastic_propagator IO Input Core Ahmidas)
+
+ADD_EXECUTABLE(finalize_meson_sequential_ultrastochastic_propagator finalize_meson_sequential_ultrastochastic_propagator.cpp)
+TARGET_LINK_LIBRARIES(finalize_meson_sequential_ultrastochastic_propagator IO Input Core Ahmidas)
+

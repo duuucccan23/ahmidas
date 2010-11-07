@@ -44,6 +44,14 @@ int main(int narg, char **arg)
   if(weave.isRoot()) std::cout<<"Lattice size: "<<L<<"x"<<L<<"x"<<L<<"x"<<T<<std::endl;
 
   //load the propagator
+  if(NF==1)
+    {
+      Core::StochasticPropagator<1> prop(L,T);
+      Tool::IO::load(&prop,files,Tool::IO::fileSCIDAC);
+      if(weave.isRoot()) std::cout<<std::endl<<"propagator successfully loaded\n"<<std::endl;
+      std::cout<<prop<<std::endl;
+      std::cerr<<sqrt(prop.normq())<<std::endl;
+    }
   if(NF==4)
     {
       Core::StochasticPropagator<4> prop(L,T);

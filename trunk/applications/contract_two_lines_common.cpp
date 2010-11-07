@@ -129,7 +129,9 @@ int main(int argc, char **argv)
     }
   }
 
-#ifdef StocCase
+#ifdef UltraStocCase
+  std::vector< Core::Correlator< Dirac::Matrix > > C2(Contract::light_meson_twopoint_ultrastochastic(prop1, prop2, operator_combinations));
+#elif defined StocCase
   std::vector< Core::Correlator< Dirac::Matrix > > C2(Contract::light_meson_twopoint_stochastic(prop1, prop2, operator_combinations));
 #else
   std::vector< Core::Correlator< Dirac::Matrix > > C2(Contract::light_meson_twopoint(prop1, prop2, operator_combinations));

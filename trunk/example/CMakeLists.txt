@@ -40,17 +40,29 @@ TARGET_LINK_LIBRARIES(generate_point_source SU3 IO Base Core Dirac Weave Input S
 ADD_EXECUTABLE(output output.cpp)
 TARGET_LINK_LIBRARIES(output Ahmidas Debug Print)
 
+ADD_EXECUTABLE(convert_ildg_to_eo convert_ildg_to_eo.cpp)
+TARGET_LINK_LIBRARIES(convert_ildg_to_eo IO Input Core Ahmidas)
+
+
 ADD_EXECUTABLE(reconstruct_doublet reconstruct_doublet.cpp)
 TARGET_LINK_LIBRARIES(reconstruct_doublet IO Input Core Ahmidas)
 
 ADD_EXECUTABLE(reconstruct_stochastic_doublet reconstruct_stochastic_doublet.cpp)
 TARGET_LINK_LIBRARIES(reconstruct_stochastic_doublet IO Input Core Ahmidas)
 
-ADD_EXECUTABLE(check_meson_stochastic_3pts check_meson_stochastic_3pts.cpp)
-TARGET_LINK_LIBRARIES(check_meson_stochastic_3pts IO Input Core Ahmidas)
+ADD_EXECUTABLE(reconstruct_ultrastochastic_doublet reconstruct_ultrastochastic_doublet.cpp)
+TARGET_LINK_LIBRARIES(reconstruct_ultrastochastic_doublet IO Input Core Ahmidas)
+
 
 ADD_EXECUTABLE(check_meson_3pts check_meson_3pts.cpp)
 TARGET_LINK_LIBRARIES(check_meson_3pts IO Input Core Ahmidas)
+
+ADD_EXECUTABLE(check_meson_stochastic_3pts check_meson_stochastic_3pts.cpp)
+TARGET_LINK_LIBRARIES(check_meson_stochastic_3pts IO Input Core Ahmidas)
+
+ADD_EXECUTABLE(check_meson_ultrastochastic_3pts check_meson_ultrastochastic_3pts.cpp)
+TARGET_LINK_LIBRARIES(check_meson_ultrastochastic_3pts IO Input Core Ahmidas)
+
 
 ADD_EXECUTABLE(propagator_dump propagator_dump.cpp)
 TARGET_LINK_LIBRARIES(propagator_dump IO Input Core Ahmidas)

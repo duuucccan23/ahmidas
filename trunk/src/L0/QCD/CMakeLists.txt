@@ -7,6 +7,7 @@ SET(Sources_Tensor     Tensor/Tensor_leftMultiply_a.cpp  Tensor/Tensor_leftMulti
                        Tensor/Tensor_operator_assign_a.cpp Tensor/Tensor_operator_assign_b.cpp
                        Tensor/Tensor_getDiracMatrix_a.cpp Tensor/Tensor_getDiracMatrix_b.cpp
                        Tensor/Tensor_getDiracMatrix_c.cpp Tensor/Tensor_getDiracMatrix_d.cpp
+		       Tensor/Tensor_getDiracMatrix_e.cpp
                        Tensor/Tensor_getDiracMatrix_alternative.cpp
                        Tensor/Tensor_make_sequential_d_a.cpp
                        Tensor/Tensor_make_sequential_d_b.cpp

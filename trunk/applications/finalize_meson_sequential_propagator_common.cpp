@@ -122,12 +122,15 @@ int main(int narg,char **arg)
   prop_out.rightMultiply(gamma5); //this is required because D=Q*g5 and g5 is not put by applyDiracOperator
   
   //Now rotate on the source as s0 (0->-,1->+)
-  PropagatorType temp(prop_out);
+  PropagatorType temp(L,T);
+#ifndef UltraStocCase
+  temp=prop_out;
   temp.isolate();
   if(s0_flav==0) temp*=std::complex<double>(0,-1);
   else           temp*=std::complex<double>(0,+1);
   temp*=(gamma5);
   prop_out+=temp;
+#endif
 
   //Now rotate on the sink as s1 (0->+,1->-)
   temp=prop_out;
@@ -138,8 +141,12 @@ int main(int narg,char **arg)
   prop_out+=temp;
 
   //Multiply by 1/sqrt(2)**2
+#ifndef UltraStocCase
   prop_out*=0.5;
-  
+#else
+  prop_out*=1/sqrt(2);
+#endif
+
   Tool::IO::save(&prop_out,file_out,Tool::IO::fileSCIDAC);
   if(weave.isRoot()) std::cout<<"sequential propagator saved"<<std::endl;
 

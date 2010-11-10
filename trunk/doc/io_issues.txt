@@ -1,0 +1,511 @@
+How the file reading is supposed to work...
+(analogue for the writing)
+
+
+The main task is to read the output of the tmLQCD inverter.
+
+For a propagator have basically 12 lime records containing spinor fields (alternatively 4 or 1 for a stochastic propagator) that have to be read into 12 (4, 1) Core::Field< QCD::Spinor > data structures. The latter are eventually converted to the Core::Field< QCD::Tensor > data structure of the Core::Propagator (Core::StochasticPropagator< 4 >, Core::StochasticPropagator< 1 >).
+
+We differentiate between two ways of storing those spinor fields.
+
+A) "splitted propagator"
+
+The spinor fields are stored in 12 (4, 1)  s e p a r a t e  files, each containing the metadata indicated by the example output of lime_contents below:
+
+*******************************************************************************************
+
+Message:        1
+Record:         1
+Type:           propagator-type
+Data Length:    17
+Padding Length: 7
+MB flag:        1
+ME flag:        1
+Data:           "DiracFermion_Sink"
+
+
+Message:        2
+Record:         1
+Type:           xlf-info
+Data Length:    232
+Padding Length: 0
+MB flag:        1
+ME flag:        1
+Data:           "
+ plaquette = 5.813412e-01
+ trajectory nr = 1125
+ beta = 3.900000, kappa = 0.160856, mu = 0.004000, c2_rec = -0.083333
+ time = 1258573651
+ hmcversion = 5.0.3
+ mubar = 0.000000
+ epsilonbar = 0.000000
+ date = Wed Nov 18 20:47:31 2009
+"
+
+
+Message:        3
+Record:         1
+Type:           inverter-info
+Data Length:    235
+Padding Length: 5
+MB flag:        1
+ME flag:        1
+Data:           "solver = CGMMS
+ result is for Q^dagger Q!
+ multiple mass solver
+ epssq = 4.052687e-10
+ noiter = 95
+ kappa = 0.135350, inverted mu = 0.001354, lowest mu = 0.004000
+ time = 1289400376
+ hmcversion = 5.1.6
+ date = Wed Nov 10 15:46:16 2010
+"
+
+
+Message:        4
+Record:         1
+Type:           gauge-scidac-checksum-copy
+Data Length:    146
+Padding Length: 6
+MB flag:        1
+ME flag:        1
+Data:           "<?xml version="1.0" encoding="UTF-8"?>
+<scidacChecksum>
+  <version>1.0</version>
+  <suma>fd7e3630</suma>
+  <sumb>bc2bd28d</sumb>
+</scidacChecksum>"
+
+
+Message:        5
+Record:         1
+Type:           etmc-propagator-format
+Data Length:    200
+Padding Length: 0
+MB flag:        1
+ME flag:        1
+Data:           "<?xml version="1.0" encoding="UTF-8"?>
+<etmcFormat>
+  <field>diracFermion</field>
+  <precision>0</precision>
+  <flavours>1</flavours>
+  <lx>8</lx>
+  <ly>8</ly>
+  <lz>8</lz>
+  <lt>16</lt>
+</etmcFormat>"
+
+
+Message:        6
+Record:         1
+Type:           scidac-binary-data
+Data Length:    786432
+Padding Length: 0
+MB flag:        1
+ME flag:        1
+Data:           [Long record skipped]
+
+
+Message:        7
+Record:         1
+Type:           scidac-checksum
+Data Length:    146
+Padding Length: 6
+MB flag:        1
+ME flag:        1
+Data:           "<?xml version="1.0" encoding="UTF-8"?>
+<scidacChecksum>
+  <version>1.0</version>
+  <suma>e31849e1</suma>
+  <sumb>a42104ac</sumb>
+</scidacChecksum>"
+
+
+************************************************************************************************
+
+
+B) "unsplitted propagator"
+
+The 12 (4, 1) spinor fields that belong to one propagator are stored in a single file (but of course in different lime records). The lime_contents of the file are given in the example (with 4 spinor fields) below.
+
+
+************************************************************************************************
+
+Message:        1
+Record:         1
+Type:           propagator-type
+Data Length:    17
+Padding Length: 7
+MB flag:        1
+ME flag:        1
+Data:           "DiracFermion_Sink"
+
+
+Message:        2
+Record:         1
+Type:           xlf-info
+Data Length:    232
+Padding Length: 0
+MB flag:        1
+ME flag:        1
+Data:           "
+ plaquette = 5.813412e-01
+ trajectory nr = 1125
+ beta = 3.900000, kappa = 0.160856, mu = 0.004000, c2_rec = -0.083333
+ time = 1258573651
+ hmcversion = 5.0.3
+ mubar = 0.000000
+ epsilonbar = 0.000000
+ date = Wed Nov 18 20:47:31 2009
+"
+
+
+Message:        3
+Record:         1
+Type:           inverter-info
+Data Length:    235
+Padding Length: 5
+MB flag:        1
+ME flag:        1
+Data:           "solver = CGMMS
+ result is for Q^dagger Q!
+ multiple mass solver
+ epssq = 4.212871e-10
+ noiter = 94
+ kappa = 0.135350, inverted mu = 0.001354, lowest mu = 0.004000
+ time = 1289401246
+ hmcversion = 5.1.6
+ date = Wed Nov 10 16:00:46 2010
+"
+
+
+Message:        4
+Record:         1
+Type:           gauge-scidac-checksum-copy
+Data Length:    146
+Padding Length: 6
+MB flag:        1
+ME flag:        1
+Data:           "<?xml version="1.0" encoding="UTF-8"?>
+<scidacChecksum>
+  <version>1.0</version>
+  <suma>fd7e3630</suma>
+  <sumb>bc2bd28d</sumb>
+</scidacChecksum>"
+
+
+Message:        5
+Record:         1
+Type:           etmc-propagator-format
+Data Length:    200
+Padding Length: 0
+MB flag:        1
+ME flag:        1
+Data:           "<?xml version="1.0" encoding="UTF-8"?>
+<etmcFormat>
+  <field>diracFermion</field>
+  <precision>0</precision>
+  <flavours>1</flavours>
+  <lx>8</lx>
+  <ly>8</ly>
+  <lz>8</lz>
+  <lt>16</lt>
+</etmcFormat>"
+
+
+Message:        6
+Record:         1
+Type:           scidac-binary-data
+Data Length:    786432
+Padding Length: 0
+MB flag:        1
+ME flag:        1
+Data:           [Long record skipped]
+
+
+Message:        7
+Record:         1
+Type:           scidac-checksum
+Data Length:    146
+Padding Length: 6
+MB flag:        1
+ME flag:        1
+Data:           "<?xml version="1.0" encoding="UTF-8"?>
+<scidacChecksum>
+  <version>1.0</version>
+  <suma>3af2be83</suma>
+  <sumb>3572c27c</sumb>
+</scidacChecksum>"
+
+
+Message:        8
+Record:         1
+Type:           propagator-type
+Data Length:    17
+Padding Length: 7
+MB flag:        1
+ME flag:        1
+Data:           "DiracFermion_Sink"
+
+
+Message:        9
+Record:         1
+Type:           xlf-info
+Data Length:    232
+Padding Length: 0
+MB flag:        1
+ME flag:        1
+Data:           "
+ plaquette = 5.813412e-01
+ trajectory nr = 1125
+ beta = 3.900000, kappa = 0.160856, mu = 0.004000, c2_rec = -0.083333
+ time = 1258573651
+ hmcversion = 5.0.3
+ mubar = 0.000000
+ epsilonbar = 0.000000
+ date = Wed Nov 18 20:47:31 2009
+"
+
+
+Message:        10
+Record:         1
+Type:           inverter-info
+Data Length:    235
+Padding Length: 5
+MB flag:        1
+ME flag:        1
+Data:           "solver = CGMMS
+ result is for Q^dagger Q!
+ multiple mass solver
+ epssq = 4.212871e-10
+ noiter = 94
+ kappa = 0.135350, inverted mu = 0.001354, lowest mu = 0.004000
+ time = 1289401283
+ hmcversion = 5.1.6
+ date = Wed Nov 10 16:01:23 2010
+"
+
+
+Message:        11
+Record:         1
+Type:           gauge-scidac-checksum-copy
+Data Length:    146
+Padding Length: 6
+MB flag:        1
+ME flag:        1
+Data:           "<?xml version="1.0" encoding="UTF-8"?>
+<scidacChecksum>
+  <version>1.0</version>
+  <suma>fd7e3630</suma>
+  <sumb>bc2bd28d</sumb>
+</scidacChecksum>"
+
+
+Message:        12
+Record:         1
+Type:           etmc-propagator-format
+Data Length:    200
+Padding Length: 0
+MB flag:        1
+ME flag:        1
+Data:           "<?xml version="1.0" encoding="UTF-8"?>
+<etmcFormat>
+  <field>diracFermion</field>
+  <precision>0</precision>
+  <flavours>1</flavours>
+  <lx>8</lx>
+  <ly>8</ly>
+  <lz>8</lz>
+  <lt>16</lt>
+</etmcFormat>"
+
+
+Message:        13
+Record:         1
+Type:           scidac-binary-data
+Data Length:    786432
+Padding Length: 0
+MB flag:        1
+ME flag:        1
+Data:           [Long record skipped]
+
+
+Message:        14
+Record:         1
+Type:           scidac-checksum
+Data Length:    146
+Padding Length: 6
+MB flag:        1
+ME flag:        1
+Data:           "<?xml version="1.0" encoding="UTF-8"?>
+<scidacChecksum>
+  <version>1.0</version>
+  <suma>3af2be83</suma>
+  <sumb>3572c27c</sumb>
+</scidacChecksum>"
+
+
+Message:        15
+Record:         1
+Type:           etmc-propagator-format
+Data Length:    200
+Padding Length: 0
+MB flag:        1
+ME flag:        1
+Data:           "<?xml version="1.0" encoding="UTF-8"?>
+<etmcFormat>
+  <field>diracFermion</field>
+  <precision>0</precision>
+  <flavours>1</flavours>
+  <lx>8</lx>
+  <ly>8</ly>
+  <lz>8</lz>
+  <lt>16</lt>
+</etmcFormat>"
+
+
+Message:        16
+Record:         1
+Type:           scidac-binary-data
+Data Length:    786432
+Padding Length: 0
+MB flag:        1
+ME flag:        1
+Data:           [Long record skipped]
+
+
+Message:        17
+Record:         1
+Type:           scidac-checksum
+Data Length:    146
+Padding Length: 6
+MB flag:        1
+ME flag:        1
+Data:           "<?xml version="1.0" encoding="UTF-8"?>
+<scidacChecksum>
+  <version>1.0</version>
+  <suma>465a86d9</suma>
+  <sumb>22af3926</sumb>
+</scidacChecksum>"
+
+
+Message:        18
+Record:         1
+Type:           etmc-propagator-format
+Data Length:    200
+Padding Length: 0
+MB flag:        1
+ME flag:        1
+Data:           "<?xml version="1.0" encoding="UTF-8"?>
+<etmcFormat>
+  <field>diracFermion</field>
+  <precision>0</precision>
+  <flavours>1</flavours>
+  <lx>8</lx>
+  <ly>8</ly>
+  <lz>8</lz>
+  <lt>16</lt>
+</etmcFormat>"
+
+
+Message:        19
+Record:         1
+Type:           scidac-binary-data
+Data Length:    786432
+Padding Length: 0
+MB flag:        1
+ME flag:        1
+Data:           [Long record skipped]
+
+
+Message:        20
+Record:         1
+Type:           scidac-checksum
+Data Length:    146
+Padding Length: 6
+MB flag:        1
+ME flag:        1
+Data:           "<?xml version="1.0" encoding="UTF-8"?>
+<scidacChecksum>
+  <version>1.0</version>
+  <suma>98352be7</suma>
+  <sumb>67809f9e</sumb>
+</scidacChecksum>"
+
+
+Message:        21
+Record:         1
+Type:           etmc-propagator-format
+Data Length:    200
+Padding Length: 0
+MB flag:        1
+ME flag:        1
+Data:           "<?xml version="1.0" encoding="UTF-8"?>
+<etmcFormat>
+  <field>diracFermion</field>
+  <precision>0</precision>
+  <flavours>1</flavours>
+  <lx>8</lx>
+  <ly>8</ly>
+  <lz>8</lz>
+  <lt>16</lt>
+</etmcFormat>"
+
+
+Message:        22
+Record:         1
+Type:           scidac-binary-data
+Data Length:    786432
+Padding Length: 0
+MB flag:        1
+ME flag:        1
+Data:           [Long record skipped]
+
+
+Message:        23
+Record:         1
+Type:           scidac-checksum
+Data Length:    146
+Padding Length: 6
+MB flag:        1
+ME flag:        1
+Data:           "<?xml version="1.0" encoding="UTF-8"?>
+<scidacChecksum>
+  <version>1.0</version>
+  <suma>67fae8aa</suma>
+  <sumb>fbe2b8dd</sumb>
+</scidacChecksum>"
+
+
+************************************************************************************************
+
+
+
+
+
+The general order of the binary data of a spinor field is (fastest-running index first)
+
+real part, imaginary part (both either single or double precision)
+color index (0,1,2)
+spin or Dirac index (0,1,2,3)
+x (0 to L-1)
+y (0 to L-1)
+z (0 to L-1)
+t (0 to T-1)
+
+
+
+
+************************************************************************************************
+
+
+
+
+The minimal metadata we have to provide when writing out a propagator is (supposed to be) in terms of lime records:
+
+propagator-type
+etmc-propagator-format
+scidac-binary-data
+(scidac-checksum)
+
+

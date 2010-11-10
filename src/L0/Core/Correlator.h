@@ -51,7 +51,8 @@ namespace Core
       void operator*=(double const factor);
       void operator*=(std::complex< double > const &factor);
       void operator*=(Base::BaryonPropagatorProjector const projector);
-      void operator+=(Correlator< Datatype > const &other);
+      void operator +=(Correlator< Datatype > const &other);
+      void operator *=(Correlator< Datatype > const &other);
 
       void deleteField();
 

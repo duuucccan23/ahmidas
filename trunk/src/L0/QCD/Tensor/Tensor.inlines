@@ -109,7 +109,7 @@ namespace QCD
     return hcTensor(*this);
   }
 
-  inline const Tensor &Tensor::spinDilutedDagger() const
+  inline Tensor Tensor::spinDilutedDagger() const
   {
     std::complex<double> out[144];
     

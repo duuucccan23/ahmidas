@@ -17,13 +17,15 @@ namespace Tool
         std::fill(type, type + 128, '\0');
       }
 
-      inline Writer::Writer(std::string const &filename, bool const writeHeader)
-        : d_stream(), d_hasWritten(false), d_messageRunning(false), d_writeHeader(writeHeader)
+      inline Writer::Writer(Base::Weave weave,std::string const &filename)
+        : d_weave(&weave), d_hasWritten(false), d_messageRunning(false), d_writeHeader(weave.rank()==0)
       {
 //         if(d_writeHeader)
-          d_stream.open(filename.c_str(), std::ios_base::out | std::ios_base::trunc);
+          d_MPI_FILE=MPI::File::Open(d_weave->d_grid.grid(), filename.c_str(),
+                                   MPI::MODE_CREATE|MPI::MODE_WRONLY, MPI::INFO_NULL);
 //         else
-//           d_stream.open(filename.c_str(), std::ios_base::out | std::ios_base::ate);
+//           d_MPI_FILE=MPI::File::Open(d_weave->d_grid.grid(), filename.c_str(),
+//                                    MPI::MODE_CREATE|MPI::MODE_WRONLY|MPI::MODE_APPEND, MPI::INFO_NULL);
       }
 
       inline Writer::~Writer()
@@ -31,52 +33,70 @@ namespace Tool
         d_record.mesEnd = true;
         d_messageRunning = false;
         finalize();
-        //d_stream.flush();
-        d_stream.close();
+        d_MPI_FILE.Sync();
+        d_MPI_FILE.Close();
       }
 
-      template< typename DataType >
-      inline void Writer::write(DataType const *buffer, uint64_t elements)
-      {
-        d_stream.write(reinterpret_cast< const char* >(buffer), elements * sizeof(DataType));
-        assert(!fail());
-        //d_stream.flush();
-      }
-
+      // this is a non-collective and blocking write, only use it when only one node writes
       template< typename DataType >
       inline void Writer::write(DataType const *buffer, DataType const *finish)
       {
+        assert(d_weave->rank()==0);
         for (DataType const *iter = buffer; buffer != finish; ++iter)
-          d_stream.write(reinterpret_cast< const char* >(iter), sizeof(DataType));
-        //d_stream.flush();
+          d_MPI_FILE.Write(reinterpret_cast< const void* >(iter), sizeof(DataType), MPI::BYTE);
+      }
+
+      // this is a non-collective and blocking write, only use it when only one node writes
+      template< typename DataType >
+      inline void Writer::write(DataType const *buffer, uint64_t const elements)
+      {
+        assert(d_weave->rank()==0);
+        d_MPI_FILE.Write(reinterpret_cast< const void * >(buffer), elements*sizeof(DataType), MPI::BYTE);
       }
 
       template< typename DataType >
-      inline void Writer::fill(DataType const &buffer, uint64_t elements)
+      inline void Writer::write_collective(DataType const *buffer, uint64_t const count, uint64_t const byte_offset)
       {
-        std::streampos tmp = d_stream.tellp();
-        for (uint64_t ctr = 0; ctr < elements; ++ctr)
-          d_stream.write(reinterpret_cast< const char* >(&buffer), sizeof(DataType));
-        d_stream.flush();
-        d_stream.seekp(tmp);
+         d_record.offset = (byte_offset + MPI::Offset(s_headerSize));
+         d_MPI_FILE.Write_at_all(d_record.offset + d_record.recOffset,
+                             reinterpret_cast< const void * >(buffer),
+                             count*sizeof(DataType), MPI::BYTE, d_MPI_Status);
+         assert(good());
       }
+
+
+
+      inline void Writer::preallocate(uint64_t bytes)
+      {
+         d_MPI_FILE.Set_size(bytes);
+         d_MPI_FILE.Preallocate(bytes);
+      }
+
 
       inline bool Writer::fail() const
       {
-        return d_stream.fail();
+        return !(good());
       }
 
       inline bool Writer::good() const
       {
-        return d_stream.good();
+        return d_MPI_Status.Get_error()==0;
       }
 
-      inline void Writer::seekp(std::streampos const offset)
+//       inline void Writer::seekp(MPI::Offset const offset)
+//       {
+//         d_record.offset = (offset + MPI::Offset(s_headerSize));
+//         MPI::Offset now(d_MPI_FILE.Get_position());
+//         MPI::Offset destination=d_record.offset + d_record.recOffset;
+//         d_MPI_FILE.Seek(d_record.offset + d_record.recOffset, MPI::SEEK_SET);
+//         if(d_weave->rank()==1)
+//           std::cout<<d_weave->rank() << " " << now << " " << destination << " " << d_MPI_FILE.Get_position() << std::endl;
+//       }
+
+      inline MPI::Offset Writer::tellp()
       {
-        d_record.offset = (offset + std::streampos(s_headerSize));
-        d_stream.seekp(d_record.offset + d_record.recOffset, std::ios::beg);
+        return d_MPI_FILE.Get_position();
       }
-
 
       inline void Writer::finishMessage()
       {

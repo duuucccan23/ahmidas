@@ -39,16 +39,19 @@ int main(int narg,char **arg)
 
   //write some output concerning what is going to be read
   if(weave.isRoot())
-    std::cout<<"Lattice size: "<<L<<"x"<<L<<"x"<<L<<"x"<<T<<std::endl;
+    {
+      std::cout<<"Lattice size: "<<L<<"x"<<L<<"x"<<L<<"x"<<T<<std::endl;
+      std::cout<<files[0].size()<<std::endl;
+    }
 
   //read the gauge configuration, needed to create u and d propagators
   Core::Field<QCD::Gauge> gauge_field(L,T);
-  Tool::IO::load(&gauge_field,"conf",Tool::IO::fileILDG);
+  Tool::IO::load(&gauge_field,files[0][0].c_str(),Tool::IO::fileILDG);
   if(weave.isRoot()) std::cout<<std::endl<<"gauge field successfully loaded"<<std::endl<<std::endl;
 
   double plaqt=Tool::temporalPlaquette(gauge_field);
   double plaqs=Tool::spatialPlaquette(gauge_field);
-  double plaq=(plaqs+plaqt)/2*3;
+  double plaq=(plaqs+plaqt)*3/2;
   std::cout<<plaqs<<" "<<plaqt<<" "<<plaq<<std::endl;
 
   {
@@ -60,12 +63,12 @@ int main(int narg,char **arg)
 	for(int idir=0;idir<4;idir++)
 	  {
 	    for(int p=0;p<2;p++)
-	      for(size_t t=0;t<T;t++)
-		for(size_t z=0;z<L;z++)
+	      for(size_t t=+0;t<T;t++)
+		for(size_t z=+0;z<L;z++)
 		  for(size_t y=0;y<L;y++)
 		    for(size_t x=0;x<L;x++)
 		      {
-			int iw=weave.globalCoordToLocalIndex(x,y,z,t);
+			int iw=weave.globalCoordToLocalIndex(x%L,y%L,z%L,t%T);
 			int sum=x+y+z+t;
 			if(sum-2*(sum/2)==p)
 			  fdel<<gauge_field[iw][idir](ic1,ic2).real()<<" "<<gauge_field[iw][idir](ic1,ic2).imag()<<std::endl;
@@ -77,7 +80,7 @@ int main(int narg,char **arg)
 
   FILE *fout=NULL;
 
-  fout=fopen("confconv","wb");
+  fout=fopen((files[0][0]+"conv").c_str(),"wb");
 
   fwrite(&T,sizeof(int),1,fout);
   fwrite(&L,sizeof(int),1,fout);
@@ -100,12 +103,12 @@ int main(int narg,char **arg)
 		int pos[4];
 		int sizes[4]={T,L,L,L};
 		
-		pos[0]=t;
-		pos[1]=z;
-		pos[2]=y;
-		pos[3]=x;
+		pos[0]=t%T;
+		pos[1]=z%L;
+		pos[2]=y%L;
+		pos[3]=x%L;
 
-		int iw=weave.globalCoordToLocalIndex(x,y,z,t);
+		int iw=weave.globalCoordToLocalIndex(x%L,y%L,z%L,t%T);
 		
 		for(int mu=0;mu<4;mu++)
 		  {
@@ -114,29 +117,31 @@ int main(int narg,char **arg)
 		    nei[mu]=safe_mod(pos[mu]-1,sizes[mu]);
 		    int iz=weave.globalCoordToLocalIndex(nei[3],nei[2],nei[1],nei[0]);
 
-		    
 		    for(int ic1=0;ic1<3;ic1++)
 		      for(int ic2=0;ic2<3;ic2++)
 			{
-			  temp[0]=gauge_field[iw][mu](ic1,ic2).real();
-			  temp[1]=gauge_field[iw][mu](ic1,ic2).imag();
-			  fwrite(&(temp),sizeof(double),2,fout);
-
-			  temp[0]=gauge_field[iz][mu](ic1,ic2).real();
-			  temp[1]=gauge_field[iz][mu](ic1,ic2).imag();
+			  temp[0]=gauge_field[iw][3-mu](ic1,ic2).real();
+			  temp[1]=gauge_field[iw][3-mu](ic1,ic2).imag();
 			  fwrite(&(temp),sizeof(double),2,fout);
 			}
-
-		    std::complex<double> *punt=(std::complex<double>*)&(gauge_field[iw][mu]);
-		    for(int ic1=0;ic1<9;ic1++) std::cout<<punt[ic1]<<std::endl;
-
 		    for(int ic1=0;ic1<3;ic1++)
 		      for(int ic2=0;ic2<3;ic2++)
-			std::cout<<gauge_field[iw][mu](ic1,ic2)<<std::endl;
+			{
+			  temp[0]=gauge_field[iz][3-mu](ic1,ic2).real();
+			  temp[1]=gauge_field[iz][3-mu](ic1,ic2).imag();
+			  fwrite(&(temp),sizeof(double),2,fout);
+			}
+		    /*
+		    //std::complex<double> *punt=(std::complex<double>*)&(gauge_field[iw][mu]);
+		    //for(int ic1=0;ic1<9;ic1++) std::cout<<punt[ic1]<<std::endl;
+		    
+		    //for(int ic1=0;ic1<3;ic1++)
+		    // for(int ic2=0;ic2<3;ic2++)
+		    //std::cout<<gauge_field[iw][mu](ic1,ic2)<<std::endl;
 
-		    //fwrite(&(gauge_field[iw][mu]),sizeof(SU3::Matrix),1,fout);
-		    //fwrite(&(gauge_field[iz][mu]),sizeof(SU3::Matrix),1,fout);
-			  
+		    fwrite(&(gauge_field[iw][3-mu]),sizeof(SU3::Matrix),1,fout);
+		    fwrite(&(gauge_field[iz][3-mu]),sizeof(SU3::Matrix),1,fout);
+		    */
 		  }
 	      }
 	  }

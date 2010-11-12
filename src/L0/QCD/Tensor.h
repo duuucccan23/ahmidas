@@ -136,7 +136,7 @@ namespace QCD
 
 
       hcTensor dagger() const;
-      const Tensor &spinDilutedDagger() const;
+      Tensor spinDilutedDagger() const;
       void spinDilutedConjugate();
       void undilutedConjugate();
       void spinDilutedTransposeFull();

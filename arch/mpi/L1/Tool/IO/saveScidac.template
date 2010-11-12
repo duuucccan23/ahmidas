@@ -124,39 +124,42 @@ void Tool::IO::saveScidac(Core::Field< Element > const &field, std::string const
   weave.barrier();
 
   size_t const elementSize = sizeof(Element) / sizeof(double);
+  size_t const fieldSize = elementSize * weave.localVolume();
 
   double * buffer = NULL;
 
-  for (size_t idxBlock = 0; idxBlock < numBlocks; idxBlock++)
+//   for (size_t idxBlock = 0; idxBlock < numBlocks; idxBlock++)
+//   {
+  if (!Base::bigEndian)
   {
-    if (!Base::bigEndian)
-    {
-      if (idxBlock == 0)
-        buffer = new double[blockSize*elementSize];
+    //if (idxBlock == 0)
+      buffer = new double[fieldSize];
 
-      std::copy(reinterpret_cast< double const * >(&(field.constPhysicalIndex(idxBlock*blockSize))),
-                reinterpret_cast< double const * >(&(field.constPhysicalIndex(idxBlock*blockSize))) + blockSize*elementSize,
-                buffer);
+    std::copy(reinterpret_cast< double const * >(&(field.constPhysicalIndex(0))),
+              reinterpret_cast< double const * >(&(field.constPhysicalIndex(0))) + fieldSize,
+              buffer);
 
-      Base::swapEndian(buffer, buffer + blockSize*elementSize, sizeof(double));
-    }
-    else
-    {
-      // the const cast is dirty but we don't actually change the data
-      buffer = const_cast< double * >
-                 (reinterpret_cast< double const* >(&(field.constPhysicalIndex(idxBlock*blockSize))));
-    }
-    writer.write_collective(buffer, blockSize*elementSize, elem_offset*sizeof(Element));
-
-    elem_offset += (idxBlock+1) % jumpN[Base::idx_Z] == 0 ? jumpS[Base::idx_Z] :
-                   (idxBlock+1) % jumpN[Base::idx_Y] == 0 ? jumpS[Base::idx_Y] :
-                                                            jumpS[Base::idx_X];
+    Base::swapEndian(buffer, buffer + fieldSize, sizeof(double));
   }
+  else
+  {
+    // the const cast is dirty but we don't actually change the data
+    buffer = const_cast< double * >
+               (reinterpret_cast< double const* >(&(field.constPhysicalIndex(0))));
+  }
+  writer.write_collective(buffer, fieldSize, elem_offset*elementSize);
+
+//     elem_offset += (idxBlock+1) % jumpN[Base::idx_Z] == 0 ? jumpS[Base::idx_Z] :
+//                    (idxBlock+1) % jumpN[Base::idx_Y] == 0 ? jumpS[Base::idx_Y] :
+//                                                             jumpS[Base::idx_X];
+//   }
 
   if (!Base::bigEndian)
     delete [] buffer;
 
   buffer = NULL;
+
+  writer.reset_view();
 
   writer.finishMessage();
   writer.closeRecord();

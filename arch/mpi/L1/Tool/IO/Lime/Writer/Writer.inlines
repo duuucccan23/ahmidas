@@ -33,7 +33,6 @@ namespace Tool
         d_record.mesEnd = true;
         d_messageRunning = false;
         finalize();
-        d_MPI_FILE.Sync();
         d_MPI_FILE.Close();
       }
 
@@ -54,17 +53,35 @@ namespace Tool
         d_MPI_FILE.Write(reinterpret_cast< const void * >(buffer), elements*sizeof(DataType), MPI::BYTE);
       }
 
-      template< typename DataType >
-      inline void Writer::write_collective(DataType const *buffer, uint64_t const count, uint64_t const byte_offset)
+      inline void Writer::write_collective(double const *buffer, uint64_t const count, uint64_t const double_offset)
       {
-         d_record.offset = (byte_offset + MPI::Offset(s_headerSize));
-         d_MPI_FILE.Write_at_all(d_record.offset + d_record.recOffset,
-                             reinterpret_cast< const void * >(buffer),
-                             count*sizeof(DataType), MPI::BYTE, d_MPI_Status);
-         assert(good());
+        d_record.offset = MPI::Offset(double_offset/sizeof(double) + s_headerSize);
+        
+        int sizes[4];
+        sizes[Base::idx_X] = sizes[Base::idx_Y] = sizes[Base::idx_Z] = d_weave->L();
+        sizes[Base::idx_T] = d_weave->T();
+
+        int subsizes[4];
+        std::copy(d_weave->d_grid.sizes(), d_weave->d_grid.sizes() + 4, subsizes);
+
+        int starts[4];
+        for(size_t i = 0; i < 4; i++)
+          starts[i] = d_weave->d_grid.coord(i)*subsizes[i];
+
+        MPI::Datatype my_filetype(MPI::DOUBLE.Create_subarray(4, sizes, subsizes, starts, MPI::ORDER_FORTRAN));
+        my_filetype.Commit();
+
+        d_MPI_FILE.Set_view(MPI::Offset(d_record.offset/sizeof(double)), MPI::DOUBLE, my_filetype, NULL, MPI::INFO_NULL);
+
+        d_MPI_FILE.Write_all(buffer, count, MPI::DOUBLE, d_MPI_Status);
+
+        assert(good());
       }
 
-
+      inline void Writer::reset_view()
+      {
+        d_MPI_FILE.Set_view(0, MPI::BYTE, MPI::BYTE, NULL, MPI::INFO_NULL);
+      }
 
       inline void Writer::preallocate(uint64_t bytes)
       {

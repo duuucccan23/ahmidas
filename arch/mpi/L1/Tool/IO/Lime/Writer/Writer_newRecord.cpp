@@ -12,7 +12,8 @@ void Tool::IO::Lime::Writer::newRecord(std::string const &type, size_t const rOf
 
   d_startOfNextRecord = rOffset;
 
-  d_stream.seekp(d_startOfNextRecord, std::ios::beg);
+  if (d_writeHeader)
+   d_MPI_FILE.Seek(d_startOfNextRecord, MPI_SEEK_SET);
 
   reserveHeader();
 }

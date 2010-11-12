@@ -4,6 +4,8 @@
 #include <fstream>
 #include <string>
 #include <cassert>
+#include <mpi.h>
+#include <L0/Base/Weave.h>
 
 namespace Tool
 {
@@ -32,8 +34,8 @@ namespace Tool
         {
           char           type[128];
           uint64_t       size;
-          std::streampos recOffset; // absolute offset at which the record starts
-          std::streampos offset;
+          MPI::Offset    recOffset; // absolute offset at which the record starts
+          MPI::Offset    offset;
           int16_t        version;
           bool           mesBeg;
           bool           mesEnd;
@@ -43,15 +45,18 @@ namespace Tool
         };
 
         private:
-          std::fstream   d_stream;
-          std::streampos d_startOfNextRecord;
+
+          Base::Weave    *d_weave;
+          MPI::File      d_MPI_FILE;
+          MPI::Offset    d_startOfNextRecord;
+          MPI::Status    d_MPI_Status;
           Record         d_record;
           bool           d_hasWritten;
           bool           d_messageRunning;
           bool           d_writeHeader;
 
         public:
-          Writer(std::string const &filename, bool const writeHeader);
+          Writer(Base::Weave passed_weave,std::string const &filename);
           ~Writer();
 
           void finishMessage();
@@ -69,13 +74,17 @@ namespace Tool
           void write(DataType const *buffer, DataType const *finish);
 
           template< typename DataType >
-          void fill(DataType const &buffer, uint64_t elements);
+          void write_collective(DataType const *buffer, uint64_t const count, uint64_t const byte_offset);
+
+          void preallocate(uint64_t bytes);
 
           bool fail() const;
           bool good() const;
 
           // sets position to offset bytes in current record
-          void seekp(std::streampos const offset);
+
+          //void seekp(MPI::Offset const offset);
+          MPI::Offset tellp();
 
         private:
           void finalize();

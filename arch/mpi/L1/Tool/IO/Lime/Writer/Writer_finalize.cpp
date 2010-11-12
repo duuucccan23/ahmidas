@@ -5,25 +5,26 @@ void Tool::IO::Lime::Writer::finalize()
 
   if(!d_writeHeader || d_hasWritten)
   {
-    //d_stream.flush();
+    //d_MPI_FILE.flush();
     // this process has done its duty
     return;
   }
 
-  assert(d_stream.tellp() >= d_record.recOffset);
+  assert(d_MPI_FILE.Get_position() >= d_record.recOffset);
   // size can be zero if only one process has written the current record
   // in that case we can ask the stream how many bytes have been written
   uint64_t written = 0;
-  if (d_stream.tellp() > 0)
-    written = d_stream.tellp() - d_record.recOffset - std::streampos(s_headerSize);
-//   std::cout << "d_stream.tellp() = " << d_stream.tellp() << ", d_record.recOffset = " << d_record.recOffset << std::endl;
-//   std::cout << "d_record.size = " << d_record.size << ", written = " << written << std::endl;
+  if (d_MPI_FILE.Get_position() > 0)
+    written = d_MPI_FILE.Get_position() - d_record.recOffset - MPI::Offset(s_headerSize);
+  //std::cout << "d_MPI_FILE.tellp() = " << d_MPI_FILE.Get_position() << ", d_record.recOffset = " << d_record.recOffset << std::endl;
+  //std::cout << "d_record.size = " << d_record.size << ", written = " << written << std::endl;
   // in the other case the actual record size had to be passed and is stored in d_record.size
   written = d_record.size > written ? d_record.size : written;
 
-  d_stream.write(s_padding, (8 - (written % 8)) % 8);
-  //d_stream.flush();
-  d_startOfNextRecord = d_stream.tellp();
+  if ( written % 8 != 0)
+    d_MPI_FILE.Write(s_padding, (8 - (written % 8)) % 8, MPI::BYTE);
+
+  d_startOfNextRecord = d_MPI_FILE.Get_position();
 
   uHeader header;
   std::fill(header.as8, header.as8 + s_headerSize, 0x00);
@@ -52,21 +53,23 @@ void Tool::IO::Lime::Writer::finalize()
   // not the case anymore for writing of non-contiguous data
   // assert (d_record.offset == std::streampos(0) || d_record.offset == std::streampos(s_headerSize));
 
-  // std::cout << "d_record.recOffset = " << d_record.recOffset << std::endl;
+  //std::cout << "d_record.recOffset = " << d_record.recOffset << std::endl;
+  //std::cout<<"position before writing the record end: "<<d_MPI_FILE.Get_position()<<std::endl;
+  d_MPI_FILE.Seek(d_record.recOffset, MPI_SEEK_SET);
+  //std::cout<<"position after seeking record end: "<<d_MPI_FILE.Get_position()<<std::endl;
+  d_MPI_FILE.Write(header.as8, s_headerSize,MPI::BYTE);
+  //std::cout<<"position after writing record end: "<<d_MPI_FILE.Get_position()<<std::endl;
+  assert(good());
 
-  d_stream.seekp(d_record.recOffset, std::ios::beg);
-  d_stream.write(header.as8, s_headerSize);
-  assert(!fail());
+  //d_MPI_FILE.flush();
 
-  //d_stream.flush();
-
-  static int cnt(0);
+  //static int cnt(0);
 
 //   std::cout << "now I am going to write the actual header! ("  << cnt ++ << ")" << std::endl;
 //   std::cout << "---" << std::endl;
 //   std::cout << std::string(header.as8, s_headerSize) << std::endl;
 //   std::cout << "---" << std::endl;
 
-  d_stream.seekp(d_startOfNextRecord, std::ios::beg);
+  d_MPI_FILE.Seek(d_startOfNextRecord, MPI_SEEK_SET);
   d_hasWritten = true;
 }

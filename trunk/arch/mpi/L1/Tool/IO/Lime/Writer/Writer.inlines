@@ -1,3 +1,10 @@
+
+/*
+  the file lock necessary for parallel I/O is not allowed on some lustre file systems
+  this will activate a workaround
+*/
+// #define __LUSTRE_WORKAROUND__
+
 namespace Tool
 {
   namespace IO
@@ -20,12 +27,18 @@ namespace Tool
       inline Writer::Writer(Base::Weave weave,std::string const &filename)
         : d_weave(&weave), d_hasWritten(false), d_messageRunning(false), d_writeHeader(weave.rank()==0)
       {
-//         if(d_writeHeader)
-          d_MPI_FILE=MPI::File::Open(d_weave->d_grid.grid(), filename.c_str(),
-                                   MPI::MODE_CREATE|MPI::MODE_WRONLY, MPI::INFO_NULL);
-//         else
-//           d_MPI_FILE=MPI::File::Open(d_weave->d_grid.grid(), filename.c_str(),
-//                                    MPI::MODE_CREATE|MPI::MODE_WRONLY|MPI::MODE_APPEND, MPI::INFO_NULL);
+
+        #ifdef __LUSTRE_WORKAROUND__
+          MPI::Info LUSTRE_INFO(MPI::Info::Create());
+          LUSTRE_INFO.Set("romio_ds_write", "disable");
+          d_MPI_FILE = MPI::File::Open(d_weave->d_grid.grid(), filename.c_str(),
+                                       MPI::MODE_CREATE|MPI::MODE_WRONLY, LUSTRE_INFO);
+        #else
+
+          d_MPI_FILE = MPI::File::Open(d_weave->d_grid.grid(), filename.c_str(),
+                                       MPI::MODE_CREATE|MPI::MODE_WRONLY, MPI::INFO_NULL);
+
+        #endif
       }
 
       inline Writer::~Writer()
@@ -53,10 +66,12 @@ namespace Tool
         d_MPI_FILE.Write(reinterpret_cast< const void * >(buffer), elements*sizeof(DataType), MPI::BYTE);
       }
 
-      inline void Writer::write_collective(double const *buffer, uint64_t const count, uint64_t const double_offset)
+      template< typename DataType >
+      inline void Writer::write_collective(DataType const *buffer, uint64_t const count, uint64_t const byte_offset)
       {
-        d_record.offset = MPI::Offset(double_offset/sizeof(double) + s_headerSize);
-        
+        // not needed here
+        d_record.offset = MPI::Offset(byte_offset + s_headerSize);
+
         int sizes[4];
         sizes[Base::idx_X] = sizes[Base::idx_Y] = sizes[Base::idx_Z] = d_weave->L();
         sizes[Base::idx_T] = d_weave->T();
@@ -68,19 +83,27 @@ namespace Tool
         for(size_t i = 0; i < 4; i++)
           starts[i] = d_weave->d_grid.coord(i)*subsizes[i];
 
-        MPI::Datatype my_filetype(MPI::DOUBLE.Create_subarray(4, sizes, subsizes, starts, MPI::ORDER_FORTRAN));
+        MPI::Datatype my_etype(MPI::BYTE.Create_contiguous(sizeof(DataType)));
+        my_etype.Commit();
+
+        MPI::Datatype my_filetype(my_etype.Create_subarray(4, sizes, subsizes, starts, MPI::ORDER_FORTRAN));
         my_filetype.Commit();
 
-        d_MPI_FILE.Set_view(MPI::Offset(d_record.offset/sizeof(double)), MPI::DOUBLE, my_filetype, NULL, MPI::INFO_NULL);
+        d_MPI_FILE.Sync();
 
-        d_MPI_FILE.Write_all(buffer, count, MPI::DOUBLE, d_MPI_Status);
+        d_MPI_FILE.Set_view(d_record.recOffset + MPI::Offset(s_headerSize),
+                            my_etype, my_filetype, "native", MPI::INFO_NULL);
+
+        d_MPI_FILE.Write_all(buffer, count, my_etype, d_MPI_Status);
 
         assert(good());
       }
 
       inline void Writer::reset_view()
       {
-        d_MPI_FILE.Set_view(0, MPI::BYTE, MPI::BYTE, NULL, MPI::INFO_NULL);
+        d_MPI_FILE.Sync();
+        d_MPI_FILE.Set_view(0, MPI::BYTE, MPI::BYTE, "native", MPI::INFO_NULL);
+        d_MPI_FILE.Seek(d_record.recOffset + MPI::Offset(s_headerSize), MPI_SEEK_SET);
       }
 
       inline void Writer::preallocate(uint64_t bytes)

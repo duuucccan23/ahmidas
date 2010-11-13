@@ -73,7 +73,8 @@ namespace Tool
           template< typename DataType >
           void write(DataType const *buffer, DataType const *finish);
 
-          void write_collective(double const *buffer, uint64_t const count, uint64_t const double_offset);
+          template< typename DataType >
+          void write_collective(DataType const *buffer, uint64_t const count, uint64_t const byte_offset);
 
           void preallocate(uint64_t bytes);
           void reset_view();

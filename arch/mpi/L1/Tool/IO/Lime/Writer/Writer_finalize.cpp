@@ -21,8 +21,13 @@ void Tool::IO::Lime::Writer::finalize()
   // in the other case the actual record size had to be passed and is stored in d_record.size
   written = d_record.size > written ? d_record.size : written;
 
+  if ( written == d_record.size)
+    d_MPI_FILE.Seek(d_record.recOffset + d_record.size + MPI::Offset(s_headerSize), MPI_SEEK_SET);
+
   if ( written % 8 != 0)
+  {
     d_MPI_FILE.Write(s_padding, (8 - (written % 8)) % 8, MPI::BYTE);
+  }
 
   d_startOfNextRecord = d_MPI_FILE.Get_position();
 

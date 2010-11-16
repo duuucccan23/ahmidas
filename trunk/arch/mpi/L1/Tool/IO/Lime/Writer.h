@@ -56,7 +56,7 @@ namespace Tool
           bool           d_writeHeader;
 
         public:
-          Writer(Base::Weave passed_weave,std::string const &filename);
+          Writer(Base::Weave * passed_weave,std::string const &filename);
           ~Writer();
 
           void finishMessage();

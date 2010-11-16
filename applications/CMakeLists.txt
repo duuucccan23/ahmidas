@@ -5,6 +5,16 @@ ADD_EXECUTABLE(contract_nucleon3point contract_nucleon3point.cpp)
 TARGET_LINK_LIBRARIES(contract_nucleon3point SU3 QCD IO Base Core Dirac Weave Contract Input Smear)
 
 
+ADD_EXECUTABLE(contract_meson_2pts contract_meson_2pts.cpp)
+TARGET_LINK_LIBRARIES(contract_meson_2pts SU3 QCD IO Base Core Dirac Contract Input Ahmidas Print)
+
+ADD_EXECUTABLE(contract_meson_stochastic_2pts contract_meson_stochastic_2pts.cpp)
+TARGET_LINK_LIBRARIES(contract_meson_stochastic_2pts SU3 QCD IO Base Core Dirac Contract Input Ahmidas Print)
+
+ADD_EXECUTABLE(contract_meson_ultrastochastic_2pts contract_meson_ultrastochastic_2pts.cpp)
+TARGET_LINK_LIBRARIES(contract_meson_ultrastochastic_2pts SU3 QCD IO Base Core Dirac Contract Input Ahmidas Print)
+
+
 ADD_EXECUTABLE(contract_two_lines contract_two_lines.cpp)
 TARGET_LINK_LIBRARIES(contract_two_lines SU3 QCD IO Base Core Dirac Contract Input Ahmidas Print)
 

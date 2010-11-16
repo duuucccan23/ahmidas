@@ -24,8 +24,8 @@ namespace Tool
         std::fill(type, type + 128, '\0');
       }
 
-      inline Writer::Writer(Base::Weave weave,std::string const &filename)
-        : d_weave(&weave), d_hasWritten(false), d_messageRunning(false), d_writeHeader(weave.rank()==0)
+      inline Writer::Writer(Base::Weave * weave,std::string const &filename)
+        : d_weave(weave), d_hasWritten(false), d_messageRunning(false), d_writeHeader(weave.rank()==0)
       {
 
         #ifdef __LUSTRE_WORKAROUND__

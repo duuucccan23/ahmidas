@@ -75,7 +75,7 @@ void Tool::IO::saveScidac(Core::Field< Element > const &field, std::string const
 
   size_t pos = 0;
 
-  Lime::Writer writer(weave, filename);
+  Lime::Writer writer(&weave, filename);
 
   assert(writer.good());
 

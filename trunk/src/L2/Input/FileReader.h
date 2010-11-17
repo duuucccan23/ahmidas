@@ -81,6 +81,24 @@ namespace Input
                               std::vector< std::vector< std::string > > &filenames,
                               std::map< std::string, double > &floats) const;
 
+    // longer version 
+    void initializeParameters(size_t &L, size_t &T,
+                              std::vector< std::vector< std::string > > &filenames,
+                              std::map< std::string, double > &floats,
+                              std::vector< size_t * > &positions,
+                              std::vector< int > &operators,
+                              std::vector< int > &rcombinations) const;
+
+    // longer version with output filename
+    void initializeParameters(size_t &L, size_t &T,
+                              std::vector< std::vector< std::string > > &filenames,
+                              std::map< std::string, double > &floats,
+                              std::vector< size_t * > &positions,
+                              std::vector< int > &operators,
+                              std::vector< int > &rcombinations,
+			      std::string &outputname) const;
+
+
   };
 }
 

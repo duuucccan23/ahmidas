@@ -23,13 +23,27 @@ namespace Input
   {
     // dummy containers
     std::vector< int > dummy_ops;
+    std::vector< int > dummy_r;
     std::vector< size_t * > dummy_pos;
-    initializeParameters(L, T, filenames, floats, dummy_pos, dummy_ops);
+    std::string dummy_string;
+    initializeParameters(L, T, filenames, floats, dummy_pos, dummy_ops,dummy_r,dummy_string);
     for (size_t i=0; i<dummy_pos.size(); i++)
     {
       delete [] dummy_pos[i];
       dummy_pos[i] = NULL;
     }
+  }
+
+  inline void FileReader::initializeParameters(size_t &L, size_t &T,
+                         std::vector< std::vector< std::string > > &filenames,
+                         std::map< std::string, double > &floats, 
+                         std::vector< size_t * > &positions,
+                         std::vector< int > &operators) const
+  {
+    // dummy containers
+    std::vector< int > dummy_r;
+    std::string dummy_string;
+    initializeParameters(L, T, filenames, floats, positions, operators,dummy_r,dummy_string);
   }
 
 

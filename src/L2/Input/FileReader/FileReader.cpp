@@ -135,7 +135,9 @@ namespace Input
                                         std::vector< std::vector< std::string > > &filenames,
                                         std::map< std::string, double > &floats,
                                         std::vector< size_t * > &positions,
-                                        std::vector< int > &operators) const
+                                        std::vector< int > &operators,
+					std::vector< int > &rcombinations,
+					std::string &outputname) const
   {
     for (size_t iF=0; iF<filenames.size(); iF++)
       filenames[iF].clear();
@@ -143,6 +145,7 @@ namespace Input
     floats.clear();
     positions.clear();
     operators.clear();
+    rcombinations.clear();
     std::multimap< std::string, std::string >::const_iterator It;
     for (It=input.begin(); It!=input.end(); It++)
     {
@@ -177,6 +180,20 @@ namespace Input
         std::istringstream iss((*It).second);
         iss >> int_tmp;
         operators.push_back(int_tmp);
+        continue;
+      }
+      if((*It).first == "rcombination")
+      {
+        int int_tmp;
+        std::istringstream iss((*It).second);
+        iss >> int_tmp;
+        rcombinations.push_back(int_tmp);
+        continue;
+      }
+      if((*It).first == "outputname")
+      {
+        std::istringstream iss((*It).second);
+        iss >> outputname;
         continue;
       }
       double tmp;

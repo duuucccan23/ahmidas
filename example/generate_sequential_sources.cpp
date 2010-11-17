@@ -22,7 +22,7 @@
 #define __COMPENSATE_UNIFORM_BOUNDARY_CONDITIONS__
 
 // use operator involving gamma_1
-#define __GAMMA_1__
+// #define __GAMMA_1__
 // use operator involving gamma_2
 // #define __GAMMA_2__
 // use operator involving gamma_3
@@ -30,6 +30,8 @@
 // use operator involving gamma_4
 // #define __GAMMA_4__
 
+// use all projectors
+#define __ALL_GAMMA__
 
 int main(int argc, char **argv)
 {
@@ -89,8 +91,20 @@ int main(int argc, char **argv)
   std::vector< std::string > const &propfilesD(files[0]);
   std::vector< std::string > const &propfilesU(files[1]);
   std::vector< std::string > const &gaugeFieldFiles(files[2]);
+#ifdef __ALL_GAMMA__
+  std::vector< std::string > const &seqSourceFilesD1(files[3]);
+  std::vector< std::string > const &seqSourceFilesU1(files[4]);
+  std::vector< std::string > const &seqSourceFilesD2(files[5]);
+  std::vector< std::string > const &seqSourceFilesU2(files[6]);
+  std::vector< std::string > const &seqSourceFilesD3(files[7]);
+  std::vector< std::string > const &seqSourceFilesU3(files[8]);
+  std::vector< std::string > const &seqSourceFilesD4(files[9]);
+  std::vector< std::string > const &seqSourceFilesU4(files[10]);
+#else  
   std::vector< std::string > const &seqSourceFilesD(files[3]);
   std::vector< std::string > const &seqSourceFilesU(files[4]);
+#endif
+
 
   Core::Field< QCD::Gauge > gauge_field(L, T);
 
@@ -133,10 +147,34 @@ int main(int argc, char **argv)
   if (weave.isRoot())
     std::cout << "propagators smeared successfully\n" << std::endl;
 
+
+#ifdef __ALL_GAMMA__
+  Core::Propagator sequentialSource1(L, T);
+  sequentialSource1 *= std::complex< double >(0, 0); // initialize with zero
+  Core::Propagator sequentialSource2(L, T);
+  sequentialSource2 *= std::complex< double >(0, 0); // initialize with zero
+  Core::Propagator sequentialSource3(L, T);
+  sequentialSource3 *= std::complex< double >(0, 0); // initialize with zero
+  Core::Propagator sequentialSource4(L, T);
+  sequentialSource4 *= std::complex< double >(0, 0); // initialize with zero
+  
+  Contract::create_sequential_source_proton_u(sequentialSource1, *dProp, *uProp,
+                                              gauge_field, Smear::sm_Jacobi, Jac_iterations, Jac_alpha,
+                                              timeslice_sink, Base::proj_1_PLUS_TM);
+  Contract::create_sequential_source_proton_u(sequentialSource2, *dProp, *uProp,
+                                              gauge_field, Smear::sm_Jacobi, Jac_iterations, Jac_alpha,
+                                              timeslice_sink, Base::proj_2_PLUS_TM);
+  Contract::create_sequential_source_proton_u(sequentialSource3, *dProp, *uProp,
+                                              gauge_field, Smear::sm_Jacobi, Jac_iterations, Jac_alpha,
+                                              timeslice_sink, Base::proj_3_PLUS_TM);
+  Contract::create_sequential_source_proton_u(sequentialSource4, *dProp, *uProp,
+                                              gauge_field, Smear::sm_Jacobi, Jac_iterations, Jac_alpha,
+                                              timeslice_sink, Base::proj_PARITY_PLUS_TM);
+#else
+  
   Core::Propagator sequentialSource(L, T);
-
   sequentialSource *= std::complex< double >(0, 0); // initialize with zero
-
+  
 #ifdef __GAMMA_1__
   Contract::create_sequential_source_proton_u(sequentialSource, *dProp, *uProp,
                                               gauge_field, Smear::sm_Jacobi, Jac_iterations, Jac_alpha,
@@ -160,18 +198,61 @@ int main(int argc, char **argv)
                                               gauge_field, Smear::sm_Jacobi, Jac_iterations, Jac_alpha,
                                               timeslice_sink, Base::proj_PARITY_PLUS_TM);
 #endif
-
+#endif
+  
   delete dProp;
 
+#ifdef __ALL_GAMMA__
+  Tool::IO::save(&sequentialSource1, seqSourceFilesU1, Tool::IO::fileSCIDAC);
+  Tool::IO::save(&sequentialSource2, seqSourceFilesU2, Tool::IO::fileSCIDAC);
+  Tool::IO::save(&sequentialSource3, seqSourceFilesU3, Tool::IO::fileSCIDAC);
+  Tool::IO::save(&sequentialSource4, seqSourceFilesU4, Tool::IO::fileSCIDAC);
+#else
   Tool::IO::save(&sequentialSource, seqSourceFilesU, Tool::IO::fileSCIDAC);
+#endif
 
+#ifdef __ALL_GAMMA__
+  double norm_u1(sequentialSource1.norm());
+  double norm_u2(sequentialSource2.norm());
+  double norm_u3(sequentialSource3.norm());
+  double norm_u4(sequentialSource4.norm());
+#else
   double norm_u(sequentialSource.norm());
+#endif
 
   if (weave.isRoot())
   {
     std::cout.precision(10);
+#ifdef __ALL_GAMMA__
+    std::cout << std::scientific << "norm of sequential source (u, projector 1): " << norm_u1 << std::endl;
+    std::cout << std::scientific << "norm of sequential source (u, projector 2): " << norm_u2 << std::endl;
+    std::cout << std::scientific << "norm of sequential source (u, projector 3): " << norm_u3 << std::endl;
+    std::cout << std::scientific << "norm of sequential source (u, projector 4): " << norm_u4 << std::endl;
+#else
     std::cout << std::scientific << "norm of sequential source (u): " << norm_u << std::endl;
+#endif    
   }
+
+#ifdef __ALL_GAMMA__
+
+  sequentialSource1 *= std::complex< double >(0, 0); // initialize with zero
+  sequentialSource2 *= std::complex< double >(0, 0); // initialize with zero
+  sequentialSource3 *= std::complex< double >(0, 0); // initialize with zero
+  sequentialSource4 *= std::complex< double >(0, 0); // initialize with zero
+  
+  Contract::create_sequential_source_proton_d(sequentialSource1, *uProp, *uProp,
+                                              gauge_field, Smear::sm_Jacobi, Jac_iterations, Jac_alpha,
+                                              timeslice_sink, Base::proj_1_PLUS_TM);
+  Contract::create_sequential_source_proton_d(sequentialSource2, *uProp, *uProp,
+                                              gauge_field, Smear::sm_Jacobi, Jac_iterations, Jac_alpha,
+                                              timeslice_sink, Base::proj_2_PLUS_TM);
+  Contract::create_sequential_source_proton_d(sequentialSource3, *uProp, *uProp,
+                                              gauge_field, Smear::sm_Jacobi, Jac_iterations, Jac_alpha,
+                                              timeslice_sink, Base::proj_3_PLUS_TM);
+  Contract::create_sequential_source_proton_d(sequentialSource4, *uProp, *uProp,
+                                              gauge_field, Smear::sm_Jacobi, Jac_iterations, Jac_alpha,
+                                              timeslice_sink, Base::proj_PARITY_PLUS_TM);
+#else
 
   sequentialSource *= std::complex< double >(0, 0); // initialize with zero
 
@@ -197,18 +278,41 @@ int main(int argc, char **argv)
   Contract::create_sequential_source_proton_d(sequentialSource, *uProp, *uProp,
                                               gauge_field, Smear::sm_Jacobi, Jac_iterations, Jac_alpha,
                                               timeslice_sink, Base::proj_PARITY_PLUS_TM);
+#endif
+
 #endif
 
   delete uProp;
 
+#ifdef __ALL_GAMMA__
+  Tool::IO::save(&sequentialSource1, seqSourceFilesD1, Tool::IO::fileSCIDAC);
+  Tool::IO::save(&sequentialSource2, seqSourceFilesD2, Tool::IO::fileSCIDAC);
+  Tool::IO::save(&sequentialSource3, seqSourceFilesD3, Tool::IO::fileSCIDAC);
+  Tool::IO::save(&sequentialSource4, seqSourceFilesD4, Tool::IO::fileSCIDAC);
+#else
   Tool::IO::save(&sequentialSource, seqSourceFilesD, Tool::IO::fileSCIDAC);
+#endif
 
+#ifdef __ALL_GAMMA__
+  double norm_d1(sequentialSource1.norm());
+  double norm_d2(sequentialSource2.norm());
+  double norm_d3(sequentialSource3.norm());
+  double norm_d4(sequentialSource4.norm());
+#else
   double norm_d(sequentialSource.norm());
+#endif
 
   if (weave.isRoot())
   {
     std::cout.precision(10);
+#ifdef __ALL_GAMMA__
+    std::cout << std::scientific << "norm of sequential source (d, projector 1): " << norm_d1 << std::endl;
+    std::cout << std::scientific << "norm of sequential source (d, projector 2): " << norm_d2 << std::endl;
+    std::cout << std::scientific << "norm of sequential source (d, projector 3): " << norm_d3 << std::endl;
+    std::cout << std::scientific << "norm of sequential source (d, projector 4): " << norm_d4 << std::endl;
+#else
     std::cout << std::scientific << "norm of sequential source (d): " << norm_d << std::endl;
+#endif    
   }
 
   if (weave.isRoot())

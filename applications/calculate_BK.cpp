@@ -38,33 +38,59 @@ int main(int argc, char **argv)
   std::map< std::string, double > floats;
   std::vector< size_t * > positions;
   std::vector< int > operators;
+  std::vector< int > rcombinations;
   std::vector< std::vector< std::string > > files;
+  std::string outputname;  
 
-  reader.initializeParameters(L_tmp, T_tmp, files, floats, positions, operators);
+  reader.initializeParameters(L_tmp, T_tmp, files, floats, positions, operators,rcombinations,outputname);
 
   size_t const L(L_tmp);
   size_t const T(T_tmp);
 
   Base::Weave weave(L, T);
 
-  if (weave.isRoot())
-    std::cout << "Lattice size: " << L << "x" << L << "x" << L << "x" << T << std::endl;
 
   double kappa = floats["kappa"];
   double mu_d    = floats["mu_d"];
   double mu_s    = floats["mu_s"];
-  if (weave.isRoot())
-    std::cout << "kappa = " << kappa << ", mu_d = " << mu_d << ", mu_s = " << mu_s << std::endl;
+  bool const phys_base = bool(floats["phys_base"] != 0.0); // 0=no,!=0 =yes
+
+  int connected = floats["connected"];  
+  bool debug=(bool)floats["debug"];
 
   size_t const t_L = size_t(floats["t_L"]);
   assert(t_L >= 0 && t_L < T);
   size_t const t_R = size_t(floats["t_R"]);
   assert(t_R >= 0 && t_R < T);
+  assert(rcombinations.size() % 4 == 0);
 
-  if (weave.isRoot())
-    std::cout << "timeslice (left)  = " << t_L << std::endl;
-  if (weave.isRoot())
-    std::cout << "timeslice (right) = " << t_R << std::endl;
+
+  {
+    // write some output concerning what is going to be read
+    std::ostringstream out;
+    out << "Lattice size: " << L << "x" << L << "x" << L << "x" << T << std::endl;
+    out << "kappa = "  << kappa  << ", mu_d = "<< mu_d << ", mu_s = "<< mu_s << std::endl;
+    out << "timeslice (left)  = " << t_L << std::endl;
+    out << "timeslice (right) = " << t_R << std::endl;
+    out << "will ";
+    if (!phys_base) out << "not ";
+    out << "rotate propagators to physical base" << std::endl;
+    Print(out.str());
+  }
+
+
+ if(weave.isRoot() and debug==true)
+    {
+      std::cout<<"The following files are going to be read:"<<std::endl;
+
+      for(size_t i=0;i<files.size();i++)
+        for(size_t j=0;j<files[i].size();j++)
+          std::cout<<(files[i])[j]<<std::endl;
+
+    }
+
+
+
 
   std::vector< std::string > const &propfilesD_L(files[0]);
   std::vector< std::string > const &propfilesS_L(files[1]);
@@ -101,10 +127,11 @@ int main(int argc, char **argv)
   if (weave.isRoot())
     std::cout << "1st propagator successfully loaded\n" << std::endl;
 
-  Core::StochasticPropagator< 4 >  dProp_plus_L(L, T);
-  Core::StochasticPropagator< 4 >  dProp_minus_L(L, T);
+  Core::StochasticPropagator< 4 >  *dProp_L[2];
+  dProp_L[0] = new Core::StochasticPropagator< 4 >(L, T);
+  dProp_L[1] = new Core::StochasticPropagator< 4 >(L, T);
   // reconstruct the full doublet from the combined MMS output, being ~ (DD^dagger)^-1
-  tmpProp->reconstruct_doublet(dProp_plus_L, dProp_minus_L, gauge_field, kappa, mu_d);
+  tmpProp->reconstruct_doublet(*(dProp_L[0]),*(dProp_L[1]), gauge_field, kappa, mu_d);
   if (weave.isRoot())
     std::cout << "1st propagator successfully reconstructed\n" << std::endl;
 
@@ -112,9 +139,11 @@ int main(int argc, char **argv)
   if (weave.isRoot())
     std::cout << "2nd propagator successfully loaded\n" << std::endl;
 
-  Core::StochasticPropagator< 4 >  sProp_plus_L(L, T);
-  Core::StochasticPropagator< 4 >  sProp_minus_L(L, T);
-  tmpProp->reconstruct_doublet(sProp_plus_L, sProp_minus_L, gauge_field, kappa, mu_s);
+  Core::StochasticPropagator< 4 >  *sProp_L[2];
+  sProp_L[0] = new Core::StochasticPropagator< 4 >(L, T);
+  sProp_L[1] = new Core::StochasticPropagator< 4 >(L, T);
+
+  tmpProp->reconstruct_doublet(*(sProp_L[0]), *(sProp_L[1]), gauge_field, kappa, mu_s);
   if (weave.isRoot())
     std::cout << "2nd propagator successfully reconsructed\n" << std::endl;
 
@@ -127,9 +156,12 @@ int main(int argc, char **argv)
   if (weave.isRoot())
       std::cout << "3rd propagator successfully loaded\n" << std::endl;
 
-  Core::StochasticPropagator< 4 >  dProp_plus_R(L, T);
-  Core::StochasticPropagator< 4 >  dProp_minus_R(L, T);
-  tmpProp->reconstruct_doublet(dProp_plus_R, dProp_minus_R, gauge_field, kappa, mu_d);
+  Core::StochasticPropagator< 4 >  *dProp_R[2];
+  dProp_R[0] = new Core::StochasticPropagator< 4 >(L, T);
+  dProp_R[1] = new Core::StochasticPropagator< 4 >(L, T);
+  
+  tmpProp->reconstruct_doublet(*(dProp_R[0]),*(dProp_R[1]), gauge_field, kappa, mu_d);
+
   if (weave.isRoot())
     std::cout << "3rd propagator successfully reconstructed\n" << std::endl;
 
@@ -137,176 +169,155 @@ int main(int argc, char **argv)
   if (weave.isRoot())
     std::cout << "4th propagator successfully loaded\n" << std::endl;
 
-  Core::StochasticPropagator< 4 >  sProp_plus_R(L, T);
-  Core::StochasticPropagator< 4 >  sProp_minus_R(L, T);
-  tmpProp->reconstruct_doublet(sProp_plus_R, sProp_minus_R, gauge_field, kappa, mu_s);
+  Core::StochasticPropagator< 4 >  *sProp_R[2];
+  sProp_R[0] = new Core::StochasticPropagator< 4 >(L, T);
+  sProp_R[1] = new Core::StochasticPropagator< 4 >(L, T);
+
+  tmpProp->reconstruct_doublet(*(sProp_R[0]), *(sProp_R[1]), gauge_field, kappa, mu_s);
+
   if (weave.isRoot())
     std::cout << "4th propagator successfully reconstructed\n" << std::endl;
 
   delete tmpProp;
 
-
-// notes: construct objects O as in notes: multiply Dirac structure, dagger, and Tensor multiplication involved
-
-  //gamma structure is: Gamma = gamma_mu (1 - gamma_5)
-
-  Dirac::Gamma< 4 > gamma4;
-  Dirac::Gamma< 54 > gamma5gamma4;
-  Dirac::Gamma< 1 >  gamma1;
-  Dirac::Gamma< 2 >  gamma2;
-  Dirac::Gamma< 3 >  gamma3;
-  Dirac::Gamma< 45 > gamma0gamma5;
-  Dirac::Gamma< 15 > gamma1gamma5;
-  Dirac::Gamma< 25 > gamma2gamma5;
-  Dirac::Gamma< 35 > gamma3gamma5;
-  Dirac::Gamma< 54 > gamma5gamma0;
-
-  //Contractions;
-
-//TODO include the complete gamma structure
-
-//we always need the dagger d propagator
-  Core::StochasticPropagator< 4 > dProp_plus_R_dagger(dProp_plus_R);
-  dProp_plus_R_dagger.dagger();
-  Core::StochasticPropagator< 4 > dProp_minus_L_dagger(dProp_minus_L);
-  dProp_minus_L_dagger.dagger();
-
-  // The structure is
- //  phi_s*phi_d ^dagger * gamma5*gammamu(1-gamma5)= phi_s*phi_d ^dagger *(gamma5gammamu+gammamu)
-
-
-  //RIGHT SIDE
-  Core::StochasticPropagator< 4 > *psiR;
-  Core::StochasticPropagator< 4 > *O_R;
-  Core::Correlator< Dirac::Matrix > *twopointR;
- 
-  psiR = new Core::StochasticPropagator< 4 >(dProp_plus_R_dagger);
-  (*psiR).rightMultiply(gamma4);
-  twopointR = new Core::Correlator< Dirac::Matrix >(sProp_plus_R*(*psiR));
-  O_R = new Core::StochasticPropagator< 4 >(*psiR);
-  delete psiR;
-  psiR = new Core::StochasticPropagator< 4 >(dProp_plus_R_dagger);
- (*psiR).rightMultiply(gamma0gamma5);
-  *twopointR += Core::Correlator< Dirac::Matrix >(sProp_plus_R*(*psiR));
-  *O_R += Core::StochasticPropagator< 4 >(*psiR);
-  delete psiR;
-  psiR = new Core::StochasticPropagator< 4 >(dProp_plus_R_dagger);
- (*psiR).rightMultiply(gamma1) ;
-  *twopointR += Core::Correlator< Dirac::Matrix >(sProp_plus_R*(*psiR));
-  *O_R += Core::StochasticPropagator< 4 >(*psiR);
-  delete psiR;
-  psiR = new Core::StochasticPropagator< 4 >(dProp_plus_R_dagger);
- (*psiR).rightMultiply(gamma1gamma5);
-  *twopointR += Core::Correlator< Dirac::Matrix >(sProp_plus_R*(*psiR));
-  *O_R += Core::StochasticPropagator< 4 >(*psiR);
-  delete psiR;
-  psiR = new Core::StochasticPropagator< 4 >(dProp_plus_R_dagger);
- (*psiR).rightMultiply(gamma2);
-  *twopointR += Core::Correlator< Dirac::Matrix >(sProp_plus_R*(*psiR));
-  *O_R += Core::StochasticPropagator< 4 >(*psiR);
-  delete psiR;
-  psiR = new Core::StochasticPropagator< 4 >(dProp_plus_R_dagger);
- (*psiR).rightMultiply(gamma2gamma5);
-  *twopointR += Core::Correlator< Dirac::Matrix >(sProp_plus_R*(*psiR));
-  *O_R += Core::StochasticPropagator< 4 >(*psiR);
-  delete psiR;
-  psiR = new Core::StochasticPropagator< 4 >(dProp_plus_R_dagger);
- (*psiR).rightMultiply(gamma3);
-  *twopointR += Core::Correlator< Dirac::Matrix >(sProp_plus_R*(*psiR));
-  *O_R += Core::StochasticPropagator< 4 >(*psiR);
-  delete psiR;
-  psiR = new Core::StochasticPropagator< 4 >(dProp_plus_R_dagger);
- (*psiR).rightMultiply(gamma3gamma5);
-  *twopointR += Core::Correlator< Dirac::Matrix >(sProp_plus_R*(*psiR));
-  *O_R += Core::StochasticPropagator< 4 >(*psiR);
-  delete psiR;
-
-  //LEFT SIDE
-  Core::StochasticPropagator< 4 > *psiL;
-  Core::StochasticPropagator< 4 > *O_L;
-  Core::Correlator< Dirac::Matrix > *twopointL;
-
-  psiL = new Core::StochasticPropagator< 4 >(dProp_minus_L_dagger);
-  (*psiL).rightMultiply(gamma4);
-  twopointL = new Core::Correlator< Dirac::Matrix >(sProp_plus_L*(*psiL));
-  O_L = new Core::StochasticPropagator< 4 >(*psiL);
-  delete psiL;
-  psiL = new Core::StochasticPropagator< 4 >(dProp_minus_L_dagger);
- (*psiL).rightMultiply(gamma0gamma5);
-  *twopointL += Core::Correlator< Dirac::Matrix >(sProp_plus_L*(*psiL));
-  *O_L += Core::StochasticPropagator< 4 >(*psiL);
-  delete psiL;
-  psiL = new Core::StochasticPropagator< 4 >(dProp_minus_L_dagger);
- (*psiL).rightMultiply(gamma1) ;
-  *twopointL += Core::Correlator< Dirac::Matrix >(sProp_plus_L*(*psiL));
-  *O_L += Core::StochasticPropagator< 4 >(*psiL);
-  delete psiL;
-  psiL = new Core::StochasticPropagator< 4 >(dProp_minus_L_dagger);
- (*psiL).rightMultiply(gamma1gamma5);
-  *twopointL += Core::Correlator< Dirac::Matrix >(sProp_plus_L*(*psiL));
-  *O_L += Core::StochasticPropagator< 4 >(*psiL);
-  delete psiL;
-  psiL = new Core::StochasticPropagator< 4 >(dProp_minus_L_dagger);
- (*psiL).rightMultiply(gamma2);
-  *twopointL += Core::Correlator< Dirac::Matrix >(sProp_plus_L*(*psiL));
-  *O_L += Core::StochasticPropagator< 4 >(*psiL);
-  delete psiL;
-  psiL = new Core::StochasticPropagator< 4 >(dProp_minus_L_dagger);
- (*psiL).rightMultiply( gamma2gamma5);
-  *twopointL += Core::Correlator< Dirac::Matrix >(sProp_plus_L*(*psiL));
-  *O_L += Core::StochasticPropagator< 4 >(*psiL);
-  delete psiL;
-  psiL = new Core::StochasticPropagator< 4 >(dProp_minus_L_dagger);
- (*psiL).rightMultiply(gamma3);
-  *twopointL += Core::Correlator< Dirac::Matrix >(sProp_plus_L*(*psiL));
-  *O_L += Core::StochasticPropagator< 4 >(*psiL);
-  delete psiL;
-  psiL = new Core::StochasticPropagator< 4 >(dProp_minus_L_dagger);
- (*psiL).rightMultiply(gamma3gamma5);
-  *twopointL += Core::Correlator< Dirac::Matrix >(sProp_plus_L*(*psiL));
-  *O_L += Core::StochasticPropagator< 4 >(*psiL);
-  delete psiL;
-
-
-  Core::Correlator< Dirac::Matrix >threepoint_Disconnected(*twopointL);
-  threepoint_Disconnected *=(*twopointR);
-
-
-  (*O_R).leftMultiply(sProp_plus_R);
-  (*O_L).leftMultiply(sProp_plus_L);
-  Core::Correlator< Dirac::Matrix >threepoint_Otto((*O_R) * (*O_L));
-
-  delete O_R;
-  delete O_L;
-
-  Core::Correlator< Dirac::Matrix >threepoint(threepoint_Otto);
-  threepoint +=threepoint_Disconnected;
-
-  (*twopointL).sumOverSpatialVolume(); // this is the projection to zero momentum
-  (*twopointR).sumOverSpatialVolume();
-  threepoint_Otto.sumOverSpatialVolume(); 
-  threepoint_Disconnected.sumOverSpatialVolume(); 
-  threepoint.sumOverSpatialVolume();
-
-
-
-
-  if (weave.isRoot())
+  if(phys_base)
   {
-    std::cout << "Ahmidas result for twopointL:\n" << std::endl;
-           std::cout << (*twopointL) << std::endl;
-   std::cout << "Ahmidas result for twopointR:\n" << std::endl;
-            std::cout << (*twopointR) << std::endl;
-    std::cout << "Ahmidas result for threepoint_Otto:\n" << std::endl;
-            std::cout << threepoint_Otto << std::endl;
-    std::cout << "Ahmidas result for threepoint_Disconnected:\n" << std::endl;
-          std::cout << threepoint_Disconnected << std::endl;
-    std::cout << "Ahmidas result for threepoint:\n" << std::endl;
-        std::cout << threepoint << std::endl;
+    dProp_R[0]->rotateToPhysicalBasis(0);
+    dProp_R[1]->rotateToPhysicalBasis(1);
+    dProp_L[0]->rotateToPhysicalBasis(0);
+    dProp_L[1]->rotateToPhysicalBasis(1);
+    sProp_R[0]->rotateToPhysicalBasis(0);
+    sProp_R[1]->rotateToPhysicalBasis(1);
+    sProp_L[0]->rotateToPhysicalBasis(0);
+    sProp_L[1]->rotateToPhysicalBasis(1);
+
 
   }
-  delete twopointL;
-  delete twopointR;
+
+  std::ostringstream out;
+  out << "C3^{connected}    = sum_{vec{x}} Tr[s(x,tR) g5 revert(d'(x,tR)) Gamma1 s(x,t_L) g5 revert(d(x,t_L)) Gamma2] \n";
+  out << "C3^{disconnected} = sum_{vec{x}} Tr[s(x,tR) g5 revert(d'(x,tR)) Gamma2] Tr[ s(x,t_L) g5 revert(d(x,t_L)) Gamma1] \n";
+  out<<  "with Gamma1 = Gamma2 = Gamma \n";
+  out<<  "where : \n";
+  out<<  "        correlator    Gamma \n ";
+  out<<  "           -1            I   \n ";
+  out<<  "            1           g5   \n ";
+  out<<  "            2           g1   \n ";
+  out<<  "            3           g2   \n ";
+  out<<  "            4           g3   \n ";
+  out<<  "            5           g4   \n ";
+  out<<  "            6          g1g5   \n ";
+  out<<  "            7          g2g5   \n ";
+  out<<  "            8          g3g5   \n ";
+  out<<  "            9          g4g5   \n ";
+  out<<  "           10          g1g2   \n ";
+  out<<  "           11          g1g3   \n ";
+  out<<  "           12          g1g4   \n ";
+  out<<  "           13          g2g3   \n ";
+  out<<  "           14          g2g4   \n ";
+  out<<  "           15          g3g4   \n ";
+  out<<  "Remember to reconstruct the Supersymmetric basis in the analysis program (see notes for the relation) \n";
+  out<<  "and promediate over the different configurations with one r of opposite sign \n";
+
+  Print(out.str());
+
+  std::vector< std::pair< Base::Operator, Base::Operator > > *operator_combinations;
+  std::vector< Core::Correlator< Dirac::Matrix > > *threepointsDis;
+  std::vector< Core::Correlator< Dirac::Matrix > > *threepointsCon;
+
+  //auxiliar index for r=0,1
+  int idL, idR, isL, isR;
+  char outputname_char[1024];
+  strcpy(outputname_char, outputname.c_str());
+
+  {
+   // now we want to tell the contraction routine which operator (gamma) combinations to use
+  // note that for Bk we always have gamma5 sources
+
+    for (size_t i = 0; i < operators.size(); i += 1)
+    {
+      std::ostringstream out;
+      out << "operator combination no ";
+      out.width(3);
+      out << i << ":  correlator ";
+      out.width(3);
+      out << std::showpos << operators[i] ;
+      Print(out.str());
+      operator_combinations= new std::vector< std::pair< Base::Operator, Base::Operator > >;
+      (*operator_combinations).push_back(std::make_pair(Tool::convertIntToOperator(5),
+                                                     Tool::convertIntToOperator(operators[i])));
+
+      for (size_t j = 0; j < rcombinations.size(); j += 4){
+		idL = rcombinations[j];
+                isL = rcombinations[j+1]; 
+ 		idR = rcombinations[j+2];
+  		isR = rcombinations[j+3];
+
+		if (idL+isL+idR+isR==2 || idL+isL+idR+isR==0 || idL+isL+idR+isR==4) std::cout<<"WARNING: NOT A O(a) IMPROVED COMBINATION OF r"<<std::endl;
+		else{
+      			 if (connected==0 ){
+      				threepointsDis = new std::vector< Core::Correlator< Dirac::Matrix > >(Contract::BK_threepoint_disconnected_stochastic(*(dProp_R[idR]), *(sProp_R[isR]), *(dProp_L[idL]), *(sProp_L[isL]), (*operator_combinations)));
+
+				if(weave.isRoot())
+   				 {
+     					 std::ofstream fout(outputname_char);
+	   				 std::ostringstream out;
+					 out.flush();
+					 out<< "RIGHT: (rd,rs)=("<<idR<<","<<isR<<")  LEFT: (rd,rs)=("<<idL<<","<<isL<<") \n";
+					 out<<" Disconnected diagram : \n";
+					 out << (*threepointsDis)[0];
+      					 out.flush();
+					 Print(out.str(), fout);
+					fout.close();
+	   			}
+    				delete threepointsDis;
+    			 }
+    
+ 			 if (connected==1 || connected==2){
+	    			  threepointsCon = new std::vector< Core::Correlator< Dirac::Matrix > >(Contract::BK_threepoint_connected_stochastic(*(dProp_R[idR]), *(sProp_R[isR]), *(dProp_L[idL]), *(sProp_L[isL]),(*operator_combinations)));
+                                  if(weave.isRoot())
+                                 {
+                                         std::ofstream fout(outputname_char);
+                                         std::ostringstream out;
+                                         out.flush();
+                                         out<< "RIGHT: (rd,rs)=("<<idR<<","<<isR<<")  LEFT: (rd,rs)=("<<idL<<","<<isL<<") \n";
+                                         out<<" Connected diagram : \n";
+                                         out << (*threepointsCon)[0];
+                                         out.flush();
+                                         Print(out.str(), fout);
+                                         fout.close();
+                                }
+
+
+     	   			 delete threepointsCon;
+			}
+			if (connected==2){
+
+				  threepointsDis = new std::vector< Core::Correlator< Dirac::Matrix > >(Contract::BK_threepoint_disconnected_stochastic(*(dProp_R[idR]), *(sProp_R[isR]), *(dProp_L[idL]), *(sProp_L[isL]), (*operator_combinations)));
+				  threepointsCon = new std::vector< Core::Correlator< Dirac::Matrix > >(Contract::BK_threepoint_connected_stochastic(*(dProp_R[idR]), *(sProp_R[isR]), *(dProp_L[idL]), *(sProp_L[isL]),(*operator_combinations)));
+				 if(weave.isRoot())
+                                 {
+                                         std::ofstream fout(outputname_char);
+                                         std::ostringstream out;
+                                         out.flush();
+                                         out<< "RIGHT: (rd,rs)=("<<idR<<","<<isR<<")  LEFT: (rd,rs)=("<<idL<<","<<isL<<") \n";
+					 out<<" Disconnected diagram : \n";
+                                         out << (*threepointsDis)[0];
+                                         out<<" Connected diagram : \n";
+                                         out << (*threepointsCon)[0];
+                                         out.flush();
+                                         Print(out.str(), fout);
+                                         fout.close();
+                                }
+
+  			 }
+		}//end else
+ 	 } //end for r combination
+   } // end for operator combination
+ }
+
+
+
   if (weave.isRoot())
     std::cout << "contractions performed successfully\n" << std::endl;
   

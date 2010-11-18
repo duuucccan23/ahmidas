@@ -3,7 +3,7 @@
   the file lock necessary for parallel I/O is not allowed on some lustre file systems
   this will activate a workaround
 */
-#define __LUSTRE_WORKAROUND__
+// #define __LUSTRE_WORKAROUND__
 
 namespace Tool
 {

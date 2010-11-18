@@ -94,7 +94,7 @@ void Tool::IO::loadScidac(Core::Field< Element > *field, std::string const &file
   else //precision can only be 32 at this point
   {
     uint32_t *elem32 = new uint32_t[fieldSize];
-    reader.read_collective64(reinterpret_cast< Element * >(elem32), weave.localVolume(), record_offset);
+    reader.read_collective32(reinterpret_cast< Element * >(elem32), weave.localVolume(), record_offset);
     if (!Base::bigEndian)
       Base::swapEndian(elem32, elem32 + fieldSize);
     std::copy(reinterpret_cast< float * >(elem32),

@@ -12,7 +12,6 @@ Base::Weave::Weave(size_t L, size_t T)
   {
     assert(s_grid != NULL);
     d_grid = reinterpret_cast< Base::Grid * >(s_grid);
-    std::cout << d_grid->L()<< " " << d_L<< " " << d_grid->T()<< " " << d_T << std::endl;
     assert(d_grid->L() == d_L && d_grid->T() == d_T);
   }
   s_grid_ref++;

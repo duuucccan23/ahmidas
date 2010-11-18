@@ -54,7 +54,7 @@ namespace Tool
 
           // non-collective reading
           template< typename DataType >
-          void read(DataType *buffer, size_t elements); //Reads elements of type Datatype into variable buffer
+          void read(DataType *buffer, uint64_t const elements); //Reads elements of type Datatype into variable buffer
 
           // collective reading
           template< typename DataType >

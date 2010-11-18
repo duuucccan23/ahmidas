@@ -15,7 +15,7 @@
 
 int main(int argc, char **argv)
 {
-  // Ahmidas start(&argc, &argv);
+  Ahmidas my_ahmidas(&argc, &argv);
 
   size_t L_tmp(0);
   size_t T_tmp(0);

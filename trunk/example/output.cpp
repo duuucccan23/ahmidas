@@ -4,7 +4,8 @@
 
 int main(int argc, char **argv)
 {
-  Ahmidas start(&argc, &argv);
+  Ahmidas my_ahmidas(&argc, &argv);
+
   Print("Hello, I should be on normal cout.");
   Debug("MESSAGE, should be on std::cerr.");
   return 0;

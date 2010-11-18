@@ -21,6 +21,7 @@ int safe_mod(int x,int y)
 
 int main(int narg,char **arg)
 {
+  Ahmidas my_ahmidas(&narg, &arg);
   size_t L,T;
 
   if(narg<2)

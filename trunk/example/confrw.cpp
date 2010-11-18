@@ -11,6 +11,8 @@
 
 int main(int argc, char **argv)
 {
+  Ahmidas my_ahmidas(&argc, &argv);
+
   //This needs some cleaning up, but it is automatically updated by SVN
   std::string Id = "$Id$";
   std::cout << "Executable tag: " << Id.substr(1,Id.length()-2) << std::endl;

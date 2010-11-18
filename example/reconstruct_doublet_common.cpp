@@ -25,6 +25,7 @@
 
 int main(int narg,char **arg)
 {
+  Ahmidas my_ahmidas(&narg, &arg);
   size_t L,T;
   std::string suff[2]={".0",".1"}; //suffix for output files (up,down)
 

@@ -6,6 +6,8 @@
 
 int main(int argc, char **argv)
 {
+  Ahmidas my_ahmidas(&argc, &argv);
+
   if (argc != 5)
   {
     std::cerr << "This program expects the following input:\n";

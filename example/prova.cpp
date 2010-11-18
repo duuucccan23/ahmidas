@@ -43,6 +43,7 @@
 
 int main(int argc, char **argv)
 {
+  Ahmidas my_ahmidas(&argc, &argv);
 
   // lattice size, to be read from input file (and therefore initialized to zero)
   size_t L(0);

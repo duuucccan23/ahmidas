@@ -5,6 +5,8 @@
 
 int main(int argc, char **argv)
 {
+  Ahmidas my_ahmidas(&argc, &argv);
+
   Dirac::Identity ident = Dirac::Identity();
   Dirac::Gamma< 1 > g1 = Dirac::Gamma< 1 >();
   Dirac::Gamma< 2 > g2 = Dirac::Gamma< 2 >();

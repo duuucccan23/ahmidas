@@ -33,6 +33,7 @@
 
 int main(int argc, char **argv)
 {
+  Ahmidas my_ahmidas(&argc, &argv);
 
   size_t L = 0;
   size_t T = 0;

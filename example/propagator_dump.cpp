@@ -20,6 +20,9 @@
 
 int main(int narg, char **arg)
 {
+  Ahmidas my_ahmidas(&narg, &arg);
+
+
   if(narg<4)
     {
       std::cerr<<"Error: use "<<arg[0]<<" L T file_base NFILE"<<std::endl;

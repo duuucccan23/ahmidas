@@ -1,5 +1,6 @@
 #include <iostream>
 #include <limits>
+#include <L0/Ahmidas.h>
 #include <L0/SU3/Matrix.h>
 #include <Eigen/Dense>
 
@@ -70,6 +71,7 @@ void reunitarize_old_method_through_eigen(SU3::Matrix &mat_SU3)
 
 int main(int argc, char **argv)
 {
+  Ahmidas my_ahmidas(&argc, &argv);
   double const prec = 1E-16;
 
   bool problem = false;

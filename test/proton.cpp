@@ -7,6 +7,7 @@
 #include <fstream>
 #include <sstream>
 
+#include <L0/Ahmidas.h>
 #include <L0/Core/Field.h>
 #include <L0/QCD/Spinor.h>
 #include <L0/Core/Propagator.h>
@@ -17,6 +18,7 @@
 
 int main(int argc, char **argv)
 {
+  Ahmidas my_ahmidas(&argc, &argv);
 
   const size_t L = 4;
   const size_t T = 4;

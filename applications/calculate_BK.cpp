@@ -29,7 +29,7 @@
 
 int main(int argc, char **argv)
 {
-
+  Ahmidas my_Ahmidas(&argc, &argv);
   size_t L_tmp = 0;
   size_t T_tmp = 0;
 

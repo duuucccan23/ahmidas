@@ -2,6 +2,9 @@
    This piece of code generates stochastic timeslice sources with Z(4) noise
 */
 
+//ahmidas
+#include <L0/Ahmidas.h>
+
 // C++ complex library
 #include <complex>
 

@@ -18,6 +18,9 @@
 
 /* *** ahmidas interfaces *** */
 
+// ahmidas
+#include <L0/Ahmidas.h>
+
 // representation of Dirac gamma matrices
 #include <L0/Dirac/Gamma.h>
 
@@ -48,6 +51,7 @@
 
 int main(int argc, char **argv)
 {
+  Ahmidas my_ahmidas(&argc, &argv);
   size_t L = 0;
   size_t T = 0;
 

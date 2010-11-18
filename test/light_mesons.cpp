@@ -2,6 +2,7 @@
 #include <complex>
 #include <iostream>
 
+#include <L0/Ahmidas.h>
 #include <L1/Tool/IO.h>
 #include <L0/Dirac/Gamma.h>
 #include <L0/Core/Propagator.h>
@@ -9,6 +10,8 @@
 
 int main(int argc, char **argv)
 {
+  Ahmidas my_ahmidas(&argc, &argv);
+
   Dirac::Gamma< 5 > gamma5;
 
   const size_t L = 4;

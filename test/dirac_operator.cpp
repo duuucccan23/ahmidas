@@ -9,6 +9,7 @@
 #include <fstream>
 #include <sstream>
 
+#include <L0/Ahmidas.h>
 #include <L0/Base/Weave.h>
 #include <L0/Dirac/Gamma.h>
 #include <L0/Dirac/Matrix.h>
@@ -20,6 +21,7 @@
 
 int main(int argc, char **argv)
 {
+  Ahmidas my_ahmidas(&argc, &argv);
   double const tolerance(1.e-13);
 
   const size_t L = 4;

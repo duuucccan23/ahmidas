@@ -38,6 +38,7 @@
 #include <vector>
 #include <iomanip>
 #include <iostream>
+#include <L0/Ahmidas.h>
 #include <L0/Base/Weave.h>
 #include <L0/Core/Field.h>
 #include <L0/Core/Propagator.h>
@@ -46,6 +47,7 @@
 
 int main(int narg,char **arg)
 {
+  Ahmidas my_ahmidas(&narg, &arg);
   size_t L,T;
 
   if(narg<2)

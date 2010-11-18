@@ -1,4 +1,5 @@
 #include <iostream>
+#include <L0/Ahmidas.h>
 #include <L0/Core/Field.h>
 #include <L0/QCD/Gauge.h>
 #include <L1/Tool.h>
@@ -6,6 +7,7 @@
 
 int main(int argc, char **argv)
 {
+  Ahmidas my_ahmidas(&argc, &argv);
   Core::Field< QCD::Gauge > field(16,6);
   Tool::IO::load(&field, "../../test/lat.sample.16x6.milc", Tool::IO::fileMILC);
   double sp = Tool::spatialPlaquette(field);

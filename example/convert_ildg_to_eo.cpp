@@ -4,6 +4,7 @@
 #include <vector>
 #include <iomanip>
 #include <iostream>
+#include <L0/Ahmidas.h>
 #include <L0/Base/Weave.h>
 #include <L0/Core/Field.h>
 #include <L0/Core/Propagator.h>

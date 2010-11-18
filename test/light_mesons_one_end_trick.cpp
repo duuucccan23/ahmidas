@@ -1,6 +1,7 @@
 #include <vector>
 #include <iostream>
 
+#include <L0/Ahmidas.h>
 #include <L0/Base/Weave.h>
 #include <L0/Core/Propagator.h>
 #include <L0/Core/Correlator.h>
@@ -9,6 +10,8 @@
 
 int main(int argc, char **argv)
 {
+  Ahmidas my_ahmidas(&argc, &argv);
+
   const size_t L = 4;
   const size_t T = 4;
 

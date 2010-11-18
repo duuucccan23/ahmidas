@@ -2,6 +2,9 @@
    This piece of code generates a (smeared) point source
 */
 
+//Ahmidas
+#include <L0/Ahmidas.h>
+
 // C++ complex library
 #include <complex>
 

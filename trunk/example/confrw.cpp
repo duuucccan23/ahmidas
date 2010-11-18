@@ -3,6 +3,7 @@
 #include <iomanip>
 #include <iostream>
 
+#include <L0/Ahmidas.h>
 #include <L0/Core/Field.h>
 #include <L0/QCD/Gauge.h>
 #include <L1/Tool.h>

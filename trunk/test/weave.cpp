@@ -1,9 +1,11 @@
+#include <L0/Ahmidas.h>
 #include <L0/Base/Base.h>
 #include <L0/Base/Weave.h>
 #include <L0/Debug.h>
 
 int main(int argc, char **argv)
 {
+  Ahmidas my_ahmidas(&argc, &argv);
   std::ostringstream ostr("Weaving\n", std::ios::ate);
   Base::Weave myWeave = Base::Weave(4, 8);
   ostr << "LocalVolume() " << myWeave.localVolume() << std::endl << myWeave.dim(Base::idx_X) << '\t'

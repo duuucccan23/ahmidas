@@ -5,6 +5,9 @@
    such as reading an input file, loading a propagator and output of the result.
 */
 
+//ahmidas
+#include <L0/Ahmidas.h>
+
 // C++ complex library
 #include <complex>
 

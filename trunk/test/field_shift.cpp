@@ -2,6 +2,7 @@
 #include <iomanip>
 #include <iostream>
 
+#include <L0/Ahmidas.h>
 #include <L0/Base/Base.h>
 #include <L0/Base/Weave.h>
 #include <L0/QCD/Gauge.h>
@@ -10,7 +11,7 @@
 
 int main(int argc, char **argv)
 {
-
+  Ahmidas my_ahmidas(&argc, &argv);
   size_t errors(0);
   size_t idx(0);
   size_t const L(4);

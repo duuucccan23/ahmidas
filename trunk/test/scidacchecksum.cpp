@@ -1,4 +1,5 @@
 #include <iostream>
+#include <L0/Ahmidas.h>
 #include <L0/Core/Field.h>
 #include <L0/QCD/Gauge.h>
 #include <L0/QCD/Spinor.h>
@@ -7,6 +8,7 @@
 
 int main(int argc, char **argv)
 {
+  Ahmidas my_ahmidas(&argc, &argv);
   Core::Field< QCD::Gauge > mygauge(4,8);
   Tool::IO::loadILDG(&mygauge, "../../test/conf.48");
   Print("In headers: 0x1c231a18 0x3c553b.\n");

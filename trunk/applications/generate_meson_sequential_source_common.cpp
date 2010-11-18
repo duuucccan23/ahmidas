@@ -29,6 +29,7 @@
 #include <fstream>
 #include <sstream>
 
+#include <L0/Ahmidas.h>
 #include <L0/QCD/Gauge.h>
 #include <L0/Core/Propagator.h>
 #include <L2/Contract/Baryon.h>
@@ -41,6 +42,7 @@
 
 int main(int narg, char **arg)
 {
+  Ahmidas my_ahmidas(&narg, &arg);
   size_t L=0;
   size_t T=0;
 

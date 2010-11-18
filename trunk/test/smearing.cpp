@@ -7,6 +7,7 @@
 #include <sstream>
 
 
+#include <L0/Ahmidas.h>
 #include <L1/Tool/IO.h>
 #include <L1/Smear/APE.h>
 #include <L1/Smear/Jacobi.h>
@@ -16,6 +17,7 @@
 
 int main(int argc, char **argv)
 {
+  Ahmidas my_ahmidas(&argc, &argv);
 
   // this test directly compares the result of a smearing procedure to some reference result
   // one could compare the average plaquette as well

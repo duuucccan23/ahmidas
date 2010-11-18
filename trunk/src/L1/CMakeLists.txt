@@ -7,7 +7,7 @@ SET(Sources_Tool Tool/Tool_localTrace.cpp Tool/Tool_reunitarize.cpp Tool/Tool_fi
                  Tool/Tool_temporalDownPlaquette.cpp
                  Tool/Tool_convertIntToOperator.cpp)
 ADD_LIBRARY(Tool ${Sources_Tool})
-TARGET_LINK_LIBRARIES(Tool SU3 Base Core Path Weave)
+TARGET_LINK_LIBRARIES(Tool SU3 Base Core Path Weave Print)
 
 SET(Sources_Path Path/Path_square.cpp Path/Path_staple.cpp Path/Path_step.cpp)
 ADD_LIBRARY(Path ${Sources_Path})

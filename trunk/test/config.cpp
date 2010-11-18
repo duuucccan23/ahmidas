@@ -1,3 +1,4 @@
+#include <L0/Ahmidas.h>
 #include <L0/Print.h>
 #include <L0/Core/Field.h>
 #include <L0/QCD/Gauge.h>
@@ -6,6 +7,7 @@
 
 int main(int argc, char **argv)
 {
+  Ahmidas my_ahmidas(&argc, &argv);
   Core::Field< QCD::Gauge > myfield(8,8);
   Tool::IO::load(&myfield, "../../test/conf.88", Tool::IO::fileILDG);
 

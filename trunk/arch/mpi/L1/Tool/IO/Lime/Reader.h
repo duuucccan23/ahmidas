@@ -7,6 +7,8 @@
 #include <string>
 #include <vector>
 
+#include <mpi.h>
+
 #include <L0/Base/Base.h>
 #include <L0/Base/Weave.h>
 
@@ -31,28 +33,38 @@ namespace Tool
           char     as8[s_headerSize];
         };
 
+        Base::Weave *      d_weave;
         std::string const &d_filename;
-        std::ifstream      d_in;
+        MPI::File          d_MPI_FILE;
+        MPI::Status        d_MPI_STATUS;
 
         std::vector< std::string >    d_types; //
         std::vector< int32_t >        d_messages; //
         std::vector< uint64_t >       d_sizes; //Size of the data elements of records
-        std::vector< std::streampos > d_offsets; //Offsets of the data elements of records
+        std::vector< MPI::Offset >    d_offsets; //Offsets of the data elements of records
         std::vector< int16_t >        d_versions; //
 
-        size_t d_currentRecord; //Index of current record
+        MPI::Offset d_currentRecord; //Index of current record
         bool d_fail; //Fail state
         bool d_messagesCorrect; //Begin and end bytes set correct?
 
         public:
-          Reader(std::string const &filename);
+          Reader(Base::Weave * passed_weave, std::string const &filename);
+          ~Reader();
 
+          // non-collective reading
           template< typename DataType >
           void read(DataType *buffer, size_t elements); //Reads elements of type Datatype into variable buffer
 
-          void retrieveRecord(size_t const record); //Go to record with index record
-          void retrieveMessageAndRecord(size_t const message, size_t const record); //Retrieve message index from record index
-          void retrieveRecord(std::string const &type); //Go to record with given type
+          // collective reading
+          template< typename DataType >
+          void read_collective64(DataType *buffer, uint64_t const count, uint64_t const byte_offset);
+          template< typename DataType >
+          void read_collective32(DataType *buffer, uint64_t const count, uint64_t const byte_offset);
+
+          uint64_t retrieveRecord(size_t const record); //Go to record with index record
+          uint64_t retrieveMessageAndRecord(size_t const message, size_t const record); //Retrieve message index from record index
+          uint64_t retrieveRecord(std::string const &type); //Go to record with given type
 
           void nextRecord(); //Go to next record
           void previousRecord(); //Go to previous record
@@ -73,8 +85,10 @@ namespace Tool
           bool fail() const; //Did something fail?
           bool messagesCorrect() const; //Are begin and end bytes correctly used?
 
-          std::streampos tellg();
-          void seekg(std::streampos const offset, size_t const record);
+          MPI::Offset tellg() const;
+          void seekg(MPI::Offset const offset, size_t const record);
+
+          void reset_view();
       };
     }
   }

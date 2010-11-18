@@ -9,5 +9,5 @@ void Core::Field< Element >::destroy()
     delete[] d_field;
     delete[] d_offsets;
   }
-  d_weave.barrier();
+  //d_weave.barrier();
 }

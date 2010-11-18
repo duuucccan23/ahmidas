@@ -62,6 +62,8 @@ namespace Core
       void momentumProjection(int const * const momentum);
       void prepareMomentumProjection(int const * const position_offset);
 
+      void rotateToPhysicalBasis();
+
       // set offset (for conventional reasons one would often like to shift the source timeslice to 0)
       void setOffset(size_t timeslice);
 

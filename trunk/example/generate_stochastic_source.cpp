@@ -149,13 +149,15 @@ int main(int argc, char **argv)
    // let's do it in scalar, even though this is not very elegant!
 
   if(weave.isRoot())
+  {
     std::cout << "\nThe following files are going to be created:" << std::endl;
 
-  // there should only be one container in files, which can be accessed by files[0]
-  // (similar to accessing an object in a C array)
-  for (size_t fileIndex=0; fileIndex<files[0].size(); fileIndex++)
-  {
-    std::cout << (files[0])[fileIndex] << std::endl;
+    // there should only be one container in files, which can be accessed by files[0]
+    // (similar to accessing an object in a C array)
+    for (size_t fileIndex=0; fileIndex<files[0].size(); fileIndex++)
+    {
+      std::cout << (files[0])[fileIndex] << std::endl;
+    }
   }
 
   Base::SourcePolarization pol_tmp;

@@ -3,11 +3,8 @@
 namespace Base
 {
   Grid::Grid(size_t L, size_t T)
-    : d_L(L), d_T(T)
+  : d_L(L), d_T(T)
   {
-    // NOTE This forces intialization of s_agent - should be really fixed.
-    s_agent.val++;
-
     size_t gridSize = static_cast< size_t >(MPI::COMM_WORLD.Get_size());
     if (totalVolume() % gridSize) // No balanced distribution available
     {

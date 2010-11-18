@@ -1,9 +1,5 @@
 namespace Base
 {
-  inline Grid::~Grid()
-  {
-    s_agent.val--;
-  }
 
   inline MPI::Cartcomm const &Grid::grid() const
   {
@@ -102,17 +98,28 @@ namespace Base
     return d_bigEndian;
   }
 
-  inline Grid::MPIAgent::MPIAgent()
-  : val(42)
+  inline size_t Grid::T() const
   {
-    // We would need argv and argc to be able to pass arguments
-    std::cout << "initializing MPI" << std::endl;
-    MPI::Init();
+    return d_T;
   }
 
-  inline Grid::MPIAgent::~MPIAgent()
+  inline size_t Grid::L() const
   {
-    MPI::Finalize();
-    std::cout << "MPI finalized" << std::endl;
+    return d_L;
   }
+
+//   inline Grid::MPIAgent::MPIAgent()
+//   : val(42)
+//   {
+//     // We would need argv and argc to be able to pass arguments
+// //     std::cout << "initializing MPI" << std::endl;
+// //     MPI::Init();
+//   }
+// 
+//   inline Grid::MPIAgent::~MPIAgent()
+//   {
+//     //std::cout << "destroying MPIAgent" <<std::endl;
+// //     MPI::Finalize();
+// //     std::cout << "MPI finalized" << std::endl;
+//   }
 }

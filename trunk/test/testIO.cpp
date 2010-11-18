@@ -1,6 +1,7 @@
 #include <iomanip>
 #include <iostream>
 
+#include <L0/Ahmidas.h>
 #include <L0/Base/Base.h>
 #include <L0/Base/Weave.h>
 #include <L0/Core/Field.h>
@@ -9,11 +10,14 @@
 // #define __SAVE_FIELD__
 #define __LOAD_FIELD__
 
+
 int main(int argc, char **argv)
 {
+  Ahmidas my_ahmidas(&argc, &argv);
 
-  size_t const L(12);
-  size_t const T(24);
+
+  size_t const L(6);
+  size_t const T(2);
 
   std::string file("../../test/my_test_conf");
 
@@ -100,9 +104,16 @@ int main(int argc, char **argv)
     weave.barrier();
 
     if (weave.isRoot())
-      std::cout << "everything ok!" << std::endl;
+      std::cout << "loading works!" << std::endl;
+    weave.barrier();
 
   }
 #endif
 
+    weave.barrier();
+    if (weave.isRoot())
+      std::cout << "everything ok!" << std::endl;
+    weave.barrier();
+
+  return EXIT_SUCCESS;
 }

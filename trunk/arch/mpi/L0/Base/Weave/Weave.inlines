@@ -1,8 +1,9 @@
 namespace Base
 {
+
   inline size_t Weave::dim(Base::SpaceTimeIndex idx) const
   {
-    return d_grid.dim(idx);
+    return d_grid->dim(idx);
   }
 
   inline size_t Weave::localSize(Base::SpaceTimeIndex idx) const
@@ -39,7 +40,7 @@ namespace Base
   {
     double all_result;
     barrier();
-    d_grid.grid().Allreduce(static_cast< const void * >(&result), static_cast< void * >(&all_result),
+    d_grid->grid().Allreduce(static_cast< const void * >(&result), static_cast< void * >(&all_result),
                            1, MPI::DOUBLE, MPI::SUM);
     return all_result;
   }
@@ -50,7 +51,7 @@ namespace Base
   {
     for (size_t t=0; t<d_T; t++)
     {
-      if ((d_grid.grid()).Get_rank() == d_grid.rank(t * d_L * d_L * d_L +
+      if ((d_grid->grid()).Get_rank() == d_grid->rank(t * d_L * d_L * d_L +
                                                     z * d_L * d_L +
                                                     y * d_L + x))
       {
@@ -62,15 +63,15 @@ namespace Base
 
   inline bool Weave::isLocallyAvailable(size_t const x, size_t const y, size_t const z, size_t const t) const
   {
-    return (d_grid.grid()).Get_rank() == d_grid.rank(t * d_L * d_L * d_L +
+    return (d_grid->grid()).Get_rank() == d_grid->rank(t * d_L * d_L * d_L +
                                                      z * d_L * d_L +
                                                      y * d_L + x);
   }
 
   inline bool Weave::isRoot() const
   {
-    // std::cout <<  "my_rank =" <<  d_grid.grid().Get_rank() << std::endl;
-    return d_grid.grid().Get_rank() == 0;
+    // std::cout <<  "my_rank =" <<  d_grid->grid().Get_rank() << std::endl;
+    return d_grid->grid().Get_rank() == 0;
   }
 
   inline size_t Weave::fromGlobal(size_t const idx, Base::SpaceTimeIndex const mu) const
@@ -100,13 +101,13 @@ namespace Base
 
   inline void Weave::barrier() const
   {
-    d_grid.grid().Barrier();
+    d_grid->grid().Barrier();
   }
 
   template< typename Element >
   inline void Weave::broadcast(Element *data, size_t const count, int root) const
   {
-    (d_grid.grid()).Bcast(data, count * sizeof(Element), MPI::BYTE, root);
+    (d_grid->grid()).Bcast(data, count * sizeof(Element), MPI::BYTE, root);
   }
 
   template< typename Element >
@@ -114,7 +115,7 @@ namespace Base
   {
     static int stag(1);
     static int rtag(1);
-    (d_grid.grid()).Sendrecv(data_send, count * sizeof(Element), MPI::BYTE, destination, stag++,
+    (d_grid->grid()).Sendrecv(data_send, count * sizeof(Element), MPI::BYTE, destination, stag++,
                              data_recv, count * sizeof(Element), MPI::BYTE, source,      rtag++);
   }
 
@@ -122,37 +123,37 @@ namespace Base
   inline void Weave::allReduce(Element const *data_send, Element *data_recv, size_t const count) const
   {
     // have to wait until all calculations are finished
-    d_grid.grid().Barrier();
+    d_grid->grid().Barrier();
 
     // call MPI::Intracomm::Allreduce(...)
-    (d_grid.grid()).Allreduce(data_send, data_recv, count * sizeof(Element), MPI::BYTE, MPI::SUM);
+    (d_grid->grid()).Allreduce(data_send, data_recv, count * sizeof(Element), MPI::BYTE, MPI::SUM);
   }
 
   inline void Weave::allReduce(std::complex< double > const *data_send, std::complex< double > *data_recv, size_t const count) const
   {
     // have to wait until all calculations are finished
-    d_grid.grid().Barrier();
+    d_grid->grid().Barrier();
 
     // call MPI::Intracomm::Allreduce(...)
-    (d_grid.grid()).Allreduce(data_send, data_recv, count, MPI::DOUBLE_COMPLEX, MPI::SUM);
+    (d_grid->grid()).Allreduce(data_send, data_recv, count, MPI::DOUBLE_COMPLEX, MPI::SUM);
   }
 
   inline void Weave::allReduce(double const *data_send, double *data_recv, size_t const count) const
   {
     // have to wait until all calculations are finished
-    d_grid.grid().Barrier();
+    d_grid->grid().Barrier();
 
     // call MPI::Intracomm::Allreduce(...)
-    (d_grid.grid()).Allreduce(data_send, data_recv, count, MPI::DOUBLE, MPI::SUM);
+    (d_grid->grid()).Allreduce(data_send, data_recv, count, MPI::DOUBLE, MPI::SUM);
   }
 
   inline size_t Weave::rank() const
   {
-    return d_grid.rank();
+    return d_grid->rank();
   }
 
   inline size_t Weave::rank(size_t index) const
   {
-    return d_grid.rank(index);
+    return d_grid->rank(index);
   }
 }

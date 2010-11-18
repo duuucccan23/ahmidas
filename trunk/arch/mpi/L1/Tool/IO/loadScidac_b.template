@@ -2,91 +2,94 @@ template< typename Element >
 void Tool::IO::loadScidac(Core::Field< Element > *field, std::string const &filename, size_t const precision)
 {
   assert(precision == 32 || precision == 64);
+
   Base::Weave weave(field->L(), field->T());
 
-  (weave.d_grid.grid()).Barrier();
+  weave.barrier();
 
-  if (weave.dim(Base::idx_X) > 1 ||
-      weave.dim(Base::idx_Y) > 1 ||
-      weave.dim(Base::idx_Z) > 1)
-  {
-    std::cerr << "parallel reading does not work for parallalization in spatial directions" << std::endl;
-    exit(1);
-  }
+  // int nprocs((weave.d_grid->grid()).Get_size());
+  int rank((weave.d_grid->grid()).Get_rank());
+  int const root_rank(0);
 
-  int nprocs((weave.d_grid.grid()).Get_size());
-  int rank((weave.d_grid.grid()).Get_rank());
 
-  assert (nprocs == int(weave.dim(Base::idx_T)));
+  size_t globalDimSize[4];
+  globalDimSize[Base::idx_T] = field->L()*field->L()*field->L();
+  globalDimSize[Base::idx_Z] = field->L()*field->L();
+  globalDimSize[Base::idx_Y] = field->L();
+  globalDimSize[Base::idx_X] = 1;
 
-  unsigned long elem_offset(weave.globalVolume());
+
+  size_t const *coords = weave.d_grid->coords();
+
+  unsigned long elem_offset(0);
 
   // each node has to find his own offset
-  for (size_t my_offset = 0; my_offset < weave.globalVolume();
-       my_offset += weave.localVolume())
+  for (size_t idx = 0; idx < 4; idx++)
   {
-    //if (rank == 0)
-    //  std::cout << "rank(" << my_offset << ") = " << weave.d_grid.rank(my_offset) << std::endl;
-    if ((unsigned int)(rank) == weave.d_grid.rank(my_offset))
-    {
-      elem_offset = (unsigned long)(my_offset);
-      break;
-    }
+    // offset in each dimension is the process' coordinate index times the
+    // global size of (one "slice" of) this direction times the local size in this direction
+    elem_offset += coords[idx] * globalDimSize[idx] * ((weave.d_grid)->size(idx));
   }
+
   assert(elem_offset < weave.globalVolume());
 
+  weave.barrier();
 
-  Lime::Reader reader(filename);
 
+  Lime::Reader reader(&weave, filename);
+  if(!reader.good())
+  {
+    if(weave.isRoot())
+      std::cerr << "Error occured trying to open file: " << filename << std::endl;
+  }
+  assert(reader.good());
+
+  uint64_t record_offset(0);
 
   // since this is causing problems in massive parallelization, the following block is
   // processed serially
-  for (int irank=0; irank<nprocs; irank++)
+  if (rank == root_rank)
   {
-    if (rank == irank)
+    record_offset = reader.retrieveRecord(reader.findRecord("scidac-binary-data"));
+    if (reader.fail())
     {
-      reader.retrieveRecord(reader.findRecord("scidac-binary-data"));
-      if (reader.fail())
-      {
-        std::cerr << "Lime reader could not find the record, check path and file, and check lime contents of file.\nField unchanged!.\n";
-        exit(EXIT_FAILURE);
-        return;
-      }
-      assert(reader.good());
-
-      //go to position from which the data is supposed to be read
-      if (precision == 64)
-        reader.seekg(elem_offset*sizeof(Element), reader.findRecord("scidac-binary-data"));
-      else
-        reader.seekg(elem_offset*sizeof(Element)/2, reader.findRecord("scidac-binary-data"));
+      std::cerr << "Lime reader could not find the record, check path and file, and check lime contents of file.\nField unchanged!.\n";
+      exit(EXIT_FAILURE);
+      return;
     }
-    (weave.d_grid.grid()).Barrier();
+    assert(reader.good());
   }
+  weave.barrier();
 
-  assert(reader.good());
+  weave.broadcast(&record_offset, 1, root_rank);
 
-  Element *dataPtr = field->raw(); //Starting memory address of the field.
+  assert(precision > 0 && record_offset > 0 );
+
+  size_t const elementSize = sizeof(Element) / sizeof(double);
+  size_t const fieldSize = elementSize * weave.localVolume();
+
+  Element * dataPtr = field->raw();
 
   if (precision == 64)
   {
-    reader.read(dataPtr, field->size());
-    if (!Base::bigEndian)
-      Base::swapEndian(dataPtr, dataPtr + field->size(), sizeof(double));
-
-    return;
+      reader.read_collective64(dataPtr, weave.localVolume(), record_offset);
+      if (!Base::bigEndian)
+        Base::swapEndian(reinterpret_cast< double * >(dataPtr),
+                         reinterpret_cast< double * >(dataPtr) + fieldSize,
+                         sizeof(double));
   }
-
-  size_t const elSize = sizeof(Element) / sizeof(double);
-  uint32_t elem32[elSize];
-
-  for (size_t ctr = 0; ctr < field->size(); ++ctr, ++dataPtr)
+  else //precision can only be 32 at this point
   {
-    reader.read(elem32, elSize);
+    uint32_t *elem32 = new uint32_t[fieldSize];
+    reader.read_collective64(reinterpret_cast< Element * >(elem32), weave.localVolume(), record_offset);
     if (!Base::bigEndian)
-      Base::swapEndian(elem32, elem32 + elSize);
-    std::copy(reinterpret_cast< float* >(elem32), reinterpret_cast< float* >(elem32) + elSize,
+      Base::swapEndian(elem32, elem32 + fieldSize);
+    std::copy(reinterpret_cast< float * >(elem32),
+              reinterpret_cast< float * >(elem32) + fieldSize,
               reinterpret_cast< double* >(dataPtr));
+    delete [] elem32;
   }
 
-  (weave.d_grid.grid()).Barrier();
+
+  weave.barrier();
 }

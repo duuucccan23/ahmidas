@@ -20,11 +20,17 @@ namespace Base
     size_t  d_localVolume;
     size_t  d_globalVolume;
 
+    static void * s_grid;
+    static size_t s_grid_ref;
+    static bool s_firstInstance;
+
     public:
-      Grid d_grid;
+
+      Grid * d_grid;
 
       Weave(size_t const L, size_t const T);
       Weave(Weave const &other);
+      ~Weave();
       Weave &operator=(Weave const &other);
 
       size_t L() const;

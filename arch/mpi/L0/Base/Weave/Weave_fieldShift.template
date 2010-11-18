@@ -11,7 +11,7 @@ void Base::Weave::fieldShift(Base::SpaceTimeIndex const idx, Base::Direction con
 
   // Set up arrays for the MPI subarray
   int sizes[4];
-  std::copy(d_grid.sizes(), d_grid.sizes() + 4, sizes);
+  std::copy(d_grid->sizes(), d_grid->sizes() + 4, sizes);
 
   int subsizes[4];
   std::copy(sizes, sizes + 4, subsizes);
@@ -59,12 +59,12 @@ void Base::Weave::fieldShift(Base::SpaceTimeIndex const idx, Base::Direction con
 
   int source_rank, dest_rank;
   // The MPI cartesian communicator tells us where to send the data and from where to recieve
-  (d_grid.grid()).Shift(idx, dir, source_rank, dest_rank);
+  (d_grid->grid()).Shift(idx, dir, source_rank, dest_rank);
 
 //   std::cout << "rank " << rank() << " is sending to rank " << dest_rank << " and recieving from rank " << source_rank << std::endl;
 
   // Send the data indicated by the subarray to our neighbours
-  (d_grid.grid()).Sendrecv_replace(field, 1, surface,
+  (d_grid->grid()).Sendrecv_replace(field, 1, surface,
                                    // send own data in direction, recieve data from opposite direction
                                    dest_rank, 1 /* sendtag */, source_rank,  1 /* recvtag */);
 

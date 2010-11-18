@@ -28,6 +28,17 @@
 #include <L0/Base/Base.h>
 #include <L0/Base/Weave.h>
 
+namespace Tool
+{
+  namespace IO
+  {
+    namespace Lime
+    {
+      class Writer;
+    }
+  }
+}
+
 namespace Core
 {
   template< typename Element, typename Atom >
@@ -42,6 +53,9 @@ namespace Core
   template< typename Element >
   class Field
   {
+
+    friend class Tool::IO::Lime::Writer;
+
     size_t                *d_references;
 
     Base::Weave            d_weave;

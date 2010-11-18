@@ -46,7 +46,7 @@ namespace Tool
 
         private:
 
-          Base::Weave    *d_weave;
+          Base::Weave   *d_weave;
           MPI::File      d_MPI_FILE;
           MPI::Offset    d_startOfNextRecord;
           MPI::Status    d_MPI_Status;

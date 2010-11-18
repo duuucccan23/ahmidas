@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<ahmidas>
+  <params>
+    <L> 32 </L>
+    <T> 64 </T>
+    <!-- position of point source (x,y,z,t) -->
+    <position> XXX </position>
+    <sourceSinkSeparation> XXXX </sourceSinkSeparation>
+    <kappa> 0.10 </kappa>
+    <mu> 0.10 </mu>
+    <APE_steps>  20  </APE_steps>
+    <APE_param>  0.5 </APE_param>
+    <Jac_steps>  50   </Jac_steps>
+    <Jac_param>  4.0 </Jac_param>
+  </params>
+  <files>
+    <!-- u and d quark propagators -->
+    <file>
+      <type>propagator</type>
+      <directory>./d_propagators/</directory>
+      <filenameBase>source.</filenameBase>
+      <filenameEnding>.inverted</filenameEnding>
+      <firstIndex>0</firstIndex>
+      <lastIndex>11</lastIndex>
+      <indexWidth>2</indexWidth>
+    </file>
+    <file>
+      <type>propagator</type>
+      <directory>./u_propagators</directory>
+      <filenameBase>source.</filenameBase>
+      <filenameEnding>.inverted</filenameEnding>
+      <firstIndex>0</firstIndex>
+      <lastIndex>11</lastIndex>
+      <indexWidth>2</indexWidth>
+    </file>
+    <!-- gauge field -->
+    <file>
+      <type>gauge</type>
+      <directory>..</directory>
+      <filenameBase>conf.</filenameBase>
+      <firstIndex>9999</firstIndex>
+      <lastIndex>9999</lastIndex>
+      <indexWidth>4</indexWidth>
+    </file>
+  </files>
+</ahmidas>

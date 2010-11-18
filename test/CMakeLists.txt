@@ -19,7 +19,7 @@ TARGET_LINK_LIBRARIES(field_shift SU3 QCD Base Core Weave)
 ADD_TEST(field_shift_test field_shift)
 
 ADD_EXECUTABLE(limereader limereader.cpp)
-TARGET_LINK_LIBRARIES(limereader Lime Base)
+TARGET_LINK_LIBRARIES(limereader Lime Base Weave)
 ADD_TEST(limereader_read_in limereader ../../test/conf.88)
 
 ADD_EXECUTABLE(readFile readFile.cpp)
@@ -76,7 +76,7 @@ ENDIF(EIGEN3_FOUND)
 # this is not made a test yet because it is unclear
 # if the lattice can be distributed to the number of processes specified
 ADD_EXECUTABLE(testIO testIO.cpp)
-TARGET_LINK_LIBRARIES(testIO IO Base Core Weave)
+TARGET_LINK_LIBRARIES(testIO IO Base Core Weave Ahmidas)
 
 # ADD_EXECUTABLE(proton_3point_sequential proton_3point_sequential.cpp)
 # TARGET_LINK_LIBRARIES(proton_3point_sequential SU3 QCD IO Base Core Weave Contract)

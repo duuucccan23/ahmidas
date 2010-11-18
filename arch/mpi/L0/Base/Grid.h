@@ -13,21 +13,6 @@ namespace Base
 {
   class Grid
   {
-    class MPIAgent
-    {
-      friend class Base::Grid;
-
-      MPIAgent(); // Protected constructor
-      public:
-      // This is a dummy member which helps enforcing
-      // intialization of static member Grid::s_agent.
-      // It is needed since compilers most likely optimize it away,
-      // even though it is crucial for initializing and finalizing MPI.
-      int val;
-      ~MPIAgent();
-    };
-
-    static MPIAgent s_agent;
 
     MPI::Cartcomm d_grid;
     MPI::Cartcomm d_timeSlice;
@@ -48,8 +33,8 @@ namespace Base
     bool d_bigEndian;
 
     public:
-      ~Grid(); //Public "destructor" for now
       Grid(size_t L, size_t T);
+      ~Grid(); //Public "destructor" for now
 
       MPI::Cartcomm const &grid() const; //NOTE: world? AD: No, Cartesian communicator with content of world...
       MPI::Cartcomm &timeSlice();
@@ -83,6 +68,9 @@ namespace Base
       size_t contiguousBlock() const;
 
       bool bigEndian() const;
+
+      size_t T() const;
+      size_t L() const;
 
     private:
       void initContiguousBlock();

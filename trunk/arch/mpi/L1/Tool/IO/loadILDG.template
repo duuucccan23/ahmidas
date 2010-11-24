@@ -55,7 +55,7 @@ void Tool::IO::loadILDG(Core::Field< Element > *field, std::string const &filena
       precision = 32;
     else
     {
-      std::cerr << "No appropriate precision given in the.\n";
+      std::cerr << "No appropriate precision given in the lime header.\n";
       exit(EXIT_FAILURE);
     }
 
@@ -68,6 +68,7 @@ void Tool::IO::loadILDG(Core::Field< Element > *field, std::string const &filena
     }
     assert(reader.good());
   }
+  
   weave.barrier();
 
 
@@ -83,6 +84,7 @@ void Tool::IO::loadILDG(Core::Field< Element > *field, std::string const &filena
 
   Element * dataPtr = field->raw();
 
+
   if (precision == 64)
   {
       reader.read_collective64(dataPtr, weave.localVolume(), record_offset);
@@ -94,7 +96,7 @@ void Tool::IO::loadILDG(Core::Field< Element > *field, std::string const &filena
   else //precision can only be 32 at this point
   {
     uint32_t *elem32 = new uint32_t[fieldSize];
-    reader.read_collective64(reinterpret_cast< Element * >(elem32), weave.localVolume(), record_offset);
+    reader.read_collective32(reinterpret_cast< Element * >(elem32), weave.localVolume(), record_offset);
     if (!Base::bigEndian)
       Base::swapEndian(elem32, elem32 + fieldSize);
     std::copy(reinterpret_cast< float * >(elem32),

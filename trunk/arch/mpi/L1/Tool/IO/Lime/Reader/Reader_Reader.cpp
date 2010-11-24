@@ -8,15 +8,19 @@ Tool::IO::Lime::Reader::Reader(Base::Weave * weave, std::string const &filename)
   int32_t message = -1;
   bool messageOpened = true;
 
-  d_MPI_FILE = MPI::File::Open(d_weave->d_grid->grid(), filename.c_str(),
+  //std::cout << "opening file ..." << std::endl; 
+  d_MPI_FILE = MPI::File::Open(d_weave->d_grid->grid(), d_filename.c_str(),
                                MPI::MODE_RDONLY, MPI::INFO_NULL);
 
+  //std::cout << "done." << std::endl; 
   if (d_weave->rank() == 0)
   {
+    MPI::Offset file_size = d_MPI_FILE.Get_size();
+    MPI::Offset current_position = 0;
     while (good())
     {
       d_MPI_FILE.Read(header.as8, s_headerSize, MPI_BYTE, d_MPI_STATUS);
-
+  
       if (!Base::bigEndian)
         Base::swapEndian(header.as32[0]);
 
@@ -54,8 +58,13 @@ Tool::IO::Lime::Reader::Reader(Base::Weave * weave, std::string const &filename)
 
       d_types.push_back(std::string(&header.as8[16]));
 
-      d_offsets.push_back(d_MPI_FILE.Get_position());
-      d_MPI_FILE.Seek(((d_sizes.back() + 7) / 8) * 8 , MPI_SEEK_CUR);
+      current_position = d_MPI_FILE.Get_position();
+      d_offsets.push_back(current_position);
+
+      if(file_size > current_position + MPI::Offset(((d_sizes.back() + 7) / 8) * 8))
+        d_MPI_FILE.Seek(((d_sizes.back() + 7) / 8) * 8 , MPI_SEEK_CUR);
+      else
+        break;
     }
     if (!d_offsets.empty())
     {
@@ -64,5 +73,6 @@ Tool::IO::Lime::Reader::Reader(Base::Weave * weave, std::string const &filename)
       d_MPI_FILE.Seek(d_offsets.front(), MPI_SEEK_SET);
     }
   }
+  
   d_weave->barrier();
 }

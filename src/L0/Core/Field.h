@@ -137,6 +137,7 @@ namespace Core
       size_t size() const;
       size_t spatialSize() const; // (for looping over a single timeslice)
       void isolate();
+      void clear();
       void refCountUp();
       void destroy();
       void fill(Element const &element); // Flush a field with a constant quantity
@@ -179,5 +180,6 @@ namespace Core
 #include "Field/Field_shift.template"
 #include "Field/Field_isolate.template"
 #include "Field/Field.operators.templates"
+#include "Field/Field_clear.template"
 
 #include "Field/hcField.inlines"

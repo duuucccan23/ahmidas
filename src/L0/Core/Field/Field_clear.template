@@ -1,0 +1,6 @@
+template< typename Element >
+void Core::Field< Element >::clear()
+{
+  isolate();
+  std::fill(d_offsets, d_offsets + 4, 0);
+}

@@ -42,6 +42,11 @@ namespace Base
       size_t localSize(Base::SpaceTimeIndex idx) const;
       size_t globalVolume() const;
 
+      MPI::Cartcomm const &grid()
+      {
+	return d_grid->grid();
+      }
+
       size_t rank() const;
       size_t rank(size_t index) const; // rank of the node holding the lattice site with index index
       size_t rank(size_t const *coords) const; // rank of the node with site coordinates coords

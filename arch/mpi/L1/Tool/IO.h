@@ -1,6 +1,16 @@
 #pragma once
 
 #include <string>
+#include <cstring>
+
+#include <lemon.h>
+#include <mpi.h>
+
+#include <L0/Core/Field.h>
+#include <L0/QCD/Spinor.h>
+
+
+#include <string>
 #include <vector>
 #include <iostream>
 #include <fstream>
@@ -33,16 +43,31 @@ namespace Tool
       ILDGinfo(Lime::Reader &reader);
     };
 
-    struct Scidacinfo
+    struct ScidacInfo
     {
       std::string field;
       std::string precision;
       std::string flavours;
       size_t      dims[4];
-
-      Scidacinfo(Lime::Reader &reader);
     };
 
+    ScidacInfo parseScidacInfo(char *scidacCStr);
+
+    //* LEMON VERSIONS *//
+    void loadPropagator(Core::Field< QCD::Spinor > &field, std::string const &filename);
+    void loadPropagator(Core::Field< QCD::Spinor > *field, size_t amount, std::string const &filename);
+    void loadScidacInfo(LemonReader *reader, ScidacInfo &info);
+    void savePropagator(Core::Field< QCD::Spinor > const &field, std::string const &filename);
+    void savePropagatorInfo(LemonWriter *writer, size_t L, size_t T);
+    void savePropagatorType(LemonWriter *writer);
+
+    template< typename Element >
+    void loadScidacBinary(LemonReader *reader, Core::Field< Element > &field, ScidacInfo const &info);
+
+    template< typename Element >
+    void saveScidacBinary(LemonWriter *writer, Core::Field< Element > const &field);
+
+    //* NON-LEMON VERSIONS *//
     void load(Core::Field< QCD::Gauge >  *field, std::string const &filename, Tool::IO::filetype);
     void load(Core::Field< QCD::Spinor > *field, std::string const &filename, Tool::IO::filetype);
     void load(Core::Field< QCD::Spinor > *field, std::string const &filename, Tool::IO::filetype, size_t const precision);
@@ -108,3 +133,7 @@ namespace Tool
 #include "IO/loadILDG.template"
 #include "IO/saveScidac.template"
 #include "IO/saveILDG.template"
+
+//* LEMON VARIETIES *//
+#include "IO/loadScidacBinary.template"
+#include "IO/saveScidacBinary.template"

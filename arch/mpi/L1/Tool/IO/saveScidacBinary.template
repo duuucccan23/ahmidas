@@ -1,0 +1,22 @@
+template< typename Element >
+void Tool::IO::saveScidacBinary(LemonWriter *writer, Core::Field< Element > const &field)
+{
+  size_t slen = field.volume() * sizeof(Element);
+  LemonRecordHeader *header = lemonCreateHeader(1, 1, "scidac-binary-data", slen);
+  lemonWriteRecordHeader(header, writer);
+  lemonDestroyHeader(header);
+
+  Base::Weave weave(field.L(), field.T());
+
+  Element *buffer = new Element[field.localVolume()];
+  for (size_t idx = 0; idx < field.localVolume(); ++idx)
+    buffer[idx] = field.constPhysicalIndex(idx);
+  if (!Base::bigEndian)
+    Base::swapEndian(buffer, buffer + sizeof(Element) * field.localVolume(), 8);
+
+  int dims[] = {field.L(), field.L(), field.L(), field.T()};
+  lemonWriteLatticeParallel(writer, buffer, sizeof(Element), dims);
+
+  delete [] buffer;
+  lemonWriterCloseRecord(writer);
+}

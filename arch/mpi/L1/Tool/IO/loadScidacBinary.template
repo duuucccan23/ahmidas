@@ -1,0 +1,26 @@
+template< typename Element >
+void Tool::IO::loadScidacBinary(LemonReader *reader, Core::Field< Element > &field, Tool::IO::ScidacInfo const &info)
+{
+  field.clear();
+
+  int dims[] = {info.dims[0], info.dims[1], info.dims[2], info.dims[3]};
+
+  uint64_t nbytes = lemonReaderBytes(reader);
+  if (info.precision == "64")
+  {
+    char *fieldBuf = reinterpret_cast< char* >(field.raw());
+    lemonReadLatticeParallel(reader, fieldBuf, sizeof(Element), dims);
+    if (!Base::bigEndian)
+      Base::swapEndian(fieldBuf, fieldBuf + sizeof(Element) * field.localVolume(), 8);
+    lemonReaderCloseRecord(reader);
+    return;
+  }
+
+  size_t elemSize = (sizeof(Element) / 2);
+  char *buffer = new char[elemSize * field.localVolume()];
+  lemonReadLatticeParallel(reader, buffer, elemSize, dims);
+  if (!Base::bigEndian)
+    Base::swapEndian(buffer, buffer + elemSize * field.localVolume(), 4);
+  std::copy(reinterpret_cast< float* >(buffer), reinterpret_cast< float* >(buffer) + (sizeof(Element) / sizeof(double)) * field.localVolume(), reinterpret_cast< double* >(field.raw()));
+  delete[] buffer;
+}

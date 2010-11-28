@@ -48,7 +48,7 @@ void Tool::IO::loadScidac(Core::Field< Element > *field, std::string const &file
   // processed serially
   if (rank == root_rank)
   {
-    Scidacinfo info(reader);
+    ScidacInfo info(reader);
     if (info.precision.compare("64") == 0)
       precision = 64;
     else if (info.precision.compare("32") == 0)

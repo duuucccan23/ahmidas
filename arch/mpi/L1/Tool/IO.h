@@ -49,6 +49,8 @@ namespace Tool
       std::string precision;
       std::string flavours;
       size_t      dims[4];
+
+      ScidacInfo(Lime::Reader &reader);
     };
 
     ScidacInfo parseScidacInfo(char *scidacCStr);

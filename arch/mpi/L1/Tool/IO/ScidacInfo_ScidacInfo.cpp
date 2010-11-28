@@ -1,4 +1,4 @@
-#include <L1/Tool/IO.h>
+#include "Scidacinfo.ih"
 
 inline char *realFront(char *string)
 {
@@ -10,17 +10,19 @@ inline size_t realLen(char *string)
   return std::strcspn(realFront(string), " \t");
 }
 
-/***/
-
-Tool::IO::ScidacInfo Tool::IO::parseScidacInfo(char *scidacCStr)
+Tool::IO::ScidacInfo::ScidacInfo(Tool::IO::Lime::Reader &reader)
 {
-  ScidacInfo result;
+  reader.retrieveRecord(reader.findRecord("etmc-propagator-format"));
+  assert(reader.good());
+
+  char *scidacCStr = new char[reader.recordSize()];
+  reader.read(scidacCStr, reader.recordSize());
 
   // We use the C tokenize capabilities to parse this string
   char *pch;
   pch = std::strtok(scidacCStr, "<>");
   if (std::strncmp(pch, "?xml", 4))
-    return ScidacInfo();
+    return;
 
   // We've removed the XML header, now we can set up a state machine to parse the file
   while ((pch = std::strtok(0, "<>")))
@@ -38,7 +40,7 @@ Tool::IO::ScidacInfo Tool::IO::parseScidacInfo(char *scidacCStr)
         {
           if (!std::strncmp(pch, "/field", 6))
             break;
-          result.field.assign(realFront(pch), realLen(pch));
+          field.assign(realFront(pch), realLen(pch));
         }
         continue;
       }
@@ -48,7 +50,7 @@ Tool::IO::ScidacInfo Tool::IO::parseScidacInfo(char *scidacCStr)
         {
           if (!std::strncmp(pch, "/precision", 10))
             break;
-          result.precision.assign(realFront(pch), realLen(pch));
+          precision.assign(realFront(pch), realLen(pch));
         }
         continue;
       }
@@ -58,7 +60,7 @@ Tool::IO::ScidacInfo Tool::IO::parseScidacInfo(char *scidacCStr)
         {
           if (!std::strncmp(pch, "/flavours", 9))
             break;
-          result.flavours.assign(realFront(pch), realLen(pch));
+          flavours.assign(realFront(pch), realLen(pch));
         }
         continue;
       }
@@ -68,7 +70,7 @@ Tool::IO::ScidacInfo Tool::IO::parseScidacInfo(char *scidacCStr)
         {
           if (!std::strncmp(pch, "/lx", 3))
             break;
-          result.dims[Base::idx_X] = atoi(realFront(pch));
+          dims[Base::idx_X] = atoi(realFront(pch));
         }
         continue;
       }
@@ -78,7 +80,7 @@ Tool::IO::ScidacInfo Tool::IO::parseScidacInfo(char *scidacCStr)
         {
           if (!std::strncmp(pch, "/ly", 3))
             break;
-          result.dims[Base::idx_Y] = atoi(realFront(pch));
+          dims[Base::idx_Y] = atoi(realFront(pch));
         }
         continue;
       }
@@ -88,7 +90,7 @@ Tool::IO::ScidacInfo Tool::IO::parseScidacInfo(char *scidacCStr)
         {
           if (!std::strncmp(pch, "/lz", 3))
             break;
-          result.dims[Base::idx_Z] = atoi(realFront(pch));
+          dims[Base::idx_Z] = atoi(realFront(pch));
         }
         continue;
       }
@@ -98,12 +100,12 @@ Tool::IO::ScidacInfo Tool::IO::parseScidacInfo(char *scidacCStr)
         {
           if (!std::strncmp(pch, "/lt", 3))
             break;
-          result.dims[Base::idx_T] = atoi(realFront(pch));
+          dims[Base::idx_T] = atoi(realFront(pch));
         }
         continue;
       }
     }
     break;
   }
-  return result;
+  delete[] scidacCStr;
 }

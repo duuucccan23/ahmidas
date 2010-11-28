@@ -1,0 +1,209 @@
+namespace Tool
+{
+  namespace IO
+  {
+    namespace Lime
+    {
+
+      inline Reader::~Reader()
+      {
+        d_MPI_FILE.Close();
+      }
+
+      // this is a non-collective reading, so only one node should do it
+      template< typename DataType >
+      inline void Reader::read(DataType *buffer, uint64_t const elements)
+      {
+        assert(d_weave->rank() == 0);
+        d_MPI_FILE.Read(reinterpret_cast< void * >(buffer), elements * sizeof(DataType), MPI::BYTE);
+      }
+
+      template< typename DataType >
+      inline void Reader::read_collective64(DataType *buffer, uint64_t const count, uint64_t const byte_offset)
+      {
+        // not needed here
+        MPI::Offset start_at(byte_offset);
+
+        int sizes[4];
+        sizes[Base::idx_X] = sizes[Base::idx_Y] = sizes[Base::idx_Z] = d_weave->L();
+        sizes[Base::idx_T] = d_weave->T();
+
+        int subsizes[4];
+        std::copy(d_weave->d_grid->sizes(), d_weave->d_grid->sizes() + 4, subsizes);
+
+        int starts[4];
+        for(size_t i = 0; i < 4; i++)
+          starts[i] = d_weave->d_grid->coord(i)*subsizes[i];
+
+        MPI::Datatype my_etype(MPI::BYTE.Create_contiguous(sizeof(DataType)));
+        my_etype.Commit();
+
+        MPI::Datatype my_filetype(my_etype.Create_subarray(4, sizes, subsizes, starts, MPI::ORDER_FORTRAN));
+        my_filetype.Commit();
+
+        //d_MPI_FILE.Sync();
+
+        d_MPI_FILE.Set_view(start_at,
+                            my_etype, my_filetype, "native", MPI::INFO_NULL);
+
+        d_MPI_FILE.Read_all(buffer, count, my_etype, d_MPI_STATUS);
+
+        assert(good());
+      }
+
+      template< typename DataType >
+      inline void Reader::read_collective32(DataType *buffer, uint64_t const count, uint64_t const byte_offset)
+      {
+        // not needed here
+        MPI::Offset start_at(byte_offset);
+
+        int sizes[4];
+        sizes[Base::idx_X] = sizes[Base::idx_Y] = sizes[Base::idx_Z] = d_weave->L();
+        sizes[Base::idx_T] = d_weave->T();
+
+        int subsizes[4];
+        std::copy(d_weave->d_grid->sizes(), d_weave->d_grid->sizes() + 4, subsizes);
+
+        int starts[4];
+        for(size_t i = 0; i < 4; i++)
+          starts[i] = d_weave->d_grid->coord(i)*subsizes[i];
+
+        MPI::Datatype my_etype(MPI::BYTE.Create_contiguous(sizeof(DataType)/2));
+        my_etype.Commit();
+
+        MPI::Datatype my_filetype(my_etype.Create_subarray(4, sizes, subsizes, starts, MPI::ORDER_FORTRAN));
+        my_filetype.Commit();
+
+        //d_MPI_FILE.Sync();
+
+        d_MPI_FILE.Set_view(start_at,
+                            my_etype, my_filetype, "native", MPI::INFO_NULL);
+
+        d_MPI_FILE.Read_all(buffer, count, my_etype, d_MPI_STATUS);
+
+        assert(good());
+      }
+
+      inline uint64_t Reader::retrieveRecord(size_t const record)
+      {
+        assert(d_weave->rank()==0);
+        if (record >= d_types.end() - d_types.begin())
+        {
+           d_fail = true; //Record does not exist
+           return 0;
+        }
+        d_currentRecord = record;
+        d_MPI_FILE.Seek(d_offsets[d_currentRecord], MPI_SEEK_SET);
+        return uint64_t(d_offsets[d_currentRecord]);
+      }
+
+      inline uint64_t Reader::retrieveMessageAndRecord(size_t const message, size_t const record)
+      {
+        assert(d_weave->rank()==0);
+        size_t const idx = std::find(d_messages.begin(), d_messages.end(), message) - d_messages.begin();
+        d_MPI_FILE.Seek(d_offsets[d_currentRecord = (idx + record)],  MPI_SEEK_SET);
+        return uint64_t(d_offsets[d_currentRecord]);
+      }
+
+      inline void Reader::nextRecord()
+      {
+        assert(d_weave->rank()==0);
+        d_MPI_FILE.Seek(d_offsets[++d_currentRecord], MPI_SEEK_SET);
+      }
+
+      inline void Reader::previousRecord()
+      {
+        assert(d_weave->rank()==0);
+        d_MPI_FILE.Seek(d_offsets[--d_currentRecord], MPI_SEEK_SET);
+      }
+
+      inline std::string const &Reader::filename() const
+      {
+        return d_filename;
+      }
+
+      inline size_t Reader::records() const
+      {
+        assert(d_weave->rank()==0);
+        return d_messages.size();
+      }
+
+      inline size_t Reader::messages() const
+      {
+        assert(d_weave->rank()==0);
+        return d_messages.back() + 1;
+      }
+
+      inline size_t Reader::currentRecord() const
+      {
+        assert(d_weave->rank()==0);
+        return d_currentRecord;
+      }
+
+      inline size_t Reader::currentMessage() const
+      {
+        assert(d_weave->rank()==0);
+        return d_messages[d_currentRecord];
+      }
+
+      inline size_t Reader::recordSize() const
+      {
+        assert(d_weave->rank()==0);
+        return d_sizes[d_currentRecord];
+      }
+
+      inline size_t Reader::findRecord(std::string const &type) const
+      {
+        assert(d_weave->rank()==0);
+        return std::find(d_types.begin(), d_types.end(), type) - d_types.begin();
+      }
+
+      inline std::string const &Reader::type() const
+      {
+        assert(d_weave->rank()==0);
+        return d_types[d_currentRecord];
+      }
+
+      inline int16_t const &Reader::version() const
+      {
+        assert(d_weave->rank()==0);
+        return d_versions[d_currentRecord];
+      }
+
+      inline bool Reader::messagesCorrect() const
+      {
+        assert(d_weave->rank()==0);
+        return d_messagesCorrect;
+      }
+
+      inline MPI::Offset Reader::tellg() const
+      {
+        assert(d_weave->rank()==0);
+        return (d_MPI_FILE.Get_position() - d_offsets[d_currentRecord]);
+      }
+
+      inline void Reader::seekg(MPI::Offset const offset, size_t const record)
+      {
+        assert(d_weave->rank()==0);
+        d_MPI_FILE.Seek(d_offsets[record] + offset, MPI_SEEK_SET);
+      }
+
+      inline void Reader::reset_view()
+      {
+        d_MPI_FILE.Sync();
+        d_MPI_FILE.Set_view(0, MPI::BYTE, MPI::BYTE, "native", MPI::INFO_NULL);
+      }
+
+      inline bool Reader::fail() const
+      {
+        return (d_MPI_STATUS.Get_error() != 0) || d_fail;;
+      }
+
+      inline bool Reader::good() const
+      {
+        return (d_MPI_STATUS.Get_error() == 0) && !d_fail;
+      }
+
+    }
+  }
+}

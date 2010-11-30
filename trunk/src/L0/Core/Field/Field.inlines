@@ -100,6 +100,13 @@ namespace Core
   }
 
   template< typename Element >
+  template< typename Atom >
+  inline Component< Element, Atom > const Field< Element >::component(size_t const idx) const
+  {
+    return Component< Element, Atom >(*const_cast< Field< Element > *>(this), idx); // Terrible, but hopefully safe hack...
+  }
+
+  template< typename Element >
   inline Element &Field< Element >::operator[](size_t const idx)
   {
     isolate();

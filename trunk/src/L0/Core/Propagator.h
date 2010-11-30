@@ -10,7 +10,7 @@
 namespace Core
 {
   /* a propagator is a tensorial stucture with 2 Dirac and 2 Colour indices,
-     each for source and sink, respectively, for all lattice sites 
+     each for source and sink, respectively, for all lattice sites
      (being sink locations for a constant source)
      maybe at some point we should include the source properties, in whatever format,
      as a member variable
@@ -39,7 +39,6 @@ namespace Core
       Propagator(Propagator const &other);
       ~Propagator();
 
-
       // return entry at particular lattice site, corresponding to the propagator sink
       // for parallelization reasons this does not return a reference
       QCD::Tensor operator()(size_t const* sinkSite) const;
@@ -47,6 +46,16 @@ namespace Core
       // unsafe access of Field elements
       QCD::Tensor       &operator[](size_t const localIndex);
       QCD::Tensor const &operator[](size_t const localIndex) const;
+
+      Core::Field< QCD::Tensor > &components() // inline hack for I/O -- make proper at some point
+      {
+	return *d_components;
+      }
+
+      Core::Field< QCD::Tensor > const &components() const // inline hack for I/O -- make proper at some point
+      {
+	return *d_components;
+      }
 
       Propagator &operator=(Propagator const &rhs);
 

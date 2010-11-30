@@ -16,6 +16,7 @@
 #include <fstream>
 #include <L0/Base/Weave.h>
 #include <L0/Core/Field.h>
+#include <L0/Core/Component.h>
 #include <L0/Core/Propagator.h>
 #include <L1/Tool.h>
 #include <L1/Tool/IO/Lime/Reader.h>
@@ -50,16 +51,22 @@ namespace Tool
       std::string flavours;
       size_t      dims[4];
 
+      ScidacInfo()
+      {
+	std::fill(dims, dims + 4, 0);
+      }
       ScidacInfo(Lime::Reader &reader);
     };
 
     ScidacInfo parseScidacInfo(char *scidacCStr);
 
     //* LEMON VERSIONS *//
-    void loadPropagator(Core::Field< QCD::Spinor > &field, std::string const &filename);
-    void loadPropagator(Core::Field< QCD::Spinor > *field, size_t amount, std::string const &filename);
+    void loadPropagator(Core::Field< QCD::Tensor > &field, std::string const &filename);
+    void loadPropagator(Core::Field< QCD::Tensor > *field, size_t amount, std::string const &filename);
     void loadScidacInfo(LemonReader *reader, ScidacInfo &info);
-    void savePropagator(Core::Field< QCD::Spinor > const &field, std::string const &filename);
+    void savePropagator(Core::Propagator const &prop, std::vector< std::string > const &filename);
+    void savePropagator(Core::StochasticPropagator< 4 > const &prop, std::vector< std::string > const &filename);
+    void savePropagator(Core::StochasticPropagator< 1 > const &prop, std::vector< std::string > const &filename);
     void savePropagatorInfo(LemonWriter *writer, size_t L, size_t T);
     void savePropagatorType(LemonWriter *writer);
 
@@ -68,6 +75,9 @@ namespace Tool
 
     template< typename Element >
     void saveScidacBinary(LemonWriter *writer, Core::Field< Element > const &field);
+
+    template< typename Element >
+    void saveScidacBinary(LemonWriter *writer, Element *buffer, size_t volume, int *dims);
 
     //* NON-LEMON VERSIONS *//
     void load(Core::Field< QCD::Gauge >  *field, std::string const &filename, Tool::IO::filetype);
@@ -86,7 +96,7 @@ namespace Tool
     void load(Core::StochasticPropagator< 4 > *sPropagator, std::vector< std::string > const &filenames,
               Tool::IO::filetype type, size_t const precision);
 
-    void save(Core::StochasticPropagator< 4 > *sPropagator, std::vector< std::string > const &filenames,
+    void save(Core::StochasticPropagator< 4 > const *sPropagator, std::vector< std::string > const &filenames,
               Tool::IO::filetype type);
 
     void load(Core::StochasticPropagator< 1 > *sPropagator, std::vector< std::string > const &filenames,
@@ -95,13 +105,13 @@ namespace Tool
     void load(Core::StochasticPropagator< 1 > *sPropagator, std::vector< std::string > const &filenames,
               Tool::IO::filetype type, size_t const precision);
 
-    void save(Core::StochasticPropagator< 1 > *sPropagator, std::vector< std::string > const &filenames,
+    void save(Core::StochasticPropagator< 1 > const *sPropagator, std::vector< std::string > const &filenames,
               Tool::IO::filetype type);
 
-    void save(Core::Field< QCD::Gauge >  *field, std::string const &filename, Tool::IO::filetype);
-    void save(Core::Field< QCD::Spinor > *field, std::string const &filename, Tool::IO::filetype);
+    void save(Core::Field< QCD::Gauge >  const *field, std::string const &filename, Tool::IO::filetype);
+    void save(Core::Field< QCD::Spinor > const *field, std::string const &filename, Tool::IO::filetype);
 
-    void save(Core::Propagator *propagator, std::vector< std::string > const &filenames,
+    void save(Core::Propagator const *propagator, std::vector< std::string > const &filenames,
               Tool::IO::filetype type);
 
     template< typename Element >

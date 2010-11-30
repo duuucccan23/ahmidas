@@ -1,6 +1,6 @@
 #include <L1/Tool/IO.h>
 
-void Tool::IO::loadPropagator(Core::Field< QCD::Spinor > &field, std::string const &filename)
+void Tool::IO::loadPropagator(Core::Field< QCD::Tensor > &field, std::string const &filename)
 {
   MPI_File fp;
   Base::Weave weave(field.L(), field.T());

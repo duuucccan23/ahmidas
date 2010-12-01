@@ -9,7 +9,7 @@
 FIND_PATH(LEMON_INCLUDES NAMES lemon.h PATHS /usr/include /usr/local/include ${CMAKE_INCLUDE_PATH} ${CMAKE_PREFIX_PATH}/include $ENV{LEMONDIR}/include PATH_SUFFIXES lemon)
 
 # Find the library itself
-FIND_LIBRARY(LEMON_LIBRARIES NAMES liblemon.a PATHS /usr/lib /usr/local/lib ${CMAKE_LIBRARY_PATH} ${CMAKE_PREFIX_PATH}/lib $ENV{LEMONDIR}/lib PATH_SUFFIXES lemon) 
+FIND_LIBRARY(LEMON_LIBRARIES NAMES liblemon.a PATHS /usr/lib /usr/local/lib ${CMAKE_LIBRARY_PATH} ${CMAKE_PREFIX_PATH}/lib $ENV{LEMONDIR}/lib $ENV{LEMONDIR}/src PATH_SUFFIXES lemon)
 
 # Set the include dir variables and the libraries and let libfind_process do the rest.
 IF (LEMON_INCLUDES AND LEMON_LIBRARIES)

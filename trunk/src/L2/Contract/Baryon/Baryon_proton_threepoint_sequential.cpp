@@ -36,7 +36,7 @@ namespace Contract
       p3p_tmp_u.deleteField();
       p3p.push_back(p3p_tmp_u);
     }
-
+	      std::cout << "3-point calculated for operator u " << iOp+1 << std::endl;
     {
       // Core::Propagator fw_tmp_d(fw_prop_d);
       Core::Propagator bw_tmp_d(bw_prop_d);

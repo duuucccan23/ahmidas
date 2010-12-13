@@ -68,6 +68,9 @@ namespace QCD
       std::complex< double > const &operator()(size_t const dirSink, size_t const colSink,
                                                size_t const dirSource, size_t const colSource) const;
 
+	  Dirac::Matrix operator()(size_t const colour_src, size_t const colour_snk) const;	
+
+
       // get entries for fixed color at source and sink
       void getDiracMatrix(Dirac::Matrix &dMatrix,
                           Base::ColourIndex const colour_src,

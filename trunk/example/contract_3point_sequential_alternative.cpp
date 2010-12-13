@@ -25,13 +25,15 @@
 #define __COMPENSATE_UNIFORM_BOUNDARY_CONDITIONS_BW__
 
 // use operator involving gamma_1
-#define __GAMMA_1__
+//#define __GAMMA_1__
 // use operator involving gamma_2
-// #define __GAMMA_2__
+ //#define __GAMMA_2__
 // use operator involving gamma_3
 // #define __GAMMA_3__
 // use operator involving gamma_4
 // #define __GAMMA_4__
+
+#define __O44__
 
 int main(int argc, char **argv)
 {
@@ -187,6 +189,14 @@ int main(int argc, char **argv)
     C3p_d *= Base::proj_PARITY_PLUS_TM;
 #endif
 
+#ifdef __O44__
+    Core::BaryonCorrelator C3p_u(C3p_u1);
+    Core::BaryonCorrelator C3p_d(C3p_d1);
+    C3p_u *= Base::proj_PARITY_PLUS_TM;
+    C3p_d *= Base::proj_PARITY_PLUS_TM;
+#endif
+
+
     C3p_u.setOffset(timeslice_source);
     C3p_d.setOffset(timeslice_source);
 
@@ -204,8 +214,13 @@ int main(int argc, char **argv)
      #ifdef __GAMMA_4__
      std::ofstream fout("output_3point_axial_4_uu.dat");
      #endif
+     #ifdef __O44__
+     std::ofstream fout("output_3point_O44_uu.dat");
+     #endif
+
      fout << C3p_u << std::endl;
      fout.close();
+
      #ifdef __GAMMA_1__
      fout.open("output_3point_axial_1_dd.dat");
      #endif
@@ -218,6 +233,11 @@ int main(int argc, char **argv)
      #ifdef __GAMMA_4__
      fout.open("output_3point_axial_4_dd.dat");
      #endif
+     #ifdef __O44__
+     fout.open("output_3point_O44_dd.dat");
+     #endif
+
+
      fout << C3p_d << std::endl;
      fout.close();
     }

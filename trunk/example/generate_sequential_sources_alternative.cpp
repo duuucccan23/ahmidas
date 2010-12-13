@@ -23,13 +23,16 @@
 #define __COMPENSATE_UNIFORM_BOUNDARY_CONDITIONS__
 
 // use operator involving gamma_1
-#define __GAMMA_1__
+//#define __GAMMA_1__
 // use operator involving gamma_2
 // #define __GAMMA_2__
 // use operator involving gamma_3
 // #define __GAMMA_3__
 // use operator involving gamma_4
 // #define __GAMMA_4__
+
+//#define _O44_
+#define _O44_with_substraction_
 
 int main(int argc, char **argv)
 {
@@ -135,8 +138,36 @@ int main(int argc, char **argv)
 
 #ifdef __GAMMA_4__
   Contract::create_sequential_source_proton_fixed_insertion_timeslice(&sequentialSource_u, &sequentialSource_d,
-                                                                        *uProp, *dProp, t_op, Base::op_GAMMA_45);
+		  *uProp, *dProp, t_op, Base::op_GAMMA_45);
 #endif  
+
+#ifdef _O44_
+
+  Core::Field< QCD::Gauge > gauge_field(L, T);
+  if (weave.isRoot())
+	  std::cout << "gauge field to be read from " << gaugeFieldFiles[0] << " ... ";
+  Tool::IO::load(&gauge_field, gaugeFieldFiles[0], Tool::IO::fileILDG);
+  if (weave.isRoot())
+	  std::cout << "done.\n" << std::endl;
+
+  Contract::create_sequential_source_proton_fixed_insertion_timeslice_derivative_operator(&sequentialSource_u, &sequentialSource_d, gauge_field , *uProp, *dProp, t_op, Base::op_O44);
+#endif  
+
+#ifdef _O44_with_substraction_
+
+  std::cout <<  "if O44_with_substraction_" << std::endl;
+
+  Core::Field< QCD::Gauge > gauge_field(L, T);
+  if (weave.isRoot())
+	  std::cout << "gauge field to be read from " << gaugeFieldFiles[0] << " ... ";
+  Tool::IO::load(&gauge_field, gaugeFieldFiles[0], Tool::IO::fileILDG);
+  if (weave.isRoot())
+	  std::cout << "done.\n" << std::endl;
+
+  Contract::create_sequential_source_proton_fixed_insertion_timeslice_derivative_operator(&sequentialSource_u, &sequentialSource_d, gauge_field , *uProp, *dProp, t_op, Base::op_O44_with_substraction);
+#endif  
+
+
 
   Tool::IO::save(&sequentialSource_d, seqSourceFilesD, Tool::IO::fileSCIDAC);
   Tool::IO::save(&sequentialSource_u, seqSourceFilesU, Tool::IO::fileSCIDAC);
@@ -148,20 +179,20 @@ int main(int argc, char **argv)
 
   if (weave.isRoot())
   {
-    std::cout.precision(10);
-    std::cout << std::scientific << "norm of sequential source (u): " << norm_u << std::endl;
+	  std::cout.precision(10);
+	  std::cout << std::scientific << "norm of sequential source (u): " << norm_u << std::endl;
   }
 
   double norm_d(sequentialSource_d.norm());
 
   if (weave.isRoot())
   {
-    std::cout.precision(10);
-    std::cout << std::scientific << "norm of sequential source (d): " << norm_d << std::endl;
+	  std::cout.precision(10);
+	  std::cout << std::scientific << "norm of sequential source (d): " << norm_d << std::endl;
   }
 
   if (weave.isRoot())
-    std::cout << "sequential sources generated and saved successfully\n" << std::endl;
+	  std::cout << "sequential sources generated and saved successfully\n" << std::endl;
 
   }
   return EXIT_SUCCESS;

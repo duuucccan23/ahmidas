@@ -127,7 +127,8 @@ namespace Base
     op_O44 = 32,
     op_O11 = 33,
     op_O22 = 34,
-    op_O33 = 35
+    op_O33 = 35,
+	op_O44_with_substraction = 36 // O44 - (O11 + O22 +O33)/3
   };
 
   extern bool const bigEndian;

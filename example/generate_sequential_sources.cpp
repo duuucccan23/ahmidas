@@ -29,10 +29,10 @@
 // use operator involving gamma_3
 // #define __GAMMA_3__
 // use operator involving gamma_4
-// #define __GAMMA_4__
+ #define __GAMMA_4__
 
 // use all projectors
-#define __ALL_GAMMA__
+//#define __ALL_GAMMA__
 
 int main(int argc, char **argv)
 {

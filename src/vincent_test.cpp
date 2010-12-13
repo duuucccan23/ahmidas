@@ -79,8 +79,18 @@ int main(int argc, char **argv)
 
 
 
+/* 1) Read the invert = phi
+   2) Apply Dirac operator => get the source xi
+   2bis) compute X phi 
 
-  
+   3) Compute g5 xi
+   3) Apply BH 4 times to 3) ( need to define the object BH) 
+   4) apply gamma5
+   5) take conjugate
+   6) multiply with 2bis)
+   7) take trace and sum of space
+   8) store results
+   */
 
   std::vector< std::string > const &propfilesU(files[0]);
   std::vector< std::string > const &propfilesD(files[1]);

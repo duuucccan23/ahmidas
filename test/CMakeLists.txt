@@ -18,9 +18,9 @@ ADD_EXECUTABLE(field_shift field_shift.cpp)
 TARGET_LINK_LIBRARIES(field_shift SU3 QCD Ahmidas Base Core Weave)
 ADD_TEST(field_shift_test field_shift)
 
-ADD_EXECUTABLE(limereader limereader.cpp)
-TARGET_LINK_LIBRARIES(limereader Lime Base Weave)
-ADD_TEST(limereader_read_in limereader ../../test/conf.88)
+#ADD_EXECUTABLE(limereader limereader.cpp)
+#TARGET_LINK_LIBRARIES(limereader Lime Base Weave)
+#ADD_TEST(limereader_read_in limereader ../../test/conf.88)
 
 ADD_EXECUTABLE(readFile readFile.cpp)
 TARGET_LINK_LIBRARIES(readFile Input Ahmidas)

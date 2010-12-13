@@ -4,8 +4,10 @@
 #include <L0/Dirac/Gamma.h>
 #include <L0/Core/Field.h>
 #include <L0/Core/Correlator.h>
+#include <L0/Core/Component.h>
 #include <L0/QCD/Gauge.h>
 #include <L0/QCD/Tensor.h>
+#include <L0/SU3/Matrix.h>
 
 namespace Core
 {
@@ -81,9 +83,15 @@ namespace Core
       void rightMultiply(Propagator const & other);
       void leftMultiply(Propagator const & other);
 
-      // Dirac operators:
-      // fixed boundary conditions (light doublet)
-      // the boundary conditions (if no theta-parameter is given) are periodic in space and antiperiodic in time
+	  //multiplication by the gauge field
+
+	  void rightMultiply(Core::Field< QCD::Gauge > & gaugeField, Base::SpaceTimeIndex const shift);
+	  void rightMultiplyDagger(Core::Field< QCD::Gauge > & gaugeField, Base::SpaceTimeIndex const shift);
+      
+	  // Dirac operators:
+	  
+	  // fixed boundary conditions (light doublet)
+	  // the boundary conditions (if no theta-parameter is given) are periodic in space and antiperiodic in time
       Propagator applyDiracOperator(Field< QCD::Gauge > const &gauge_field, double const kappa, double const mu,
                                     double const thetaT = 1.0, double const thetaX = 0.0,
                                     double const thetaY = 0.0, double const thetaZ = 0.0) const;

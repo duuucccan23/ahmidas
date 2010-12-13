@@ -31,7 +31,7 @@
 #define __CALCULATE_TWOPOINT__
 
 // use operator involving gamma_1
-#define __GAMMA_1__
+//#define __GAMMA_1__
 // use operator involving gamma_2
 // #define __GAMMA_2__
 // use operator involving gamma_3
@@ -137,23 +137,26 @@ int main(int argc, char **argv)
 
   std::vector< Base::Operator > my_operators;
 
-//   my_operators.push_back(Base::op_GAMMA_4);
-//   my_operators.push_back(Base::op_GAMMA_1);
-//   my_operators.push_back(Base::op_GAMMA_2);
-//   my_operators.push_back(Base::op_GAMMA_3);
-#ifdef __GAMMA_1__
-  my_operators.push_back(Base::op_GAMMA_15);
-#endif
-#ifdef __GAMMA_2__
-  my_operators.push_back(Base::op_GAMMA_25);
-#endif
-#ifdef __GAMMA_3__
-  my_operators.push_back(Base::op_GAMMA_35);
-#endif
-#ifdef __GAMMA_4__
-  my_operators.push_back(Base::op_GAMMA_45);
-#endif
-//   my_operators.push_back(Base::op_O44);
+ //  my_operators.push_back(Base::op_GAMMA_4);
+ //  my_operators.push_back(Base::op_GAMMA_1);
+ //  my_operators.push_back(Base::op_GAMMA_2);
+ //  my_operators.push_back(Base::op_GAMMA_3);
+//#ifdef __GAMMA_1__
+//  my_operators.push_back(Base::op_GAMMA_15);
+//#endif
+//#ifdef __GAMMA_2__
+//  my_operators.push_back(Base::op_GAMMA_25);
+//#endif
+//#ifdef __GAMMA_3__
+//  my_operators.push_back(Base::op_GAMMA_35);
+//#endif
+//#ifdef __GAMMA_4__
+//  my_operators.push_back(Base::op_GAMMA_45);
+//#endif
+   my_operators.push_back(Base::op_O44);
+   my_operators.push_back(Base::op_O11);
+   my_operators.push_back(Base::op_O22);
+   my_operators.push_back(Base::op_O33);
 //   my_operators.push_back(Base::op_O11);
 //   my_operators.push_back(Base::op_O22);
 //   my_operators.push_back(Base::op_O33);
@@ -173,34 +176,46 @@ int main(int argc, char **argv)
 
   if (weave.isRoot())
   {
-   #ifdef __GAMMA_1__
-   std::ofstream fout("output_3point_axial_1_uu.dat");
-   #endif
-   #ifdef __GAMMA_2__
-   std::ofstream fout("output_3point_axial_2_uu.dat");
-   #endif
-   #ifdef __GAMMA_3__
-   std::ofstream fout("output_3point_axial_3_uu.dat");
-   #endif
-   #ifdef __GAMMA_4__
-   std::ofstream fout("output_3point_axial_4_uu.dat");
-   #endif
-   fout << C3p[0] << std::endl;
-   fout.close();
-   #ifdef __GAMMA_1__
-   fout.open("output_3point_axial_1_dd.dat");
-   #endif
-   #ifdef __GAMMA_2__
-   fout.open("output_3point_axial_2_dd.dat");
-   #endif
-   #ifdef __GAMMA_3__
-   fout.open("output_3point_axial_3_dd.dat");
-   #endif
-   #ifdef __GAMMA_4__
-   fout.open("output_3point_axial_4_dd.dat");
-   #endif
-   fout << C3p[1] << std::endl;
-   fout.close();
+
+	  std::ofstream fout("output_3point_O44_uu.dat");
+	  //fout.open("output_3point_O44_uu.dat");
+	  fout << C3p[0] << std::endl;
+	  fout.close();
+
+	  std::ofstream fout2("output_3point_O44_dd.dat");
+//	  fout2.open("output_3point_O44_dd.dat");
+	  fout2 << C3p[1] << std::endl;
+	  fout2.close();
+ 
+	  std::ofstream fout3("output_3point_O11_uu.dat");
+//	  fout3.open("output_3point_O11_uu.dat");
+	  fout3 << C3p[2] << std::endl;
+	  fout3.close();
+
+	  std::ofstream fout4("output_3point_O11_dd.dat");
+//	  fout4.open("output_3point_O11_dd.dat");
+	  fout4 << C3p[3] << std::endl;
+	  fout4.close();
+ 
+	  std::ofstream fout5("output_3point_O22_uu.dat");
+//	  fout5.open("output_3point_O22_uu.dat");
+	  fout5 << C3p[4] << std::endl;
+	  fout5.close();
+
+	  std::ofstream fout6("output_3point_O22_dd.dat");
+//	  fout6.open("output_3point_O22_dd.dat");
+	  fout6 << C3p[5] << std::endl;
+	  fout6.close();
+ 
+	  std::ofstream fout7("output_3point_O33_uu.dat");
+//	  fout7.open("output_3point_O33_uu.dat");
+	  fout7 << C3p[6] << std::endl;
+	  fout7.close();
+
+	  std::ofstream fout8("output_3point_O33_dd.dat");
+//	  fout8.open("output_3point_O33_dd.dat");
+	  fout8 << C3p[7] << std::endl;
+	  fout8.close();
   }
 
 #endif
@@ -208,7 +223,7 @@ int main(int argc, char **argv)
 #ifdef __CALCULATE_TWOPOINT__
 
   if (weave.isRoot())
-    std::cout << "\n calculating 2-point function \n" << std::endl;
+	  std::cout << "\n calculating 2-point function \n" << std::endl;
 
   double const APE_alpha      = floats["APE_param"];
   size_t const APE_iterations = size_t(floats["APE_steps"]);
@@ -217,8 +232,8 @@ int main(int argc, char **argv)
 
   if (weave.isRoot())
   {
-    std::cout << "APE    smearing: parameter = " << APE_alpha << ", iterations = " << APE_iterations << std::endl;
-    std::cout << "Jacobi smearing: parameter = " << Jac_alpha << ", iterations = " << Jac_iterations << std::endl;
+	  std::cout << "APE    smearing: parameter = " << APE_alpha << ", iterations = " << APE_iterations << std::endl;
+	  std::cout << "Jacobi smearing: parameter = " << Jac_alpha << ", iterations = " << Jac_iterations << std::endl;
   }
 
   Smear::APE APE_tool(APE_alpha);
@@ -230,25 +245,25 @@ int main(int argc, char **argv)
   forwardProp_d.smearJacobi(Jac_alpha, Jac_iterations, gauge_field);
 
   if (weave.isRoot())
-    std::cout << "propagators and gauge field smeared successfully\n" << std::endl;
+	  std::cout << "propagators and gauge field smeared successfully\n" << std::endl;
 
   Core::BaryonCorrelator C2_P = Contract::proton_twopoint(forwardProp_u, forwardProp_u, forwardProp_d, Base::proj_PARITY_PLUS_TM);
   C2_P.setOffset(timeslice_source);
 
   if (weave.isRoot())
   {
-    std::ofstream fout("output_2point.dat");
-    std::cout << "proton two point" << std::endl;
-    std::cout << C2_P << std::endl;
-    fout << C2_P << std::endl;
-    fout.close();
+	  std::ofstream fout("output_2point.dat");
+	  std::cout << "proton two point" << std::endl;
+	  std::cout << C2_P << std::endl;
+	  fout << C2_P << std::endl;
+	  fout.close();
   }
 
 
 #endif
 
   if (weave.isRoot())
-    std::cout << "contractions performed and saved successfully\n" << std::endl;
+	  std::cout << "contractions performed and saved successfully\n" << std::endl;
 
   return EXIT_SUCCESS;
 }

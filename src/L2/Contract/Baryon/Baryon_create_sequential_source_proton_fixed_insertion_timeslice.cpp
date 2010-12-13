@@ -21,14 +21,21 @@ namespace Contract
 
     Base::Weave weave(L, T);
 
-    (*seqSrc_u) = Core::Propagator(u);
-    (*seqSrc_d) = Core::Propagator(d);
+     (*seqSrc_u) = Core::Propagator(u);
+     (*seqSrc_d) = Core::Propagator(d);
 
-    (*seqSrc_u).select_timeslice(t_op);
-    (*seqSrc_d).select_timeslice(t_op);
+     (*seqSrc_u).select_timeslice(t_op);
+     (*seqSrc_d).select_timeslice(t_op);
+
+    //if op != 044 
 
     seqSrc_u->rightMultiplyOperator(op);
     seqSrc_d->rightMultiplyOperator(op);
+
+    
+   
+
   }
 
 }
+

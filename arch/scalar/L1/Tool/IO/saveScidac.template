@@ -4,7 +4,7 @@ void Tool::IO::saveScidac(Core::Field< Element > const &field, std::string const
   size_t const elements = sizeof(Element) / sizeof(double);
   Lime::Writer writer(filename);
 
-  assert(writer.good());
+//  assert(writer.good());
 
   // write info header
   writer.newRecord("propagator-type");

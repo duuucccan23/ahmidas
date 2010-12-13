@@ -5,6 +5,7 @@
 #include <L0/Core/Field.h>
 #include <L0/Core/Propagator.h>
 #include <L0/Core/Correlator.h>
+#include <L0/Core/Component.h>
 #include <L1/Smear.h>
 
 namespace Contract
@@ -97,6 +98,14 @@ namespace Contract
                                                                  Core::Propagator const &d,
                                                                  size_t const t_op, Base::Operator op);
 
+
+
+  void create_sequential_source_proton_fixed_insertion_timeslice_derivative_operator(Core::Propagator *seqSrc_u,
+										   Core::Propagator *seqSrc_d,
+										   Core::Field< QCD::Gauge > &gauge_field,
+										   Core::Propagator const &u,
+										   Core::Propagator const &d,
+										     size_t const t_op, Base::Operator op);
 
 
   /* ---------------------------------------------------------------------------------------------- */

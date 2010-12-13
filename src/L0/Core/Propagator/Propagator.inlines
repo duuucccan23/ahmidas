@@ -72,6 +72,20 @@ inline void Propagator::rightMultiply(Propagator const & other)
   }
 }
 
+inline void Propagator::rightMultiply(Core::Field < QCD::Gauge > & gauge_field, Base::SpaceTimeIndex const shift)
+{
+	isolate();
+	(*d_components).rightMultiply(gauge_field.component< SU3::Matrix >(size_t(shift)));
+
+}
+
+
+inline void Propagator::rightMultiplyDagger(Core::Field < QCD::Gauge > & gauge_field, Base::SpaceTimeIndex const shift)
+{
+	isolate();
+	(*d_components).rightMultiply(gauge_field.component< SU3::Matrix >(size_t(shift)).dagger());
+
+}
 
 inline Propagator &Propagator::dagger()
 {

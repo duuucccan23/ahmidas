@@ -131,6 +131,17 @@ namespace Base
 	op_O44_with_substraction = 36 // O44 - (O11 + O22 +O33)/3
   };
 
+  enum DiracOperator
+  {
+	Full = -1,
+    A = 0,
+    H = 1,
+	B = 2,
+	Bdagger = 3
+  };
+
+
+
   extern bool const bigEndian;
 }
 

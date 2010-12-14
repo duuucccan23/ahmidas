@@ -8,6 +8,7 @@ SET(Sources_Propagator Propagator/StochasticPropagator.cpp
                        Propagator/Propagator_applyDiracOperator_a.cpp
                        Propagator/Propagator_applyDiracOperator_b.cpp
                        Propagator/Propagator_applyDiracOperator_c.cpp
+                       Propagator/Propagator_applyDiracOperator_d.cpp
                        Propagator/Propagator_changeBoundaryConditions.cpp
                        Propagator/Propagator_construct_baryon.cpp
                        Propagator/Propagator_construct_baryon_with_operator_insertion.cpp

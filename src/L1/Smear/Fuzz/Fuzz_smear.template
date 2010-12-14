@@ -1,7 +1,6 @@
 namespace Smear
 {
-  template< size_t L, size_t T >
-  void Fuzz::smear(Core::Field< QCD::Gauge, L, T > *field) const
+  void Fuzz::smear(Core::Field< QCD::Gauge  > *field) const
   {
     if (d_length <= 1) // Or we'll be making 3 pointless copies...
       return;

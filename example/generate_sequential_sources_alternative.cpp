@@ -13,6 +13,7 @@
 #include <L2/Contract/Baryon.h>
 #include <L1/Tool/IO.h>
 #include <L1/Smear.h>
+
 #include <L1/Smear/APE.h>
 #include <L1/Smear/Jacobi.h>
 #include <L2/Input/FileReader.h>

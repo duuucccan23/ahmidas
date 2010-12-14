@@ -20,6 +20,8 @@ SET(Sources_Baryon Baryon.h
                    Baryon/Baryon_proton_threepoint_sequential.cpp
                    Baryon/Baryon_proton_threepoint_stochastic_naive.cpp
                    Baryon/Baryon_proton_threepoint_stochastic.cpp)
-ADD_LIBRARY(Contract ${Sources_Meson} ${Sources_Baryon})
+SET(Sources_Disconnected Disconnected.h
+                  Disconnected/Disconnected_compute_loop.cpp)
+ADD_LIBRARY(Contract ${Sources_Meson} ${Sources_Baryon} ${Sources_Disconnected})
 SET_TARGET_PROPERTIES(Contract PROPERTIES LINKER_LANGUAGE CXX)
 TARGET_LINK_LIBRARIES(Contract Core Dirac QCD)

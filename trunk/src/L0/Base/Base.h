@@ -48,96 +48,96 @@ namespace Base
 
   enum SourceColorState
   {
-    sou_WHITE   = 0,
-    sou_GENERIC = 1,
-    sou_PURE    = 2
+	  sou_WHITE   = 0,
+	  sou_GENERIC = 1,
+	  sou_PURE    = 2
   };
 
   enum SourceSpatialLayout
   {
-    sou_POINT,
-    sou_FULL,
-    sou_WALL
+	  sou_POINT,
+	  sou_FULL,
+	  sou_WALL
   };
 
   enum SourceStochasticTypeFlag
   {
-    sou_Z4 =  4, // this is Z(2) x Z(2) = 1/sqrt(2) *std::complex< double >(+/-1 , +/-1)
-    sou_Z2 =  2, // Z(2) = +/-1
-    sou_P1 =  1, // for test cases: all entries +1
-    sou_M1 = -1  // for test cases: all entries -1
+	  sou_Z4 =  4, // this is Z(2) x Z(2) = 1/sqrt(2) *std::complex< double >(+/-1 , +/-1)
+	  sou_Z2 =  2, // Z(2) = +/-1
+	  sou_P1 =  1, // for test cases: all entries +1
+	  sou_M1 = -1  // for test cases: all entries -1
   };
 
 
   enum weaveOperator
   {
-    wea_SUM,
-    wea_XOR
+	  wea_SUM,
+	  wea_XOR
   };
 
-//   enum boundaryConditions
-//   {
-//     bc_ANTIPERIODIC_FIXED;
-//     bc_ANTIPERIODIC_UNIFORM;
-//     bc_PERIODIC_FIXED;
-//     bc_PERIODIC_UNIFORM;
-//   }
+  //   enum boundaryConditions
+  //   {
+  //     bc_ANTIPERIODIC_FIXED;
+  //     bc_ANTIPERIODIC_UNIFORM;
+  //     bc_PERIODIC_FIXED;
+  //     bc_PERIODIC_UNIFORM;
+  //   }
 
   // Definitions to be used for baryon contractions
   enum BaryonInterpolatingField
   {
-    bar_PROTON
+	  bar_PROTON
   };
 
   enum BaryonPropagatorProjector
   {
-    proj_PARITY_PLUS_STD,
-    proj_PARITY_MINUS_STD,
-    proj_PARITY_PLUS_TM,
-    proj_PARITY_PLUS_TM_STAR,
-    proj_PARITY_MINUS_TM,
-    proj_1_MINUS_TM, // 1/2(1+gamma0)*i*gamma5*gamma1 in twisted basis (for d quark): 1/4(i*gamma5*gamma1-gamma0*gamma1)
-    proj_1_PLUS_TM,  // 1/2(1+gamma0)*i*gamma5*gamma1 in twisted basis (for u quark): 1/4(i*gamma5*gamma1+gamma0*gamma1)
-    proj_2_MINUS_TM, // same as above but with gamma2
-    proj_2_PLUS_TM,
-    proj_3_MINUS_TM, // same as above but with gamma3
-    proj_3_PLUS_TM,
-    proj_NO_PROJECTOR // this one does not do anything
+	  proj_PARITY_PLUS_STD,
+	  proj_PARITY_MINUS_STD,
+	  proj_PARITY_PLUS_TM,
+	  proj_PARITY_PLUS_TM_STAR,
+	  proj_PARITY_MINUS_TM,
+	  proj_1_MINUS_TM, // 1/2(1+gamma0)*i*gamma5*gamma1 in twisted basis (for d quark): 1/4(i*gamma5*gamma1-gamma0*gamma1)
+	  proj_1_PLUS_TM,  // 1/2(1+gamma0)*i*gamma5*gamma1 in twisted basis (for u quark): 1/4(i*gamma5*gamma1+gamma0*gamma1)
+	  proj_2_MINUS_TM, // same as above but with gamma2
+	  proj_2_PLUS_TM,
+	  proj_3_MINUS_TM, // same as above but with gamma3
+	  proj_3_PLUS_TM,
+	  proj_NO_PROJECTOR // this one does not do anything
   };
 
   enum Operator
   {
-    op_UNITY = -1,
-    op_GAMMA_1 = 1,
-    op_GAMMA_2 = 2,
-    op_GAMMA_3 = 3,
-    op_GAMMA_4 = 4,
-    op_GAMMA_5 = 5,
-    op_GAMMA_15 = 6,
-    op_GAMMA_25 = 7,
-    op_GAMMA_35 = 8,
-    op_GAMMA_45 = 9,
-    op_GAMMA_12 = 10,
-    op_GAMMA_13 = 11,
-    op_GAMMA_14 = 12,
-    op_GAMMA_23 = 13,
-    op_GAMMA_24 = 14,
-    op_GAMMA_34 = 15,
-    op_CONSERVED_GAMMA_4 = 16,
-    op_O44 = 32,
-    op_O11 = 33,
-    op_O22 = 34,
-    op_O33 = 35,
-	op_O44_with_substraction = 36 // O44 - (O11 + O22 +O33)/3
+	  op_UNITY = -1,
+	  op_GAMMA_1 = 1,
+	  op_GAMMA_2 = 2,
+	  op_GAMMA_3 = 3,
+	  op_GAMMA_4 = 4,
+	  op_GAMMA_5 = 5,
+	  op_GAMMA_15 = 6,
+	  op_GAMMA_25 = 7,
+	  op_GAMMA_35 = 8,
+	  op_GAMMA_45 = 9,
+	  op_GAMMA_12 = 10,
+	  op_GAMMA_13 = 11,
+	  op_GAMMA_14 = 12,
+	  op_GAMMA_23 = 13,
+	  op_GAMMA_24 = 14,
+	  op_GAMMA_34 = 15,
+	  op_CONSERVED_GAMMA_4 = 16,
+	  op_O44 = 32,
+	  op_O11 = 33,
+	  op_O22 = 34,
+	  op_O33 = 35,
+	  op_O44_with_substraction = 36 // O44 - (O11 + O22 +O33)/3
   };
 
   enum DiracOperator
   {
-	Full = -1,
-    A = 0,
-    H = 1,
-	B = 2,
-	Bdagger = 3
+	  Full = -1,
+	  A = 0,
+	  H = 1,
+	  B = 2,
+	  Bdagger = 3
   };
 
 

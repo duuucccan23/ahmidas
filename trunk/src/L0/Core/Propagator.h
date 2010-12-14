@@ -3,6 +3,7 @@
 #include <vector>
 #include <L0/Dirac/Gamma.h>
 #include <L0/Core/Field.h>
+#include <L0/Base/Base.h>
 #include <L0/Core/Correlator.h>
 #include <L0/Core/Component.h>
 #include <L0/QCD/Gauge.h>
@@ -100,7 +101,12 @@ namespace Core
       // fixed boundary conditions (light doublet)
       Propagator applyDiracOperator(Field< QCD::Gauge > const &gauge_field, double const kappa, double const mu, size_t const t_boundary) const;
 
-      // this function reconstructs the doublet propagators from  the (Q^+Q^-)^-1 output of the tmLQCD multi-mas-solver
+	  // This function can apply independantly the diagonal and the hopping term of the Dirac operator or the full Dirac operator
+      Propagator applyDiracOperator(Field< QCD::Gauge > const &gauge_field, double const kappa, double const mu,
+                                    double const thetaT, double const thetaX,
+									double const thetaY, double const thetaZ, Base::DiracOperator const O) const;
+
+	  // this function reconstructs the doublet propagators from  the (Q^+Q^-)^-1 output of the tmLQCD multi-mas-solver
       // the boundary conditions (if no theta-parameter is given) are periodic in space and antiperiodic in time
       void reconstruct_doublet(Propagator &propPlus, Propagator &propMinus,
                               Field< QCD::Gauge > const &gauge_field,

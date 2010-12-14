@@ -15,13 +15,10 @@ namespace Smear
 
     public:
       Fuzz(size_t length);
-
-      template< size_t L, size_t T >
-      void smear(Core::Field< QCD::Gauge, L, T > *field) const;
+      void smear(Core::Field< QCD::Gauge > *field) const;
 
     private:
-      template< size_t L, size_t T >
-      void accumDirection(Core::Field< QCD::Gauge, L, T > *field, Base::SpaceTimeIndex) const;
+      void accumDirection(Core::Field< QCD::Gauge > *field, Base::SpaceTimeIndex) const;
   };
 }
 

@@ -1,8 +1,11 @@
 namespace Smear
 {
-  template< size_t L, size_t T >
-  void Fuzz::accumDirection(Core::Field< QCD::Gauge, L, T > *field, Base::SpaceTimeIndex idx) const
+  void Fuzz::accumDirection(Core::Field< QCD::Gauge> *field, Base::SpaceTimeIndex idx) const
   {
+    size_t const L = field.L();
+    size_t const T = field.T();
+		    
+
     Core::Field< QCD::Gauge, L, T > shifter(*field);
     Core::Component< QCD::Gauge, L, T, SU3::Matrix > shiftComponent(shifter, idx);
     Core::Component< QCD::Gauge, L, T, SU3::Matrix > fieldComponent(*field, idx);

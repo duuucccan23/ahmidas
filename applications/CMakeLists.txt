@@ -48,3 +48,9 @@ TARGET_LINK_LIBRARIES(finalize_meson_sequential_stochastic_propagator IO Input C
 ADD_EXECUTABLE(finalize_meson_sequential_ultrastochastic_propagator finalize_meson_sequential_ultrastochastic_propagator.cpp)
 TARGET_LINK_LIBRARIES(finalize_meson_sequential_ultrastochastic_propagator IO Input Core Ahmidas)
 
+
+ADD_EXECUTABLE(contract_disconnected contract_disconnected.cpp)
+TARGET_LINK_LIBRARIES(contract_disconnected Print Ahmidas SU3 QCD IO Base Core Dirac
+			Weave Contract Input Smear)
+
+

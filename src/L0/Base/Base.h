@@ -131,6 +131,30 @@ namespace Base
 	  op_O44_with_substraction = 36 // O44 - (O11 + O22 +O33)/3
   };
 
+  enum HermitianBilinearOperator
+  {
+
+	  op_G_0 = 0,  //gamma5
+	  op_G_1 = 1,  //gamma1
+	  op_G_2 = 2,  //gamma2
+	  op_G_3 = 3,  //gamma3
+	  op_G_4 = 4,  //-i gamma4 gamma5
+	  op_G_5 = 5,  //-i gamma4 gamma1
+	  op_G_6 = 6,  //-i gamma4 gamma2
+	  op_G_7 = 7,  //-i gamma4 gamma3
+	  op_G_8 = 8,  // identity
+	  op_G_9 = 9,  // -i gamma_5 gamma1
+	  op_G_10 = 10,// -i gamma_5 gamma2
+	  op_G_11 = 11,// -i gamma_5 gamma3
+	  op_G_12 = 12,// gamma_0
+	  op_G_13 = 13,// -i gamma_5 gamma_0 gamma_1
+	  op_G_14 = 14,// -i gamma_5 gamma_0 gamma_2
+	  op_G_15 = 15// -i gamma_5 gamma_0 gamma_3
+
+  };
+
+
+
   enum DiracOperator
   {
 	  Full = -1,

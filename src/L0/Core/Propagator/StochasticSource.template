@@ -75,3 +75,40 @@ template< size_t NComp >
 Core::StochasticSource< NComp >::StochasticSource(Core::StochasticSource< NComp > const &other)
   : Core::Propagator(dynamic_cast< Core::Propagator const &>(other))
 {}
+
+
+template< size_t NComp >
+Core::StochasticSource< NComp >::StochasticSource(size_t const L, size_t const T,
+		Base::SourcePolarization const pol, Base::SourceColorState const col,
+		Core::Field< uint64_t > const &seeds,
+		Base::SourceStochasticTypeFlag const type)
+: Core::Propagator(L, T)
+{
+
+	Base::Weave weave(L, T);
+
+	size_t localIndex;
+
+	for(size_t idx_T = 0; idx_T < L; idx_T++)
+	{
+		for(size_t idx_Z = 0; idx_Z < L; idx_Z++)
+		{
+			for(size_t idx_Y = 0; idx_Y < L; idx_Y++)
+			{
+				for(size_t idx_X = 0; idx_X < L; idx_X++)
+				{
+					localIndex = weave.globalCoordToLocalIndex(idx_X, idx_Y, idx_Z, idx_T);
+					/* globalCoordToLocalIndex returns local volume if local data is not available on this cpu */
+					if (localIndex == weave.localVolume())
+						continue;
+
+					((*d_components)[localIndex]).setToRandom(pol, col, type, seeds[localIndex]);
+				}
+			}
+		}
+	} /* end loop on idx_T */
+
+
+}
+
+

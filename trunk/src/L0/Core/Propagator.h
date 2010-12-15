@@ -77,8 +77,10 @@ namespace Core
       Propagator &rightMultiply(Dirac::Gamma< Index > const& gamma);
 
       // multiplication by operator (this is multiplication from the right)
+
       void rightMultiplyOperator(Base::Operator const O); // only for local operators
-      void leftMultiplyOperator(Base::Operator const O); // only for local operators
+      void rightMultiplyOperator(Base::HermitianBilinearOperator const O); // only for local operators
+	  void leftMultiplyOperator(Base::Operator const O); // only for local operators
       Core::Field< Dirac::Matrix > *contractWithOperatorInsertion(Base::Operator const O, Field< QCD::Gauge > * const gauge_field, Propagator const &fromRight);
 
       void rightMultiply(Propagator const & other);
@@ -220,61 +222,67 @@ namespace Core
       StochasticSource< NComp > (size_t const L, size_t const T);
       StochasticSource< NComp > (size_t const L, size_t const T,
                                  Base::SourcePolarization const pol, Base::SourceColorState const col,
-                                 size_t const timeslice,
-                                 Field< uint64_t > const &seeds,
-                                 Base::SourceStochasticTypeFlag const type);
+								 size_t const timeslice,
+								 Field< uint64_t > const &seeds,
+								 Base::SourceStochasticTypeFlag const type);
 
-      explicit StochasticSource< NComp > (Propagator const &base);
-      StochasticSource< NComp > (StochasticSource< NComp > const &other);
 
-      // ~StochasticSource< NComp > ();
+	  StochasticSource< NComp > (size_t const L, size_t const T,
+			                        Base::SourcePolarization const pol, Base::SourceColorState const col,
+                       			    Core::Field< uint64_t > const &seeds,
+   			                        Base::SourceStochasticTypeFlag const type);
 
-      //void conjugate();
+	  explicit StochasticSource< NComp > (Propagator const &base);
+	  StochasticSource< NComp > (StochasticSource< NComp > const &other);
 
-      Propagator operator*(StochasticPropagator< NComp > const &sPropagator) const;
+	  // ~StochasticSource< NComp > ();
 
-      Propagator createStochasticPropagator_fixedSink(StochasticPropagator< NComp > const &, size_t const *) const;
+	  //void conjugate();
 
-      size_t const L() const;
-      size_t const T() const;
+	  Propagator operator*(StochasticPropagator< NComp > const &sPropagator) const;
+
+	  Propagator createStochasticPropagator_fixedSink(StochasticPropagator< NComp > const &, size_t const *) const;
+
+	  size_t const L() const;
+	  size_t const T() const;
 
   };
 
   template< size_t NComp >
-  class StochasticPropagator : public Propagator
+	  class StochasticPropagator : public Propagator
   {
 
-    friend class StochasticSource< NComp >;
+	  friend class StochasticSource< NComp >;
 
-    public:
+	  public:
 
-      StochasticPropagator< NComp > (size_t const L, size_t const T);
+	  StochasticPropagator< NComp > (size_t const L, size_t const T);
 
-      StochasticPropagator< NComp > (Propagator const &other);
+	  StochasticPropagator< NComp > (Propagator const &other);
 
-      StochasticPropagator< NComp > (StochasticPropagator< NComp > const &other);
+	  StochasticPropagator< NComp > (StochasticPropagator< NComp > const &other);
 
-      Field< Dirac::Matrix > *operator*(StochasticPropagator< NComp > const &other) const;
+	  Field< Dirac::Matrix > *operator*(StochasticPropagator< NComp > const &other) const;
 
-      StochasticPropagator< NComp > &select_timeslice(size_t const timeslice);
+	  StochasticPropagator< NComp > &select_timeslice(size_t const timeslice);
 
-      Propagator operator*(StochasticSource< NComp > const &sSource) const;
+	  Propagator operator*(StochasticSource< NComp > const &sSource) const;
 
-      StochasticPropagator< NComp > &revert();
-      StochasticPropagator< NComp > &dagger();
-      StochasticPropagator< NComp > &conjugate();
-      StochasticPropagator< NComp > &transpose();
+	  StochasticPropagator< NComp > &revert();
+	  StochasticPropagator< NComp > &dagger();
+	  StochasticPropagator< NComp > &conjugate();
+	  StochasticPropagator< NComp > &transpose();
 
-      void isolate();
+	  void isolate();
 
-      void rotateToPhysicalBasis(bool const sign);
+	  void rotateToPhysicalBasis(bool const sign);
   };
 
-  #include "Propagator/Propagator.inlines"
-  #include "Propagator/StochasticPropagator.inlines"
-  #include "Propagator/Propagator.iterator.inlines"
-  #include "Propagator/Propagator.const_iterator.inlines"
-  #include "Propagator/Propagator.operators.inlines"
+#include "Propagator/Propagator.inlines"
+#include "Propagator/StochasticPropagator.inlines"
+#include "Propagator/Propagator.iterator.inlines"
+#include "Propagator/Propagator.const_iterator.inlines"
+#include "Propagator/Propagator.operators.inlines"
 }
 #include "Propagator/StochasticSource.template"
 

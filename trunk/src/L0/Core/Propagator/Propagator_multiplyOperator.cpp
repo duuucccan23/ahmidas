@@ -578,59 +578,150 @@ namespace Core
         (*this).rightMultiply(gamma2gamma5);
         break;
       }
-      case Base::op_GAMMA_35:
-      {
-        Dirac::Gamma< 35 > gamma3gamma5;
-        (*this).rightMultiply(gamma3gamma5);
-        break;
-      }
-      case Base::op_GAMMA_45:
-      {
-        Dirac::Gamma< 45 > gamma4gamma5;
-        (*this).rightMultiply(gamma4gamma5);
-        break;
-      }
-      case Base::op_GAMMA_12:
-      {
-        Dirac::Gamma< 12 > gamma1gamma2;
-        (*this).rightMultiply(gamma1gamma2);
-        break;
-      }
-      case Base::op_GAMMA_13:
-      {
-        Dirac::Gamma< 13 > gamma1gamma3;
-        (*this).rightMultiply(gamma1gamma3);
-        break;
-      }
-      case Base::op_GAMMA_14:
-      {
-        Dirac::Gamma< 14 > gamma1gamma4;
-        (*this).rightMultiply(gamma1gamma4);
-        break;
-      }
-      case Base::op_GAMMA_23:
-      {
-        Dirac::Gamma< 23 > gamma2gamma3;
-        (*this).rightMultiply(gamma2gamma3);
-        break;
-      }
-      case Base::op_GAMMA_24:
-      {
-        Dirac::Gamma< 24 > gamma2gamma4;
-        (*this).rightMultiply(gamma2gamma4);
-        break;
-      }
-      case Base::op_GAMMA_34:
-      {
-        Dirac::Gamma< 34 > gamma3gamma4;
-        (*this).rightMultiply(gamma3gamma4);
-        break;
-      }
-      default:
-        std::cerr << "Error in void Propagator::multiplyOperator(Base::Operator const& O)\n";
-        std::cerr << "Operator with no. " << O << " not implemented!" << std::endl;
-        exit(1);
-    }
+	  case Base::op_GAMMA_35:
+	  {
+		  Dirac::Gamma< 35 > gamma3gamma5;
+		  (*this).rightMultiply(gamma3gamma5);
+		  break;
+	  }
+	  case Base::op_GAMMA_45:
+	  {
+		  Dirac::Gamma< 45 > gamma4gamma5;
+		  (*this).rightMultiply(gamma4gamma5);
+		  break;
+	  }
+	  case Base::op_GAMMA_12:
+	  {
+		  Dirac::Gamma< 12 > gamma1gamma2;
+		  (*this).rightMultiply(gamma1gamma2);
+		  break;
+	  }
+	  case Base::op_GAMMA_13:
+	  {
+		  Dirac::Gamma< 13 > gamma1gamma3;
+		  (*this).rightMultiply(gamma1gamma3);
+		  break;
+	  }
+	  case Base::op_GAMMA_14:
+	  {
+		  Dirac::Gamma< 14 > gamma1gamma4;
+		  (*this).rightMultiply(gamma1gamma4);
+		  break;
+	  }
+	  case Base::op_GAMMA_23:
+	  {
+		  Dirac::Gamma< 23 > gamma2gamma3;
+		  (*this).rightMultiply(gamma2gamma3);
+		  break;
+	  }
+	  case Base::op_GAMMA_24:
+	  {
+		  Dirac::Gamma< 24 > gamma2gamma4;
+		  (*this).rightMultiply(gamma2gamma4);
+		  break;
+	  }
+	  case Base::op_GAMMA_34:
+	  {
+		  Dirac::Gamma< 34 > gamma3gamma4;
+		  (*this).rightMultiply(gamma3gamma4);
+		  break;
+	  }
+	  default:
+	  std::cerr << "Error in void Propagator::multiplyOperator(Base::Operator const& O)\n";
+	  std::cerr << "Operator with no. " << O << " not implemented!" << std::endl;
+	  exit(1);
+	}
+  }
+
+  void Propagator::rightMultiplyOperator(Base::HermitianBilinearOperator const O)
+  {
+
+	  Dirac::Gamma< 1 > gamma1;
+	  Dirac::Gamma< 2 > gamma2;
+	  Dirac::Gamma< 3 > gamma3;
+	  Dirac::Gamma< 4 > gamma4;
+	  Dirac::Gamma< 5 > gamma5;
+	  std::complex<double >minus_i(0,-1); 
+	  isolate();
+	  switch (O)
+	  {
+		  case Base::op_G_0:
+			  (*this).rightMultiply(gamma5);
+			  break;
+		  case Base::op_G_1:
+			  (*this).rightMultiply(gamma1);
+			  break;
+		  case Base::op_G_2:
+			  (*this).rightMultiply(gamma2);
+			  break;
+		  case Base::op_G_3:
+			  (*this).rightMultiply(gamma3);
+			  break;
+		  case Base::op_G_4:
+			  (*this).rightMultiply(gamma4);
+			  (*this).rightMultiply(gamma5);
+			  (*this)*= minus_i;
+			  break;
+		  case Base::op_G_5:
+			  (*this).rightMultiply(gamma1);
+			  (*this).rightMultiply(gamma4);
+			  (*this)*= minus_i;
+			  break;
+		  case Base::op_G_6:
+			  (*this).rightMultiply(gamma2);
+			  (*this).rightMultiply(gamma4);
+			  (*this)*= minus_i;
+			  break;
+		  case Base::op_G_7:
+			  (*this).rightMultiply(gamma3);
+			  (*this).rightMultiply(gamma4);
+			  (*this)*= minus_i;
+			  break;
+		  case Base::op_G_8:
+			  break;
+		  case Base::op_G_9:
+			  (*this).rightMultiply(gamma1);
+			  (*this).rightMultiply(gamma5);
+			  (*this)*= minus_i;
+			  break;
+		  case Base::op_G_10:
+			  (*this).rightMultiply(gamma2);
+			  (*this).rightMultiply(gamma5);
+			  (*this)*= minus_i;
+			  break;
+		  case Base::op_G_11:
+			  (*this).rightMultiply(gamma3);
+			  (*this).rightMultiply(gamma5);
+			  (*this)*= minus_i;
+			  break;
+		  case Base::op_G_12:
+			  (*this).rightMultiply(gamma4);
+			  break;
+		  case Base::op_G_13:
+			  (*this).rightMultiply(gamma1);
+			  (*this).rightMultiply(gamma4);
+			  (*this).rightMultiply(gamma5);
+			  (*this)*= minus_i;
+			  break;
+		  case Base::op_G_14:
+			  (*this).rightMultiply(gamma2);
+			  (*this).rightMultiply(gamma4);
+			  (*this).rightMultiply(gamma5);
+			  (*this)*= minus_i;
+
+			  break;
+		  case Base::op_G_15:
+			  (*this).rightMultiply(gamma3);
+			  (*this).rightMultiply(gamma4);
+			  (*this).rightMultiply(gamma5);
+			  (*this)*= minus_i;
+
+			  break;
+		  default:
+			  std::cerr << "Error in void Propagator::multiplyOperator(Base::Operator const& O)\n";
+			  std::cerr << "Operator with no. " << O << " not implemented!" << std::endl;
+			  exit(1);
+	  }
   }
 
 

@@ -185,9 +185,10 @@ int main(int argc, char **argv)
 		std::cout<<"Smear gauge field   ... "; 
 
 	Smear::APE APE_tool(APE_alpha);
-	//	Smear::Fuzz Fuzz_tool(Nlong);
+	Smear::Fuzz Fuzz_tool(Nlong);
 	APE_tool.smear(gauge_field_f, APE_iterations);
-	//Fuzz_tool.smear(gauge_field_f<L,T>);
+	Fuzz_tool.smear(gauge_field_f);
+
 	if(weave.isRoot())	
 		std::cout << "done.\n" << std::endl;
 
@@ -197,9 +198,9 @@ int main(int argc, char **argv)
 	size_t const Nsample=propaStochaFiles.size();
 	std::cout << "Number of stochastic propagator to read : "<< Nsample << std::endl;
 
-	Core::StochasticPropagator<1> source(L,T);
-	Core::StochasticPropagator< 1 >  phi(L, T);
-	Core::StochasticPropagator< 1 >  tmp(L, T);
+	Core::StochasticPropagator< 1 > source(L,T);
+	Core::StochasticPropagator< 1 > phi(L, T);
+	Core::StochasticPropagator< 1 > tmp(L, T);
 
 	for(size_t n=0;n<Nsample;n++)
 	{  

@@ -14,7 +14,7 @@ SET(CMAKE_INCLUDE_PATH ${PROJECT_SOURCE_DIR}/eigen)
 OPTION(BUILD_TESTS "Build all tests packaged with Ahmidas" ON)
 
 INCLUDE_DIRECTORIES(BEFORE SYSTEM src)
-SET(CMAKE_CXX_FLAGS "-g -O3 -Wall -pedantic")
+SET(CMAKE_CXX_FLAGS "-O3 -Wall -pedantic")
 # SET(CMAKE_CXX_FLAGS "-g -Wall -pedantic")
 
 FIND_PACKAGE(Eigen3)

@@ -76,7 +76,7 @@ Core::StochasticSource< NComp >::StochasticSource(Core::StochasticSource< NComp 
   : Core::Propagator(dynamic_cast< Core::Propagator const &>(other))
 {}
 
-
+// for volume sources
 template< size_t NComp >
 Core::StochasticSource< NComp >::StochasticSource(size_t const L, size_t const T,
 		Base::SourcePolarization const pol, Base::SourceColorState const col,

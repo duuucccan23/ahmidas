@@ -1,4 +1,7 @@
-
+/*
+This code performs contraction of disconnected for all the element of an hermitian basis of Dirac matrices.
+The code only perform local contraction. Fuzzing has to be include in the future
+*/
 // C++ complex library
 #include <complex>
 
@@ -36,7 +39,7 @@
 
 #include <L1/Smear.h>
 #include <L1/Smear/APE.h>
-//#include <L1/Smear/Fuzz.h>
+#include <L1/Smear/Fuzz.h>
 #include <L1/Smear/Jacobi.h>
 
 #include <L0/Debug.h>                                                                                                                                    
@@ -81,7 +84,7 @@ int main(int argc, char **argv)
 	double thetaz=floats["thetaz"];
 	double thetat=floats["thetat"];
 
-	
+
 
 
 	if(weave.isRoot())
@@ -104,21 +107,21 @@ int main(int argc, char **argv)
 
 	std::vector< Base::HermitianBilinearOperator > my_operators;
 
-// not exactly the convention used by carsten 
-//  missing are : g5 g0 g1, g5 g0 g2, g5 g0 g2
-/*	my_operators.push_back(Base::op_GAMMA_5);
-	my_operators.push_back(Base::op_GAMMA_1);
-	my_operators.push_back(Base::op_GAMMA_2);
-	my_operators.push_back(Base::op_GAMMA_3);
-	my_operators.push_back(Base::op_GAMMA_45);
-	my_operators.push_back(Base::op_GAMMA_14);
-	my_operators.push_back(Base::op_GAMMA_24);
-	my_operators.push_back(Base::op_GAMMA_34);
-	my_operators.push_back(Base::op_UNITY);
-	my_operators.push_back(Base::op_GAMMA_15);
-	my_operators.push_back(Base::op_GAMMA_25);
-	my_operators.push_back(Base::op_GAMMA_35);
-	my_operators.push_back(Base::op_GAMMA_4);*/
+	// not exactly the convention used by carsten 
+	//  missing are : g5 g0 g1, g5 g0 g2, g5 g0 g2
+	/*	my_operators.push_back(Base::op_GAMMA_5);
+		my_operators.push_back(Base::op_GAMMA_1);
+		my_operators.push_back(Base::op_GAMMA_2);
+		my_operators.push_back(Base::op_GAMMA_3);
+		my_operators.push_back(Base::op_GAMMA_45);
+		my_operators.push_back(Base::op_GAMMA_14);
+		my_operators.push_back(Base::op_GAMMA_24);
+		my_operators.push_back(Base::op_GAMMA_34);
+		my_operators.push_back(Base::op_UNITY);
+		my_operators.push_back(Base::op_GAMMA_15);
+		my_operators.push_back(Base::op_GAMMA_25);
+		my_operators.push_back(Base::op_GAMMA_35);
+		my_operators.push_back(Base::op_GAMMA_4);*/
 
 
 	my_operators.push_back(Base::op_G_0);
@@ -192,7 +195,7 @@ int main(int argc, char **argv)
 
 	// read and declare Stochastic prop
 	size_t const Nsample=propaStochaFiles.size();
-	std::cout << "Nsample = "<< Nsample << "std::endl";
+	std::cout << "Number of stochastic propagator to read : "<< Nsample << std::endl;
 
 	Core::StochasticPropagator<1> source(L,T);
 	Core::StochasticPropagator< 1 >  phi(L, T);
@@ -233,7 +236,7 @@ int main(int argc, char **argv)
 			std::cout << "Apply Dirac operator to get the source " << " ... ";
 
 		source = phi.applyDiracOperator(gauge_field,kappa,mu,thetat,thetax,thetay,thetaz,Base::Full); 
-		
+
 		if (weave.isRoot())
 			std::cout << "done.\n" << std::endl;
 
@@ -276,8 +279,15 @@ int main(int argc, char **argv)
 		std::vector< Core::Correlator< Dirac::Matrix > > C_v4 = Contract::compute_loop(xi,phi,my_operators);
 		//vv loop
 		std::vector< Core::Correlator< Dirac::Matrix > > C_vv = Contract::compute_loop(phi,g5_phi,my_operators);
-		
-		std::vector< Core::Correlator< Dirac::Matrix > > C_twist2 = Contract::compute_loop_twist2_operator(gauge_field,phi,g5_phi);
+
+
+		//for check only ...
+		//std::vector<std::string> filename2;
+		//filename2.push_back(propaStochaFiles[1]);
+		//		Core::StochasticPropagator< 1 >  xi2(L,T);
+		//		Tool::IO::load(&xi2,filename2, Tool::IO::fileSCIDAC);
+
+		std::vector< Core::Correlator< Dirac::Matrix > > C_twist2 = Contract::compute_loop_twist2_operator(gauge_field,xi,phi);
 
 
 		for(size_t i=0; i<my_operators.size(); i++)
@@ -285,7 +295,7 @@ int main(int argc, char **argv)
 			C_v4[i].sumOverSpatialVolume();
 			C_vv[i] *=  std::complex<double>(0,2.0*mu/(8.*kappa));	
 			C_vv[i].sumOverSpatialVolume();
-			
+
 		}
 
 
@@ -315,21 +325,25 @@ int main(int argc, char **argv)
 				for(size_t t = 0; t < T; t++)
 				{
 					fout_v4 << t << std::scientific <<"  "
-						<< i <<"  "<< n <<"  "<<C_v4[i][t].trace().real() <<"  "<< C_v4[i][t].trace().real() << std::endl;
+						<< i <<"  "<< n <<"  "<<C_v4[i][t].trace().real() <<"  "<< C_v4[i][t].trace().imag() << std::endl;
 					fout_vv << t << std::scientific <<"  "
-						<< i <<"  "<< n <<"  "<<C_vv[i][t].trace().real() <<"  "<< C_vv[i][t].trace().real() << std::endl;
-	
+						<< i <<"  "<< n <<"  "<<C_vv[i][t].trace().real() <<"  "<< C_vv[i][t].trace().imag() << std::endl;
+
 				}			
 			}
-			for(size_t i=0; i<4; i++)
+			for(size_t i=0; i<8; i++)
 			{
 				for(size_t t = 0; t < T; t++)
 				{
-	
-				fout_twist2 << t << std::scientific <<"  "
-						<< i <<"  "<< n <<"  "<<C_twist2[i][t].trace().real() <<"  "<< C_twist2[i][t].trace().real() << std::endl;
-				}
-			}
+					for(size_t j=0; j<4; j++)
+					{
+
+						fout_twist2 << t << std::scientific <<"  "
+							<< i <<"  "<< j <<"  "<< n <<"  "<<C_twist2[4*i+j][t].trace().real() <<"  "<< C_twist2[4*i+j][t].trace().imag() << std::endl;
+
+					}/*end loop on the 4 terms contributing to a symmetrized covariant derivative */
+				} /*t*/
+			} /*loop on the 8 operator : O_mumu (unpolarized) and Omumu g5 (polarized)*/
 
 			fout_v4.close();
 			fout_vv.close();
@@ -338,7 +352,7 @@ int main(int argc, char **argv)
 		}
 
 		if (weave.isRoot())
-			
+
 			std::cout << "done.\n" << std::endl;
 
 	}
@@ -350,6 +364,7 @@ int main(int argc, char **argv)
 
 		if(weave.isRoot())
 			std::cout << "\nprogram is going to exit normally now\n" << std::endl;
+
 	return EXIT_SUCCESS;
 
 }

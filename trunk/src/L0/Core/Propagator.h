@@ -226,11 +226,11 @@ namespace Core
 								 Field< uint64_t > const &seeds,
 								 Base::SourceStochasticTypeFlag const type);
 
-
+	  // constructor without any timeslice gives source in the whole volume.
 	  StochasticSource< NComp > (size_t const L, size_t const T,
-			                        Base::SourcePolarization const pol, Base::SourceColorState const col,
-                       			    Core::Field< uint64_t > const &seeds,
-   			                        Base::SourceStochasticTypeFlag const type);
+		                         Base::SourcePolarization const pol, Base::SourceColorState const col,
+                       			 Core::Field< uint64_t > const &seeds,
+   			                     Base::SourceStochasticTypeFlag const type);
 
 	  explicit StochasticSource< NComp > (Propagator const &base);
 	  StochasticSource< NComp > (StochasticSource< NComp > const &other);

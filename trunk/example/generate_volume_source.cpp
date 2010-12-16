@@ -1,5 +1,5 @@
 /*
-   This piece of code generates stochastic timeslice sources with Z(4) noise
+   This piece of code generates stochastic volume sources
 */
 
 //ahmidas

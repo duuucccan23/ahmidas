@@ -55,6 +55,88 @@ namespace Core
 	  {
 		  case Base::Full:
 			  {
+				  {
+					  Dirac::Gamma< 4 > gamma4;
+					  // negative t-direction
+					  Propagator neighbors(*this);
+					  neighbors.isolate();
+					  neighbors += gamma4*neighbors;
+					  // same procedure as in Transport::step(..., Base::dir_UP)
+					  (neighbors.d_components)->rightMultiply(gauge_field_copy.component< SU3::Matrix >(Base::idx_T).dagger());
+					  neighbors.shift(Base::idx_T, Base::dir_UP);
+					  result += neighbors;
+					  // positive t-direction
+					  neighbors = (*this);
+					  neighbors.isolate();
+					  neighbors -= gamma4*neighbors;
+					  // same procedure as in Transport::step(..., Base::dir_DOWN)
+					  neighbors.shift(Base::idx_T, Base::dir_DOWN);
+					  (neighbors.d_components)->rightMultiply(gauge_field_copy.component< SU3::Matrix >(Base::idx_T));
+					  result += neighbors;
+				  }
+
+				  {
+					  Dirac::Gamma< 1 > gamma1;
+					  // negative x-direction
+					  Propagator neighbors(*this);
+					  neighbors.isolate();
+					  neighbors += gamma1*neighbors;
+					  // same procedure as in Transport::step(..., Base::dir_UP)
+					  (neighbors.d_components)->rightMultiply(gauge_field_copy.component< SU3::Matrix >(Base::idx_X).dagger());
+					  neighbors.shift(Base::idx_X, Base::dir_UP);
+					  result += neighbors;
+					  // positive x-direction
+					  neighbors = (*this);
+					  neighbors.isolate();
+					  neighbors -= gamma1*neighbors;
+					  // same procedure as in Transport::step(..., Base::dir_DOWN)
+					  neighbors.shift(Base::idx_X, Base::dir_DOWN);
+					  (neighbors.d_components)->rightMultiply(gauge_field_copy.component< SU3::Matrix >(Base::idx_X));
+					  result += neighbors;
+				  }
+
+				  {
+					  Dirac::Gamma< 2 > gamma2;
+					  // negative y-direction
+					  Propagator neighbors(*this);
+					  neighbors.isolate();
+					  neighbors += gamma2*neighbors;
+					  // same procedure as in Transport::step(..., Base::dir_UP)
+					  (neighbors.d_components)->rightMultiply(gauge_field_copy.component< SU3::Matrix >(Base::idx_Y).dagger());
+					  neighbors.shift(Base::idx_Y, Base::dir_UP);
+					  result += neighbors;
+					  // positive y-direction
+					  neighbors = (*this);
+					  neighbors.isolate();
+					  neighbors -= gamma2*neighbors;
+					  // same procedure as in Transport::step(..., Base::dir_DOWN)
+					  neighbors.shift(Base::idx_Y, Base::dir_DOWN);
+					  (neighbors.d_components)->rightMultiply(gauge_field_copy.component< SU3::Matrix >(Base::idx_Y));
+					  result += neighbors;
+				  }
+
+				  {
+					  Dirac::Gamma< 3 > gamma3;
+					  // negative z-direction
+					  Propagator neighbors(*this);
+					  neighbors.isolate();
+					  neighbors += gamma3*neighbors;
+					  // same procedure as in Transport::step(..., Base::dir_UP)
+					  (neighbors.d_components)->rightMultiply(gauge_field_copy.component< SU3::Matrix >(Base::idx_Z).dagger());
+					  neighbors.shift(Base::idx_Z, Base::dir_UP);
+					  result += neighbors;
+					  // positive z-direction
+					  neighbors = (*this);
+					  neighbors.isolate();
+					  neighbors -= gamma3*neighbors;
+					  // same procedure as in Transport::step(..., Base::dir_DOWN)
+					  neighbors.shift(Base::idx_Z, Base::dir_DOWN);
+					  (neighbors.d_components)->rightMultiply(gauge_field_copy.component< SU3::Matrix >(Base::idx_Z));
+					  result += neighbors;
+				  }
+
+				  result *= std::complex<double>(-0.5, 0.0);
+
 				  // diagonal contribution
 				  {
 					  Dirac::Gamma< 5 > gamma5;
@@ -66,91 +148,100 @@ namespace Core
 					  tmp *= std::complex<double>(0.0, mu);
 					  result += tmp;
 				  }
-				  case Base::H:
-				  {
 
-					  {
-						  Dirac::Gamma< 4 > gamma4;
-						  // negative t-direction
-						  Propagator neighbors(*this);
-						  neighbors.isolate();
-						  neighbors += gamma4*neighbors;
-						  // same procedure as in Transport::step(..., Base::dir_UP)
-						  (neighbors.d_components)->rightMultiply(gauge_field_copy.component< SU3::Matrix >(Base::idx_T).dagger());
-						  neighbors.shift(Base::idx_T, Base::dir_UP);
-						  result += neighbors;
-						  // positive t-direction
-						  neighbors = (*this);
-						  neighbors.isolate();
-						  neighbors -= gamma4*neighbors;
-						  // same procedure as in Transport::step(..., Base::dir_DOWN)
-						  neighbors.shift(Base::idx_T, Base::dir_DOWN);
-						  (neighbors.d_components)->rightMultiply(gauge_field_copy.component< SU3::Matrix >(Base::idx_T));
-						  result += neighbors;
-					  }
 
-					  {
-						  Dirac::Gamma< 1 > gamma1;
-						  // negative x-direction
-						  Propagator neighbors(*this);
-						  neighbors.isolate();
-						  neighbors += gamma1*neighbors;
-						  // same procedure as in Transport::step(..., Base::dir_UP)
-						  (neighbors.d_components)->rightMultiply(gauge_field_copy.component< SU3::Matrix >(Base::idx_X).dagger());
-						  neighbors.shift(Base::idx_X, Base::dir_UP);
-						  result += neighbors;
-						  // positive x-direction
-						  neighbors = (*this);
-						  neighbors.isolate();
-						  neighbors -= gamma1*neighbors;
-						  // same procedure as in Transport::step(..., Base::dir_DOWN)
-						  neighbors.shift(Base::idx_X, Base::dir_DOWN);
-						  (neighbors.d_components)->rightMultiply(gauge_field_copy.component< SU3::Matrix >(Base::idx_X));
-						  result += neighbors;
-					  }
-
-					  {
-						  Dirac::Gamma< 2 > gamma2;
-						  // negative y-direction
-						  Propagator neighbors(*this);
-						  neighbors.isolate();
-						  neighbors += gamma2*neighbors;
-						  // same procedure as in Transport::step(..., Base::dir_UP)
-						  (neighbors.d_components)->rightMultiply(gauge_field_copy.component< SU3::Matrix >(Base::idx_Y).dagger());
-						  neighbors.shift(Base::idx_Y, Base::dir_UP);
-						  result += neighbors;
-						  // positive y-direction
-						  neighbors = (*this);
-						  neighbors.isolate();
-						  neighbors -= gamma2*neighbors;
-						  // same procedure as in Transport::step(..., Base::dir_DOWN)
-						  neighbors.shift(Base::idx_Y, Base::dir_DOWN);
-						  (neighbors.d_components)->rightMultiply(gauge_field_copy.component< SU3::Matrix >(Base::idx_Y));
-						  result += neighbors;
-					  }
-
-					  {
-						  Dirac::Gamma< 3 > gamma3;
-						  // negative z-direction
-						  Propagator neighbors(*this);
-						  neighbors.isolate();
-						  neighbors += gamma3*neighbors;
-						  // same procedure as in Transport::step(..., Base::dir_UP)
-						  (neighbors.d_components)->rightMultiply(gauge_field_copy.component< SU3::Matrix >(Base::idx_Z).dagger());
-						  neighbors.shift(Base::idx_Z, Base::dir_UP);
-						  result += neighbors;
-						  // positive z-direction
-						  neighbors = (*this);
-						  neighbors.isolate();
-						  neighbors -= gamma3*neighbors;
-						  // same procedure as in Transport::step(..., Base::dir_DOWN)
-						  neighbors.shift(Base::idx_Z, Base::dir_DOWN);
-						  (neighbors.d_components)->rightMultiply(gauge_field_copy.component< SU3::Matrix >(Base::idx_Z));
-						  result += neighbors;
-					  }
-					  break;
-				  }
+				  break;
 			  }
+
+		  case Base::H:
+			  {
+
+				  {
+					  Dirac::Gamma< 4 > gamma4;
+					  // negative t-direction
+					  Propagator neighbors(*this);
+					  neighbors.isolate();
+					  neighbors += gamma4*neighbors;
+					  // same procedure as in Transport::step(..., Base::dir_UP)
+					  (neighbors.d_components)->rightMultiply(gauge_field_copy.component< SU3::Matrix >(Base::idx_T).dagger());
+					  neighbors.shift(Base::idx_T, Base::dir_UP);
+					  result += neighbors;
+					  // positive t-direction
+					  neighbors = (*this);
+					  neighbors.isolate();
+					  neighbors -= gamma4*neighbors;
+					  // same procedure as in Transport::step(..., Base::dir_DOWN)
+					  neighbors.shift(Base::idx_T, Base::dir_DOWN);
+					  (neighbors.d_components)->rightMultiply(gauge_field_copy.component< SU3::Matrix >(Base::idx_T));
+					  result += neighbors;
+				  }
+
+				  {
+					  Dirac::Gamma< 1 > gamma1;
+					  // negative x-direction
+					  Propagator neighbors(*this);
+					  neighbors.isolate();
+					  neighbors += gamma1*neighbors;
+					  // same procedure as in Transport::step(..., Base::dir_UP)
+					  (neighbors.d_components)->rightMultiply(gauge_field_copy.component< SU3::Matrix >(Base::idx_X).dagger());
+					  neighbors.shift(Base::idx_X, Base::dir_UP);
+					  result += neighbors;
+					  // positive x-direction
+					  neighbors = (*this);
+					  neighbors.isolate();
+					  neighbors -= gamma1*neighbors;
+					  // same procedure as in Transport::step(..., Base::dir_DOWN)
+					  neighbors.shift(Base::idx_X, Base::dir_DOWN);
+					  (neighbors.d_components)->rightMultiply(gauge_field_copy.component< SU3::Matrix >(Base::idx_X));
+					  result += neighbors;
+				  }
+
+				  {
+					  Dirac::Gamma< 2 > gamma2;
+					  // negative y-direction
+					  Propagator neighbors(*this);
+					  neighbors.isolate();
+					  neighbors += gamma2*neighbors;
+					  // same procedure as in Transport::step(..., Base::dir_UP)
+					  (neighbors.d_components)->rightMultiply(gauge_field_copy.component< SU3::Matrix >(Base::idx_Y).dagger());
+					  neighbors.shift(Base::idx_Y, Base::dir_UP);
+					  result += neighbors;
+					  // positive y-direction
+					  neighbors = (*this);
+					  neighbors.isolate();
+					  neighbors -= gamma2*neighbors;
+					  // same procedure as in Transport::step(..., Base::dir_DOWN)
+					  neighbors.shift(Base::idx_Y, Base::dir_DOWN);
+					  (neighbors.d_components)->rightMultiply(gauge_field_copy.component< SU3::Matrix >(Base::idx_Y));
+					  result += neighbors;
+				  }
+
+				  {
+					  Dirac::Gamma< 3 > gamma3;
+					  // negative z-direction
+					  Propagator neighbors(*this);
+					  neighbors.isolate();
+					  neighbors += gamma3*neighbors;
+					  // same procedure as in Transport::step(..., Base::dir_UP)
+					  (neighbors.d_components)->rightMultiply(gauge_field_copy.component< SU3::Matrix >(Base::idx_Z).dagger());
+					  neighbors.shift(Base::idx_Z, Base::dir_UP);
+					  result += neighbors;
+					  // positive z-direction
+					  neighbors = (*this);
+					  neighbors.isolate();
+					  neighbors -= gamma3*neighbors;
+					  // same procedure as in Transport::step(..., Base::dir_DOWN)
+					  neighbors.shift(Base::idx_Z, Base::dir_DOWN);
+					  (neighbors.d_components)->rightMultiply(gauge_field_copy.component< SU3::Matrix >(Base::idx_Z));
+					  result += neighbors;
+				  }
+
+				  result *= std::complex<double>(-kappa, 0.0);
+			
+				  break;
+			  }
+
+
 
 		  case Base::A:
 			  {

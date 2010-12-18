@@ -50,6 +50,7 @@ The code only perform local contraction. Fuzzing has to be include in the future
 
 #define _with_theta_
 //#define _with_MMS_
+#define _without_MMS_
 
 int main(int argc, char **argv)
 {
@@ -107,22 +108,7 @@ int main(int argc, char **argv)
 
 	std::vector< Base::HermitianBilinearOperator > my_operators;
 
-	// not exactly the convention used by carsten 
-	//  missing are : g5 g0 g1, g5 g0 g2, g5 g0 g2
-	/*	my_operators.push_back(Base::op_GAMMA_5);
-		my_operators.push_back(Base::op_GAMMA_1);
-		my_operators.push_back(Base::op_GAMMA_2);
-		my_operators.push_back(Base::op_GAMMA_3);
-		my_operators.push_back(Base::op_GAMMA_45);
-		my_operators.push_back(Base::op_GAMMA_14);
-		my_operators.push_back(Base::op_GAMMA_24);
-		my_operators.push_back(Base::op_GAMMA_34);
-		my_operators.push_back(Base::op_UNITY);
-		my_operators.push_back(Base::op_GAMMA_15);
-		my_operators.push_back(Base::op_GAMMA_25);
-		my_operators.push_back(Base::op_GAMMA_35);
-		my_operators.push_back(Base::op_GAMMA_4);*/
-
+	// define a basis of Hermitian Dirac matrices 
 
 	my_operators.push_back(Base::op_G_0);
 	my_operators.push_back(Base::op_G_1);
@@ -196,34 +182,48 @@ int main(int argc, char **argv)
 
 	// read and declare Stochastic prop
 	size_t const Nsample=propaStochaFiles.size();
-	std::cout << "Number of stochastic propagator to read : "<< Nsample << std::endl;
+	if (weave.isRoot())
+		std::cout << "Number of stochastic propagator to read : "<< Nsample << std::endl;
 
 	Core::StochasticPropagator< 1 > source(L,T);
-	Core::StochasticPropagator< 1 > phi(L, T);
+
 	Core::StochasticPropagator< 1 > tmp(L, T);
 
 	for(size_t n=0;n<Nsample;n++)
 	{  
 
-
-
-		if(weave.isRoot()) std::cout<< "Stochastic propagator " <<n<< " to be read from " << propaStochaFiles[n] <<" ... "; 
-
 		std::vector<std::string> filename;
 		filename.push_back(propaStochaFiles[n]);
 
+
+#ifdef _without_MMS_
+		if(weave.isRoot()) std::cout<< "Stochastic propagator " <<n<< " to be read from " << propaStochaFiles[n] <<" ... "; 
+
+		Core::StochasticPropagator< 1 > phi(L, T);
 		Tool::IO::load(&phi,filename, Tool::IO::fileSCIDAC);
 		if (weave.isRoot())
 			std::cout << "done.\n" << std::endl;
+#endif
+		// if source have been produced using MMS ... read (D+D-)^-1
 
-		// if source have been produced using MMS ... need to apply Dirac operator to get 1/D
 #ifdef _with_MMS_
 		if(weave.isRoot())	
 			std::cout << "MMS :" << propaStochaFiles[n] << "is 1/(Ddagger D) so apply Ddagger to get the propagator" <<" ...";
-		exit(1);
+
+		Core::StochasticPropagator< 1 > DD_prop(L, T);
+		Core::StochasticPropagator< 1 > prop_out(L, T);
+
+		Tool::IO::load(&DD_prop,filename, Tool::IO::fileSCIDAC);
+
+		prop_out=DD_prop.applyDiracOperator(gauge_field,kappa,-mu,thetat,thetax,thetay,thetaz);
+		prop_out.rightMultiply(gamma5); //this is required because D=Q*g5 and g5 is not put by applyDiracOperator
+
+		Core::StochasticPropagator< 1 > phi(prop_out);
+
 		if(weave.isRoot())	
 			std::cout << "done.\n" << std::endl;
-#endif	
+#endif
+
 		Core::StochasticPropagator< 1 >  phi_f(phi);
 		Smear::Jacobi Jacobi_tool(Jac_alpha);
 		phi_f.smearJacobi(Jac_alpha, Jac_iterations, gauge_field_f);
@@ -298,6 +298,11 @@ int main(int argc, char **argv)
 			C_vv[i].sumOverSpatialVolume();
 
 		}
+
+
+// constant contributin for :
+//	i=0	addimag = 2.*kappa*mu/sqrt(1 + 4.*kappa*kappa*mu*mu)*L*L*L*3.*4.*2.*kappa*2 *4kappa.;
+//	i=8	addreal = 1./sqrt(1 + 4.*kappa*kappa*mu*mu)*L*L*L*3.*4.*2.*kappa*2. *4kappa;
 
 
 		//output

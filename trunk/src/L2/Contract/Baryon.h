@@ -144,4 +144,15 @@ namespace Contract
                                                 /* this allows for more than one operator */
                                                 std::vector< Base::Operator > const &my_operators,
                                                 Base::BaryonPropagatorProjector const my_projector);
+
+  std::vector< Core::BaryonCorrelator > proton_threepoint_stochastic_non_local(Core::Propagator const &u,
+                                                Core::Propagator const &d,
+                                                Core::StochasticPropagator <12> const &phi_u,
+                                                Core::StochasticPropagator <12> const &phi_d,
+                                                Core::StochasticSource <12> const &xi,
+                                                Core::Field<QCD::Gauge> const &gauge_field,
+                                                size_t t_source, size_t t_sink,
+                                                /* this allows for more than one operator */
+                                                std::vector< Base::Operator > const &my_operators,
+                                                Base::BaryonPropagatorProjector const my_projector);
 }

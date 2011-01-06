@@ -62,6 +62,8 @@ namespace QCD
       void setToRandom();
       void setToZero();
 
+      double norm() const;
+
       size_t size() const;
       friend std::ostream &operator<<(std::ostream &out, Spinor const &spinor);
   };

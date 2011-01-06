@@ -45,6 +45,15 @@ namespace Base
     return all_result;
   }
 
+  inline std::complex< double > Weave::sum(std::complex< double > result) const
+  {
+    std::complex< double > all_result;
+    barrier();
+    d_grid->grid().Allreduce(static_cast< const void * >(&result), static_cast< void * >(&all_result),
+                           1, MPI_DOUBLE_COMPLEX, MPI::SUM);
+    return all_result;
+  }
+
   // SD: this is quite inefficient, but will do the job.
   // btw, where do we actually need this?
   inline bool Weave::isLocallyAvailable(size_t const x, size_t const y, size_t const z) const
@@ -135,7 +144,7 @@ namespace Base
     d_grid->grid().Barrier();
 
     // call MPI::Intracomm::Allreduce(...)
-    (d_grid->grid()).Allreduce(data_send, data_recv, count, MPI::DOUBLE_COMPLEX, MPI::SUM);
+    (d_grid->grid()).Allreduce(data_send, data_recv, count, MPI_DOUBLE_COMPLEX, MPI::SUM);
   }
 
   inline void Weave::allReduce(double const *data_send, double *data_recv, size_t const count) const

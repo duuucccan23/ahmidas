@@ -9,6 +9,6 @@ namespace Base
 
     // call MPI::Intracomm::Allreduce(...)
     (d_grid->grid()).Allreduce(static_cast< const void * >(data_send), static_cast< void * >(data_recv),
-                           int(count*d_T), MPI::DOUBLE_COMPLEX, MPI::SUM);
+                           int(count*d_T), MPI_DOUBLE_COMPLEX, MPI::SUM);
   }
 }

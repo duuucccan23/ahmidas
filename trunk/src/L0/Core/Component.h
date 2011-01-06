@@ -39,6 +39,10 @@ namespace Core
 
       #include "Component/Component.operators"
 
+
+      // NOTE: would be great to have this:
+      // void shift(Base::SpaceTimeIndex const idx, Base::Direction const dir);
+
     private:
       Atom &getPhysicalIndex(size_t const idx);
       Atom const &getPhysicalIndex(size_t const idx) const;

@@ -2,7 +2,7 @@
 
 // performs a summation over timeslices including non-zero momentum projection
 template< typename Datatype >
-void Correlator< Datatype >::momentumProjection(int const * const momentum)
+std::vector< Correlator< Datatype > > Correlator< Datatype >::momentumProjection(std::vector< int * > const &momenta) const
 {
   size_t const L(this->L());
   size_t const T(this->T());
@@ -13,32 +13,42 @@ void Correlator< Datatype >::momentumProjection(int const * const momentum)
     exit(1);
   }
 
-  std::complex< double > const I(0, 1);
+  // this is 2*pi*i/L
+  std::complex< double > const factor(0.0, 2.0*M_PI/double(L));
 
-  isolate();
-  size_t localIndex;
-  for(size_t idx_T = 0;  idx_T < T; idx_T++)
+  std::vector< Correlator< Datatype > > results; 
+  for (size_t idx_M = 0;  idx_M < momenta.size(); idx_M++)
   {
-    d_sumTimeslice[idx_T] = Dirac::Matrix(std::complex< double >(0.0, 0.0));
-    for(size_t idx_Z = 0; idx_Z < L; idx_Z++)
+    Correlator< Datatype > corr_tmp(*this);
+
+    corr_tmp.deleteField();
+    corr_tmp.isolate();
+    size_t localIndex;
+    for (size_t idx_T = 0;  idx_T < T; idx_T++)
     {
-      for(size_t idx_Y = 0; idx_Y < L; idx_Y++)
+      corr_tmp.d_sumTimeslice[idx_T] = Dirac::Matrix(std::complex< double >(0.0, 0.0));
+      for (size_t idx_Z = 0; idx_Z < L; idx_Z++)
       {
-        for(size_t idx_X = 0; idx_X < L; idx_X++)
+        for (size_t idx_Y = 0; idx_Y < L; idx_Y++)
         {
+          for (size_t idx_X = 0; idx_X < L; idx_X++)
+          {
 
-          localIndex = d_weave->globalCoordToLocalIndex(idx_X, idx_Y, idx_Z, idx_T);
-          /* globalCoordToLocalIndex returns local volume if local data is not available on this cpu */
-          if (localIndex == d_weave->localVolume())
-            continue;
+            localIndex = d_weave->globalCoordToLocalIndex(idx_X, idx_Y, idx_Z, idx_T);
+            /* globalCoordToLocalIndex returns local volume if local data is not available on this cpu */
+            if (localIndex == d_weave->localVolume())
+              continue;
 
-          d_sumTimeslice[idx_T] += (*d_data)[localIndex] *
-            exp(I * double(std::inner_product(momentum, momentum + 3, (*s_xRelative)[localIndex], 0)));
+            corr_tmp.d_sumTimeslice[idx_T] += (*d_data)[localIndex] *
+              exp(factor * double(std::inner_product(momenta[idx_M], momenta[idx_M] + 3, (*s_xRelative)[localIndex], 0)));
+          }
         }
       }
     }
+    d_weave->sumOverTimeSlices(reinterpret_cast< std::complex< double> const * >(corr_tmp.d_sumTimeslice),
+                               reinterpret_cast< std::complex< double> * >(corr_tmp.d_sumTimeslice_global),
+                               sizeof(Datatype)/sizeof(std::complex< double >));
+    results.push_back(corr_tmp);
   }
-  d_weave->sumOverTimeSlices(reinterpret_cast< std::complex< double> const * >(d_sumTimeslice),
-                            reinterpret_cast< std::complex< double> * >(d_sumTimeslice_global),
-                            sizeof(Datatype)/sizeof(std::complex< double >));
+  return results;
 }

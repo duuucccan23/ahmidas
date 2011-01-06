@@ -52,12 +52,12 @@ namespace Core
 
       Core::Field< QCD::Tensor > &components() // inline hack for I/O -- make proper at some point
       {
-	return *d_components;
+        return *d_components;
       }
 
       Core::Field< QCD::Tensor > const &components() const // inline hack for I/O -- make proper at some point
       {
-	return *d_components;
+        return *d_components;
       }
 
       Propagator &operator=(Propagator const &rhs);
@@ -80,21 +80,21 @@ namespace Core
 
       void rightMultiplyOperator(Base::Operator const O); // only for local operators
       void rightMultiplyOperator(Base::HermitianBilinearOperator const O); // only for local operators
-	  void leftMultiplyOperator(Base::Operator const O); // only for local operators
+      void leftMultiplyOperator(Base::Operator const O); // only for local operators
       Core::Field< Dirac::Matrix > *contractWithOperatorInsertion(Base::Operator const O, Field< QCD::Gauge > * const gauge_field, Propagator const &fromRight);
 
       void rightMultiply(Propagator const & other);
       void leftMultiply(Propagator const & other);
 
-	  //multiplication by the gauge field
+      //multiplication by the gauge field
 
-	  void rightMultiply(Core::Field< QCD::Gauge > & gaugeField, Base::SpaceTimeIndex const shift);
-	  void rightMultiplyDagger(Core::Field< QCD::Gauge > & gaugeField, Base::SpaceTimeIndex const shift);
-      
-	  // Dirac operators:
-	  
-	  // fixed boundary conditions (light doublet)
-	  // the boundary conditions (if no theta-parameter is given) are periodic in space and antiperiodic in time
+      void rightMultiply(Core::Field< QCD::Gauge > & gaugeField, Base::SpaceTimeIndex const shift);
+      void rightMultiplyDagger(Core::Field< QCD::Gauge > & gaugeField, Base::SpaceTimeIndex const shift);
+
+      // Dirac operators:
+
+      // fixed boundary conditions (light doublet)
+      // the boundary conditions (if no theta-parameter is given) are periodic in space and antiperiodic in time
       Propagator applyDiracOperator(Field< QCD::Gauge > const &gauge_field, double const kappa, double const mu,
                                     double const thetaT = 1.0, double const thetaX = 0.0,
                                     double const thetaY = 0.0, double const thetaZ = 0.0) const;
@@ -103,12 +103,12 @@ namespace Core
       // fixed boundary conditions (light doublet)
       Propagator applyDiracOperator(Field< QCD::Gauge > const &gauge_field, double const kappa, double const mu, size_t const t_boundary) const;
 
-	  // This function can apply independantly the diagonal and the hopping term of the Dirac operator or the full Dirac operator
+      // This function can apply independantly the diagonal and the hopping term of the Dirac operator or the full Dirac operator
       Propagator applyDiracOperator(Field< QCD::Gauge > const &gauge_field, double const kappa, double const mu,
                                     double const thetaT, double const thetaX,
-									double const thetaY, double const thetaZ, Base::DiracOperator const O) const;
+                                    double const thetaY, double const thetaZ, Base::DiracOperator const O) const;
 
-	  // this function reconstructs the doublet propagators from  the (Q^+Q^-)^-1 output of the tmLQCD multi-mas-solver
+      // this function reconstructs the doublet propagators from  the (Q^+Q^-)^-1 output of the tmLQCD multi-mas-solver
       // the boundary conditions (if no theta-parameter is given) are periodic in space and antiperiodic in time
       void reconstruct_doublet(Propagator &propPlus, Propagator &propMinus,
                               Field< QCD::Gauge > const &gauge_field,
@@ -143,6 +143,17 @@ namespace Core
                                                  std::vector< Base::Operator > const &ops,
                                                  size_t const t_src, size_t const t_snk) const;
 
+      // needed for baryon contractions (threepoint)
+      std::vector< Core::Field< Dirac::Matrix > * >
+        construct_baryon_with_non_local_operator_insertion(Propagator const &no2, Propagator const &no3,
+                                                 StochasticPropagator< 12 > const &phi_no1,
+                                                 StochasticPropagator< 12 > const &phi_no2,
+                                                 StochasticPropagator< 12 > const &phi_no3,
+                                                 StochasticSource< 12 > const &xi,
+                                                 Field< QCD::Gauge > const &gauge_field,
+                                                 Base::BaryonInterpolatingField const ipol,
+                                                 std::vector< Base::Operator > const &ops,
+                                                 size_t const t_src, size_t const t_snk) const;
 
       /*
           Revert Propagator using gamma5 hermeticity trick:
@@ -222,60 +233,65 @@ namespace Core
       StochasticSource< NComp > (size_t const L, size_t const T);
       StochasticSource< NComp > (size_t const L, size_t const T,
                                  Base::SourcePolarization const pol, Base::SourceColorState const col,
-								 size_t const timeslice,
-								 Field< uint64_t > const &seeds,
-								 Base::SourceStochasticTypeFlag const type);
+                 size_t const timeslice,
+                 Field< uint64_t > const &seeds,
+                 Base::SourceStochasticTypeFlag const type);
 
-	  // constructor without any timeslice gives source in the whole volume.
-	  StochasticSource< NComp > (size_t const L, size_t const T,
-		                         Base::SourcePolarization const pol, Base::SourceColorState const col,
-                       			 Core::Field< uint64_t > const &seeds,
-   			                     Base::SourceStochasticTypeFlag const type);
+    // constructor without any timeslice gives source in the whole volume.
+    StochasticSource< NComp > (size_t const L, size_t const T,
+                             Base::SourcePolarization const pol, Base::SourceColorState const col,
+                              Core::Field< uint64_t > const &seeds,
+                              Base::SourceStochasticTypeFlag const type);
 
-	  explicit StochasticSource< NComp > (Propagator const &base);
-	  StochasticSource< NComp > (StochasticSource< NComp > const &other);
+    explicit StochasticSource< NComp > (Propagator const &base);
+    StochasticSource< NComp > (StochasticSource< NComp > const &other);
 
-	  // ~StochasticSource< NComp > ();
+    // ~StochasticSource< NComp > ();
 
-	  //void conjugate();
+    //void conjugate();
 
-	  Propagator operator*(StochasticPropagator< NComp > const &sPropagator) const;
+    Propagator operator*(StochasticPropagator< NComp > const &sPropagator) const;
 
-	  Propagator createStochasticPropagator_fixedSink(StochasticPropagator< NComp > const &, size_t const *) const;
+    Propagator createStochasticPropagator_fixedSink(StochasticPropagator< NComp > const &, size_t const *) const;
 
-	  size_t const L() const;
-	  size_t const T() const;
+    size_t const L() const;
+    size_t const T() const;
 
   };
 
   template< size_t NComp >
-	  class StochasticPropagator : public Propagator
+  class StochasticPropagator : public Propagator
   {
 
-	  friend class StochasticSource< NComp >;
+    friend class StochasticSource< NComp >;
 
-	  public:
+    public:
 
-	  StochasticPropagator< NComp > (size_t const L, size_t const T);
+    StochasticPropagator< NComp > (size_t const L, size_t const T);
 
-	  StochasticPropagator< NComp > (Propagator const &other);
+    StochasticPropagator< NComp > (Propagator const &other);
 
-	  StochasticPropagator< NComp > (StochasticPropagator< NComp > const &other);
+    StochasticPropagator< NComp > (StochasticPropagator< NComp > const &other);
 
-	  Field< Dirac::Matrix > *operator*(StochasticPropagator< NComp > const &other) const;
+    Field< Dirac::Matrix > *operator*(StochasticPropagator< NComp > const &other) const;
 
-	  StochasticPropagator< NComp > &select_timeslice(size_t const timeslice);
+    StochasticPropagator< NComp > &select_timeslice(size_t const timeslice);
 
-	  Propagator operator*(StochasticSource< NComp > const &sSource) const;
+    Propagator operator*(StochasticSource< NComp > const &sSource) const;
 
-	  StochasticPropagator< NComp > &revert();
-	  StochasticPropagator< NComp > &dagger();
-	  StochasticPropagator< NComp > &conjugate();
-	  StochasticPropagator< NComp > &transpose();
+    StochasticPropagator< NComp > &revert();
+    StochasticPropagator< NComp > &dagger();
+    StochasticPropagator< NComp > &conjugate();
+    StochasticPropagator< NComp > &transpose();
 
-	  void isolate();
+    template< size_t Index >
+    StochasticPropagator< NComp > &rightMultiply(Dirac::Gamma< Index > const &gamma);
 
-	  void rotateToPhysicalBasis(bool const sign);
+//     StochasticPropagator< NComp > &shift(Base::SpaceTimeIndex const idx, Base::Direction const dir, size_t const times);
+
+    void isolate();
+
+    void rotateToPhysicalBasis(bool const sign);
   };
 
 #include "Propagator/Propagator.inlines"
@@ -285,4 +301,5 @@ namespace Core
 #include "Propagator/Propagator.operators.inlines"
 }
 #include "Propagator/StochasticSource.template"
+#include "Propagator/StochasticPropagator_rightMultiply.template"
 

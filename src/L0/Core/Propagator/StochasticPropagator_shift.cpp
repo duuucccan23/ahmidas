@@ -2,7 +2,11 @@
 
 namespace Core
 {
-  Propagator &Propagator::shift(Base::SpaceTimeIndex const idx, Base::Direction const dir, size_t const times)
+
+  // not working since we cannot shift a Core::Component
+
+/*  template< >
+  StochasticPropagator< 1 > &StochasticPropagator< 1 >::shift(Base::SpaceTimeIndex const idx, Base::Direction const dir, size_t const times)
   {
     if (times == 0)
       return *this;
@@ -48,9 +52,9 @@ namespace Core
           exit(1);
        }
     }
+    // need to shift only non-zero component 
     for (size_t I=0; I<my_times; I++)
-      d_components->shift(idx, my_dir);
+      (d_components->component< QCD::Spinor >(0)).shift(idx, my_dir);
     return *this;
-  }
+  }*/
 }
-

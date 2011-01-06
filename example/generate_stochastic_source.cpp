@@ -274,8 +274,12 @@ int main(int argc, char **argv)
         std::cout << "stochastic source smeared successfully\n" << std::endl;
     }
     Tool::IO::save(&stochastic_source, stochasticSourceFiles, Tool::IO::fileSCIDAC);
+    double norm = stochastic_source.norm();
     if (weave.isRoot())
+    {
       std::cout << "stochastic source saved successfully\n" << std::endl;
+      std::cout << "norm of stochastic source: " << std::scientific << norm << std::endl;
+    }
   }
   // version 2: spin (Dirac) dilution only
   else if(polarization == Base::sou_FULLY_POLARIZED && colorState == Base::sou_GENERIC)
@@ -292,8 +296,12 @@ int main(int argc, char **argv)
     }
     Tool::IO::save(reinterpret_cast< Core::StochasticPropagator< 4 > * >(&stochastic_source),
                    stochasticSourceFiles, Tool::IO::fileSCIDAC);
+    double norm = stochastic_source.norm();
     if (weave.isRoot())
+    {
       std::cout << "stochastic source saved successfully\n" << std::endl;
+      std::cout << "norm of stochastic source: " << std::scientific << norm << std::endl;
+    }
   }
   // version 2: spin (Dirac) dilution only
   else if(polarization == Base::sou_PARTLY_POLARIZED && colorState == Base::sou_GENERIC)
@@ -309,8 +317,12 @@ int main(int argc, char **argv)
         std::cout << "stochastic source smeared successfully\n" << std::endl;
     }
     Tool::IO::save(reinterpret_cast< Core::StochasticPropagator< 1 > * >(&stochastic_source), stochasticSourceFiles, Tool::IO::fileSCIDAC);
+    double norm = stochastic_source.norm();
     if (weave.isRoot())
+    {
       std::cout << "stochastic source saved successfully\n" << std::endl;
+      std::cout << "norm of stochastic source: " << std::scientific << norm << std::endl;
+    }
   }
   else
   {

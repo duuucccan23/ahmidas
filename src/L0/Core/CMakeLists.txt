@@ -1,10 +1,12 @@
 SET(Sources_Correlator Correlator/Correlator.cpp
                        Correlator/Correlator_projection.cpp
+                       Correlator/Correlator_printWithMomentum.cpp
                        Correlator/Correlator_rotateToPhysicalBasis.cpp
                        Correlator/Correlator_cout_operator_lshift.cpp)
 SET(Sources_Propagator Propagator/StochasticPropagator.cpp
                        Propagator/StochasticSource.cpp
                        Propagator/StochasticPropagator_rotateToPhysicalBasis.cpp
+                       Propagator/StochasticPropagator_shift.cpp
                        Propagator/Propagator_applyDiracOperator_a.cpp
                        Propagator/Propagator_applyDiracOperator_b.cpp
                        Propagator/Propagator_applyDiracOperator_c.cpp

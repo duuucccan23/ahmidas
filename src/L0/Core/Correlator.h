@@ -59,7 +59,7 @@ namespace Core
       // performs a summation over the volume of each individual timeslice (zero momentum projection)
       void sumOverSpatialVolume();
       // performs a summation over the volume of each individual timeslice including non-zero momentum projection
-      void momentumProjection(int const * const momentum);
+      std::vector< Correlator< Datatype > > momentumProjection(std::vector< int * > const &momenta) const;
       void prepareMomentumProjection(int const * const position_offset);
 
       void rotateToPhysicalBasis();
@@ -74,6 +74,9 @@ namespace Core
       size_t T() const;
       size_t L() const;
       size_t size() const;
+
+
+      void printWithMomentum(std::ostream &out, int const * const momentum) const;
 
       friend std::ostream &operator<< < Datatype >(std::ostream &out, Correlator< Datatype > const &c);
 

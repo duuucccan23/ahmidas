@@ -226,7 +226,7 @@ inline StochasticPropagator< 1 > &StochasticPropagator< 1 >::dagger()
 template< >
 inline StochasticPropagator< 1 > &StochasticPropagator< 1 >::conjugate()
 {
-  StochasticPropagator<1>::iterator it = begin();
+  StochasticPropagator< 1 >::iterator it = begin();
   isolate();
 
     while(it != end())
@@ -243,3 +243,6 @@ inline StochasticPropagator< 1 > &StochasticPropagator< 1 >::transpose()
 {
   return *this;
 }
+
+
+

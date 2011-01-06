@@ -16,7 +16,7 @@ bool QCD::Spinor::equals(QCD::Spinor const &other, double const relPrecision) co
 
   for (size_t idx=0; idx<12; idx++)
   {
-    if (Base::isnan(abs(ptr_tmp[idx])))
+    if (Base::isNaN(abs(ptr_tmp[idx])))
       return false;
     if (abs(ptr_tmp[idx]) != ZERO && (abs(ptr_tmp[idx])/abs(ptr_this[idx])) > relPrecision)
       return false;

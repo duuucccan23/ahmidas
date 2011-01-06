@@ -32,7 +32,7 @@ namespace Contract
       psi2.rightMultiplyOperator(operator_combinations[iOp].second);
 
       Core::StochasticPropagator< 4 > O_R(psi1);
-      O_R.rightMultiply(psi2);
+      (dynamic_cast<Core::Propagator & >(O_R)).rightMultiply(psi2);
 
 	//LEFT SIDE
 
@@ -43,7 +43,7 @@ namespace Contract
       psi4.rightMultiplyOperator(operator_combinations[iOp].second);
 
       Core::StochasticPropagator< 4 >  O_L(psi3);
-      O_L.rightMultiply(psi4);
+      (dynamic_cast<Core::Propagator & >(O_L)).rightMultiply(psi4);
 
 	// Multiply and take the trace 	
 

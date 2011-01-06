@@ -52,6 +52,7 @@ namespace Base
       size_t rank(size_t const *coords) const; // rank of the node with site coordinates coords
 
       double sum(double result) const;
+      std::complex< double > sum(std::complex< double > result) const;
 
       template< typename Element >
       void fieldShift(Base::SpaceTimeIndex const idx, Base::Direction const dir, Element *field, size_t const *offsets) const;

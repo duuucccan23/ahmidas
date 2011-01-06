@@ -12,7 +12,7 @@ bool SU3::Matrix::equals(SU3::Matrix const &other, double const relativePrecisio
   tmp -= other;
   for (size_t idx=0; idx<9; idx++)
   {
-    if (Base::isnan(abs(d_data[idx])))
+    if (Base::isNaN(abs(d_data[idx])))
       return false;
     if (abs(tmp.d_data[idx]) != ZERO && (abs(tmp.d_data[idx])/abs(d_data[idx])) > relativePrecision)
       return false;

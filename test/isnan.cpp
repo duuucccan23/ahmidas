@@ -6,9 +6,9 @@ int main(int argc, char **argv)
 {
   Ahmidas start(&argc, &argv);
   double a = 0;
-  bool stdflag = Base::isnan(a);
-  bool infflag = Base::isnan(1/a);
-  bool nanflag = Base::isnan(a/a);
+  bool stdflag = Base::isNaN(a);
+  bool infflag = Base::isNaN(1.0/a);
+  bool nanflag = Base::isNaN(a/a);
   std::ostringstream ostr("Base::isnan(", std::ios::ate);
   ostr << a << ") = " << stdflag << std::endl
        << "Base::isnan(" << 1/a << ") = " << infflag << std::endl

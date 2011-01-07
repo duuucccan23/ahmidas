@@ -12,10 +12,10 @@ void Tool::IO::savePropagatorInfo(LemonWriter *writer, size_t L, size_t T)
   oss << "<lt>" << T << "</lt>\n";
   oss << "</etmcFormat>";
   std::string const datastr(oss.str());
-  size_t slen = datastr.length();
+  uint64_t slen = datastr.length();
 
   char *data = new char[slen + 1];
-  std::fill_n(data, slen+1, '\0');
+  std::fill_n(data, slen + 1, '\0');
   std::string recordType("etmc-propagator-format");
   std::copy(recordType.begin(), recordType.end(), data);
   LemonRecordHeader *header = lemonCreateHeader(1, 1, data, slen);

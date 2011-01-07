@@ -10,26 +10,29 @@ void Tool::IO::saveScidacBinary(LemonWriter *writer, Core::Field< Element > cons
   for (size_t idx = 0; idx < field.localVolume(); ++idx)
     buffer[idx] = field.constPhysicalIndex(idx);
   if (!Base::bigEndian)
-    Base::swapEndian(buffer, buffer + sizeof(Element) * field.localVolume(), 8);
+    Base::swapEndian(buffer, buffer + field.localVolume(), 8);
 
   int dims[] = {field.L(), field.L(), field.L(), field.T()};
-  lemonWriteLatticeParallel(writer, buffer, sizeof(Element), dims);
+  int const mapping[4] = {3, 2, 1, 0};
+  lemonWriteLatticeParallelMapped(writer, buffer, sizeof(Element), dims, mapping);
 
   delete [] buffer;
   lemonWriterCloseRecord(writer);
 }
 
 template< typename Element >
-void Tool::IO::saveScidacBinary(LemonWriter *writer, Element *buffer, size_t volume, int *dims)
+void Tool::IO::saveScidacBinary(LemonWriter *writer, Element *buffer, size_t volume, size_t const localVolume, int *dims)
 {
   LemonRecordHeader *header = lemonCreateHeader(1, 1, "scidac-binary-data", volume * sizeof(Element));
   lemonWriteRecordHeader(header, writer);
   lemonDestroyHeader(header);
 
   if (!Base::bigEndian)
-    Base::swapEndian(buffer, buffer + sizeof(Element) * volume, 8);
+    Base::swapEndian(buffer, buffer + localVolume, 8);
 
-  lemonWriteLatticeParallel(writer, buffer, sizeof(Element), dims);
+
+  int const mapping[4] = {3, 2, 1, 0};
+  lemonWriteLatticeParallelMapped(writer, buffer, sizeof(Element), dims, mapping);
 
   lemonWriterCloseRecord(writer);
 }

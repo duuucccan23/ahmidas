@@ -6,7 +6,7 @@ void Tool::IO::savePropagatorType(LemonWriter *writer)
   uint64_t slen = infoString.length();
 
   char data[32];
-  std::string recordType("etmc-propagator-format");
+  std::string recordType("propagator-type");
   std::copy(recordType.begin(), recordType.end(), data);
   LemonRecordHeader *header = lemonCreateHeader(1, 1, data, slen);
   lemonWriteRecordHeader(header, writer);

@@ -77,7 +77,7 @@ namespace Tool
     void saveScidacBinary(LemonWriter *writer, Core::Field< Element > const &field);
 
     template< typename Element >
-    void saveScidacBinary(LemonWriter *writer, Element *buffer, size_t volume, int *dims);
+    void saveScidacBinary(LemonWriter *writer, Element *buffer, size_t volume, size_t const localVolume, int *dims);
 
     //* NON-LEMON VERSIONS *//
     void load(Core::Field< QCD::Gauge >  *field, std::string const &filename, Tool::IO::filetype);

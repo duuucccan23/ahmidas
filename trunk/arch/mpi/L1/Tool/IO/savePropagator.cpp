@@ -27,7 +27,7 @@ void Tool::IO::savePropagator(Core::Propagator const &prop, std::vector< std::st
     for (size_t ctr = 0; ctr < field.localVolume(); ++ctr)
       buffer[ctr] = comp[ctr];
 
-    saveScidacBinary(writer, buffer, field.volume(), dims); // Takes care of BE issues
+    saveScidacBinary(writer, buffer, field.volume(), field.localVolume(), dims); // Takes care of BE issues
 
     lemonDestroyWriter(writer);
     MPI_File_close(&fp);
@@ -60,7 +60,7 @@ void Tool::IO::savePropagator(Core::StochasticPropagator< 1 > const &prop, std::
   for (size_t ctr = 0; ctr < field.localVolume(); ++ctr)
     buffer[ctr] = comp[ctr];
 
-  saveScidacBinary(writer, buffer, field.volume(), dims); // Takes care of BE issues
+  saveScidacBinary(writer, buffer, field.volume(), field.localVolume(), dims); // Takes care of BE issues
 
   lemonDestroyWriter(writer);
   MPI_File_close(&fp);
@@ -94,7 +94,7 @@ void Tool::IO::savePropagator(Core::StochasticPropagator< 4 > const &prop, std::
     for (size_t ctr = 0; ctr < field.localVolume(); ++ctr)
       buffer[ctr] = comp[ctr];
 
-    saveScidacBinary(writer, buffer, field.volume(), dims); // Takes care of BE issues
+    saveScidacBinary(writer, buffer, field.volume(), field.localVolume(), dims); // Takes care of BE issues
 
     lemonDestroyWriter(writer);
     MPI_File_close(&fp);

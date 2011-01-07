@@ -2,11 +2,12 @@
 
 void Tool::IO::savePropagatorType(LemonWriter *writer)
 {
-  std::string infoString("DiracFermion_Sink");
+  std::string const infoString("DiracFermion_Sink");
   uint64_t slen = infoString.length();
 
   char data[32];
-  std::string recordType("propagator-type");
+  std::fill_n(data, 32, '\0');
+  std::string const recordType("propagator-type");
   std::copy(recordType.begin(), recordType.end(), data);
   LemonRecordHeader *header = lemonCreateHeader(1, 1, data, slen);
   lemonWriteRecordHeader(header, writer);

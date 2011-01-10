@@ -17,7 +17,7 @@ Correlator< Datatype >::Correlator(Core::Field< Datatype >* data)
   d_weave = (new Base::Weave(d_L, d_T));
   d_data = (new Field< Datatype >(*data));
   d_sumTimeslice = (new Datatype[d_T]);
-  d_sumTimeslice_global = (new Dirac::Matrix[d_T]);
+  d_sumTimeslice_global = (new Datatype[d_T]);
   d_references = (new size_t(1));
   d_offset = (0);
 }

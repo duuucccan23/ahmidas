@@ -295,11 +295,11 @@ namespace Core
   };
 
 #include "Propagator/Propagator.inlines"
+#include "Propagator/StochasticPropagator_rightMultiply.template"
 #include "Propagator/StochasticPropagator.inlines"
 #include "Propagator/Propagator.iterator.inlines"
 #include "Propagator/Propagator.const_iterator.inlines"
 #include "Propagator/Propagator.operators.inlines"
 }
 #include "Propagator/StochasticSource.template"
-#include "Propagator/StochasticPropagator_rightMultiply.template"
 

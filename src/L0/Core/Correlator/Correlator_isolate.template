@@ -1,10 +1,17 @@
 #include "Correlator.ih"
 
 template< typename Datatype >
-void Correlator< Datatype >::isolate()
+inline void Correlator< Datatype >::isolate()
 {
   if (*d_references == 1)
     return;
+  else
+   isolate_action();
+}
+
+template< typename Datatype >
+void Correlator< Datatype >::isolate_action()
+{
 
   assert(*d_references > 1);
 

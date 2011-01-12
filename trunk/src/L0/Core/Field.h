@@ -148,6 +148,7 @@ namespace Core
     private:
       size_t shiftIdxToZero(size_t const idx) const;
       size_t shiftIdxToOffset(size_t const idx) const;
+      void isolate_action();
   };
 
   template< typename Element >

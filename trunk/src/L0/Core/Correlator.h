@@ -83,6 +83,7 @@ namespace Core
     private:
       void destroy();
       void isolate();
+      void isolate_action();
   };
 
 

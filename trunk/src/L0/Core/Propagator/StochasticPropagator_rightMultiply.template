@@ -1,39 +1,36 @@
 #include "Propagator.ih"
 
-namespace Core
+template< >
+template< size_t Index >
+StochasticPropagator< 1 > &StochasticPropagator< 1 >::rightMultiply(Dirac::Gamma< Index > const &gamma)
 {
-  template< >
-  template< size_t Index >
-  StochasticPropagator< 1 > &StochasticPropagator< 1 >::rightMultiply(Dirac::Gamma< Index > const &gamma)
+  StochasticPropagator< 1 >::iterator it = begin();
+  isolate();
+
+  while(it != end())
   {
-    StochasticPropagator< 1 >::iterator it = begin();
-    isolate();
-
-    while(it != end())
-    {
-      (*it)[0].leftMultiply(gamma);
-      ++it;
-    }
-
-    return *this;
+    (*it)[0].leftMultiply(gamma);
+    ++it;
   }
 
-  template< >
-  template< size_t Index >
-  StochasticPropagator< 4 > &StochasticPropagator< 4 >::rightMultiply(Dirac::Gamma< Index > const &gamma)
+  return *this;
+}
+
+template< >
+template< size_t Index >
+StochasticPropagator< 4 > &StochasticPropagator< 4 >::rightMultiply(Dirac::Gamma< Index > const &gamma)
+{
+  StochasticPropagator< 4 >::iterator it = begin();
+  isolate();
+
+  while(it != end())
   {
-    StochasticPropagator< 4 >::iterator it = begin();
-    isolate();
-
-    while(it != end())
-    {
-      (*it)[0].leftMultiply(gamma);
-      (*it)[3].leftMultiply(gamma);
-      (*it)[6].leftMultiply(gamma);
-      (*it)[9].leftMultiply(gamma);
-      ++it;
-    }
-
-    return *this;
+    (*it)[0].leftMultiply(gamma);
+    (*it)[3].leftMultiply(gamma);
+    (*it)[6].leftMultiply(gamma);
+    (*it)[9].leftMultiply(gamma);
+    ++it;
   }
+
+  return *this;
 }

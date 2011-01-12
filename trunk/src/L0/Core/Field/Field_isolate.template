@@ -1,10 +1,18 @@
 template< typename Element >
-void Core::Field< Element >::isolate()
+inline void Core::Field< Element >::isolate()
 {
   // std::cout << "isolate:\nref = " << d_references << ": refCount (Field) = " << *d_references << std::endl;
 
   if ((*d_references) == 1)
     return;
+  else
+   isolate_action();
+}
+
+
+template< typename Element >
+void Core::Field< Element >::isolate_action()
+{
   assert(*d_references > 1);
   (*d_references) -= 1;
   d_references = new size_t(1);

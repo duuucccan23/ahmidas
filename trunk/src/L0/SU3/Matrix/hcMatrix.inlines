@@ -4,7 +4,7 @@ namespace SU3
   {
     return std::conj(det(mat.d_parent));
   }
-  
+
   inline std::complex< double > tr(hcMatrix const &mat)
   {
     return std::conj(tr(mat.d_parent));
@@ -13,7 +13,7 @@ namespace SU3
   inline hcMatrix::hcMatrix(Matrix const &parent)
     : d_parent(parent)
   {}
-  
+
   inline Matrix const &hcMatrix::dagger() const
   {
     return d_parent;

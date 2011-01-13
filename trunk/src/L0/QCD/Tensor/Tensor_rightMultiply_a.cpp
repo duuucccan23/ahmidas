@@ -1,6 +1,6 @@
-#include "Tensor.ih"
+// #include "Tensor.ih"
 
-QCD::Tensor &QCD::Tensor::rightMultiply(QCD::Tensor const &other)
+inline QCD::Tensor &QCD::Tensor::rightMultiply(QCD::Tensor const &other)
 {
   std::complex< double > result[144];
   std::fill_n(result, 144, std::complex< double >(0.0, 0.0)); // Default construction is not sufficient...

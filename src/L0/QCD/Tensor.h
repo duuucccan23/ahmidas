@@ -244,3 +244,8 @@ namespace QCD
 #include "Tensor/Tensor.sigma.inlines"
 
 #include "Tensor/Tensor.iterator.inlines"
+
+#include "Tensor/Tensor_rightMultiply_a.cpp"
+#include "Tensor/Tensor_rightMultiply_b.cpp"
+#include "Tensor/Tensor_rightMultiply_c.cpp"
+#include "Tensor/Tensor_rightMultiply_d.cpp"

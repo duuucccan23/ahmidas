@@ -124,3 +124,7 @@ namespace SU3
 
 #include "Matrix/Matrix.inlines"
 #include "Matrix/hcMatrix.inlines"
+
+#include "Matrix/Matrix_reunitarize.cpp"
+#include "Matrix/Matrix_rightMultiply_a.cpp"
+#include "Matrix/Matrix_rightMultiply_b.cpp"

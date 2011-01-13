@@ -1,9 +1,9 @@
-#include "Matrix.ih"
+// #include "Matrix.ih"
 
-void SU3::Matrix::rightMultiply(SU3::Matrix const &other)
+inline void SU3::Matrix::rightMultiply(SU3::Matrix const &other)
 {
   std::complex< double > temp[9];
-  
+
   temp[0] = d_data[0] * other.d_data[0] + d_data[1] * other.d_data[3] + d_data[2] * other.d_data[6];
   temp[1] = d_data[0] * other.d_data[1] + d_data[1] * other.d_data[4] + d_data[2] * other.d_data[7];
   temp[2] = d_data[0] * other.d_data[2] + d_data[1] * other.d_data[5] + d_data[2] * other.d_data[8];

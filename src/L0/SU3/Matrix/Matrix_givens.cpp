@@ -2,15 +2,15 @@
 
 void SU3::Matrix::givens(std::complex< double > &c, std::complex< double > &s, std::complex< double > const &f, std::complex < double > const &g) const
 {
-  if (g.real() == 0 && g.imag() == 0)
+  if (g.real() == 0.0 && g.imag() == 0.0)
   {
-    c = std::complex< double > (1, 0);
-    s = std::complex< double > (0, 0);
+    c = std::complex< double > (1.0, 0.0);
+    s = std::complex< double > (0.0, 0.0);
     return;
   }
-  if (f.real() == 0 && f.imag() == 0)
+  if (f.real() == 0.0 && f.imag() == 0.0)
   {
-    c = std::complex< double > (0, 0);
+    c = std::complex< double > (0.0, 0.0);
     s = sign(conj(g));
     return;
   }

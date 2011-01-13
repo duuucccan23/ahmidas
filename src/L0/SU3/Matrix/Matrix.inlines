@@ -160,13 +160,20 @@ namespace SU3
            + d_data[2] * (d_data[3] * d_data[7] - d_data[4] * d_data[6]);
   }
 
-  inline Matrix const  Matrix::inverse() const
+  inline Matrix const Matrix::inverse() const
   {
-    std::complex< double > b=1.0/det();
-    std::complex< double > temp[] = {(-d_data[5]*d_data[7]+d_data[4]*d_data[8])*b, (d_data[2]*d_data[7]-d_data[1]*d_data[8])*b, (-d_data[2]*d_data[4]+d_data[1]*d_data[5])*b,
-   				     (d_data[5]*d_data[6]-d_data[3]*d_data[8])*b,  (-d_data[2]*d_data[6]+d_data[0]*d_data[8])*b, (d_data[2]*d_data[3]-d_data[0]*d_data[5])*b,
-  				     (-d_data[4]*d_data[6]+d_data[3]*d_data[7])*b, (d_data[1]*d_data[6]-d_data[0]*d_data[7])*b, (-d_data[1]*d_data[3]+d_data[0]*d_data[4])*b };
-  return Matrix(temp);
+    std::complex< double > b = 1.0 / det();
+    std::complex< double > temp[] = {
+      (-d_data[5]*d_data[7]+d_data[4]*d_data[8])*b,
+      ( d_data[2]*d_data[7]-d_data[1]*d_data[8])*b,
+      (-d_data[2]*d_data[4]+d_data[1]*d_data[5])*b,
+      ( d_data[5]*d_data[6]-d_data[3]*d_data[8])*b,
+      (-d_data[2]*d_data[6]+d_data[0]*d_data[8])*b,
+      ( d_data[2]*d_data[3]-d_data[0]*d_data[5])*b,
+      (-d_data[4]*d_data[6]+d_data[3]*d_data[7])*b,
+      ( d_data[1]*d_data[6]-d_data[0]*d_data[7])*b,
+      (-d_data[1]*d_data[3]+d_data[0]*d_data[4])*b};
+    return Matrix(temp);
   }
 
   inline std::complex< double > Matrix::tr() const

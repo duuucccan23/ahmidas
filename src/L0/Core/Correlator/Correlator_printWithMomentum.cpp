@@ -11,9 +11,22 @@ namespace Core
     {
       out << std::setw(3)    << std::noshowpos << t           << "  ";
       out.setf(std::ios::showpos);
-      out << std::setw(2)    << std::showpos   << momentum[0] << " ";
-      out << std::setw(2)    << std::showpos   << momentum[1] << " ";
-      out << std::setw(2)    << std::showpos   << momentum[2] << "  ";
+
+      if (momentum[0] == 0)
+        out << "+0 ";
+      else
+        out << std::setw(2)    << std::showpos   << momentum[0] << " ";
+
+      if (momentum[1] == 0)
+        out << "+0 ";
+      else
+        out << std::setw(2)    << std::showpos   << momentum[1] << " ";
+
+      if (momentum[2] == 0)
+        out << "+0 ";
+      else
+        out << std::setw(2)    << std::showpos   << momentum[2] << "  ";
+
       out << std::scientific << std::showpos   << std::setprecision(8);
       out << ((*this)[t]).trace().real() << "  "
           << ((*this)[t]).trace().imag() << std::endl;

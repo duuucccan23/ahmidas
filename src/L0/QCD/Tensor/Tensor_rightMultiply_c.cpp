@@ -1,6 +1,6 @@
-#include "Tensor.ih"
+// #include "Tensor.ih"
 
-QCD::Tensor &QCD::Tensor::rightMultiply(SU3::Matrix const &mat)
+inline QCD::Tensor &QCD::Tensor::rightMultiply(SU3::Matrix const &mat)
 {
   std::complex< double > result[144];
 

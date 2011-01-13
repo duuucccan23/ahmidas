@@ -134,5 +134,3 @@ void SU3::Matrix::DEPRECATED_reunitarize()
   rightMultiply(H);
   operator/=(std::pow(det(), fac_1_3));
 }
-
-  

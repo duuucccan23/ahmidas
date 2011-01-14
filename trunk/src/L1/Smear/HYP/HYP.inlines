@@ -1,6 +1,6 @@
 namespace Smear
 {
-  inline HYP::HYP(double alpha)
-    : d_alpha(alpha)
+  inline HYP::HYP(double alpha1, double alpha2, double alpha3)
+    : d_alpha1(alpha1), d_alpha2(alpha2), d_alpha3(alpha3)
   {}
 }

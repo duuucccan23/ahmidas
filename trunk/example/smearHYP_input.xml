@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<ahmidas>
+  <params>
+    <L> 32 </L>
+    <T> 64 </T>
+    <!-- -->
+    <kappa> 0.151740 </kappa>
+    <mu> 0.00175 </mu>
+    <!-- -->
+    <!-- -->
+    <!-- HYP smearing parameters -->
+    <HYP_steps>  1   </HYP_steps>
+    <HYP_param1> 0.75 </HYP_param1>
+    <HYP_param2> 0.6 </HYP_param2>
+    <HYP_param3> 0.3 </HYP_param3>
+  </params>
+  <files>
+    <!-- gauge field (input)-->
+    <file>
+      <type>gauge</type>
+      <directory>./</directory>
+      <filenameBase>conf.</filenameBase>
+      <firstIndex>520</firstIndex>
+      <lastIndex>520</lastIndex>
+      <indexWidth>4</indexWidth>
+    </file>
+    <!-- gauge field (output) -->
+    <file>
+      <type>gauge</type>
+      <directory>./</directory>
+      <filenameBase>conf.HYP.</filenameBase>
+      <firstIndex>520</firstIndex>
+      <lastIndex>520</lastIndex>
+      <indexWidth>4</indexWidth>
+    </file>
+  </files>
+</ahmidas>

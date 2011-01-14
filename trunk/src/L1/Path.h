@@ -14,4 +14,10 @@ namespace Path
   Core::Field< SU3::Matrix > staple(Core::Field< QCD::Gauge > const &field, Base::SpaceTimeIndex via, Base::Direction dirVia, Base::SpaceTimeIndex to, Base::Direction dirTo);
 
   Core::Field< SU3::Matrix > square(Core::Field< QCD::Gauge > const &field, Base::SpaceTimeIndex via, Base::Direction dirVia, Base::SpaceTimeIndex to, Base::Direction dirTo);
+
+  // this is for HYP smearing where we have to take different fat links for each step
+  Core::Field< SU3::Matrix > HYPstaple(Core::Field< QCD::Gauge > const &fieldVia,
+                                       Core::Field< QCD::Gauge > const &fieldTo,
+                                       Base::SpaceTimeIndex via, Base::Direction dirVia,
+                                       Base::SpaceTimeIndex to, Base::Direction dirTo);
 }

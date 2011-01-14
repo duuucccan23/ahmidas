@@ -11,19 +11,17 @@ namespace Smear
 {
   class HYP
   {
-    double d_alpha;
+    double d_alpha1;
+    double d_alpha2;
+    double d_alpha3;
+
+    void smear(Core::Field< QCD::Gauge > &field) const;
 
     public:
-      HYP(double alpha);
+      HYP(double alpha1, double alpha2, double alpha3);
 
-      template< size_t L, size_t T >
-      void smear(Core::Field< QCD::Gauge, L, T > &field) const;
-
-      template< size_t L, size_t T >
-      void smear(Core::Field< QCD::Gauge, L, T > &field, size_t iterations) const;
+      void smear(Core::Field< QCD::Gauge > &field, size_t iterations) const;
   };
 }
 
 #include "HYP/HYP.inlines"
-#include "HYP/HYP_smear_a.template"
-#include "HYP/HYP_smear_b.template"

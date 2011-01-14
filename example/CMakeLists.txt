@@ -4,6 +4,13 @@ TARGET_LINK_LIBRARIES(confrw Base IO SU3 Tool Ahmidas)
 ADD_EXECUTABLE(smearAPE smearAPE.cpp)
 TARGET_LINK_LIBRARIES(smearAPE Tool Path Base IO SU3 Weave Smear Ahmidas)
 
+ADD_EXECUTABLE(smearHYP smearHYP.cpp)
+IF(USE_MPI)
+TARGET_LINK_LIBRARIES(smearHYP Tool Path Base IO SU3 Weave Smear Ahmidas lemon)
+ELSE(USE_MPI)
+TARGET_LINK_LIBRARIES(smearHYP Tool Path Base IO SU3 Weave Smear Input Ahmidas)
+ENDIF(USE_MPI)
+
 ADD_EXECUTABLE(pion_contr pion_contraction.cpp)
 TARGET_LINK_LIBRARIES(pion_contr Base Core IO Contract Input Ahmidas)
 

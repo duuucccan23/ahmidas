@@ -30,6 +30,10 @@ ADD_EXECUTABLE(loadMILC loadMILC.cpp)
 TARGET_LINK_LIBRARIES(loadMILC Base IO SU3 Ahmidas)
 ADD_TEST(load_MILC_lattice loadMILC)
 
+ADD_EXECUTABLE(gamma_multiplication gamma.cpp)
+TARGET_LINK_LIBRARIES(gamma_multiplication Base Dirac QCD Print Ahmidas)
+ADD_TEST(gamma_multiplication_test gamma_multiplication)
+
 ADD_EXECUTABLE(random random.cpp)
 TARGET_LINK_LIBRARIES(random Base Print Ahmidas)
 ADD_TEST(random_performance random)

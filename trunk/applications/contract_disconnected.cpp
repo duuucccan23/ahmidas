@@ -189,7 +189,7 @@ int main(int argc, char **argv)
 
 
 
-	if (Nsample%2 != 0){ 
+	if (Nsample%12 != 0){ 
 
 		Core::StochasticPropagator< 1 > source(L,T);
 		Core::StochasticPropagator< 1 > tmp(L, T);
@@ -438,7 +438,6 @@ int main(int argc, char **argv)
 
 
 #ifdef _without_MMS_
-			//			if(weave.isRoot()) std::cout<< "Stochastic propagator " <<n<< " to be read from " << propaStochaFiles[n] <<" ... "; 
 			Core::Propagator phi(L, T);
 			Tool::IO::load(&phi,filename, Tool::IO::fileSCIDAC);
 #endif
@@ -520,11 +519,7 @@ int main(int argc, char **argv)
 			std::vector< std::complex <double>  > C_v4 = Contract::compute_loop_new(xi,phi,my_operators);
 			//vv loop
 			std::vector< std::complex <double>  > C_vv = Contract::compute_loop_new(phi,g5_phi,my_operators);
-			if (weave.isRoot()) std::cout << "write output for sources from " << 12*n << " to " << 11+12*n<<"   " <<  C_v4[63 +  T*15 + 16*T*7].real() << std::endl;
 
-			
-
-			if (weave.isRoot()) std::cout << "local op finished" <<std::endl;
 
 			for(size_t i=0; i < C_vv.size(); i++)
 			{
@@ -536,12 +531,9 @@ int main(int argc, char **argv)
 			std::vector< std::complex<double> > C_twist2_pol = Contract::compute_loop_twist2_operator(gauge_field,xi,g5_phi);
 #endif
 
-			if (weave.isRoot()) std::cout << "derived op finished" <<std::endl;
 			if (weave.isRoot())
 				std::cout << "done.\n" << std::endl;
 
-			if(weave.isRoot()) 
-				std::cout<<"Write results"<< " ... ";
 
 			if (weave.isRoot())	
 			{
@@ -558,19 +550,16 @@ int main(int argc, char **argv)
 				if (n==0)
 				{
 
-					std::cout << "try to open and n = "<< n  <<std::endl;
 					fout_v4.open("output_disc_v4.dat");
 					fout_vv.open("output_disc_vv.dat");
 #ifdef _with_Omunu_
 					fout_twist2.open("output_disc_twist2.dat");
 					fout_twist2_pol.open("output_disc_twist2_pol.dat");
 #endif
-					std::cout << "open" <<std::endl;
 				}
 				else	
 				{
 
-					std::cout << "append" <<std::endl;
 					fout_v4.open("output_disc_v4.dat",std::ios::app);
 					fout_vv.open("output_disc_vv.dat",std::ios::app);
 #ifdef _with_Omunu_
@@ -579,11 +568,10 @@ int main(int argc, char **argv)
 #endif
 				}
 
-				std::cout << "write output for sources from " << 12*n << " to " << 11+12*n<<"   " <<  C_v4[63 +  T*15 + 16*T*7].real() << std::endl;
+				std::cout << "write output for sources from " << 12*n << " to " << 11+12*n<<" ... "  << std::endl;
 
 				for(size_t j=0; j<12; j++)
 				{
-					std::cout << "j = "<< j << std::endl;
 
 					for(size_t i=0; i<my_operators.size(); i++)
 					{
@@ -634,9 +622,9 @@ int main(int argc, char **argv)
 
 
 								fout_twist2 << t << std::scientific <<"  "
-									<< i <<"  "<< j + 12*n <<"  "<< k <<"  "<< t  + T*k + 4*T*i + 4*T*4*j << "  " <<C_twist2[t  + T*k + 4*T*i + 4*T*4*j ].real() <<"  "<< C_twist2[t + T*k + 4*T*i +4*T*4*j ].imag() << std::endl;
+									<< i <<"  "<< j + 12*n <<"  "<< k <<"  " <<C_twist2[t  + T*k + 4*T*i + 4*T*4*j ].real() <<"  "<< C_twist2[t + T*k + 4*T*i +4*T*4*j ].imag() << std::endl;
 								fout_twist2_pol << t << std::scientific <<"  "
-									<< i <<"  "<< j + 12*n <<"  "<< k <<"  "<< t  + T*k + 4*T*i + 4*T*4*j << "  " <<C_twist2_pol[t  + T*k + 4*T*i + 4*T*4*j ].real() <<"  "<< C_twist2_pol[t + T*k + 4*T*i +4*T*4*j ].imag() << std::endl;
+									<< i <<"  "<< j + 12*n <<"  "<< k <<"  " <<C_twist2_pol[t  + T*k + 4*T*i + 4*T*4*j ].real() <<"  "<< C_twist2_pol[t + T*k + 4*T*i +4*T*4*j ].imag() << std::endl;
 								
 								fout_twist2.flush();
 								fout_twist2_pol.flush();

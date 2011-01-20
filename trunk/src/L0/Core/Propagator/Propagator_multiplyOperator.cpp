@@ -658,8 +658,8 @@ namespace Core
 			  (*this).rightMultiply(gamma3);
 			  break;
 		  case Base::op_G_4:
-			  (*this).rightMultiply(gamma4);
 			  (*this).rightMultiply(gamma5);
+			  (*this).rightMultiply(gamma4);
 			  (*this)*= minus_i;
 			  break;
 		  case Base::op_G_5:
@@ -675,7 +675,7 @@ namespace Core
 		  case Base::op_G_7:
 			  (*this).rightMultiply(gamma3);
 			  (*this).rightMultiply(gamma4);
-			  (*this)*= minus_i;
+			 (*this)*= minus_i;
 			  break;
 		  case Base::op_G_8:
 			  break;
@@ -726,3 +726,107 @@ namespace Core
 
 
 }
+
+
+/*
+void Propagator::rightMultiplyOperator(Base::HermitianBilinearOperator const O)
+  {
+
+	  Dirac::Gamma< 1 > gamma1;
+	  Dirac::Gamma< 2 > gamma2;
+	  Dirac::Gamma< 3 > gamma3;
+	  Dirac::Gamma< 4 > gamma4;
+	  Dirac::Gamma< 5 > gamma5;
+	  std::complex<double >minus_i(0,-1); 
+	  std::complex<double >minus_one(-1,0); 
+	  std::complex<double >plus_i(0,1); 
+	  isolate();
+	  switch (O)
+	  {
+		  case Base::op_G_0:
+			  (*this).rightMultiply(gamma5);
+			  break;
+		  case Base::op_G_1:
+			  (*this).rightMultiply(gamma1);
+			  (*this) *=minus_one;
+			  break;
+		  case Base::op_G_2:
+			  (*this).rightMultiply(gamma2);
+			  (*this) *=minus_one;
+			  break;
+		  case Base::op_G_3:
+			  (*this).rightMultiply(gamma3);
+			  (*this) *=minus_one;
+			  break;
+		  case Base::op_G_4:
+			  (*this).rightMultiply(gamma5);
+			  (*this).rightMultiply(gamma4);
+			  (*this)*= minus_i;
+			  break;
+		  case Base::op_G_5:
+			  (*this).rightMultiply(gamma1);
+			  (*this).rightMultiply(gamma4);
+			  (*this)*= plus_i;
+			  break;
+		  case Base::op_G_6:
+			  (*this).rightMultiply(gamma2);
+			  (*this).rightMultiply(gamma4);
+			  (*this)*= plus_i;
+			  break;
+		  case Base::op_G_7:
+			  (*this).rightMultiply(gamma3);
+			  (*this).rightMultiply(gamma4);
+			 (*this)*= plus_i;
+			  break;
+		  case Base::op_G_8:
+			  (*this) *=minus_one;
+			  break;
+		  case Base::op_G_9:
+			  (*this).rightMultiply(gamma1);
+			  (*this).rightMultiply(gamma5);
+			  (*this)*= minus_i;
+			  break;
+		  case Base::op_G_10:
+			  (*this).rightMultiply(gamma2);
+			  (*this).rightMultiply(gamma5);
+			  (*this)*= minus_i;
+			  break;
+		  case Base::op_G_11:
+			  (*this).rightMultiply(gamma3);
+			  (*this).rightMultiply(gamma5);
+			  (*this)*= minus_i;
+			  break;
+		  case Base::op_G_12:
+			  (*this).rightMultiply(gamma4);
+			  (*this) *=minus_one;
+			  break;
+		  case Base::op_G_13:
+			  (*this).rightMultiply(gamma1);
+			  (*this).rightMultiply(gamma4);
+			  (*this).rightMultiply(gamma5);
+			  (*this)*= minus_i;
+			  break;
+		  case Base::op_G_14:
+			  (*this).rightMultiply(gamma2);
+			  (*this).rightMultiply(gamma4);
+			  (*this).rightMultiply(gamma5);
+			  (*this)*= minus_i;
+
+			  break;
+		  case Base::op_G_15:
+			  (*this).rightMultiply(gamma3);
+			  (*this).rightMultiply(gamma4);
+			  (*this).rightMultiply(gamma5);
+			  (*this)*= minus_i;
+
+			  break;
+		  default:
+			  std::cerr << "Error in void Propagator::multiplyOperator(Base::Operator const& O)\n";
+			  std::cerr << "Operator with no. " << O << " not implemented!" << std::endl;
+			  exit(1);
+	  }
+  }
+
+
+}
+*/

@@ -684,13 +684,6 @@ namespace Contract
 		}
 		//end O33 polarized
 
-
-
-
-
-
-		//contract
-
 		return twopoints;
 	}
 

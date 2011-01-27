@@ -155,8 +155,8 @@ int main(int argc, char **argv)
 #endif  
 
 #ifdef _O44_with_substraction_
-
-  std::cout <<  "if O44_with_substraction_" << std::endl;
+if (weave.isRoot())
+	std::cout <<  " O44_with_substraction case_" << std::endl;
 
   Core::Field< QCD::Gauge > gauge_field(L, T);
   if (weave.isRoot())

@@ -50,10 +50,9 @@
 
 #define _with_theta_
 #define _with_Omunu_
-//#define _with_MMS_
-#define _without_MMS_
+#define _with_MMS_
+//#define _without_MMS_
 
-#define _12sources_mode_
 int main(int argc, char **argv)
 {
 
@@ -82,6 +81,7 @@ int main(int argc, char **argv)
 
 	double kappa = floats["kappa"];
 	double mu = floats["mu"];
+
 	double thetax=floats["thetax"];
 	double thetay=floats["thetay"];
 	double thetaz=floats["thetaz"];
@@ -136,9 +136,6 @@ int main(int argc, char **argv)
 
 	std::vector< std::string > const &propaStochaFiles(files[0]);
 	std::vector< std::string > const &gaugeFieldFiles(files[1]); 
-
-	//read source if possible ?
-	//std::vector< std::string > const &gaugeFieldFiles(files[1]); 
 
 	//read and declare gauge field 
 	Core::Field< QCD::Gauge > gauge_field(L, T);
@@ -416,7 +413,7 @@ int main(int argc, char **argv)
 	else { //  Nsample==12
 
 		if(weave.isRoot()) std::cout<< "The code will read sources by packet of 12 " <<" ... ";
-		
+
 		size_t N = size_t(Nsample/12);
 		for (size_t n=0;n<N;n++)
 		{
@@ -431,10 +428,8 @@ int main(int argc, char **argv)
 			{
 				std::cout << "\nThe following files are going to be read:" << std::endl;
 				for (size_t I=0; I<filename.size(); I++)	std::cout << filename[I] << std::endl;
-				
+
 			}
-
-
 
 
 #ifdef _without_MMS_
@@ -446,7 +441,7 @@ int main(int argc, char **argv)
 
 			if(weave.isRoot()) 
 				std::cout << "MMS compilation  1/(Ddagger D) is read so  Ddagger is applied to get the propagator" <<" ...";
-			
+
 			Core::Propagator DD_prop(L, T);
 			Core::Propagator prop_out(L, T);
 
@@ -520,7 +515,6 @@ int main(int argc, char **argv)
 			//vv loop
 			std::vector< std::complex <double>  > C_vv = Contract::compute_loop_new(phi,g5_phi,my_operators);
 
-
 			for(size_t i=0; i < C_vv.size(); i++)
 			{
 				C_vv[i] *=  std::complex<double>(0,2.0*mu/(8.*kappa));	 // factor + 4 * i kappa mu /( 4 kappa) ^2
@@ -529,6 +523,10 @@ int main(int argc, char **argv)
 #ifdef	_with_Omunu_
 			std::vector< std::complex<double> > C_twist2 = Contract::compute_loop_twist2_operator(gauge_field,xi,phi);
 			std::vector< std::complex<double> > C_twist2_pol = Contract::compute_loop_twist2_operator(gauge_field,xi,g5_phi);
+
+			std::vector< std::complex<double> > C_twist2_vv = Contract::compute_loop_twist2_operator(gauge_field,phi,g5_phi);
+			std::vector< std::complex<double> > C_twist2_pol_vv = Contract::compute_loop_twist2_operator(gauge_field,phi,phi);
+
 #endif
 
 			if (weave.isRoot())
@@ -545,6 +543,10 @@ int main(int argc, char **argv)
 #ifdef _with_Omunu_
 				std::ofstream fout_twist2;
 				std::ofstream fout_twist2_pol;
+
+				std::ofstream fout_twist2_vv;
+				std::ofstream fout_twist2_pol_vv;
+
 #endif
 
 				if (n==0)
@@ -555,6 +557,9 @@ int main(int argc, char **argv)
 #ifdef _with_Omunu_
 					fout_twist2.open("output_disc_twist2.dat");
 					fout_twist2_pol.open("output_disc_twist2_pol.dat");
+					fout_twist2.open("output_disc_twist2_vv.dat");
+					fout_twist2_pol.open("output_disc_twist2_pol_vv.dat");
+
 #endif
 				}
 				else	
@@ -565,6 +570,9 @@ int main(int argc, char **argv)
 #ifdef _with_Omunu_
 					fout_twist2.open("output_disc_twist2.dat",std::ios::app);
 					fout_twist2_pol.open("output_disc_twist2_pol.dat",std::ios::app);
+					fout_twist2.open("output_disc_twist2_vv.dat",std::ios::app);
+					fout_twist2_pol.open("output_disc_twist2_pol_vv.dat",std::ios::app);
+
 #endif
 				}
 
@@ -597,10 +605,10 @@ int main(int argc, char **argv)
 
 							fout_vv << t << std::scientific <<"  "
 								<< i <<"  "<< j + 12*n <<"  "<<C_vv[t +  T*i + 16*T*j].real() <<"  "<< C_vv[t + T*i + 16*T*j].imag() << std::endl;
-							
+
 							fout_vv.flush();
 							fout_v4.flush();
-							
+
 						}
 					}			
 				}
@@ -625,9 +633,18 @@ int main(int argc, char **argv)
 									<< i <<"  "<< j + 12*n <<"  "<< k <<"  " <<C_twist2[t  + T*k + 4*T*i + 4*T*4*j ].real() <<"  "<< C_twist2[t + T*k + 4*T*i +4*T*4*j ].imag() << std::endl;
 								fout_twist2_pol << t << std::scientific <<"  "
 									<< i <<"  "<< j + 12*n <<"  "<< k <<"  " <<C_twist2_pol[t  + T*k + 4*T*i + 4*T*4*j ].real() <<"  "<< C_twist2_pol[t + T*k + 4*T*i +4*T*4*j ].imag() << std::endl;
-								
+
+								fout_twist2_vv << t << std::scientific <<"  "
+									<< i <<"  "<< j + 12*n <<"  "<< k <<"  " <<C_twist2_vv[t  + T*k + 4*T*i + 4*T*4*j ].real() <<"  "<< C_twist2_vv[t + T*k + 4*T*i +4*T*4*j ].imag() << std::endl;
+								fout_twist2_pol_vv << t << std::scientific <<"  "
+									<< i <<"  "<< j + 12*n <<"  "<< k <<"  " <<C_twist2_pol_vv[t  + T*k + 4*T*i + 4*T*4*j ].real() <<"  "<< C_twist2_pol_vv[t + T*k + 4*T*i +4*T*4*j ].imag() << std::endl;
+
+
 								fout_twist2.flush();
 								fout_twist2_pol.flush();
+								fout_twist2_vv.flush();
+								fout_twist2_pol_vv.flush();
+
 
 							}/*t*/
 						}/*end loop on the 4 terms contributing to a symmetrized covariant derivative */
@@ -636,6 +653,9 @@ int main(int argc, char **argv)
 
 				fout_twist2.close();
 				fout_twist2_pol.close();
+				fout_twist2_vv.close();
+				fout_twist2_pol_vv.close();
+
 #endif
 
 				std::cout << "done.\n" << std::endl;

@@ -3,6 +3,8 @@
 #include <L0/Core/Component.h>
 #include <L0/SU3/Matrix.h>
 
+#define _Hermitian_basis
+
 namespace Core
 {
 
@@ -633,6 +635,7 @@ namespace Core
 	}
   }
 
+#ifdef _Hermitian_basis
   void Propagator::rightMultiplyOperator(Base::HermitianBilinearOperator const O)
   {
 
@@ -727,8 +730,10 @@ namespace Core
 
 }
 
+#endif
 
-/*
+#ifdef _Hermitian_basis_disc.cc
+
 void Propagator::rightMultiplyOperator(Base::HermitianBilinearOperator const O)
   {
 
@@ -829,4 +834,5 @@ void Propagator::rightMultiplyOperator(Base::HermitianBilinearOperator const O)
 
 
 }
-*/
+
+#endif

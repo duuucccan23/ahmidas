@@ -27,7 +27,7 @@ void create_sequential_source_proton_fixed_insertion_timeslice_derivative_operat
 	std::complex<double> const z=exp(  std::complex<double>(0,1) * M_PI/double(T)  );
 
 
-	std::cout << z << std::endl;
+//	std::cout << z << std::endl;
 	Base::Weave weave(L, T);
 
 	(*seqSrc_u) *= 0.00;
@@ -103,8 +103,6 @@ void create_sequential_source_proton_fixed_insertion_timeslice_derivative_operat
 		{
 			case Base::op_O44_with_substraction:
 				{
-
-					std::cout << "in the O44 with substraction case !" << std::endl; 
 
 					// derivative direction 1
 					{

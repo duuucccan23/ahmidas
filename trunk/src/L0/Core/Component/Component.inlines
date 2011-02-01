@@ -8,13 +8,13 @@ namespace Core
   template< typename Element, typename Atom >
   inline Atom &Component< Element, Atom >::getMemoryIndex(size_t const idx)
   {
-    return d_parent.getMemoryIndex(idx)[d_component];
+    return d_parent.memoryIndex(idx)[d_component];
   }
 
   template< typename Element, typename Atom >
   inline Atom const &Component< Element, Atom >::getMemoryIndex(size_t const idx) const
   {
-    return d_parent.getMemoryIndex(idx)[d_component];
+    return d_parent.memoryIndex(idx)[d_component];
   }
 
   template< typename Element, typename Atom >

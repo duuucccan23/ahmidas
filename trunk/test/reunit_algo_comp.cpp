@@ -75,22 +75,22 @@ int main(int argc, char **argv)
   double const prec = 1E-16;
 
   bool problem = false;
-  for (size_t ctr = 0; ctr < 100000; ++ctr)
+  for (size_t ctr = 0; ctr < 10; ++ctr)
   {
     SU3::Matrix new_method = SU3::Matrix::random();
     SU3::Matrix old_method(new_method);
-//     SU3::Matrix new_method_eigen(new_method);
-//     SU3::Matrix old_method_eigen(new_method);
+    SU3::Matrix new_method_eigen(new_method);
+    SU3::Matrix old_method_eigen(new_method);
 
     new_method.reunitarize();
     old_method.DEPRECATED_reunitarize();
-//     reunitarize_old_method_through_eigen(old_method_eigen);
-//     reunitarize_new_method_through_eigen(new_method_eigen);
+    reunitarize_old_method_through_eigen(old_method_eigen);
+    reunitarize_new_method_through_eigen(new_method_eigen);
 
-//     std::cout << "Old method (deprecated):\n" << old_method;
-//     std::cout << "New method:\n" << new_method;
-//    std::cout << "Eigen version old method:\n" << old_method_eigen;
-//    std::cout << "Eigen version new method:\n" << new_method_eigen;
+    std::cout << "Old method (deprecated):\n" << old_method;
+    std::cout << "New method:\n" << new_method;
+    std::cout << "Eigen version old method:\n" << old_method_eigen;
+    std::cout << "Eigen version new method:\n" << new_method_eigen;
     new_method -= old_method;
 //     std::cout << "Difference:\n" << new_method;
 //     std::cout << "Norm:\n" << new_method.norm() << "\n\n" << std::endl;

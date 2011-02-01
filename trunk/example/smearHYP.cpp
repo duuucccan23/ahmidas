@@ -92,13 +92,26 @@ int main(int argc, char **argv)
 
   std::cout << "Showing the gauge link in the x-up direction from point (0,0,0,0).\n";
   std::cout << gauge_field[0][Base::idx_X];
+  std::cout << "Showing the gauge link in the y-up direction from point (0,0,0,0).\n";
+  std::cout << gauge_field[0][Base::idx_Y];
+  std::cout << "Showing the gauge link in the z-up direction from point (0,0,0,0).\n";
+  std::cout << gauge_field[0][Base::idx_Z];
+  std::cout << "Showing the gauge link in the t-up direction from point (0,0,0,0).\n";
+  std::cout << gauge_field[0][Base::idx_T];
+
 
   Smear::HYP hyp = Smear::HYP(HYP_alpha1, HYP_alpha2, HYP_alpha3);
 
   hyp.smear(gauge_field, HYP_iterations);
 
-  std::cout << "\nShowing the now smeared gauge link in the x-up direction from point (0,0,0,0).\n";
+  std::cout << "\nShowing the smeared gauge link in the x-up direction from point (0,0,0,0).\n";
   std::cout << gauge_field[0][Base::idx_X];
+  std::cout << "\nShowing the smeared gauge link in the y-up direction from point (0,0,0,0).\n";
+  std::cout << gauge_field[0][Base::idx_Y];
+  std::cout << "\nShowing the smeared gauge link in the z-up direction from point (0,0,0,0).\n";
+  std::cout << gauge_field[0][Base::idx_Z];
+  std::cout << "\nShowing the smeared gauge link in the t-up direction from point (0,0,0,0).\n";
+  std::cout << gauge_field[0][Base::idx_T];
 
   Tool::IO::save(&gauge_field, gaugeFieldOutputFile, Tool::IO::fileILDG);
 

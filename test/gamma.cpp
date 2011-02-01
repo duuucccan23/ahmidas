@@ -18,12 +18,12 @@ int main(int argc, char **argv)
   Print("Testing some gamma multiplications...");
 
   complex< double > const refData[12] = {
-      complex< double >( 1,  2), std::complex< double >( 3,  4),
-      complex< double >( 5,  6), std::complex< double >( 7,  8),
-      complex< double >( 9, 10), std::complex< double >(11, 12),
-      complex< double >(13, 14), std::complex< double >(15, 16),
-      complex< double >(17, 18), std::complex< double >(19, 20),
-      complex< double >(21, 22), std::complex< double >(23, 24)};
+    complex< double >( 1,  2), std::complex< double >( 3,  4),
+    complex< double >( 5,  6), std::complex< double >( 7,  8),
+    complex< double >( 9, 10), std::complex< double >(11, 12),
+    complex< double >(13, 14), std::complex< double >(15, 16),
+    complex< double >(17, 18), std::complex< double >(19, 20),
+    complex< double >(21, 22), std::complex< double >(23, 24)};
 
   Gamma< 1 > gamma1;
   Gamma< 2 > gamma2;

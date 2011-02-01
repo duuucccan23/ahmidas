@@ -11,6 +11,11 @@ namespace Smear
 {
   class HYP
   {
+
+    // smearing parameters:
+    // d_alpha3 for 1st level of smearing
+    // d_alpha2 for 2nd level of smearing
+    // d_alpha1 for 3rd level of smearing
     double d_alpha1;
     double d_alpha2;
     double d_alpha3;

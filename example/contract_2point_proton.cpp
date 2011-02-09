@@ -25,7 +25,7 @@
 
 int main(int argc, char **argv)
 {
-  Ahmidas my_ahmidas(&argc, &argv);
+  Ahmidas ahmidas(&argc, &argv);
 
   size_t L_tmp = 0;
   size_t T_tmp = 0;
@@ -72,8 +72,6 @@ int main(int argc, char **argv)
   std::vector< std::string > const &propfilesD(files[0]);
   std::vector< std::string > const &propfilesU(files[1]);
   std::vector< std::string > const &gaugeFieldFiles(files[2]);
-  std::vector< std::string > const &seqPropFilesD(files[3]);
-  std::vector< std::string > const &seqPropFilesU(files[4]);
 
   Core::Field< QCD::Gauge > gauge_field(L, T);
   if (weave.isRoot())
@@ -124,42 +122,54 @@ int main(int argc, char **argv)
   if (weave.isRoot())
     std::cout << "propagators and gauge field smeared successfully\n" << std::endl;
 
+//   Core::BaryonCorrelator C2_P_tm = Contract::proton_twopoint(forwardProp_u, forwardProp_u, forwardProp_d, Base::proj_PARITY_PLUS_TM);
+//   C2_P_tm.deleteField();
+//   C2_P_tm.setOffset(timeslice_source);
+//   if (weave.isRoot())
+//   {
+//     std::ofstream fout("output_2point.dat");
+//     fout << C2_P_tm;
+//     fout.close();
+//   }
+
+  forwardProp_u.rotateToPhysicalBasis(true);
+  forwardProp_d.rotateToPhysicalBasis(false);
+
   Core::BaryonCorrelator C2_P = Contract::proton_twopoint(forwardProp_u, forwardProp_u, forwardProp_d, Base::proj_NO_PROJECTOR);
-  C2_P.setOffset(timeslice_source);
 
   C2_P.deleteField();
-  C2_P.rotateToPhysicalBasis();
+  // C2_P.rotateToPhysicalBasis();
 
+  C2_P.setOffset(timeslice_source);
   if (weave.isRoot())
   {
     std::ofstream fout("output_2point_unprojected.dat");
     for(size_t t = 0; t < T; t++)
     {
-      fout << C2_P << std::endl;
       fout.precision(8);
       fout.width(3);
-      fout << t << std::scientific << std::showpos
+      fout << t << "  " << std::scientific << std::showpos
            << C2_P[t][ 0].real() << "  " << C2_P[t][ 0].imag() << "  "
            << C2_P[t][ 1].real() << "  " << C2_P[t][ 1].imag() << "  "
            << C2_P[t][ 2].real() << "  " << C2_P[t][ 2].imag() << "  "
            << C2_P[t][ 3].real() << "  " << C2_P[t][ 3].imag() << "  "
            << std::endl;
       fout.width(3);
-      fout << t << std::scientific << std::showpos
+      fout << t << "  " << std::scientific << std::showpos
            << C2_P[t][ 4].real() << "  " << C2_P[t][ 4].imag() << "  "
            << C2_P[t][ 5].real() << "  " << C2_P[t][ 5].imag() << "  "
            << C2_P[t][ 6].real() << "  " << C2_P[t][ 6].imag() << "  "
            << C2_P[t][ 7].real() << "  " << C2_P[t][ 7].imag() << "  "
            << std::endl;
       fout.width(3);
-      fout << t << std::scientific << std::showpos
+      fout << t << "  " << std::scientific << std::showpos
            << C2_P[t][ 8].real() << "  " << C2_P[t][ 8].imag() << "  "
            << C2_P[t][ 9].real() << "  " << C2_P[t][ 9].imag() << "  "
            << C2_P[t][10].real() << "  " << C2_P[t][10].imag() << "  "
            << C2_P[t][11].real() << "  " << C2_P[t][11].imag() << "  "
            << std::endl;
       fout.width(3);
-      fout << t << std::scientific << std::showpos
+      fout << t << "  " << std::scientific << std::showpos
            << C2_P[t][12].real() << "  " << C2_P[t][12].imag() << "  "
            << C2_P[t][13].real() << "  " << C2_P[t][13].imag() << "  "
            << C2_P[t][14].real() << "  " << C2_P[t][14].imag() << "  "

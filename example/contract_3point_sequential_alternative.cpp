@@ -215,7 +215,7 @@ int main(int argc, char **argv)
      std::ofstream fout("output_3point_axial_4_uu.dat");
      #endif
      #ifdef __O44__
-     std::ofstream fout("output_3point_O44_uu.dat");
+     std::ofstream fout("output_3point_O44_subtr_uu.dat");
      #endif
 
      fout << C3p_u << std::endl;
@@ -234,7 +234,7 @@ int main(int argc, char **argv)
      fout.open("output_3point_axial_4_dd.dat");
      #endif
      #ifdef __O44__
-     fout.open("output_3point_O44_dd.dat");
+     fout.open("output_3point_O44_subtr_dd.dat");
      #endif
 
 
@@ -260,6 +260,59 @@ int main(int argc, char **argv)
     }
   }
 
+
+  {
+    if (weave.isRoot())
+      std::cout << "\n calculating 2-point function (unprojected) \n" << std::endl;
+
+    uProp.rotateToPhysicalBasis(true);
+    dProp.rotateToPhysicalBasis(false);
+
+    Core::BaryonCorrelator C2_P = Contract::proton_twopoint(uProp, uProp, dProp, Base::proj_NO_PROJECTOR);
+
+    C2_P.deleteField();
+
+    C2_P.setOffset(timeslice_source);
+    if (weave.isRoot())
+    {
+      std::ofstream fout("output_2point_unprojected.dat");
+      for(size_t t = 0; t < T; t++)
+      {
+        fout.precision(8);
+        fout.width(3);
+        fout << t << "  " << std::scientific << std::showpos
+             << C2_P[t][ 0].real() << "  " << C2_P[t][ 0].imag() << "  "
+             << C2_P[t][ 1].real() << "  " << C2_P[t][ 1].imag() << "  "
+             << C2_P[t][ 2].real() << "  " << C2_P[t][ 2].imag() << "  "
+             << C2_P[t][ 3].real() << "  " << C2_P[t][ 3].imag() << "  "
+             << std::endl;
+        fout.width(3);
+        fout << t << "  " << std::scientific << std::showpos
+             << C2_P[t][ 4].real() << "  " << C2_P[t][ 4].imag() << "  "
+             << C2_P[t][ 5].real() << "  " << C2_P[t][ 5].imag() << "  "
+             << C2_P[t][ 6].real() << "  " << C2_P[t][ 6].imag() << "  "
+             << C2_P[t][ 7].real() << "  " << C2_P[t][ 7].imag() << "  "
+             << std::endl;
+        fout.width(3);
+        fout << t << "  " << std::scientific << std::showpos
+             << C2_P[t][ 8].real() << "  " << C2_P[t][ 8].imag() << "  "
+             << C2_P[t][ 9].real() << "  " << C2_P[t][ 9].imag() << "  "
+             << C2_P[t][10].real() << "  " << C2_P[t][10].imag() << "  "
+             << C2_P[t][11].real() << "  " << C2_P[t][11].imag() << "  "
+             << std::endl;
+        fout.width(3);
+        fout << t << "  " << std::scientific << std::showpos
+             << C2_P[t][12].real() << "  " << C2_P[t][12].imag() << "  "
+             << C2_P[t][13].real() << "  " << C2_P[t][13].imag() << "  "
+             << C2_P[t][14].real() << "  " << C2_P[t][14].imag() << "  "
+             << C2_P[t][15].real() << "  " << C2_P[t][15].imag() << "  "
+             << std::endl;
+
+      }
+      fout.close();
+    }
+  }
+  
   if (weave.isRoot())
     std::cout << "contractions performed and saved successfully\n" << std::endl;
 

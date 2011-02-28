@@ -50,6 +50,7 @@
 
 #define _with_theta_
 #define _with_MMS_
+#define _with_Omunu_
 //#define _without_MMS_
 
 int main(int argc, char **argv)
@@ -64,7 +65,7 @@ int main(int argc, char **argv)
 	/* ****** reading the input file ************ */
 	/* ****************************************** */
 
-	Input::FileReader reader("./contract_disconnected_input.xml");
+	Input::FileReader reader("./contract_disconnected_heavylight_input.xml");
 
 	std::map< std::string, double > floats;
 	std::vector< size_t * > positions;
@@ -79,8 +80,8 @@ int main(int argc, char **argv)
 
 
 	double kappa = floats["kappa"];
-	double mu = floats["mu"];
-	double mu_s = floats["mu_s"];
+	double mu_l = floats["mu_light"];
+	double mu_h = floats["mu_heavy"];
 
 	double thetax=floats["thetax"];
 	double thetay=floats["thetay"];
@@ -93,7 +94,7 @@ int main(int argc, char **argv)
 	if(weave.isRoot())
 	{
 		std::cout<<"Lattice size: "<<L<<"x"<<L<<"x"<<L<<"x"<<T<<std::endl;
-		std::cout<<"kappa="<<kappa<<", mu="<<mu<<std::endl;
+		std::cout<<"kappa="<<kappa<<", mu_light="<<mu_l<<", mu_heavy="<<mu_h<<std::endl;
 		std::cout<<"thetax="<<thetax<<", ";
 		std::cout<<"thetay="<<thetay<<", ";
 
@@ -136,9 +137,7 @@ int main(int argc, char **argv)
 
 	std::vector< std::string > const &propaStochaFiles(files[0]);
 	std::vector< std::string > const &gaugeFieldFiles(files[1]); 
-#ifdef _with_heavy_light_
 	std::vector< std::string > const &propaStochaFiles_light(files[2]); 
-#endif
 	//read source if possible ?
 	//std::vector< std::string > const &gaugeFieldFiles(files[1]); 
 
@@ -219,8 +218,6 @@ int main(int argc, char **argv)
 
 			}
 
-#ifdef _with_heavy_light_
-
 			std::vector<std::string> filename_light;
 			for (size_t k=0; k<12;k++) filename_light.push_back(propaStochaFiles_light[k+12*n]);
 			if(weave.isRoot())
@@ -235,21 +232,23 @@ int main(int argc, char **argv)
 
 			Tool::IO::load(&light_DD_prop,filename_light, Tool::IO::fileSCIDAC,32);
 
-			prop_light_out=light_DD_prop.applyDiracOperator(gauge_field,kappa,-mu,thetat,thetax,thetay,thetaz);
+			prop_light_out=light_DD_prop.applyDiracOperator(gauge_field,kappa,-mu_l,thetat,thetax,thetay,thetaz);
 			prop_light_out.rightMultiply(gamma5); //this is required because D=Q*g5 and g5 is not put by applyDiracOperator
 			Core::Propagator phi_light(prop_light_out);
 
-			prop_light_out_opp=light_DD_prop.applyDiracOperator(gauge_field,kappa,mu,thetat,thetax,thetay,thetaz);
+			prop_light_out_opp=light_DD_prop.applyDiracOperator(gauge_field,kappa,mu_l,thetat,thetax,thetay,thetaz);
 			prop_light_out_opp.rightMultiply(gamma5); //this is required because D=Q*g5 and g5 is not put by applyDiracOperator
 
 			Core::Propagator phi_light_opp(prop_light_out_opp);
 
 			if (weave.isRoot())
 				std::cout << "done.\n" << std::endl;
-#endif
 
 
 #ifdef _without_MMS_
+			if (weave.isRoot())
+				std::cout << "Not tested !! exiting...\n" << std::endl;
+			exit(1);
 			Core::Propagator phi(L, T);
 			Tool::IO::load(&phi,filename, Tool::IO::fileSCIDAC);
 #endif
@@ -264,17 +263,15 @@ int main(int argc, char **argv)
 
 			Tool::IO::load(&DD_prop,filename, Tool::IO::fileSCIDAC,32);
 
-			prop_out=DD_prop.applyDiracOperator(gauge_field,kappa,-mu,thetat,thetax,thetay,thetaz);
+			prop_out=DD_prop.applyDiracOperator(gauge_field,kappa,-mu_h,thetat,thetax,thetay,thetaz);
 			prop_out.rightMultiply(gamma5); //this is required because D=Q*g5 and g5 is not put by applyDiracOperator
 
 			Core::Propagator phi(prop_out);
-#ifdef _with_heavy_light_
 			//build the propagator with opposite mass
 			Core::Propagator prop_opp(L, T);
-			prop_opp=DD_prop.applyDiracOperator(gauge_field,kappa,mu,thetat,thetax,thetay,thetaz);
+			prop_opp=DD_prop.applyDiracOperator(gauge_field,kappa,mu_h,thetat,thetax,thetay,thetaz);
 			prop_opp.rightMultiply(gamma5); //this is required because D=Q*g5 and g5 is not put by applyDiracOperator
 			Core::Propagator phi_opp(prop_opp);
-#endif
 
 #endif
 
@@ -282,56 +279,58 @@ int main(int argc, char **argv)
 				std::cout << "done.\n" << std::endl;
 
 
-			//Now compute the source 
+			// for "vv" correlators
 
-
-			if(weave.isRoot()) 
-				std::cout << "Apply Dirac operator to get the source " << " ... ";
-
-			source = phi.applyDiracOperator(gauge_field,kappa,mu,thetat,thetax,thetay,thetaz,Base::Full); 
-
-			if (weave.isRoot())
-				std::cout << "done.\n" << std::endl;
-
-				// for "vv" correlators
-
-			Core::Propagator  psi(phi);
 			Core::Propagator  g5_phi(phi);
+			Core::Propagator  g5_phi_opp(phi_opp);
 
 			g5_phi.rightMultiply(gamma5);
-
+			g5_phi_opp.rightMultiply(gamma5);
 
 			if (weave.isRoot())
 				std::cout << "Compute loops of the form 1/M_u + 1/M_d  - 2/M_s "<<" ... ";
 
 
-#ifdef _with_heavy_light_
 
 
 			Core::Propagator phi_light_conj(phi_light);
-			Core::Propagator phi_light_opp_conj(phi_light);
-			phi_light_conj.conjugate();
-			phi_light_opp_conj.conjugate();
-			Core::Propagator  g5_phi_opp(phi_opp);
-			g5_phi_opp.rightMultiply(gamma5);
+		
+			Core::Propagator  g5_phi_light(phi_light);
+			g5_phi_light.rightMultiply(gamma5);
 
-// compute for the bilinear operator first
+			Core::Propagator  g5_phi_light_opp(phi_light);
+			g5_phi_light_opp.rightMultiply(gamma5);
+
+		// compute for the bilinear operator first
 			//1/M_u  - 1/M_s
-			std::vector< std::complex <double>  > C_hl1 = Contract::compute_loop_new(phi_light_conj,g5_phi_opp,my_operators);
+			std::vector< std::complex <double>  > C_hl1 = Contract::compute_loop_new(g5_phi_light_opp,phi,my_operators);
 			//1/M_d  - 1/tilde{M}_s
-			std::vector< std::complex <double>  > C_hl2 = Contract::compute_loop_new(phi_light_opp_conj,g5_phi,my_operators);
+			std::vector< std::complex <double>  > C_hl2 = Contract::compute_loop_new(g5_phi_light,phi_opp,my_operators);
 
-#endif
 
 			//loop involving twist 2 operators
 #ifdef	_with_Omunu_
-			std::vector< std::complex<double> > C_twist2 = Contract::compute_loop_twist2_operator(gauge_field,xi,phi);
-			std::vector< std::complex<double> > C_twist2_pol = Contract::compute_loop_twist2_operator(gauge_field,xi,g5_phi);
+			std::vector< std::complex<double> > C_twist2_hl1 = Contract::compute_loop_twist2_operator(gauge_field,g5_phi_light_opp,phi);
+			std::vector< std::complex<double> > C_twist2_pol_hl1 = Contract::compute_loop_twist2_operator(gauge_field,g5_phi_light_opp,g5_phi);
+			std::vector< std::complex<double> > C_twist2_hl2 =  Contract::compute_loop_twist2_operator(gauge_field,g5_phi_light,phi_opp);
+			std::vector< std::complex<double> > C_twist2_pol_hl2 = Contract::compute_loop_twist2_operator(gauge_field,g5_phi_light,g5_phi_opp);
+
 #endif
-		//	for(size_t i=0; i < C_vv.size(); i++)
-		//	{
-				//C_vv[i] *=  std::complex<double>(0,2.0*mu/(8.*kappa));	 // factor + 4 * i kappa mu /( 4 kappa) ^2
-		//	}
+			for(size_t i=0; i < C_hl1.size(); i++)
+			{
+				C_hl1[i] *=  std::complex<double>(0,(mu_l-mu_h)/(8.*kappa));	 // factor:  +2 * i kappa (mu_l - mu_s) /( 4 kappa) ^2
+				C_hl2[i] *=  std::complex<double>(0,(mu_l-mu_h)/(8.*kappa));	 
+			}
+
+			
+			for(size_t i=0; i < C_twist2_hl1.size(); i++)
+			{
+				C_twist2_hl1[i] *=  std::complex<double>(0,(mu_l-mu_h)/(8.*kappa));	 // factor:  +2 * i kappa (mu_l - mu_s) /( 4 kappa) ^2
+				C_twist2_hl2[i] *=  std::complex<double>(0,(mu_l-mu_h)/(8.*kappa));	 
+				C_twist2_pol_hl1[i] *=  std::complex<double>(0,(mu_l-mu_h)/(8.*kappa));	 // factor:  +2 * i kappa (mu_l - mu_s) /( 4 kappa) ^2
+				C_twist2_pol_hl2[i] *=  std::complex<double>(0,(mu_l-mu_h)/(8.*kappa));	 // factor:  +2 * i kappa (mu_l - mu_s) /( 4 kappa) ^2
+			}
+
 
 
 			if (weave.isRoot())
@@ -341,30 +340,66 @@ int main(int argc, char **argv)
 			if (weave.isRoot())	
 			{
 
+				std::ofstream fout_hl1;
+				std::ofstream fout_hl2;
+					
 #ifdef _with_Omunu_
-				std::ofstream fout_twist2;
-				std::ofstream fout_twist2_pol;
+				std::ofstream fout_twist2_hl1;
+				std::ofstream fout_twist2_pol_hl1;
+				std::ofstream fout_twist2_hl2;
+				std::ofstream fout_twist2_pol_hl2;
 #endif
 
 				if (n==0)
 				{
 
+					fout_hl1.open("output_disc_hl1.dat");
+					fout_hl2.open("output_disc_hl2.dat");
 #ifdef _with_Omunu_
-					fout_twist2.open("output_disc_twist2.dat");
-					fout_twist2_pol.open("output_disc_twist2_pol.dat");
+					fout_twist2_hl1.open("output_disc_twist2_hl1.dat");
+					fout_twist2_pol_hl1.open("output_disc_twist2_pol_hl1.dat");
+					fout_twist2_hl2.open("output_disc_twist2_hl2.dat");
+					fout_twist2_pol_hl2.open("output_disc_twist2_pol_hl2.dat");
 #endif
 				}
 				else	
 				{
+					fout_hl1.open("output_disc_hl1.dat",std::ios::app);
+					fout_hl2.open("output_disc_hl2.dat",std::ios::app);
 
 #ifdef _with_Omunu_
-					fout_twist2.open("output_disc_twist2.dat",std::ios::app);
-					fout_twist2_pol.open("output_disc_twist2_pol.dat",std::ios::app);
+					fout_twist2_hl1.open("output_disc_twist2_hl1.dat",std::ios::app);
+					fout_twist2_pol_hl1.open("output_disc_twist2_pol_hl1.dat",std::ios::app);
+					fout_twist2_hl2.open("output_disc_twist2_hl2.dat",std::ios::app);
+					fout_twist2_pol_hl2.open("output_disc_twist2_pol_hl2.dat",std::ios::app);
 #endif
 				}
 
 				std::cout << "write output for sources from " << 12*n << " to " << 11+12*n<<" ... "  << std::endl;
 
+				for(size_t j=0; j<12; j++)
+				{
+
+					for(size_t i=0; i<my_operators.size(); i++)
+					{
+
+						for(size_t t = 0; t < T; t++)
+						{
+
+							fout_hl1 << t << std::scientific <<"  "
+								<< i <<"  "<< j + 12*n <<"  "<<C_hl1[t +  T*i + 16*T*j].real() <<"  "<< C_hl1[t + T*i + 16*T*j].imag() << std::endl;
+
+							fout_hl2 << t << std::scientific <<"  "
+								<< i <<"  "<< j + 12*n <<"  "<<C_hl2[t +  T*i + 16*T*j].real() <<"  "<< C_hl2[t + T*i + 16*T*j].imag() << std::endl;
+
+							fout_hl1.flush();
+							fout_hl2.flush();
+
+						}
+					}			
+				}
+				fout_hl1.close();
+				fout_hl2.close();
 
 #ifdef _with_Omunu_
 
@@ -378,22 +413,29 @@ int main(int argc, char **argv)
 							{
 
 
+								fout_twist2_hl1 << t << std::scientific <<"  "
+									<< i <<"  "<< j + 12*n <<"  "<< k <<"  " <<C_twist2_hl1[t  + T*k + 4*T*i + 4*T*4*j ].real() <<"  "<< C_twist2_hl1[t + T*k + 4*T*i +4*T*4*j ].imag() << std::endl;
+								fout_twist2_pol_hl1 << t << std::scientific <<"  "
+									<< i <<"  "<< j + 12*n <<"  "<< k <<"  " <<C_twist2_pol_hl1[t  + T*k + 4*T*i + 4*T*4*j ].real() <<"  "<< C_twist2_pol_hl1[t + T*k + 4*T*i +4*T*4*j ].imag() << std::endl;
 
-								fout_twist2 << t << std::scientific <<"  "
-									<< i <<"  "<< j + 12*n <<"  "<< k <<"  " <<C_twist2[t  + T*k + 4*T*i + 4*T*4*j ].real() <<"  "<< C_twist2[t + T*k + 4*T*i +4*T*4*j ].imag() << std::endl;
-								fout_twist2_pol << t << std::scientific <<"  "
-									<< i <<"  "<< j + 12*n <<"  "<< k <<"  " <<C_twist2_pol[t  + T*k + 4*T*i + 4*T*4*j ].real() <<"  "<< C_twist2_pol[t + T*k + 4*T*i +4*T*4*j ].imag() << std::endl;
+								fout_twist2_hl2 << t << std::scientific <<"  "
+									<< i <<"  "<< j + 12*n <<"  "<< k <<"  " <<C_twist2_hl2[t  + T*k + 4*T*i + 4*T*4*j ].real() <<"  "<< C_twist2_hl2[t + T*k + 4*T*i +4*T*4*j ].imag() << std::endl;
+								fout_twist2_pol_hl2 << t << std::scientific <<"  "
+									<< i <<"  "<< j + 12*n <<"  "<< k <<"  " <<C_twist2_pol_hl2[t  + T*k + 4*T*i + 4*T*4*j ].real() <<"  "<< C_twist2_pol_hl2[t + T*k + 4*T*i +4*T*4*j ].imag() << std::endl;
 
-								fout_twist2.flush();
-								fout_twist2_pol.flush();
+
+								fout_twist2_hl1.flush();
+								fout_twist2_hl2.flush();
+								fout_twist2_pol_hl1.flush();
+								fout_twist2_pol_hl2.flush();
 
 							}/*t*/
 						}/*end loop on the 4 terms contributing to a symmetrized covariant derivative */
 					} /*i loop on the 4 operators : O_mumu (unpo1arized) and Omumu g5 (polarized) */
 				} /*loop on the 12 sources*/
 
-				fout_twist2.close();
-				fout_twist2_pol.close();
+				fout_twist2_hl1.close();
+				fout_twist2_pol_hl2.close();
 #endif
 
 				std::cout << "done.\n" << std::endl;

@@ -4,6 +4,7 @@
 #include <L0/SU3/Matrix.h>
 
 #define _Hermitian_basis
+//#define _Hermitian_basis_disc_cc
 
 namespace Core
 {
@@ -732,7 +733,7 @@ namespace Core
 
 #endif
 
-#ifdef _Hermitian_basis_disc.cc
+#ifdef _Hermitian_basis_disc_cc
 
 void Propagator::rightMultiplyOperator(Base::HermitianBilinearOperator const O)
   {

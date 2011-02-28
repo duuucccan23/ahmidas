@@ -42,7 +42,7 @@ ADD_EXECUTABLE(prova_sequential_contraction prova_sequential_contraction.cpp)
 TARGET_LINK_LIBRARIES(prova_sequential_contraction Base Core IO Input Ahmidas) 
 
 ADD_EXECUTABLE(generate_volume_source generate_volume_source.cpp)
-TARGET_LINK_LIBRARIES(generate_volume_source SU3 IO Base Core Dirac Weave Input Smear Ahmidas)
+TARGET_LINK_LIBRARIES(generate_volume_source SU3 IO Base Core Dirac Weave Input Smear Ahmidas lemon)
 
 ADD_EXECUTABLE(generate_stochastic_source generate_stochastic_source.cpp)
 IF(USE_MPI)

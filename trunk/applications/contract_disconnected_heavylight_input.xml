@@ -6,7 +6,8 @@
     <!-- position of point source (x,y,z,t) -->
     <position> 0 </position>
     <kappa> 0.10 </kappa>
-    <mu> 0.10 </mu>
+    <mu_light> 0.10 </mu_light>
+    <mu_heavy> 0.10 </mu_heavy>
 	<thetax> 0 </thetax>
 	<thetay> 0 </thetay>
 	<thetaz> 0 </thetaz>
@@ -36,6 +37,14 @@
       <firstIndex>9999</firstIndex>
       <lastIndex>9999</lastIndex>
       <indexWidth>4</indexWidth>
+    </file>
+    <file>
+      <type>propagator</type>
+      <directory>./prop/</directory>
+      <filenameBase>source.</filenameBase>
+      <firstIndex>0</firstIndex>
+      <lastIndex>0</lastIndex>
+      <indexWidth>2</indexWidth>
     </file>
   </files>
 </ahmidas>

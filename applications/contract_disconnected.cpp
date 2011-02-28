@@ -283,7 +283,7 @@ int main(int argc, char **argv)
 			// v4 loop
 			std::vector< Core::Correlator< Dirac::Matrix > > C_v4 = Contract::compute_loop(xi,phi,my_operators);
 			//vv loop
-			std::vector< Core::Correlator< Dirac::Matrix > > C_vv = Contract::compute_loop(phi,g5_phi,my_operators);
+			std::vector< Core::Correlator< Dirac::Matrix > > C_vv = Contract::compute_loop(g5_phi,phi,my_operators);
 
 
 			//for check only ...
@@ -500,10 +500,9 @@ int main(int argc, char **argv)
 
 			// for "vv" correlators
 
-			Core::Propagator  psi(phi);
 			Core::Propagator  g5_phi(phi);
-
 			g5_phi.rightMultiply(gamma5);
+
 
 
 			if (weave.isRoot())
@@ -513,19 +512,19 @@ int main(int argc, char **argv)
 			// v4 loop
 			std::vector< std::complex <double>  > C_v4 = Contract::compute_loop_new(xi,phi,my_operators);
 			//vv loop
-			std::vector< std::complex <double>  > C_vv = Contract::compute_loop_new(phi,g5_phi,my_operators);
+			std::vector< std::complex <double>  > C_vv = Contract::compute_loop_new(g5_phi,phi,my_operators);
 
 			for(size_t i=0; i < C_vv.size(); i++)
 			{
 				C_vv[i] *=  std::complex<double>(0,2.0*mu/(8.*kappa));	 // factor + 4 * i kappa mu /( 4 kappa) ^2
 			}
 
-#ifdef	_with_Omunu_
+#ifdef _with_Omunu_
 			std::vector< std::complex<double> > C_twist2 = Contract::compute_loop_twist2_operator(gauge_field,xi,phi);
 			std::vector< std::complex<double> > C_twist2_pol = Contract::compute_loop_twist2_operator(gauge_field,xi,g5_phi);
 
-			std::vector< std::complex<double> > C_twist2_vv = Contract::compute_loop_twist2_operator(gauge_field,phi,g5_phi);
-			std::vector< std::complex<double> > C_twist2_pol_vv = Contract::compute_loop_twist2_operator(gauge_field,phi,phi);
+			std::vector< std::complex<double> > C_twist2_vv = Contract::compute_loop_twist2_operator(gauge_field,g5_phi,phi);
+			std::vector< std::complex<double> > C_twist2_pol_vv = Contract::compute_loop_twist2_operator(gauge_field,g5_phi,g5_phi);
 
 #endif
 
@@ -536,7 +535,7 @@ int main(int argc, char **argv)
 			if (weave.isRoot())	
 			{
 				double addimag =  2.*kappa*mu*L*L*L*3.*4. / (sqrt(1 + 4.*kappa*kappa*mu*mu));
-				double addreal = L*L*L*3.*4. / ( sqrt(1 + 4.*kappa*kappa*mu*mu));
+				double addreal =  L*L*L*3.*4./( sqrt(1. + 4.*kappa*kappa*mu*mu));
 
 				std::ofstream fout_v4;
 				std::ofstream fout_vv;
@@ -557,8 +556,8 @@ int main(int argc, char **argv)
 #ifdef _with_Omunu_
 					fout_twist2.open("output_disc_twist2.dat");
 					fout_twist2_pol.open("output_disc_twist2_pol.dat");
-					fout_twist2.open("output_disc_twist2_vv.dat");
-					fout_twist2_pol.open("output_disc_twist2_pol_vv.dat");
+					fout_twist2_vv.open("output_disc_twist2_vv.dat");
+					fout_twist2_pol_vv.open("output_disc_twist2_pol_vv.dat");
 
 #endif
 				}
@@ -570,8 +569,8 @@ int main(int argc, char **argv)
 #ifdef _with_Omunu_
 					fout_twist2.open("output_disc_twist2.dat",std::ios::app);
 					fout_twist2_pol.open("output_disc_twist2_pol.dat",std::ios::app);
-					fout_twist2.open("output_disc_twist2_vv.dat",std::ios::app);
-					fout_twist2_pol.open("output_disc_twist2_pol_vv.dat",std::ios::app);
+					fout_twist2_vv.open("output_disc_twist2_vv.dat",std::ios::app);
+					fout_twist2_pol_vv.open("output_disc_twist2_pol_vv.dat",std::ios::app);
 
 #endif
 				}

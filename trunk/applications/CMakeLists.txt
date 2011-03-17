@@ -51,11 +51,11 @@ TARGET_LINK_LIBRARIES(finalize_meson_sequential_ultrastochastic_propagator IO In
 
 ADD_EXECUTABLE(contract_disconnected contract_disconnected.cpp)
 TARGET_LINK_LIBRARIES(contract_disconnected Print Ahmidas SU3 QCD IO Base Core Dirac
-			Weave Contract Input Smear lemon)
+			Weave Contract Input Smear)
 
 
 ADD_EXECUTABLE(contract_disconnected_heavylight contract_disconnected_heavylight.cpp)
 TARGET_LINK_LIBRARIES(contract_disconnected_heavylight Print Ahmidas SU3 QCD IO Base Core Dirac
-			Weave Contract Input Smear lemon)
+			Weave Contract Input Smear)
 
 

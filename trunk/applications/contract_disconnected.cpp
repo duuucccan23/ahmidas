@@ -50,8 +50,8 @@
 
 #define _with_theta_
 #define _with_Omunu_
-#define _with_MMS_
-//#define _without_MMS_
+//#define _with_MMS_
+#define _without_MMS_
 
 int main(int argc, char **argv)
 {
@@ -96,7 +96,7 @@ int main(int argc, char **argv)
 		std::cout<<"kappa="<<kappa<<", mu="<<mu<<std::endl;
 		std::cout<<"thetax="<<thetax<<", ";
 		std::cout<<"thetay="<<thetay<<", ";
-
+		std::cout<<"thetaz="<<thetaz<<", ";
 		std::cout<<"thetat="<<thetat<<std::endl;
 	}
 
@@ -285,14 +285,7 @@ int main(int argc, char **argv)
 			//vv loop
 			std::vector< Core::Correlator< Dirac::Matrix > > C_vv = Contract::compute_loop(g5_phi,phi,my_operators);
 
-
-			//for check only ...
-			//std::vector<std::string> filename2;
-			//filename2.push_back(propaStochaFiles[1]);
-			//		Core::StochasticPropagator< 1 >  xi2(L,T);
-			//		Tool::IO::load(&xi2,filename2, Tool::IO::fileSCIDAC);
-
-
+			
 #ifdef	_with_Omunu_
 			std::vector< Core::Correlator< Dirac::Matrix > > C_twist2 = Contract::compute_loop_twist2_operator(gauge_field,xi,phi);
 #endif
@@ -309,6 +302,7 @@ int main(int argc, char **argv)
 				C_vv[i].deleteField();
 
 			}
+
 
 			if (weave.isRoot())
 				std::cout << "done.\n" << std::endl;
@@ -345,6 +339,7 @@ int main(int argc, char **argv)
 				{
 					fout_v4.open("output_disc_v4.dat",std::ios::app);
 					fout_vv.open("output_disc_vv.dat",std::ios::app);
+
 #ifdef _with_Omunu_
 					fout_twist2.open("output_disc_twist2.dat",std::ios::app);
 #endif
@@ -376,6 +371,7 @@ int main(int argc, char **argv)
 
 					}			
 				}
+
 #ifdef _with_Omunu_
 				for(size_t i=0; i<8; i++)
 				{
@@ -508,16 +504,25 @@ int main(int argc, char **argv)
 			if (weave.isRoot())
 				std::cout << "Compute loops for vv and v4 method"<<" ... ";
 
-
 			// v4 loop
 			std::vector< std::complex <double>  > C_v4 = Contract::compute_loop_new(xi,phi,my_operators);
+			std::vector< std::complex <double> > C_conserved_v4 = Contract::compute_loop_conserved_vector_current(gauge_field,xi,phi);
 			//vv loop
 			std::vector< std::complex <double>  > C_vv = Contract::compute_loop_new(g5_phi,phi,my_operators);
+			std::vector< std::complex <double> > C_conserved_vv = Contract::compute_loop_conserved_vector_current(gauge_field,g5_phi,phi);
+	
 
-			for(size_t i=0; i < C_vv.size(); i++)
+			
+for(size_t i=0; i < C_vv.size(); i++)
 			{
 				C_vv[i] *=  std::complex<double>(0,2.0*mu/(8.*kappa));	 // factor + 4 * i kappa mu /( 4 kappa) ^2
 			}
+
+			for(size_t i=0; i < C_conserved_vv.size(); i++)
+			{
+				C_conserved_vv[i] *=  std::complex<double>(0,2.0*mu/(8.*kappa));	 // factor + 4 * i kappa mu /( 4 kappa) ^2
+			}
+
 
 #ifdef _with_Omunu_
 			std::vector< std::complex<double> > C_twist2 = Contract::compute_loop_twist2_operator(gauge_field,xi,phi);
@@ -534,11 +539,17 @@ int main(int argc, char **argv)
 
 			if (weave.isRoot())	
 			{
-				double addimag =  2.*kappa*mu*L*L*L*3.*4. / (sqrt(1 + 4.*kappa*kappa*mu*mu));
-				double addreal =  L*L*L*3.*4./( sqrt(1. + 4.*kappa*kappa*mu*mu));
+				double addimag =0; 
+				double addreal =0;
+
+				//double addimag =  2.*kappa*mu*L*L*L*3.*4. / (sqrt(1 + 4.*kappa*kappa*mu*mu));
+				//double addreal =  L*L*L*3.*4./( sqrt(1. + 4.*kappa*kappa*mu*mu));
 
 				std::ofstream fout_v4;
 				std::ofstream fout_vv;
+				std::ofstream fout_conserved_v4;
+				std::ofstream fout_conserved_vv;
+
 #ifdef _with_Omunu_
 				std::ofstream fout_twist2;
 				std::ofstream fout_twist2_pol;
@@ -553,6 +564,9 @@ int main(int argc, char **argv)
 
 					fout_v4.open("output_disc_v4.dat");
 					fout_vv.open("output_disc_vv.dat");
+					fout_conserved_v4.open("output_disc_conserved_v4.dat");
+					fout_conserved_vv.open("output_disc_conserved_vv.dat");
+
 #ifdef _with_Omunu_
 					fout_twist2.open("output_disc_twist2.dat");
 					fout_twist2_pol.open("output_disc_twist2_pol.dat");
@@ -566,6 +580,9 @@ int main(int argc, char **argv)
 
 					fout_v4.open("output_disc_v4.dat",std::ios::app);
 					fout_vv.open("output_disc_vv.dat",std::ios::app);
+					fout_conserved_v4.open("output_disc_conserved_v4.dat",std::ios::app);
+					fout_conserved_vv.open("output_disc_conserved_vv.dat",std::ios::app);
+
 #ifdef _with_Omunu_
 					fout_twist2.open("output_disc_twist2.dat",std::ios::app);
 					fout_twist2_pol.open("output_disc_twist2_pol.dat",std::ios::app);
@@ -614,6 +631,26 @@ int main(int argc, char **argv)
 				fout_v4.close();
 				fout_vv.close();
 
+				for(size_t j=0; j<12; j++)
+				{
+					for(size_t i=0; i<4; i++)
+					{
+						for(size_t k=0; k<2; k++)
+						{
+							for(size_t t = 0; t < T; t++)
+							{
+								fout_conserved_v4 << t << std::scientific <<"  "
+									<< i <<"  "<< j+12*n <<"  "<<k <<"  "<< C_conserved_v4[t+ T*k + 2*T*i + 2*T*4*j].real() <<"  "<< C_conserved_v4[t+ T*k + 2*T*i + 2*T*4*j].imag() << std::endl;
+
+								fout_conserved_vv << t << std::scientific <<"  "
+									<< i <<"  "<< j+12*n <<"  "<<k <<"  "<< C_conserved_vv[t+ T*k + 2*T*i + 2*T*4*j].real() <<"  "<< C_conserved_vv[t+ T*k + 2*T*i + 2*T*4*j].imag() << std::endl;
+							}
+						}			
+					}
+				}
+
+				fout_conserved_vv.close();
+				fout_conserved_v4.close();
 
 #ifdef _with_Omunu_
 

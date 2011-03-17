@@ -4,7 +4,8 @@
 //Compute the disconnected loop of the operator O_{mumu} and O_{mumu}\gamma5
 // O_00 and g5 O_00 cross checked independtly using an independent code 
 // still to cross check the spatial derivative
-
+//this function is used to perfom contraction on a  Core::StochasticPropagator< 1 >  
+// not that it is very slow due to the absence of any iterator, and because the multiplication Core::StochasticPropagator< 1 >  is performed filling a Propagtors with 12 component.
 
 namespace Contract
 {
@@ -107,7 +108,7 @@ namespace Contract
 
 			Gamma_psi = tmp;
 
-			Core::Correlator< Dirac::Matrix >twopoint( (dynamic_cast< Core::StochasticPropagator<1> & >(xi_conj_shifted_T_UP)) * (dynamic_cast< Core::StochasticPropagator<1> & >(Gamma_psi)));
+			Core::Correlator< Dirac::Matrix >twopoint( (dynamic_cast< Core::StochasticPropagator<1> & >(xi_conj_shifted_T_DOWN)) * (dynamic_cast< Core::StochasticPropagator<1> & >(Gamma_psi)));
 
 			twopoint.sumOverSpatialVolume(); 
 			twopoints.push_back(twopoint);
@@ -128,7 +129,7 @@ namespace Contract
 
 			Gamma_psi = tmp;
 
-			Core::Correlator< Dirac::Matrix >twopoint( (dynamic_cast< Core::StochasticPropagator<1> & >(xi_conj_shifted_T_DOWN)) * (dynamic_cast< Core::StochasticPropagator<1> & >(Gamma_psi)));
+			Core::Correlator< Dirac::Matrix >twopoint( (dynamic_cast< Core::StochasticPropagator<1> & >(xi_conj_shifted_T_UP)) * (dynamic_cast< Core::StochasticPropagator<1> & >(Gamma_psi)));
 
 			twopoint.sumOverSpatialVolume(); 
 			twopoints.push_back(twopoint);
@@ -181,7 +182,7 @@ namespace Contract
 
 			Gamma_psi = tmp;
 
-			Core::Correlator< Dirac::Matrix >twopoint( (dynamic_cast< Core::StochasticPropagator<1> & >(xi_conj_shifted_X_UP)) * (dynamic_cast< Core::StochasticPropagator<1> & >(Gamma_psi)));
+			Core::Correlator< Dirac::Matrix >twopoint( (dynamic_cast< Core::StochasticPropagator<1> & >(xi_conj_shifted_X_DOWN)) * (dynamic_cast< Core::StochasticPropagator<1> & >(Gamma_psi)));
 
 			twopoint.sumOverSpatialVolume(); 
 			twopoints.push_back(twopoint);
@@ -199,7 +200,7 @@ namespace Contract
 
 			Gamma_psi = tmp;
 
-			Core::Correlator< Dirac::Matrix >twopoint( (dynamic_cast< Core::StochasticPropagator<1> & >(xi_conj_shifted_X_DOWN)) * (dynamic_cast< Core::StochasticPropagator<1> & >(Gamma_psi)));
+			Core::Correlator< Dirac::Matrix >twopoint( (dynamic_cast< Core::StochasticPropagator<1> & >(xi_conj_shifted_X_UP)) * (dynamic_cast< Core::StochasticPropagator<1> & >(Gamma_psi)));
 
 			twopoint.sumOverSpatialVolume(); 
 			twopoints.push_back(twopoint);
@@ -250,7 +251,7 @@ namespace Contract
 
 			Gamma_psi = tmp;
 
-			Core::Correlator< Dirac::Matrix >twopoint( (dynamic_cast< Core::StochasticPropagator<1> & >(xi_conj_shifted_Y_UP)) * (dynamic_cast< Core::StochasticPropagator<1> & >(Gamma_psi)));
+			Core::Correlator< Dirac::Matrix >twopoint( (dynamic_cast< Core::StochasticPropagator<1> & >(xi_conj_shifted_Y_DOWN)) * (dynamic_cast< Core::StochasticPropagator<1> & >(Gamma_psi)));
 
 			twopoint.sumOverSpatialVolume(); 
 			twopoints.push_back(twopoint);
@@ -269,7 +270,7 @@ namespace Contract
 
 			Gamma_psi = tmp;
 
-			Core::Correlator< Dirac::Matrix >twopoint( (dynamic_cast< Core::StochasticPropagator<1> & >(xi_conj_shifted_Y_DOWN)) * (dynamic_cast< Core::StochasticPropagator<1> & >(Gamma_psi)));
+			Core::Correlator< Dirac::Matrix >twopoint( (dynamic_cast< Core::StochasticPropagator<1> & >(xi_conj_shifted_Y_UP)) * (dynamic_cast< Core::StochasticPropagator<1> & >(Gamma_psi)));
 
 			twopoint.sumOverSpatialVolume(); 
 			twopoints.push_back(twopoint);
@@ -322,7 +323,7 @@ namespace Contract
 
 			Gamma_psi = tmp;
 
-			Core::Correlator< Dirac::Matrix >twopoint( (dynamic_cast< Core::StochasticPropagator<1> & >(xi_conj_shifted_Z_UP)) * (dynamic_cast< Core::StochasticPropagator<1> & >(Gamma_psi)));
+			Core::Correlator< Dirac::Matrix >twopoint( (dynamic_cast< Core::StochasticPropagator<1> & >(xi_conj_shifted_Z_DOWN)) * (dynamic_cast< Core::StochasticPropagator<1> & >(Gamma_psi)));
 
 			twopoint.sumOverSpatialVolume(); 
 			twopoints.push_back(twopoint);
@@ -340,7 +341,7 @@ namespace Contract
 
 			Gamma_psi = tmp;
 
-			Core::Correlator< Dirac::Matrix >twopoint( (dynamic_cast< Core::StochasticPropagator<1> & >(xi_conj_shifted_Z_DOWN)) * (dynamic_cast< Core::StochasticPropagator<1> & >(Gamma_psi)));
+			Core::Correlator< Dirac::Matrix >twopoint( (dynamic_cast< Core::StochasticPropagator<1> & >(xi_conj_shifted_Z_UP)) * (dynamic_cast< Core::StochasticPropagator<1> & >(Gamma_psi)));
 
 			twopoint.sumOverSpatialVolume(); 
 			twopoints.push_back(twopoint);
@@ -396,7 +397,7 @@ namespace Contract
 
 			Gamma_psi = tmp;
 
-			Core::Correlator< Dirac::Matrix >twopoint( (dynamic_cast< Core::StochasticPropagator<1> & >(xi_conj_shifted_T_UP)) * (dynamic_cast< Core::StochasticPropagator<1> & >(Gamma_psi)));
+			Core::Correlator< Dirac::Matrix >twopoint( (dynamic_cast< Core::StochasticPropagator<1> & >(xi_conj_shifted_T_DOWN)) * (dynamic_cast< Core::StochasticPropagator<1> & >(Gamma_psi)));
 
 			twopoint.sumOverSpatialVolume(); 
 			twopoints.push_back(twopoint);
@@ -415,7 +416,7 @@ namespace Contract
 
 			Gamma_psi = tmp;
 
-			Core::Correlator< Dirac::Matrix >twopoint( (dynamic_cast< Core::StochasticPropagator<1> & >(xi_conj_shifted_T_DOWN)) * (dynamic_cast< Core::StochasticPropagator<1> & >(Gamma_psi)));
+			Core::Correlator< Dirac::Matrix >twopoint( (dynamic_cast< Core::StochasticPropagator<1> & >(xi_conj_shifted_T_UP)) * (dynamic_cast< Core::StochasticPropagator<1> & >(Gamma_psi)));
 
 			twopoint.sumOverSpatialVolume(); 
 			twopoints.push_back(twopoint);
@@ -472,7 +473,7 @@ namespace Contract
 
 			Gamma_psi = tmp;
 
-			Core::Correlator< Dirac::Matrix >twopoint( (dynamic_cast< Core::StochasticPropagator<1> & >(xi_conj_shifted_X_UP)) * (dynamic_cast< Core::StochasticPropagator<1> & >(Gamma_psi)));
+			Core::Correlator< Dirac::Matrix >twopoint( (dynamic_cast< Core::StochasticPropagator<1> & >(xi_conj_shifted_X_DOWN)) * (dynamic_cast< Core::StochasticPropagator<1> & >(Gamma_psi)));
 
 			twopoint.sumOverSpatialVolume(); 
 			twopoints.push_back(twopoint);
@@ -492,7 +493,7 @@ namespace Contract
 
 			Gamma_psi = tmp;
 
-			Core::Correlator< Dirac::Matrix >twopoint( (dynamic_cast< Core::StochasticPropagator<1> & >(xi_conj_shifted_X_DOWN)) * (dynamic_cast< Core::StochasticPropagator<1> & >(Gamma_psi)));
+			Core::Correlator< Dirac::Matrix >twopoint( (dynamic_cast< Core::StochasticPropagator<1> & >(xi_conj_shifted_X_UP)) * (dynamic_cast< Core::StochasticPropagator<1> & >(Gamma_psi)));
 
 			twopoint.sumOverSpatialVolume(); 
 			twopoints.push_back(twopoint);
@@ -548,7 +549,7 @@ namespace Contract
 
 			Gamma_psi = tmp;
 
-			Core::Correlator< Dirac::Matrix >twopoint( (dynamic_cast< Core::StochasticPropagator<1> & >(xi_conj_shifted_Y_UP)) * (dynamic_cast< Core::StochasticPropagator<1> & >(Gamma_psi)));
+			Core::Correlator< Dirac::Matrix >twopoint( (dynamic_cast< Core::StochasticPropagator<1> & >(xi_conj_shifted_Y_DOWN)) * (dynamic_cast< Core::StochasticPropagator<1> & >(Gamma_psi)));
 
 			twopoint.sumOverSpatialVolume(); 
 			twopoints.push_back(twopoint);
@@ -567,7 +568,7 @@ namespace Contract
 
 			Gamma_psi = tmp;
 
-			Core::Correlator< Dirac::Matrix >twopoint( (dynamic_cast< Core::StochasticPropagator<1> & >(xi_conj_shifted_Y_DOWN)) * (dynamic_cast< Core::StochasticPropagator<1> & >(Gamma_psi)));
+			Core::Correlator< Dirac::Matrix >twopoint( (dynamic_cast< Core::StochasticPropagator<1> & >(xi_conj_shifted_Y_UP)) * (dynamic_cast< Core::StochasticPropagator<1> & >(Gamma_psi)));
 
 			twopoint.sumOverSpatialVolume(); 
 			twopoints.push_back(twopoint);
@@ -623,7 +624,7 @@ namespace Contract
 
 			Gamma_psi = tmp;
 
-			Core::Correlator< Dirac::Matrix >twopoint( (dynamic_cast< Core::StochasticPropagator<1> & >(xi_conj_shifted_Z_UP)) * (dynamic_cast< Core::StochasticPropagator<1> & >(Gamma_psi)));
+			Core::Correlator< Dirac::Matrix >twopoint( (dynamic_cast< Core::StochasticPropagator<1> & >(xi_conj_shifted_Z_DOWN)) * (dynamic_cast< Core::StochasticPropagator<1> & >(Gamma_psi)));
 
 			twopoint.sumOverSpatialVolume(); 
 			twopoints.push_back(twopoint);
@@ -643,7 +644,7 @@ namespace Contract
 
 			Gamma_psi = tmp;
 
-			Core::Correlator< Dirac::Matrix >twopoint( (dynamic_cast< Core::StochasticPropagator<1> & >(xi_conj_shifted_Z_DOWN)) * (dynamic_cast< Core::StochasticPropagator<1> & >(Gamma_psi)));
+			Core::Correlator< Dirac::Matrix >twopoint( (dynamic_cast< Core::StochasticPropagator<1> & >(xi_conj_shifted_Z_UP)) * (dynamic_cast< Core::StochasticPropagator<1> & >(Gamma_psi)));
 
 			twopoint.sumOverSpatialVolume(); 
 			twopoints.push_back(twopoint);

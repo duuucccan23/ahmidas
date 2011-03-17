@@ -76,7 +76,7 @@ namespace Contract
 
 			tmp.isolate();
 			xi_conj_shifted.isolate();
-			xi_conj_shifted.shift(Base::idx_T, Base::dir_UP);
+			xi_conj_shifted.shift(Base::idx_T, Base::dir_DOWN);
 
 			tmp.rightMultiplyDagger(gauge_field,Base::idx_T); 
 			tmp.rightMultiply(gamma4);
@@ -98,7 +98,7 @@ namespace Contract
 
 			tmp.isolate();
 			xi_conj_shifted.isolate();
-			xi_conj_shifted.shift(Base::idx_T, Base::dir_DOWN);
+			xi_conj_shifted.shift(Base::idx_T, Base::dir_UP);
 
 			tmp.shift(Base::idx_T, Base::dir_DOWN);
 			tmp.rightMultiply(gauge_field,Base::idx_T);
@@ -157,7 +157,7 @@ namespace Contract
 
 			tmp.isolate();
 			xi_conj_shifted.isolate();
-			xi_conj_shifted.shift(Base::idx_X, Base::dir_UP);
+			xi_conj_shifted.shift(Base::idx_X, Base::dir_DOWN);
 
 			tmp.rightMultiplyDagger(gauge_field,Base::idx_X); 
 			tmp.rightMultiply(gamma1);
@@ -177,7 +177,7 @@ namespace Contract
 
 			tmp.isolate();
 			xi_conj_shifted.isolate();
-			xi_conj_shifted.shift(Base::idx_X, Base::dir_DOWN);
+			xi_conj_shifted.shift(Base::idx_X, Base::dir_UP);
 
 			tmp.shift(Base::idx_X, Base::dir_DOWN);
 			tmp.rightMultiply(gauge_field,Base::idx_X);
@@ -234,7 +234,7 @@ namespace Contract
 
 			tmp.isolate();
 			xi_conj_shifted.isolate();
-			xi_conj_shifted.shift(Base::idx_Y, Base::dir_UP);
+			xi_conj_shifted.shift(Base::idx_Y, Base::dir_DOWN);
 
 			tmp.rightMultiplyDagger(gauge_field,Base::idx_Y); 
 			tmp.rightMultiply(gamma2);
@@ -254,7 +254,7 @@ namespace Contract
 
 			tmp.isolate();
 			xi_conj_shifted.isolate();
-			xi_conj_shifted.shift(Base::idx_Y, Base::dir_DOWN);
+			xi_conj_shifted.shift(Base::idx_Y, Base::dir_UP);
 
 			tmp.shift(Base::idx_Y, Base::dir_DOWN);
 			tmp.rightMultiply(gauge_field,Base::idx_Y);
@@ -313,7 +313,7 @@ namespace Contract
 
 			tmp.isolate();
 			xi_conj_shifted.isolate();
-			xi_conj_shifted.shift(Base::idx_Z, Base::dir_UP);
+			xi_conj_shifted.shift(Base::idx_Z, Base::dir_DOWN);
 
 			tmp.rightMultiplyDagger(gauge_field,Base::idx_Z); 
 			tmp.rightMultiply(gamma3);
@@ -333,7 +333,7 @@ namespace Contract
 
 			tmp.isolate();
 			xi_conj_shifted.isolate();
-			xi_conj_shifted.shift(Base::idx_Z, Base::dir_DOWN);
+			xi_conj_shifted.shift(Base::idx_Z, Base::dir_UP);
 
 			tmp.shift(Base::idx_Z, Base::dir_DOWN);
 			tmp.rightMultiply(gauge_field,Base::idx_Z);
@@ -394,7 +394,7 @@ namespace Contract
 
 			tmp.isolate();
 			xi_conj_shifted.isolate();
-			xi_conj_shifted.shift(Base::idx_T, Base::dir_UP);
+			xi_conj_shifted.shift(Base::idx_T, Base::dir_DOWN);
 
 			tmp.rightMultiply(gamma5);
 			tmp.rightMultiplyDagger(gauge_field,Base::idx_T); 
@@ -415,7 +415,7 @@ namespace Contract
 
 			tmp.isolate();
 			xi_conj_shifted.isolate();
-			xi_conj_shifted.shift(Base::idx_T, Base::dir_DOWN);
+			xi_conj_shifted.shift(Base::idx_T, Base::dir_UP);
 
 			tmp.rightMultiply(gamma5);
 			tmp.shift(Base::idx_T, Base::dir_DOWN);
@@ -478,7 +478,7 @@ namespace Contract
 
 			tmp.isolate();
 			xi_conj_shifted.isolate();
-			xi_conj_shifted.shift(Base::idx_X, Base::dir_UP);
+			xi_conj_shifted.shift(Base::idx_X, Base::dir_DOWN);
 
 			tmp.rightMultiply(gamma5);
 			tmp.rightMultiplyDagger(gauge_field,Base::idx_X); 
@@ -499,7 +499,7 @@ namespace Contract
 
 			tmp.isolate();
 			xi_conj_shifted.isolate();
-			xi_conj_shifted.shift(Base::idx_X, Base::dir_DOWN);
+			xi_conj_shifted.shift(Base::idx_X, Base::dir_UP);
 
 			tmp.rightMultiply(gamma5);
 			tmp.shift(Base::idx_X, Base::dir_DOWN);
@@ -561,7 +561,7 @@ namespace Contract
 
 			tmp.isolate();
 			xi_conj_shifted.isolate();
-			xi_conj_shifted.shift(Base::idx_Y, Base::dir_UP);
+			xi_conj_shifted.shift(Base::idx_Y, Base::dir_DOWN);
 
 			tmp.rightMultiply(gamma5);
 			tmp.rightMultiplyDagger(gauge_field,Base::idx_Y); 
@@ -582,7 +582,7 @@ namespace Contract
 
 			tmp.isolate();
 			xi_conj_shifted.isolate();
-			xi_conj_shifted.shift(Base::idx_Y, Base::dir_DOWN);
+			xi_conj_shifted.shift(Base::idx_Y, Base::dir_UP);
 
 			tmp.rightMultiply(gamma5);
 			tmp.shift(Base::idx_Y, Base::dir_DOWN);
@@ -644,7 +644,7 @@ namespace Contract
 
 			tmp.isolate();
 			xi_conj_shifted.isolate();
-			xi_conj_shifted.shift(Base::idx_Z, Base::dir_UP);
+			xi_conj_shifted.shift(Base::idx_Z, Base::dir_DOWN);
 
 			tmp.rightMultiply(gamma5);
 			tmp.rightMultiplyDagger(gauge_field,Base::idx_Z); 
@@ -665,7 +665,7 @@ namespace Contract
 
 			tmp.isolate();
 			xi_conj_shifted.isolate();
-			xi_conj_shifted.shift(Base::idx_Z, Base::dir_DOWN);
+			xi_conj_shifted.shift(Base::idx_Z, Base::dir_UP);
 
 			tmp.rightMultiply(gamma5);
 			tmp.shift(Base::idx_Z, Base::dir_DOWN);

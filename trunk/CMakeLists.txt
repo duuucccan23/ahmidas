@@ -14,8 +14,8 @@ SET(CMAKE_INCLUDE_PATH ${PROJECT_SOURCE_DIR}/eigen)
 OPTION(BUILD_TESTS "Build all tests packaged with Ahmidas" ON)
 
 INCLUDE_DIRECTORIES(BEFORE SYSTEM src)
-SET(CMAKE_CXX_FLAGS "-O3 -qstrict -qarch=450d -qtune=450 -I/workgpfs/rech/cib/rcib044/binaires/lemon_babel_cxx/include -L/workgpfs/rech/cib/rcib044/binaires/lemon_babel_cxx/lib")
-# SET(CMAKE_CXX_FLAGS "-g -Wall -pedantic")
+#SET(CMAKE_CXX_FLAGS "-O3 -qstrict -qarch=450d -qtune=450 -I/workgpfs/rech/cib/rcib044/binaires/lemon_babel_cxx/include -L/workgpfs/rech/cib/rcib044/binaires/lemon_babel_cxx/lib")
+ SET(CMAKE_CXX_FLAGS "-g -Wall -pedantic")
 
 FIND_PACKAGE(Eigen3)
 IF(EIGEN3_FOUND)

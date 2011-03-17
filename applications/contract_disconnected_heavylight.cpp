@@ -293,12 +293,12 @@ int main(int argc, char **argv)
 
 
 
-			Core::Propagator phi_light_conj(phi_light);
+//			Core::Propagator phi_light_conj(phi_light);
 		
 			Core::Propagator  g5_phi_light(phi_light);
 			g5_phi_light.rightMultiply(gamma5);
 
-			Core::Propagator  g5_phi_light_opp(phi_light);
+			Core::Propagator  g5_phi_light_opp(phi_light_opp);
 			g5_phi_light_opp.rightMultiply(gamma5);
 
 		// compute for the bilinear operator first
@@ -307,7 +307,8 @@ int main(int argc, char **argv)
 			//1/M_d  - 1/tilde{M}_s
 			std::vector< std::complex <double>  > C_hl2 = Contract::compute_loop_new(g5_phi_light,phi_opp,my_operators);
 
-
+			std::vector< std::complex <double> > C_conserved_hl1 = Contract::compute_loop_conserved_vector_current(gauge_field,g5_phi_light_opp,phi);
+			std::vector< std::complex <double> > C_conserved_hl2 = Contract::compute_loop_conserved_vector_current(gauge_field,g5_phi_light,phi);
 			//loop involving twist 2 operators
 #ifdef	_with_Omunu_
 			std::vector< std::complex<double> > C_twist2_hl1 = Contract::compute_loop_twist2_operator(gauge_field,g5_phi_light_opp,phi);
@@ -322,7 +323,13 @@ int main(int argc, char **argv)
 				C_hl2[i] *=  std::complex<double>(0,(mu_l-mu_h)/(8.*kappa));	 
 			}
 
-			
+			for(size_t i=0; i < C_hl1.size(); i++)
+			{
+				C_conserved_hl1[i] *=  std::complex<double>(0,(mu_l - mu_h)/(8.*kappa));         
+				C_conserved_hl2[i] *=  std::complex<double>(0,(mu_l - mu_h)/(8.*kappa));         
+			}
+
+
 			for(size_t i=0; i < C_twist2_hl1.size(); i++)
 			{
 				C_twist2_hl1[i] *=  std::complex<double>(0,(mu_l-mu_h)/(8.*kappa));	 // factor:  +2 * i kappa (mu_l - mu_s) /( 4 kappa) ^2
@@ -342,7 +349,10 @@ int main(int argc, char **argv)
 
 				std::ofstream fout_hl1;
 				std::ofstream fout_hl2;
-					
+
+				std::ofstream fout_conserved_hl1;
+				std::ofstream fout_conserved_hl2;
+
 #ifdef _with_Omunu_
 				std::ofstream fout_twist2_hl1;
 				std::ofstream fout_twist2_pol_hl1;
@@ -355,6 +365,10 @@ int main(int argc, char **argv)
 
 					fout_hl1.open("output_disc_hl1.dat");
 					fout_hl2.open("output_disc_hl2.dat");
+					
+					fout_conserved_hl1.open("output_disc_conserved_hl1.dat");
+					fout_conserved_hl2.open("output_disc_conserved_hl2.dat");
+
 #ifdef _with_Omunu_
 					fout_twist2_hl1.open("output_disc_twist2_hl1.dat");
 					fout_twist2_pol_hl1.open("output_disc_twist2_pol_hl1.dat");
@@ -366,6 +380,10 @@ int main(int argc, char **argv)
 				{
 					fout_hl1.open("output_disc_hl1.dat",std::ios::app);
 					fout_hl2.open("output_disc_hl2.dat",std::ios::app);
+
+					fout_conserved_hl1.open("output_disc_conserved_hl1.dat",std::ios::app);
+					fout_conserved_hl2.open("output_disc_conserved_hl2.dat",std::ios::app);
+
 
 #ifdef _with_Omunu_
 					fout_twist2_hl1.open("output_disc_twist2_hl1.dat",std::ios::app);
@@ -400,6 +418,30 @@ int main(int argc, char **argv)
 				}
 				fout_hl1.close();
 				fout_hl2.close();
+
+				for(size_t j=0; j<12; j++)
+				{
+					for(size_t i=0; i<4; i++)
+					{
+						for(size_t k=0; k<2; k++)
+						{
+							for(size_t t = 0; t < T; t++)
+							{
+								fout_conserved_hl1<< t << std::scientific <<"  "
+									<< i <<"  "<< j+12*n <<"  "<<k <<"  "<< C_conserved_hl1[t+ T*k + 2*T*i + 2*T*4*j].real
+									() <<"  "<< C_conserved_hl1[t+ T*k + 2*T*i + 2*T*4*j].imag() << std::endl;
+
+								fout_conserved_hl2 << t << std::scientific <<"  "
+									<< i <<"  "<< j+12*n <<"  "<<k <<"  "<< C_conserved_hl2[t+ T*k + 2*T*i + 2*T*4*j].real
+									() <<"  "<< C_conserved_hl2[t+ T*k + 2*T*i + 2*T*4*j].imag() << std::endl;
+							}
+						}
+					}
+				}
+
+				fout_conserved_hl1.close();
+				fout_conserved_hl2.close();
+
 
 #ifdef _with_Omunu_
 

@@ -356,22 +356,22 @@ namespace Contract
 			for (size_t i=0; i<12;i++)
 			{
 
-				(*K)[0+16*i]=innerProduct((*I)[i],(*J0)[i]);
+				(*K)[0+16*i]=innerProduct((*I)[i],(*J0)[i]); // correct
 				(*K)[1+16*i]=innerProduct((*I)[i],(*J1)[i]);
-				(*K)[2+16*i]=innerProduct((*I0)[i],(*J2)[i]);
-				(*K)[3+16*i]=innerProduct((*I1)[i],(*J3)[i]);
+				(*K)[2+16*i]=innerProduct((*I1)[i],(*J2)[i]);  //should be I1 ?
+				(*K)[3+16*i]=innerProduct((*I0)[i],(*J3)[i]);
 				(*K)[4+16*i]=innerProduct((*I)[i],(*J4)[i]);
 				(*K)[5+16*i]=innerProduct((*I)[i],(*J5)[i]);
-				(*K)[6+16*i]=innerProduct((*I2)[i],(*J6)[i]);
-				(*K)[7+16*i]=innerProduct((*I3)[i],(*J7)[i]);
+				(*K)[6+16*i]=innerProduct((*I3)[i],(*J6)[i]);
+				(*K)[7+16*i]=innerProduct((*I2)[i],(*J7)[i]);
 				(*K)[8+16*i]=innerProduct((*I)[i],(*J8)[i]);
 				(*K)[9+16*i]=innerProduct((*I)[i],(*J9)[i]);
-				(*K)[10+16*i]=innerProduct((*I4)[i],(*J10)[i]);
-				(*K)[11+16*i]=innerProduct((*I5)[i],(*J11)[i]);
+				(*K)[10+16*i]=innerProduct((*I5)[i],(*J10)[i]);
+				(*K)[11+16*i]=innerProduct((*I4)[i],(*J11)[i]);
 				(*K)[12+16*i]=innerProduct((*I)[i],(*J12)[i]);
 				(*K)[13+16*i]=innerProduct((*I)[i],(*J13)[i]);
-				(*K)[14+16*i]=innerProduct((*I6)[i],(*J14)[i]);
-				(*K)[15+16*i]=innerProduct((*I7)[i],(*J15)[i]);
+				(*K)[14+16*i]=innerProduct((*I7)[i],(*J14)[i]);
+				(*K)[15+16*i]=innerProduct((*I6)[i],(*J15)[i]);
 
 			}
 			++K;

@@ -23,7 +23,8 @@ SET(Sources_Baryon Baryon.h
 SET(Sources_Disconnected Disconnected.h
                   Disconnected/Disconnected_compute_loop_twist2_operator_a.cpp
                   Disconnected/Disconnected_compute_loop_twist2_operator_b.cpp
-                  Disconnected/Disconnected_compute_loop_a.cpp
+				  Disconnected/Disconnected_compute_loop_conserved_current.cpp
+				  Disconnected/Disconnected_compute_loop_a.cpp
                   Disconnected/Disconnected_compute_loop_b.cpp
                   Disconnected/Disconnected_compute_loop_c.cpp)
 

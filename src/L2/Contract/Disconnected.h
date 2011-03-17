@@ -34,4 +34,9 @@ namespace Contract
 			Core::Field < QCD::Gauge > &gauge_field,
 			Core::Propagator const &xi, Core::Propagator const &psi);
 
+	std::vector< std::complex<double>  > compute_loop_conserved_vector_current(
+			Core::Field < QCD::Gauge > &gauge_field,
+			Core::Propagator const &xi, Core::Propagator const &psi);
+
+
 }

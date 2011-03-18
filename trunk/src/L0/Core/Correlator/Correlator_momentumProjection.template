@@ -26,7 +26,7 @@ std::vector< Correlator< Datatype > > Correlator< Datatype >::momentumProjection
     size_t localIndex;
     for (size_t idx_T = 0;  idx_T < T; idx_T++)
     {
-      corr_tmp.d_sumTimeslice[idx_T] = Dirac::Matrix(std::complex< double >(0.0, 0.0));
+      corr_tmp.d_sumTimeslice[idx_T] = Datatype(std::complex< double >(0.0, 0.0));
       for (size_t idx_Z = 0; idx_Z < L; idx_Z++)
       {
         for (size_t idx_Y = 0; idx_Y < L; idx_Y++)

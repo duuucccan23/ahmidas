@@ -9,9 +9,9 @@ class complex12
 
 	public :
 
-	
-    inline complex12() { std::fill_n(data,12,0.0); }
-    inline complex12(std::complex<double> c) { std::fill_n(data,12,c); }
+
+	inline complex12() { std::fill_n(data,12,0.0); }
+	inline complex12(std::complex<double> c) { std::fill_n(data,12,c); }
 	inline std::complex<double> &operator[](size_t index){ return data[index]; } 
 	inline complex12 &operator+=(complex12 const &other){ std::transform (this->data, this->data + 12, other.data, this->data, std::plus< std::complex< double > >()); return *this; }
 };
@@ -43,104 +43,15 @@ class complex192
 };
 
 
+
 namespace Contract
 {
 
 	// compute xi^* x Gamma x psi
-	std::vector< std::complex<double>  > compute_loop(
-			Core::Propagator const &xi, Core::Propagator const &psi,
-			std::vector< Base::HermitianBilinearOperator > ops)
-	{
-
-
-
-		assert(xi.T() == psi.T() && psi.L() == psi.L());
-		Base::Weave weave(xi.L(), xi.T());
-		//std::vector< Core::Correlator< Dirac::Matrix > > twopoints;
-		std::vector<  std::complex<double>  > twopoints;
-		//Core::Propagator xi_conj(xi);
-
-		//conjugation
-		//xi_conj.conjugate();
-
-		// loop over all operator combinations
-
-		for (size_t iOp=0; iOp<ops.size(); iOp++)
-		{
-			if (weave.isRoot()) std::cout << "Nop = " << iOp << std::endl;
-
-			Core::Propagator Gamma_psi(psi);
-
-			//apply operator X
-			Gamma_psi.rightMultiplyOperator(ops[iOp]);
-
-			Core::Field< complex12 > res(xi.L(),xi.T());
-			Core::Field< complex12 >::iterator K(res.begin());
-
-			//			Core::Field< std::complex<double> > field(xi.L(),xi.T());
-			//			std::vector< Core::Field< std::complex<double> > > res(12,field);
-
-
-			//			std::vector< Core::Field< std::complex<double> > >::iterator K(res.begin());
-			Core::Propagator::const_iterator J(Gamma_psi.begin());
-			Core::Propagator::const_iterator I(xi.begin());
-
-			while(I != xi.end())
-			{
-				for (size_t i=0; i<12;i++)
-				{
-					(*K)[i]=innerProduct((*I)[i],(*J)[i]);
-				}
-				++K;
-				++J;
-				++I;
-			}
-			Core::Correlator< complex12 > twopoint(&res);
-
-			twopoint.sumOverSpatialVolume(); 
-			twopoint.deleteField();
-
-			//		std::cout << "C" <<twopoint[0][0] <<std::endl;
-
-			if (weave.isRoot()) 
-			{
-				/*	for (size_t i=0; i<12;i++)
-					{
-					for (size_t t=0;t < xi.T();t++)
-					{
-					std::cout << "Op = "<< iOp << " " << i <<" " << t  <<" "<<twopoint[t][i].real() << " "<< twopoint[t][i].imag()  <<std::endl;
-					}
-					}*/
-
-				for (size_t t=0;t < xi.T();t++)
-				{
-					for (size_t i=0; i<12;i++)
-					{
-						twopoints.push_back(twopoint[t][i]);
-					}
-				}
-			}
-
-		}
-		//contract
-		//Core::Correlator< Dirac::Matrix >twopoint( xi_conj * Gamma_psi);
-		//sum over space
-
-
-
-		//		twopoint.deleteField();	
-		//accumulate 
-		//		 twopoints.push_back(twopoint);
-
-
-
-
-		return twopoints;
-	}	
-
 	std::vector< std::complex<double>  > compute_loop_new(
 			Core::Propagator const &xi, Core::Propagator const &psi,
-			std::vector< Base::HermitianBilinearOperator > ops)
+			std::vector< Base::HermitianBilinearOperator > ops,
+			int const * const position_offset, std::vector< int* > const &momenta,int const tsrc)
 	{
 
 
@@ -262,31 +173,30 @@ namespace Contract
 
 
 		Core::Correlator< complex192 > twopoint(&res);
-		//sum over space
-		twopoint.sumOverSpatialVolume(); 
+
+
+
+
+		twopoint.prepareMomentumProjection(position_offset);
+
+		std::vector< Core::Correlator< complex192 > > tmp(twopoint.momentumProjection(momenta));
+
 		twopoint.deleteField();
-
-
 
 		if (weave.isRoot()) 
 		{
-			/*	for (size_t i=0; i<12;i++)
-				{
-				for (size_t t=0;t < xi.T();t++)
-				{
-				std::cout << "Op = "<< iOp << " " << i <<" " << t  <<" "<<twopoint[t][i].real() << " "<< twopoint[t][i].imag()  <<std::endl;
-				}
-				}*/
 
-			//accumulate 
-			for (size_t i=0; i < 192;i++)
+			for (size_t m=0; m <momenta.size();m++)
 			{
-				for (size_t t=0;t < xi.T();t++)
+				tmp[m].setOffset(tsrc);
+				for (size_t i=0; i < 192;i++)
 				{
-					twopoints.push_back(twopoint[t][i]);
+					for (size_t t=0;t < xi.T();t++)
+					{
+						twopoints.push_back(tmp[m][t][i]);
+					}
 				}
 			}
-
 		}
 
 		return twopoints;

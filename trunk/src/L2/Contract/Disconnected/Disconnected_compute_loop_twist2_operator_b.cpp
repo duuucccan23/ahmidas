@@ -72,16 +72,6 @@ namespace Contract
 		xi_shifted_Z_UP.shift(Base::idx_Z, Base::dir_UP);
 		xi_shifted_Z_DOWN.shift(Base::idx_Z, Base::dir_DOWN);
 
-		Core::Propagator::const_iterator I(xi.begin());
-		Core::Propagator::const_iterator I0(xi_shifted_T_UP.begin());
-		Core::Propagator::const_iterator I1(xi_shifted_T_DOWN.begin());
-		Core::Propagator::const_iterator I2(xi_shifted_X_UP.begin());
-		Core::Propagator::const_iterator I3(xi_shifted_X_DOWN.begin());
-		Core::Propagator::const_iterator I4(xi_shifted_Y_UP.begin());
-		Core::Propagator::const_iterator I5(xi_shifted_Y_DOWN.begin());
-		Core::Propagator::const_iterator I6(xi_shifted_Z_UP.begin());
-		Core::Propagator::const_iterator I7(xi_shifted_Z_DOWN.begin());
-
 		Core::Propagator Gamma_psi0(psi);
 		Core::Propagator Gamma_psi1(psi);
 		Core::Propagator Gamma_psi2(psi);
@@ -98,24 +88,6 @@ namespace Contract
 		Core::Propagator Gamma_psi13(psi);
 		Core::Propagator Gamma_psi14(psi);
 		Core::Propagator Gamma_psi15(psi);
-
-		Core::Propagator::const_iterator J0(Gamma_psi0.begin());
-		Core::Propagator::const_iterator J1(Gamma_psi1.begin());
-		Core::Propagator::const_iterator J2(Gamma_psi2.begin());
-		Core::Propagator::const_iterator J3(Gamma_psi3.begin());
-		Core::Propagator::const_iterator J4(Gamma_psi4.begin());
-		Core::Propagator::const_iterator J5(Gamma_psi5.begin());
-		Core::Propagator::const_iterator J6(Gamma_psi6.begin());
-		Core::Propagator::const_iterator J7(Gamma_psi7.begin());
-		Core::Propagator::const_iterator J8(Gamma_psi8.begin());
-		Core::Propagator::const_iterator J9(Gamma_psi9.begin());
-		Core::Propagator::const_iterator J10(Gamma_psi10.begin());
-		Core::Propagator::const_iterator J11(Gamma_psi11.begin());
-		Core::Propagator::const_iterator J12(Gamma_psi12.begin());
-		Core::Propagator::const_iterator J13(Gamma_psi13.begin());
-		Core::Propagator::const_iterator J14(Gamma_psi14.begin());
-		Core::Propagator::const_iterator J15(Gamma_psi15.begin());
-
 
 		// now start the very ugly part ... O_mu mu and gamma_5 O_mu mu 
 
@@ -344,6 +316,34 @@ namespace Contract
 		}
 		//end O33
 
+		Core::Propagator::const_iterator I(xi.begin());
+		Core::Propagator::const_iterator I0(xi_shifted_T_UP.begin());
+		Core::Propagator::const_iterator I1(xi_shifted_T_DOWN.begin());
+		Core::Propagator::const_iterator I2(xi_shifted_X_UP.begin());
+		Core::Propagator::const_iterator I3(xi_shifted_X_DOWN.begin());
+		Core::Propagator::const_iterator I4(xi_shifted_Y_UP.begin());
+		Core::Propagator::const_iterator I5(xi_shifted_Y_DOWN.begin());
+		Core::Propagator::const_iterator I6(xi_shifted_Z_UP.begin());
+		Core::Propagator::const_iterator I7(xi_shifted_Z_DOWN.begin());
+
+
+		Core::Propagator::const_iterator J0(Gamma_psi0.begin());
+		Core::Propagator::const_iterator J1(Gamma_psi1.begin());
+		Core::Propagator::const_iterator J2(Gamma_psi2.begin());
+		Core::Propagator::const_iterator J3(Gamma_psi3.begin());
+		Core::Propagator::const_iterator J4(Gamma_psi4.begin());
+		Core::Propagator::const_iterator J5(Gamma_psi5.begin());
+		Core::Propagator::const_iterator J6(Gamma_psi6.begin());
+		Core::Propagator::const_iterator J7(Gamma_psi7.begin());
+		Core::Propagator::const_iterator J8(Gamma_psi8.begin());
+		Core::Propagator::const_iterator J9(Gamma_psi9.begin());
+		Core::Propagator::const_iterator J10(Gamma_psi10.begin());
+		Core::Propagator::const_iterator J11(Gamma_psi11.begin());
+		Core::Propagator::const_iterator J12(Gamma_psi12.begin());
+		Core::Propagator::const_iterator J13(Gamma_psi13.begin());
+		Core::Propagator::const_iterator J14(Gamma_psi14.begin());
+		Core::Propagator::const_iterator J15(Gamma_psi15.begin());
+
 
 		//declare iterator on a field of 192 complex.... 
 		Core::Field< complex192 > res(xi.L(),xi.T());
@@ -422,7 +422,7 @@ namespace Contract
 
 		}
 
-	
+
 		return twopoints;
 	}
 

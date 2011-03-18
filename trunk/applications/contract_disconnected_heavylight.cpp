@@ -52,6 +52,7 @@
 #define _with_MMS_
 #define _with_Omunu_
 //#define _without_MMS_
+#define _with_momentum_projection_
 
 int main(int argc, char **argv)
 {
@@ -97,7 +98,7 @@ int main(int argc, char **argv)
 		std::cout<<"kappa="<<kappa<<", mu_light="<<mu_l<<", mu_heavy="<<mu_h<<std::endl;
 		std::cout<<"thetax="<<thetax<<", ";
 		std::cout<<"thetay="<<thetay<<", ";
-
+		std::cout<<"thetaz="<<thetaz<<", ";
 		std::cout<<"thetat="<<thetat<<std::endl;
 	}
 
@@ -310,6 +311,12 @@ int main(int argc, char **argv)
 			std::vector< std::complex <double> > C_conserved_hl1 = Contract::compute_loop_conserved_vector_current(gauge_field,g5_phi_light_opp,phi);
 			std::vector< std::complex <double> > C_conserved_hl2 = Contract::compute_loop_conserved_vector_current(gauge_field,g5_phi_light,phi);
 			//loop involving twist 2 operators
+			if (weave.isRoot())
+				std::cout << "done.\n" << std::endl;
+
+
+
+
 #ifdef	_with_Omunu_
 			std::vector< std::complex<double> > C_twist2_hl1 = Contract::compute_loop_twist2_operator(gauge_field,g5_phi_light_opp,phi);
 			std::vector< std::complex<double> > C_twist2_pol_hl1 = Contract::compute_loop_twist2_operator(gauge_field,g5_phi_light_opp,g5_phi);
@@ -317,172 +324,330 @@ int main(int argc, char **argv)
 			std::vector< std::complex<double> > C_twist2_pol_hl2 = Contract::compute_loop_twist2_operator(gauge_field,g5_phi_light,g5_phi_opp);
 
 #endif
-			for(size_t i=0; i < C_hl1.size(); i++)
-			{
-				C_hl1[i] *=  std::complex<double>(0,(mu_l-mu_h)/(8.*kappa));	 // factor:  +2 * i kappa (mu_l - mu_s) /( 4 kappa) ^2
-				C_hl2[i] *=  std::complex<double>(0,(mu_l-mu_h)/(8.*kappa));	 
-			}
-
-			for(size_t i=0; i < C_hl1.size(); i++)
-			{
-				C_conserved_hl1[i] *=  std::complex<double>(0,(mu_l - mu_h)/(8.*kappa));         
-				C_conserved_hl2[i] *=  std::complex<double>(0,(mu_l - mu_h)/(8.*kappa));         
-			}
-
-
-			for(size_t i=0; i < C_twist2_hl1.size(); i++)
-			{
-				C_twist2_hl1[i] *=  std::complex<double>(0,(mu_l-mu_h)/(8.*kappa));	 // factor:  +2 * i kappa (mu_l - mu_s) /( 4 kappa) ^2
-				C_twist2_hl2[i] *=  std::complex<double>(0,(mu_l-mu_h)/(8.*kappa));	 
-				C_twist2_pol_hl1[i] *=  std::complex<double>(0,(mu_l-mu_h)/(8.*kappa));	 // factor:  +2 * i kappa (mu_l - mu_s) /( 4 kappa) ^2
-				C_twist2_pol_hl2[i] *=  std::complex<double>(0,(mu_l-mu_h)/(8.*kappa));	 // factor:  +2 * i kappa (mu_l - mu_s) /( 4 kappa) ^2
-			}
-
-
+#ifdef _with_momentum_projection_                                                                                                                        
 
 			if (weave.isRoot())
-				std::cout << "done.\n" << std::endl;
+				std::cout << "Non zero momentum "<<" ... ";
 
 
-			if (weave.isRoot())	
+			size_t const * const source_position = positions[0];
+			size_t const timeslice_source = source_position[Base::idx_T] % T;
+
+			if(weave.isRoot())
+				std::cout << "\nsource position: " << source_position[0] << " " << source_position[1] << " "
+					<< source_position[2] << " " << source_position[3] << std::endl;
+
+
+			// this is important!!!
+			int const sourcePos[3] = {source_position[0], source_position[1], source_position[2]}; 
+
+
+			std::vector< int* > momenta;
+			for(size_t I=0; I<19; I++)
+				momenta.push_back( new int[3]);
 			{
+				int momenta_raw[57] = {
+					+0, +0, +0,
+					1, +0, +0,
+					-1, +0, +0,
+					+0,  1, +0,
+					+0, -1, +0,
+					+0, +0,  1,
+					+0, +0, -1,
+					1, +0,  1,
+					-1, +0, -1,
+					1, +0, -1,
+					-1, +0,  1,
+					1,  1, +0,
+					-1, -1, +0,
+					1, -1, +0,
+					-1,  1, +0,
+					+0,  1,  1,
+					+0, -1, -1,
+					+0,  1, -1,
+					+0, -1,  1};
 
-				std::ofstream fout_hl1;
-				std::ofstream fout_hl2;
 
-				std::ofstream fout_conserved_hl1;
-				std::ofstream fout_conserved_hl2;
 
-#ifdef _with_Omunu_
-				std::ofstream fout_twist2_hl1;
-				std::ofstream fout_twist2_pol_hl1;
-				std::ofstream fout_twist2_hl2;
-				std::ofstream fout_twist2_pol_hl2;
+
+				for(size_t I=0; I<momenta.size(); I++)
+					std::copy(&(momenta_raw[3*I]), &(momenta_raw[3*I]) + 3, momenta[I]);
+			}
+
+			  
+			//1/M_u  - 1/M_s
+			std::vector< std::complex <double>  > C_hl1_mom=Contract::compute_loop_new(g5_phi_light_opp,phi,my_operators,sourcePos,momenta,timeslice_source);
+			 //1/M_d  - 1/tilde{M}_s
+			 std::vector< std::complex <double>  >C_hl2_mom=Contract::compute_loop_new(g5_phi_light,phi_opp,my_operators,sourcePos,momenta,timeslice_source);
+
+
+			 std::vector< std::complex <double> > C_conserved_hl1_mom = Contract::compute_loop_conserved_vector_current(gauge_field,g5_phi_light_opp,phi,sourcePos,momenta,timeslice_source);
+			 std::vector< std::complex <double> > C_conserved_hl2_mom = Contract::compute_loop_conserved_vector_current(gauge_field,g5_phi_light,phi,sourcePos,momenta,timeslice_source);
+
+
+
+			 for(size_t i=0; i < C_conserved_hl1_mom.size(); i++)
+			 {
+				 C_conserved_hl1_mom[i] *=  std::complex<double>(0,(mu_l - mu_h)/(8.*kappa));         
+				 C_conserved_hl2_mom[i] *=  std::complex<double>(0,(mu_l - mu_h)/(8.*kappa));         
+			 }
+
+
+
+		 for(size_t i=0; i < C_hl1_mom.size(); i++)
+			 {
+			 C_hl1_mom[i] *=  std::complex<double>(0,(mu_l - mu_h)/(8.*kappa));         
+			 C_hl2_mom[i] *=  std::complex<double>(0,(mu_l - mu_h)/(8.*kappa));         
+			 }
+
+			 if (weave.isRoot())
+				 std::cout << "done.\n" << std::endl;
+
+
+
 #endif
+			 for(size_t i=0; i < C_hl1.size(); i++)
+			 {
+				 C_hl1[i] *=  std::complex<double>(0,(mu_l-mu_h)/(8.*kappa));	 // factor:  +2 * i kappa (mu_l - mu_s) /( 4 kappa) ^2
+				 C_hl2[i] *=  std::complex<double>(0,(mu_l-mu_h)/(8.*kappa));	 
+			 }
 
-				if (n==0)
-				{
-
-					fout_hl1.open("output_disc_hl1.dat");
-					fout_hl2.open("output_disc_hl2.dat");
-					
-					fout_conserved_hl1.open("output_disc_conserved_hl1.dat");
-					fout_conserved_hl2.open("output_disc_conserved_hl2.dat");
-
-#ifdef _with_Omunu_
-					fout_twist2_hl1.open("output_disc_twist2_hl1.dat");
-					fout_twist2_pol_hl1.open("output_disc_twist2_pol_hl1.dat");
-					fout_twist2_hl2.open("output_disc_twist2_hl2.dat");
-					fout_twist2_pol_hl2.open("output_disc_twist2_pol_hl2.dat");
-#endif
-				}
-				else	
-				{
-					fout_hl1.open("output_disc_hl1.dat",std::ios::app);
-					fout_hl2.open("output_disc_hl2.dat",std::ios::app);
-
-					fout_conserved_hl1.open("output_disc_conserved_hl1.dat",std::ios::app);
-					fout_conserved_hl2.open("output_disc_conserved_hl2.dat",std::ios::app);
-
-
-#ifdef _with_Omunu_
-					fout_twist2_hl1.open("output_disc_twist2_hl1.dat",std::ios::app);
-					fout_twist2_pol_hl1.open("output_disc_twist2_pol_hl1.dat",std::ios::app);
-					fout_twist2_hl2.open("output_disc_twist2_hl2.dat",std::ios::app);
-					fout_twist2_pol_hl2.open("output_disc_twist2_pol_hl2.dat",std::ios::app);
-#endif
-				}
-
-				std::cout << "write output for sources from " << 12*n << " to " << 11+12*n<<" ... "  << std::endl;
-
-				for(size_t j=0; j<12; j++)
-				{
-
-					for(size_t i=0; i<my_operators.size(); i++)
-					{
-
-						for(size_t t = 0; t < T; t++)
-						{
-
-							fout_hl1 << t << std::scientific <<"  "
-								<< i <<"  "<< j + 12*n <<"  "<<C_hl1[t +  T*i + 16*T*j].real() <<"  "<< C_hl1[t + T*i + 16*T*j].imag() << std::endl;
-
-							fout_hl2 << t << std::scientific <<"  "
-								<< i <<"  "<< j + 12*n <<"  "<<C_hl2[t +  T*i + 16*T*j].real() <<"  "<< C_hl2[t + T*i + 16*T*j].imag() << std::endl;
-
-							fout_hl1.flush();
-							fout_hl2.flush();
-
-						}
-					}			
-				}
-				fout_hl1.close();
-				fout_hl2.close();
-
-				for(size_t j=0; j<12; j++)
-				{
-					for(size_t i=0; i<4; i++)
-					{
-						for(size_t k=0; k<2; k++)
-						{
-							for(size_t t = 0; t < T; t++)
-							{
-								fout_conserved_hl1<< t << std::scientific <<"  "
-									<< i <<"  "<< j+12*n <<"  "<<k <<"  "<< C_conserved_hl1[t+ T*k + 2*T*i + 2*T*4*j].real
-									() <<"  "<< C_conserved_hl1[t+ T*k + 2*T*i + 2*T*4*j].imag() << std::endl;
-
-								fout_conserved_hl2 << t << std::scientific <<"  "
-									<< i <<"  "<< j+12*n <<"  "<<k <<"  "<< C_conserved_hl2[t+ T*k + 2*T*i + 2*T*4*j].real
-									() <<"  "<< C_conserved_hl2[t+ T*k + 2*T*i + 2*T*4*j].imag() << std::endl;
-							}
-						}
-					}
-				}
-
-				fout_conserved_hl1.close();
-				fout_conserved_hl2.close();
+			 for(size_t i=0; i < C_conserved_hl1.size(); i++)
+			 {
+				 C_conserved_hl1[i] *=  std::complex<double>(0,(mu_l - mu_h)/(8.*kappa));         
+				 C_conserved_hl2[i] *=  std::complex<double>(0,(mu_l - mu_h)/(8.*kappa));         
+			 }
 
 
 #ifdef _with_Omunu_
+			 for(size_t i=0; i < C_twist2_hl1.size(); i++)
+			 {
+				 C_twist2_hl1[i] *=  std::complex<double>(0,(mu_l-mu_h)/(8.*kappa));	 // factor:  +2 * i kappa (mu_l - mu_s) /( 4 kappa) ^2
+				 C_twist2_hl2[i] *=  std::complex<double>(0,(mu_l-mu_h)/(8.*kappa));	 
+				 C_twist2_pol_hl1[i] *=  std::complex<double>(0,(mu_l-mu_h)/(8.*kappa));	 // factor:  +2 * i kappa (mu_l - mu_s) /( 4 kappa) ^2
+				 C_twist2_pol_hl2[i] *=  std::complex<double>(0,(mu_l-mu_h)/(8.*kappa));	 // factor:  +2 * i kappa (mu_l - mu_s) /( 4 kappa) ^2
+			 }
 
-				for(size_t j=0; j<12; j++)
-				{
-					for(size_t i=0; i<4; i++)
-					{
-						for(size_t k=0; k<4; k++)
-						{
-							for(size_t t = 0; t < T; t++)
-							{
-
-
-								fout_twist2_hl1 << t << std::scientific <<"  "
-									<< i <<"  "<< j + 12*n <<"  "<< k <<"  " <<C_twist2_hl1[t  + T*k + 4*T*i + 4*T*4*j ].real() <<"  "<< C_twist2_hl1[t + T*k + 4*T*i +4*T*4*j ].imag() << std::endl;
-								fout_twist2_pol_hl1 << t << std::scientific <<"  "
-									<< i <<"  "<< j + 12*n <<"  "<< k <<"  " <<C_twist2_pol_hl1[t  + T*k + 4*T*i + 4*T*4*j ].real() <<"  "<< C_twist2_pol_hl1[t + T*k + 4*T*i +4*T*4*j ].imag() << std::endl;
-
-								fout_twist2_hl2 << t << std::scientific <<"  "
-									<< i <<"  "<< j + 12*n <<"  "<< k <<"  " <<C_twist2_hl2[t  + T*k + 4*T*i + 4*T*4*j ].real() <<"  "<< C_twist2_hl2[t + T*k + 4*T*i +4*T*4*j ].imag() << std::endl;
-								fout_twist2_pol_hl2 << t << std::scientific <<"  "
-									<< i <<"  "<< j + 12*n <<"  "<< k <<"  " <<C_twist2_pol_hl2[t  + T*k + 4*T*i + 4*T*4*j ].real() <<"  "<< C_twist2_pol_hl2[t + T*k + 4*T*i +4*T*4*j ].imag() << std::endl;
-
-
-								fout_twist2_hl1.flush();
-								fout_twist2_hl2.flush();
-								fout_twist2_pol_hl1.flush();
-								fout_twist2_pol_hl2.flush();
-
-							}/*t*/
-						}/*end loop on the 4 terms contributing to a symmetrized covariant derivative */
-					} /*i loop on the 4 operators : O_mumu (unpo1arized) and Omumu g5 (polarized) */
-				} /*loop on the 12 sources*/
-
-				fout_twist2_hl1.close();
-				fout_twist2_pol_hl2.close();
 #endif
 
-				std::cout << "done.\n" << std::endl;
 
-			}/* end if weave.isRoot() */
+
+
+			 if (weave.isRoot())	
+			 {
+
+				 std::ofstream fout_hl1;
+				 std::ofstream fout_hl2;
+
+				 std::ofstream fout_conserved_hl1;
+				 std::ofstream fout_conserved_hl2;
+
+#ifdef _with_momentum_projection_                                                                                                                        
+				 std::ofstream fout_hl1_mom;
+				 std::ofstream fout_hl2_mom;
+
+				 std::ofstream fout_conserved_hl1_mom;
+				 std::ofstream fout_conserved_hl2_mom;
+#endif
+
+#ifdef _with_Omunu_
+				 std::ofstream fout_twist2_hl1;
+				 std::ofstream fout_twist2_pol_hl1;
+				 std::ofstream fout_twist2_hl2;
+				 std::ofstream fout_twist2_pol_hl2;
+#endif
+
+				 if (n==0)
+				 {
+
+					 fout_hl1.open("output_disc_hl1.dat");
+					 fout_hl2.open("output_disc_hl2.dat");
+
+					 fout_conserved_hl1.open("output_disc_conserved_hl1.dat");
+					 fout_conserved_hl2.open("output_disc_conserved_hl2.dat");
+
+#ifdef _with_momentum_projection_                                                                                                                        
+					 fout_hl1_mom.open("output_disc_hl1_mom.dat");
+					 fout_hl2_mom.open("output_disc_hl2_mom.dat");
+
+					 fout_conserved_hl1_mom.open("output_disc_conserved_hl1_mom.dat");
+					 fout_conserved_hl2_mom.open("output_disc_conserved_hl2_mom.dat");
+#endif
+
+#ifdef _with_Omunu_
+					 fout_twist2_hl1.open("output_disc_twist2_hl1.dat");
+					 fout_twist2_pol_hl1.open("output_disc_twist2_pol_hl1.dat");
+					 fout_twist2_hl2.open("output_disc_twist2_hl2.dat");
+					 fout_twist2_pol_hl2.open("output_disc_twist2_pol_hl2.dat");
+#endif
+				 }
+				 else	
+				 {
+					 fout_hl1.open("output_disc_hl1.dat",std::ios::app);
+					 fout_hl2.open("output_disc_hl2.dat",std::ios::app);
+
+					 fout_conserved_hl1.open("output_disc_conserved_hl1.dat",std::ios::app);
+					 fout_conserved_hl2.open("output_disc_conserved_hl2.dat",std::ios::app);
+
+#ifdef _with_momentum_projection_                                                                                                                        
+					 fout_hl1_mom.open("output_disc_hl1_mom.dat",std::ios::app);
+					 fout_hl2_mom.open("output_disc_hl2_mom.dat",std::ios::app);
+					 fout_conserved_hl1_mom.open("output_disc_conserved_hl1_mom.dat",std::ios::app);
+					 fout_conserved_hl2_mom.open("output_disc_conserved_hl2_mom.dat",std::ios::app);
+
+#endif
+
+#ifdef _with_Omunu_
+					 fout_twist2_hl1.open("output_disc_twist2_hl1.dat",std::ios::app);
+					 fout_twist2_pol_hl1.open("output_disc_twist2_pol_hl1.dat",std::ios::app);
+					 fout_twist2_hl2.open("output_disc_twist2_hl2.dat",std::ios::app);
+					 fout_twist2_pol_hl2.open("output_disc_twist2_pol_hl2.dat",std::ios::app);
+#endif
+				 }
+
+				 std::cout << "write output for sources from " << 12*n << " to " << 11+12*n<<" ... "  << std::endl;
+
+				 for(size_t j=0; j<12; j++)
+				 {
+
+					 for(size_t i=0; i<my_operators.size(); i++)
+					 {
+
+						 for(size_t t = 0; t < T; t++)
+						 {
+
+							 fout_hl1 << t << std::scientific <<"  "
+								 << i <<"  "<< j + 12*n <<"  "<<C_hl1[t +  T*i + 16*T*j].real() <<"  "<< C_hl1[t + T*i + 16*T*j].imag() << std::endl;
+
+							 fout_hl2 << t << std::scientific <<"  "
+								 << i <<"  "<< j + 12*n <<"  "<<C_hl2[t +  T*i + 16*T*j].real() <<"  "<< C_hl2[t + T*i + 16*T*j].imag() << std::endl;
+
+							 fout_hl1.flush();
+							 fout_hl2.flush();
+
+						 }
+					 }			
+				 }
+				 fout_hl1.close();
+				 fout_hl2.close();
+
+				 for(size_t j=0; j<12; j++)
+				 {
+					 for(size_t i=0; i<4; i++)
+					 {
+						 for(size_t k=0; k<2; k++)
+						 {
+							 for(size_t t = 0; t < T; t++)
+							 {
+								 fout_conserved_hl1<< t << std::scientific <<"  "
+									 << i <<"  "<< j+12*n <<"  "<<k <<"  "<< C_conserved_hl1[t+ T*k + 2*T*i + 2*T*4*j].real
+									 () <<"  "<< C_conserved_hl1[t+ T*k + 2*T*i + 2*T*4*j].imag() << std::endl;
+
+								 fout_conserved_hl2 << t << std::scientific <<"  "
+									 << i <<"  "<< j+12*n <<"  "<<k <<"  "<< C_conserved_hl2[t+ T*k + 2*T*i + 2*T*4*j].real
+									 () <<"  "<< C_conserved_hl2[t+ T*k + 2*T*i + 2*T*4*j].imag() << std::endl;
+							 }
+						 }
+					 }
+				 }
+
+				 fout_conserved_hl1.close();
+				 fout_conserved_hl2.close();
+
+
+#ifdef _with_Omunu_
+
+				 for(size_t j=0; j<12; j++)
+				 {
+					 for(size_t i=0; i<4; i++)
+					 {
+						 for(size_t k=0; k<4; k++)
+						 {
+							 for(size_t t = 0; t < T; t++)
+							 {
+
+
+								 fout_twist2_hl1 << t << std::scientific <<"  "
+									 << i <<"  "<< j + 12*n <<"  "<< k <<"  " <<C_twist2_hl1[t  + T*k + 4*T*i + 4*T*4*j ].real() <<"  "<< C_twist2_hl1[t + T*k + 4*T*i +4*T*4*j ].imag() << std::endl;
+								 fout_twist2_pol_hl1 << t << std::scientific <<"  "
+									 << i <<"  "<< j + 12*n <<"  "<< k <<"  " <<C_twist2_pol_hl1[t  + T*k + 4*T*i + 4*T*4*j ].real() <<"  "<< C_twist2_pol_hl1[t + T*k + 4*T*i +4*T*4*j ].imag() << std::endl;
+
+								 fout_twist2_hl2 << t << std::scientific <<"  "
+									 << i <<"  "<< j + 12*n <<"  "<< k <<"  " <<C_twist2_hl2[t  + T*k + 4*T*i + 4*T*4*j ].real() <<"  "<< C_twist2_hl2[t + T*k + 4*T*i +4*T*4*j ].imag() << std::endl;
+								 fout_twist2_pol_hl2 << t << std::scientific <<"  "
+									 << i <<"  "<< j + 12*n <<"  "<< k <<"  " <<C_twist2_pol_hl2[t  + T*k + 4*T*i + 4*T*4*j ].real() <<"  "<< C_twist2_pol_hl2[t + T*k + 4*T*i +4*T*4*j ].imag() << std::endl;
+
+
+								 fout_twist2_hl1.flush();
+								 fout_twist2_hl2.flush();
+								 fout_twist2_pol_hl1.flush();
+								 fout_twist2_pol_hl2.flush();
+
+							 }/*t*/
+						 }/*end loop on the 4 terms contributing to a symmetrized covariant derivative */
+					 } /*i loop on the 4 operators : O_mumu (unpo1arized) and Omumu g5 (polarized) */
+				 } /*loop on the 12 sources*/
+
+				 fout_twist2_hl1.close();
+				 fout_twist2_pol_hl2.close();
+#endif
+
+#ifdef _with_momentum_projection_                                                                                                                        
+				 int N=momenta.size();
+				 int index;	
+
+				 for(size_t I = 0; I < momenta.size(); I++)
+				 {
+					 for(size_t j=0; j<12; j++)
+					 {
+						 for(size_t i=0; i<16; i++)
+						 {
+							 for(size_t t = 0; t < T; t++)
+							 {
+								 index = t + T*i  +T*16*j + T*16*12*I;
+
+								 fout_hl1_mom << t << std::scientific <<"  " << momenta[I][0] << "  "<< momenta[I][1] << "  "<< momenta[I][2] << "  "
+									 << i <<"  "<< j + 12*n <<"  "<<C_hl1_mom[index].real() <<"  "<< C_hl1_mom[index].imag() << std::endl;
+								 fout_hl2_mom << t << std::scientific <<"  " << momenta[I][0] << "  "<< momenta[I][1] << "  "<< momenta[I][2] << "  "
+									 << i <<"  "<< j + 12*n <<"  "<<C_hl2_mom[index].real() <<"  "<< C_hl2_mom[index].imag() << std::endl;
+
+							 }
+						 }			
+					 }
+				 }
+				 fout_hl1_mom.close();
+				 fout_hl2_mom.close();
+
+
+				 for(size_t I = 0; I < momenta.size(); I++)
+				 {
+					 for(size_t j=0; j<12; j++)
+					 {
+						 for(size_t i=0; i<4; i++)
+						 {
+							 for(size_t k=0; k<2; k++)
+							 {
+								 for(size_t t = 0; t < T; t++)
+								 {
+									 fout_conserved_hl1_mom<< t << std::scientific <<"  "
+										 << momenta[I][0] << "  "<< momenta[I][1] << "  "<< momenta[I][2] << "  "<< i <<"  "<< j+12*n <<"  "<<k <<"  "<< C_conserved_hl1_mom[t+ T*k + 2*T*i + 2*T*4*j + 2*T*4*12*I].real() <<"  "<< C_conserved_hl1_mom[t+ T*k + 2*T*i + 2*T*4*j + 2*T*4*12*I].imag() << std::endl;
+
+									 fout_conserved_hl2_mom<< t << std::scientific <<"  "
+										 << momenta[I][0] << "  "<< momenta[I][1] << "  "<< momenta[I][2] << "  "<< i <<"  "<< j+12*n <<"  "<<k <<"  "<< C_conserved_hl2_mom[t+ T*k + 2*T*i + 2*T*4*j + 2*T*4*12*I].real() <<"  "<< C_conserved_hl2_mom[t+ T*k + 2*T*i + 2*T*4*j + 2*T*4*12*I].imag() << std::endl;
+
+								 }
+							 }
+						 }
+					 }
+				 }
+
+				 fout_conserved_hl1_mom.close();
+				 fout_conserved_hl2_mom.close();
+
+#endif 
+				 std::cout << "done.\n" << std::endl;
+
+			 }/* end if weave.isRoot() */
 		} /* loop on Nsample */
 	}/* end case N%12 = 0 */
 

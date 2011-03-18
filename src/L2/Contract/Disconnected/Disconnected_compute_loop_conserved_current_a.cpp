@@ -4,7 +4,6 @@
 //Compute the disconnected loop of the operator O_{mumu} and O_{mumu}\gamma5
 // O_00 and g5 O_00 cross checked independtly using an independent code 
 // still to cross check the spatial derivative
-
 class complex96
 {
 	private :
@@ -19,9 +18,9 @@ class complex96
 		inline complex96 &operator+=(complex96 const &other){ std::transform (this->data, this->data + 96, other.data, this->data, std::plus< std::complex< double > >()); return *this; }
 
 		inline complex96 &operator=(complex96 const &other) {
-			if (&other != this)
-				std::copy(other.data, other.data + 96, data); 
-			return *this;
+		 if (&other != this)	
+			std::copy(other.data, other.data + 96, data); 
+		 return *this;
 		}
 		inline complex96 operator*(std::complex<double> const &factor) const {
 			complex96 tmp;
@@ -35,11 +34,10 @@ class complex96
 
 namespace Contract
 {
-
 	// compute xi^* x Gamma x psi
 	std::vector<  std::complex<double> > compute_loop_conserved_vector_current(
 			Core::Field < QCD::Gauge > &gauge_field,
-			Core::Propagator const &xi, Core::Propagator const &psi)
+			Core::Propagator const &xi, Core::Propagator const &psi,int const * const position_offset, std::vector< int* > const &momenta,int const tsrc)
 	{
 
 		Dirac::Gamma<1> gamma1;
@@ -54,6 +52,8 @@ namespace Contract
 		assert(xi.T() == psi.T() && psi.L() == psi.L());
 		Base::Weave weave(xi.L(), xi.T());
 		std::vector<  std::complex<double>  > twopoints;
+
+		if (weave.isRoot()) std::cout <<"merde" <<std::endl;
 
 		Core::Propagator Gamma_psi(L,T);
 
@@ -84,7 +84,7 @@ namespace Contract
 		xi_shifted_Z_UP.shift(Base::idx_Z, Base::dir_UP);
 		xi_shifted_Z_DOWN.shift(Base::idx_Z, Base::dir_DOWN);
 
-		Core::Propagator Gamma_psi0(psi);
+				Core::Propagator Gamma_psi0(psi);
 		Core::Propagator Gamma_psi1(psi);
 		Core::Propagator Gamma_psi2(psi);
 		Core::Propagator Gamma_psi3(psi);
@@ -96,6 +96,7 @@ namespace Contract
 		//V_0  
 
 
+		if (weave.isRoot()) std::cout <<"merde2" <<std::endl;
 		// part1 tr (g0 -1) U_0(x) psi(x+0) xi^star(x)
 		{	Core::Propagator tmp(psi);
 			tmp.isolate();
@@ -203,8 +204,7 @@ namespace Contract
 			Gamma_psi7.isolate();
 		}
 
-
-		Core::Propagator::const_iterator I(xi.begin());
+Core::Propagator::const_iterator I(xi.begin());
 		Core::Propagator::const_iterator I0(xi_shifted_T_UP.begin());
 		Core::Propagator::const_iterator I1(xi_shifted_T_DOWN.begin());
 		Core::Propagator::const_iterator I2(xi_shifted_X_UP.begin());
@@ -225,18 +225,14 @@ namespace Contract
 
 
 
-
 		//declare iterator on a field of 96 complex.... 
 		Core::Field< complex96 > res(xi.L(),xi.T());
 		Core::Field< complex96 >::iterator K(res.begin());
 
-		size_t index=0;
 		while(I != xi.end())
 		{
 			for (size_t i=0; i<12;i++)
 			{
-
-
 
 				(*K)[0+8*i]=innerProduct((*I)[i],(*J0)[i]);
 				(*K)[1+8*i]=innerProduct((*I1)[i],(*J1)[i]);
@@ -258,13 +254,13 @@ namespace Contract
 			++J6;
 			++J7;
 
-			//			++I0;
+//			++I0;
 			++I1;
-			//			++I2;
+//			++I2;
 			++I3;
-			//			++I4;
+//			++I4;
 			++I5;
-			//			++I6;
+//			++I6;
 			++I7;
 			++I;
 		}
@@ -272,24 +268,31 @@ namespace Contract
 
 		Core::Correlator< complex96 > twopoint(&res);
 
+		twopoint.prepareMomentumProjection(position_offset);
+
+
+		std::vector< Core::Correlator< complex96 > > tmp(twopoint.momentumProjection(momenta));
 
 
 
 		//sum over space
-		twopoint.sumOverSpatialVolume(); 
+		//		twopoint.sumOverSpatialVolume(); 
 		twopoint.deleteField();
 
 		if (weave.isRoot()) 
 		{
-			//accumulate 
-			for (size_t i=0; i < 96;i++)
+			for (size_t m=0; m <momenta.size();m++)
 			{
-				for (size_t t=0;t < xi.T();t++)
+				tmp[m].setOffset(tsrc);
+
+				for (size_t i=0; i < 96;i++)
 				{
-					twopoints.push_back(twopoint[t][i]);
+					for (size_t t=0;t < xi.T();t++)
+					{
+						twopoints.push_back(tmp[m][t][i]);
+					}
 				}
 			}
-
 		}
 
 

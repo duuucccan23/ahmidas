@@ -50,8 +50,10 @@
 
 #define _with_theta_
 #define _with_Omunu_
-//#define _with_MMS_
-#define _without_MMS_
+#define _with_MMS_
+//#define _without_MMS_
+#define _with_momentum_projection
+
 
 int main(int argc, char **argv)
 {
@@ -285,7 +287,7 @@ int main(int argc, char **argv)
 			//vv loop
 			std::vector< Core::Correlator< Dirac::Matrix > > C_vv = Contract::compute_loop(g5_phi,phi,my_operators);
 
-			
+
 #ifdef	_with_Omunu_
 			std::vector< Core::Correlator< Dirac::Matrix > > C_twist2 = Contract::compute_loop_twist2_operator(gauge_field,xi,phi);
 #endif
@@ -510,10 +512,10 @@ int main(int argc, char **argv)
 			//vv loop
 			std::vector< std::complex <double>  > C_vv = Contract::compute_loop_new(g5_phi,phi,my_operators);
 			std::vector< std::complex <double> > C_conserved_vv = Contract::compute_loop_conserved_vector_current(gauge_field,g5_phi,phi);
-	
 
-			
-for(size_t i=0; i < C_vv.size(); i++)
+
+
+			for(size_t i=0; i < C_vv.size(); i++)
 			{
 				C_vv[i] *=  std::complex<double>(0,2.0*mu/(8.*kappa));	 // factor + 4 * i kappa mu /( 4 kappa) ^2
 			}
@@ -537,6 +539,72 @@ for(size_t i=0; i < C_vv.size(); i++)
 				std::cout << "done.\n" << std::endl;
 
 
+
+#ifdef _with_momentum_projection
+			if (weave.isRoot())
+				std::cout << "Non zero momentum "<<" ... ";
+
+
+			size_t const * const source_position = positions[0];
+			size_t const timeslice_source = source_position[Base::idx_T] % T;
+
+			if(weave.isRoot())
+				std::cout << "\nsource position: " << source_position[0] << " " << source_position[1] << " "
+					<< source_position[2] << " " << source_position[3] << std::endl;
+
+
+			// this is important!!!
+			int const sourcePos[3] = {source_position[0], source_position[1], source_position[2]}; 
+
+
+			std::vector< int* > momenta;
+			for(size_t I=0; I<19; I++)
+				momenta.push_back( new int[3]);
+			{
+				int momenta_raw[57] = {
+					+0, +0, +0,
+					1, +0, +0,
+					-1, +0, +0,
+					+0,  1, +0,
+					+0, -1, +0,
+					+0, +0,  1,
+					+0, +0, -1,
+					1, +0,  1,
+					-1, +0, -1,
+					1, +0, -1,
+					-1, +0,  1,
+					1,  1, +0,
+					-1, -1, +0,
+					1, -1, +0,
+					-1,  1, +0,
+					+0,  1,  1,
+					+0, -1, -1,
+					+0,  1, -1,
+					+0, -1,  1};
+
+
+
+
+				for(size_t I=0; I<momenta.size(); I++)
+					std::copy(&(momenta_raw[3*I]), &(momenta_raw[3*I]) + 3, momenta[I]);
+			}
+
+			std::vector< std::complex <double>  > C_vv_mom=Contract::compute_loop_new(g5_phi,phi,my_operators,sourcePos,momenta,timeslice_source);
+
+
+			for(size_t i=0; i < C_vv_mom.size(); i++)
+			{
+				C_vv_mom[i] *=  std::complex<double>(0,2.0*mu/(8.*kappa)); 
+			}
+
+
+
+			if (weave.isRoot())
+			std::cout << "done.\n" << std::endl;
+#endif
+
+
+
 			if (weave.isRoot())	
 			{
 				double addimag =0; 
@@ -547,6 +615,10 @@ for(size_t i=0; i < C_vv.size(); i++)
 
 				std::ofstream fout_v4;
 				std::ofstream fout_vv;
+	
+#ifdef _with_momentum_projection
+				std::ofstream fout_vv_mom;
+#endif
 				std::ofstream fout_conserved_v4;
 				std::ofstream fout_conserved_vv;
 
@@ -564,6 +636,10 @@ for(size_t i=0; i < C_vv.size(); i++)
 
 					fout_v4.open("output_disc_v4.dat");
 					fout_vv.open("output_disc_vv.dat");
+	
+#ifdef _with_momentum_projection
+					fout_vv_mom.open("output_disc_vv_mom.dat");
+#endif
 					fout_conserved_v4.open("output_disc_conserved_v4.dat");
 					fout_conserved_vv.open("output_disc_conserved_vv.dat");
 
@@ -580,6 +656,10 @@ for(size_t i=0; i < C_vv.size(); i++)
 
 					fout_v4.open("output_disc_v4.dat",std::ios::app);
 					fout_vv.open("output_disc_vv.dat",std::ios::app);
+
+#ifdef _with_momentum_projection
+					fout_vv_mom.open("output_disc_vv_mom.dat",std::ios::app);
+#endif
 					fout_conserved_v4.open("output_disc_conserved_v4.dat",std::ios::app);
 					fout_conserved_vv.open("output_disc_conserved_vv.dat",std::ios::app);
 
@@ -694,6 +774,29 @@ for(size_t i=0; i < C_vv.size(); i++)
 
 #endif
 
+#ifdef _with_momentum_projection
+				int N=momenta.size();
+				int index;
+
+				for(size_t I = 0; I < momenta.size(); I++)
+				{
+					for(size_t j=0; j<12; j++)
+					{
+						for(size_t i=0; i<16; i++)
+						{
+							for(size_t t = 0; t < T; t++)
+							{
+								index = t + T*i  +T*16*j + T*16*12*I;
+
+								fout_vv_mom << t << std::scientific <<"  " << momenta[I][0] << "  "<< momenta[I][1] << "  "	<< momenta[I][2] << "  "
+									<< i <<"  "<< j + 12*n <<"  "<<C_vv_mom[index].real() <<"  "<< C_vv_mom[index].imag() << std::endl;
+
+							}
+						}
+					}
+				}
+				fout_vv_mom.close();
+#endif				
 				std::cout << "done.\n" << std::endl;
 
 			}/* end if weave.isRoot() */

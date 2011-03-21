@@ -119,6 +119,22 @@ namespace Contract
     std::vector< Base::Operator > ops);
 
 
+  // does a set of contractions depending on the identifier
+  /* identifier  --  operators
+   * "local"         all Base::HermitianBilinearOperators in the order specified in Base.h
+   * "1D"            gamma_mu D_nu (mu,nu=1,...,4, nu faster running index)
+   *  -> addCorrs:   gamma_5 gamma_mu D_nu (mu,nu=1,...,4, nu faster running index)
+   * "noether"       conserved vector current
+   *  -> addCorrs:   conserved axial current
+   */
+  std::vector< Core::BaryonCorrelator > proton_threepoint_sequential(
+    Core:: Propagator const &bw_prop_u, Core::Propagator const &fw_prop_u,
+    Core:: Propagator const &bw_prop_d, Core::Propagator const &fw_prop_d,
+    Core::Field< QCD::Gauge > * const gauge_field,
+    std::string identifier, std::vector< Core::BaryonCorrelator > * addCorrs = NULL);
+
+
+
   /* ---------------------------------------------------------------------------------------------- */
 
 

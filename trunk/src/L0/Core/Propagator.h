@@ -79,10 +79,14 @@ namespace Core
       // multiplication by operator (this is multiplication from the right)
 
       void rightMultiplyOperator(Base::Operator const O); // only for local operators
-      void rightMultiplyOperator(Base::HermitianBilinearOperator const O); // only for local operators
+      void rightMultiplyOperator(Base::HermitianBilinearOperator const O, bool const twisted_basis=false); // only for local operators
+      void leftMultiplyOperator(Base::HermitianBilinearOperator const O, bool const twisted_basis=false);
       void leftMultiplyOperator(Base::Operator const O); // only for local operators
+      // for "non-local" operators (axial component is returned in timesG5)
+      Core::Field< Dirac::Matrix > *contractWithOperatorInsertion(Base::Operator const O, Field< QCD::Gauge > * const gauge_field, Propagator const &fromRight,
+                                                                  Core::Field< Dirac::Matrix > * timesG5);
+      // version without additional contraction including gamma5
       Core::Field< Dirac::Matrix > *contractWithOperatorInsertion(Base::Operator const O, Field< QCD::Gauge > * const gauge_field, Propagator const &fromRight);
-
       void rightMultiply(Propagator const & other);
       void leftMultiply(Propagator const & other);
 

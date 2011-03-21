@@ -6,10 +6,10 @@ namespace Core
   StochasticPropagator< 4 > &StochasticPropagator< 4 >::select_timeslice(size_t const timeslice)
   {
     isolate(); 
-    assert(timeslice >= 0 && timeslice < T());
-   
+    assert(timeslice < T());
+
     isolate();
-    
+
     std::complex< double > ZERO(0,0);
 
     Base::Weave weave(L(), T());

@@ -72,19 +72,21 @@ namespace Core
 
 	bool isRoot() const;
 
+  // prints the trace and the momentum
+  void printWithMomentum(std::ostream &out, int const * const momentum, std::string const& prefix="") const;
+  // prints the full correlator and the momentum
+  void printWithMomentum_full(std::ostream &out, int const * const momentum, std::string const& prefix="") const;
+
 	size_t T() const;
 	size_t L() const;
 	size_t size() const;
 
-
-	void printWithMomentum(std::ostream &out, int const * const momentum) const;
-
 	friend std::ostream &operator<< < Datatype >(std::ostream &out, Correlator< Datatype > const &c);
 
-	  private:
-	void destroy();
-	void isolate();
-	void isolate_action();
+	private:
+	 void destroy();
+	 void isolate();
+	 void isolate_action();
   };
 
 

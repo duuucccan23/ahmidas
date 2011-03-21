@@ -53,7 +53,11 @@ ENDIF(USE_MPI)
 
 
 ADD_EXECUTABLE(generate_point_source generate_point_source.cpp)
+IF(USE_MPI)
 TARGET_LINK_LIBRARIES(generate_point_source SU3 IO Base Core Dirac Weave Input Smear Ahmidas lemon)
+ELSE(USE_MPI)
+TARGET_LINK_LIBRARIES(generate_point_source SU3 IO Base Core Dirac Weave Input Smear Ahmidas)
+ENDIF(USE_MPI)
 
 ADD_EXECUTABLE(output output.cpp)
 TARGET_LINK_LIBRARIES(output Ahmidas Debug Print)

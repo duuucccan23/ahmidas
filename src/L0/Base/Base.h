@@ -107,63 +107,75 @@ namespace Base
 
   enum Operator
   {
-	  op_UNITY = -1,
-	  op_GAMMA_1 = 1,
-	  op_GAMMA_2 = 2,
-	  op_GAMMA_3 = 3,
-	  op_GAMMA_4 = 4,
-	  op_GAMMA_5 = 5,
-	  op_GAMMA_15 = 6,
-	  op_GAMMA_25 = 7,
-	  op_GAMMA_35 = 8,
-	  op_GAMMA_45 = 9,
-	  op_GAMMA_12 = 10,
-	  op_GAMMA_13 = 11,
-	  op_GAMMA_14 = 12,
-	  op_GAMMA_23 = 13,
-	  op_GAMMA_24 = 14,
-	  op_GAMMA_34 = 15,
-	  op_CONSERVED_GAMMA_4 = 16,
-	  op_O44 = 32,
-	  op_O11 = 33,
-	  op_O22 = 34,
-	  op_O33 = 35,
-	  op_O44_with_substraction = 36 // O44 - (O11 + O22 +O33)/3
+    op_UNITY = -1,
+    op_GAMMA_1 = 1,
+    op_GAMMA_2 = 2,
+    op_GAMMA_3 = 3,
+    op_GAMMA_4 = 4,
+    op_GAMMA_5 = 5,
+    op_GAMMA_15 = 6,
+    op_GAMMA_25 = 7,
+    op_GAMMA_35 = 8,
+    op_GAMMA_45 = 9,
+    op_GAMMA_12 = 10,
+    op_GAMMA_13 = 11,
+    op_GAMMA_14 = 12,
+    op_GAMMA_23 = 13,
+    op_GAMMA_24 = 14,
+    op_GAMMA_34 = 15,
+    op_CONSERVED_GAMMA_4 = 16,
+    op_CONSERVED_GAMMA_1 = 17,
+    op_CONSERVED_GAMMA_2 = 18,
+    op_CONSERVED_GAMMA_3 = 19,
+    op_O44 = 32,
+    op_O11 = 33,
+    op_O22 = 34,
+    op_O33 = 35,
+    op_O44_with_substraction = 36, // O44 - (O11 + O22 +O33)/3
+    op_O41 = 141,
+    op_O42 = 142,
+    op_O43 = 143,
+    op_O14 = 114,
+    op_O12 = 112,
+    op_O13 = 113,
+    op_O24 = 124,
+    op_O21 = 121,
+    op_O23 = 123,
+    op_O34 = 134,
+    op_O31 = 131,
+    op_O32 = 132
   };
 
+  // definitions are given in the physical basis
   enum HermitianBilinearOperator
-  {
-
-	  op_G_0 = 0,  //gamma5
-	  op_G_1 = 1,  //gamma1
-	  op_G_2 = 2,  //gamma2
-	  op_G_3 = 3,  //gamma3
-	  op_G_4 = 4,  //-i gamma4 gamma5
-	  op_G_5 = 5,  //-i gamma4 gamma1
-	  op_G_6 = 6,  //-i gamma4 gamma2
-	  op_G_7 = 7,  //-i gamma4 gamma3
-	  op_G_8 = 8,  // identity
-	  op_G_9 = 9,  // -i gamma_5 gamma1
-	  op_G_10 = 10,// -i gamma_5 gamma2
-	  op_G_11 = 11,// -i gamma_5 gamma3
-	  op_G_12 = 12,// gamma_0
-	  op_G_13 = 13,// -i gamma_5 gamma_0 gamma_1
-	  op_G_14 = 14,// -i gamma_5 gamma_0 gamma_2
-	  op_G_15 = 15// -i gamma_5 gamma_0 gamma_3
-
+  { //                physical basis            |  twisted basis (changes only)
+    // -----------------------------------------|-----------------------------------
+    op_G_0 = 0,   //    gamma5                  |  i identity tau_3
+    op_G_1 = 1,   //    gamma1                  |
+    op_G_2 = 2,   //    gamma2                  |
+    op_G_3 = 3,   //    gamma3                  |
+    op_G_4 = 4,   // -i gamma0 gamma5           |
+    op_G_5 = 5,   // -i gamma0 gamma1           |    gamma5 gamma0 gamma1 tau_3
+    op_G_6 = 6,   // -i gamma0 gamma2           |    gamma5 gamma0 gamma2 tau_3
+    op_G_7 = 7,   // -i gamma0 gamma3           |    gamma5 gamma0 gamma3 tau_3
+    op_G_8 = 8,   //    identity                |  i gamma5 tau_3
+    op_G_9 = 9,   // -i gamma_5 gamma1          |
+    op_G_10 = 10, // -i gamma_5 gamma2          |
+    op_G_11 = 11, // -i gamma_5 gamma3          |
+    op_G_12 = 12, //    gamma_0                 |
+    op_G_13 = 13, // -i gamma_5 gamma_0 gamma_1 |    gamma_0 gamma_1 tau_3
+    op_G_14 = 14, // -i gamma_5 gamma_0 gamma_2 |    gamma_0 gamma_2 tau_3
+    op_G_15 = 15  // -i gamma_5 gamma_0 gamma_3 |    gamma_0 gamma_3 tau_3
   };
-
-
 
   enum DiracOperator
   {
-	  Full = -1,
-	  A = 0,
-	  H = 1,
-	  B = 2,
-	  Bdagger = 3
+    Full = -1,
+    A = 0,
+    H = 1,
+    B = 2,
+    Bdagger = 3
   };
-
 
 
   extern bool const bigEndian;

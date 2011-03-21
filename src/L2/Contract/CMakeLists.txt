@@ -17,7 +17,8 @@ SET(Sources_Baryon Baryon.h
                    Baryon/Baryon_create_sequential_source_proton_u_b.cpp
                    Baryon/Baryon_create_sequential_source_proton_u_c.cpp
                    Baryon/Baryon_create_sequential_source_proton_u_d.cpp
-                   Baryon/Baryon_proton_threepoint_sequential.cpp
+                   Baryon/Baryon_proton_threepoint_sequential_a.cpp
+                   Baryon/Baryon_proton_threepoint_sequential_b.cpp
                    Baryon/Baryon_proton_threepoint_stochastic_naive.cpp
                    Baryon/Baryon_proton_threepoint_stochastic.cpp)
 SET(Sources_Disconnected Disconnected.h

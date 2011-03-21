@@ -3,12 +3,13 @@
 namespace Core
 {
   template< >
-  void Correlator< Dirac::Matrix >::printWithMomentum(std::ostream &out, int const * const momentum) const
+  void Correlator< Dirac::Matrix >::printWithMomentum(std::ostream &out, int const * const momentum, std::string const& prefix) const
   {
     size_t prec_tmp = out.precision();
     // out << "T        real part   imaginary part\n";
     for (size_t t = 0; t < T(); t++)
     {
+      out << prefix << " ";
       out << std::setw(3)    << std::noshowpos << t           << "  ";
       out.setf(std::ios::showpos);
 

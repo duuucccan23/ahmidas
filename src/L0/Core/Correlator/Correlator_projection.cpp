@@ -25,6 +25,17 @@ namespace Core
           d_sumTimeslice_global[t] *= 0.5;
         }
         break;
+      case Base::proj_PARITY_PLUS_STD:
+        // projector is 1 + gamma0
+
+        for(size_t t = 0; t < T(); t++)
+        {
+          Dirac::Matrix second = d_sumTimeslice_global[t];
+          d_sumTimeslice_global[t] = gamma_0 * d_sumTimeslice_global[t];
+          d_sumTimeslice_global[t] += second;
+          d_sumTimeslice_global[t] *= 0.5;
+        }
+        break;
       case Base::proj_1_PLUS_TM:
       {
         for(size_t t = 0; t < T(); t++)

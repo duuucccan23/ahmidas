@@ -5,20 +5,20 @@ namespace Core
   // personal note (SD):
   // at some point I should add an additional parameter "size_t const * sink_momentum" for an obvious reason
 
-  std::vector< Core::Field< Dirac::Matrix > * > construct_proton_with_operator_insertion(
+  std::vector< Core::Field< Dirac::Matrix >  > construct_proton_with_operator_insertion(
     Propagator const &S_u, Core::Propagator const &S_d,
     StochasticPropagator< 12 > const &phi_u, StochasticPropagator< 12 > const &phi_d,
     StochasticSource< 12 > const &xi, std::vector< Base::Operator > const &ops,
     size_t const t_src, size_t const t_snk);
 
-  std::vector< Core::Field< Dirac::Matrix > * > construct_proton_with_non_local_operator_insertion(
+  std::vector< Core::Field< Dirac::Matrix >  > construct_proton_with_non_local_operator_insertion(
     Propagator const &S_u, Core::Propagator const &S_d,
     StochasticPropagator< 12 > const &phi_u, StochasticPropagator< 12 > const &phi_d,
     StochasticSource< 12 > const &xi, Field<QCD::Gauge> const& gauge_field,
     std::vector< Base::Operator > const &ops,
     size_t const t_src, size_t const t_snk);
 
-  std::vector< Core::Field< Dirac::Matrix > * >
+  std::vector< Core::Field< Dirac::Matrix >  >
            Propagator::construct_baryon_with_operator_insertion(
              Propagator const &no2, Propagator const &no3,
              StochasticPropagator< 12 > const &phi_no1,
@@ -44,7 +44,7 @@ namespace Core
 
   }
 
-  std::vector< Core::Field< Dirac::Matrix > * >
+  std::vector< Core::Field< Dirac::Matrix > >
              Propagator::construct_baryon_with_non_local_operator_insertion(
              Propagator const &no2, Propagator const &no3,
              StochasticPropagator< 12 > const &phi_no1,
@@ -89,21 +89,17 @@ namespace Core
 
     Base::Weave weave(L, T);
 
-    Field< Dirac::Matrix > *field_uu;
-    Field< Dirac::Matrix > *field_dd;
-
     Dirac::Gamma< 5 > gamma5;
     Dirac::Gamma< 4 > gamma0;
     Dirac::Gamma< 45 > gamma0gamma5;
 
     for (size_t opNo=0; opNo<ops.size(); opNo++)
     {
-      field_uu = new Field< Dirac::Matrix >(L, T);
-      field_dd = new Field< Dirac::Matrix >(L, T);
+      Field< Dirac::Matrix >field_uu(L, T);
+      Field< Dirac::Matrix >field_dd(L, T);
 
-
-      Field< Dirac::Matrix >::iterator It_dd(field_dd->begin());
-      Field< Dirac::Matrix >::iterator It_uu(field_uu->begin());
+      Field< Dirac::Matrix >::iterator It_dd(field_dd.begin());
+      Field< Dirac::Matrix >::iterator It_uu(field_uu.begin());
 
       Propagator::const_iterator It_u(S_u.begin());
       Propagator::const_iterator It_d(S_d.begin());
@@ -197,7 +193,7 @@ namespace Core
       QCD::Tensor tmp;
 
       //y-dependent loop
-      while(It_dd != field_dd->end())
+      while(It_dd != field_dd.end())
       {
 
         //for spin & color diluted sources left and right multiplication is the same since they're diagonal
@@ -264,7 +260,7 @@ namespace Core
 
 
 
-  std::vector< Core::Field< Dirac::Matrix > * > construct_proton_with_non_local_operator_insertion(
+  std::vector< Core::Field< Dirac::Matrix > > construct_proton_with_non_local_operator_insertion(
              Propagator const &S_u, Propagator const &S_d,
              StochasticPropagator< 12 > const &phi_u,
              StochasticPropagator< 12 > const &phi_d,
@@ -281,9 +277,6 @@ namespace Core
     size_t const T(S_u.T());
 
     Base::Weave weave(L, T);
-
-    Field< Dirac::Matrix > *field_uu;
-    Field< Dirac::Matrix > *field_dd;
 
     Dirac::Gamma< 5 > gamma5;
     Dirac::Gamma< 4 > gamma0;
@@ -320,11 +313,11 @@ namespace Core
 
     for (size_t opNo=0; opNo<ops.size(); opNo++)
     {
-      field_uu = new Field< Dirac::Matrix >(L, T);
-      field_dd = new Field< Dirac::Matrix >(L, T);
+      Field< Dirac::Matrix >field_uu(L, T);
+      Field< Dirac::Matrix >field_dd(L, T);
 
-      Field< Dirac::Matrix >::iterator It_dd(field_dd->begin());
-      Field< Dirac::Matrix >::iterator It_uu(field_uu->begin());
+      Field< Dirac::Matrix >::iterator It_dd(field_dd.begin());
+      Field< Dirac::Matrix >::iterator It_uu(field_uu.begin());
 
       Field< QCD::Gauge >::const_iterator It_g_m(gauge_field_shifted4m.begin());
       Field< QCD::Gauge >::const_iterator It_g(gauge_field.begin());
@@ -422,7 +415,7 @@ namespace Core
       QCD::Tensor tmp;
 
       //y-dependent loop
-      while(It_dd != field_dd->end())
+      while(It_dd != field_dd.end())
       {
 
         //for spin & color diluted sources left and right multiplication is the same since they're diagonal

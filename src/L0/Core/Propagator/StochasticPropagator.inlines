@@ -82,15 +82,15 @@ inline StochasticPropagator< 1 >::StochasticPropagator(Propagator const &other)
 
 
 template< >
-inline Field< Dirac::Matrix > *StochasticPropagator< 4 >::operator*(StochasticPropagator< 4 > const &other) const
+inline Field< Dirac::Matrix > StochasticPropagator< 4 >::operator*(StochasticPropagator< 4 > const &other) const
 {
   assert (T()==other.T() && L()==other.L());
-  Field< Dirac::Matrix > *field = new Field< Dirac::Matrix > (L(), T());
+  Field< Dirac::Matrix > field(L(), T());
 
   Propagator::const_iterator Ia(begin());
   Propagator::const_iterator Ib(other.begin());
 
-  Field< Dirac::Matrix >::iterator Ic(field->begin());
+  Field< Dirac::Matrix >::iterator Ic(field.begin());
 
   while(Ia != end())
   {
@@ -101,20 +101,20 @@ inline Field< Dirac::Matrix > *StochasticPropagator< 4 >::operator*(StochasticPr
   }
   assert(Ia==end());
   assert(Ib==other.end());
-  assert(Ic==field->end());
+  assert(Ic==field.end());
   return field;
 }
 
 template< >
-inline Field< Dirac::Matrix > *StochasticPropagator< 1 >::operator*(StochasticPropagator< 1 > const &other) const
+inline Field< Dirac::Matrix > StochasticPropagator< 1 >::operator*(StochasticPropagator< 1 > const &other) const
 {
   assert (T()==other.T() && L()==other.L());
-  Field< Dirac::Matrix > *field = new Field< Dirac::Matrix > (L(), T());
+  Field< Dirac::Matrix > field(L(), T());
 
   Propagator::const_iterator Ia(begin());
   Propagator::const_iterator Ib(other.begin());
 
-  Field< Dirac::Matrix >::iterator Ic(field->begin());
+  Field< Dirac::Matrix >::iterator Ic(field.begin());
 
   while(Ia != end())
   {
@@ -125,7 +125,7 @@ inline Field< Dirac::Matrix > *StochasticPropagator< 1 >::operator*(StochasticPr
   }
   assert(Ia==end());
   assert(Ib==other.end());
-  assert(Ic==field->end());
+  assert(Ic==field.end());
   return field;
 }
 

@@ -83,10 +83,9 @@ namespace Core
       void leftMultiplyOperator(Base::HermitianBilinearOperator const O, bool const twisted_basis=false);
       void leftMultiplyOperator(Base::Operator const O); // only for local operators
       // for "non-local" operators (axial component is returned in timesG5)
-      Core::Field< Dirac::Matrix > *contractWithOperatorInsertion(Base::Operator const O, Field< QCD::Gauge > * const gauge_field, Propagator const &fromRight,
-                                                                  Core::Field< Dirac::Matrix > * timesG5);
+      Core::Field< Dirac::Matrix > contractWithOperatorInsertion(Base::Operator const O, Field< QCD::Gauge > * const gauge_field, Propagator const &fromRight, Core::Field< Dirac::Matrix > &timesG5);
       // version without additional contraction including gamma5
-      Core::Field< Dirac::Matrix > *contractWithOperatorInsertion(Base::Operator const O, Field< QCD::Gauge > * const gauge_field, Propagator const &fromRight);
+      Core::Field< Dirac::Matrix > contractWithOperatorInsertion(Base::Operator const O, Field< QCD::Gauge > * const gauge_field, Propagator const &fromRight);
       void rightMultiply(Propagator const & other);
       void leftMultiply(Propagator const & other);
 
@@ -125,19 +124,19 @@ namespace Core
       Propagator &smearJacobi(double const alpha, size_t const iterations, Field< QCD::Gauge > &gauge_field, size_t const timeslice);
 
       // needed for meson contractions
-      Core::Field< Dirac::Matrix > *operator*(Propagator const &other) const;
+      Core::Field< Dirac::Matrix > operator*(Propagator const &other) const;
 
       // this is a simple contraction: A be a Tensor of *this, B be a Tensor of other,
       // both at the same lattice site.
       // this routine does A.leftMultiply(B) and takes the color trace of the result.
-      Core::Field< Dirac::Matrix > *contract(Propagator const &other) const;
+      Core::Field< Dirac::Matrix > contract(Propagator const &other) const;
 
       // needed for baryon contractions (twopoint)
-      Core::Field< Dirac::Matrix > *construct_baryon(Propagator const &no2, Propagator const &no3,
+      Core::Field< Dirac::Matrix > construct_baryon(Propagator const &no2, Propagator const &no3,
                                                           Base::BaryonInterpolatingField const ipol) const;
 
       // needed for baryon contractions (threepoint)
-      std::vector< Core::Field< Dirac::Matrix > * >
+      std::vector< Core::Field< Dirac::Matrix >  >
         construct_baryon_with_operator_insertion(Propagator const &no2, Propagator const &no3,
                                                  StochasticPropagator< 12 > const &phi_no1,
                                                  StochasticPropagator< 12 > const &phi_no2,
@@ -148,7 +147,7 @@ namespace Core
                                                  size_t const t_src, size_t const t_snk) const;
 
       // needed for baryon contractions (threepoint)
-      std::vector< Core::Field< Dirac::Matrix > * >
+      std::vector< Core::Field< Dirac::Matrix >  >
         construct_baryon_with_non_local_operator_insertion(Propagator const &no2, Propagator const &no3,
                                                  StochasticPropagator< 12 > const &phi_no1,
                                                  StochasticPropagator< 12 > const &phi_no2,
@@ -277,7 +276,7 @@ namespace Core
 
     StochasticPropagator< NComp > (StochasticPropagator< NComp > const &other);
 
-    Field< Dirac::Matrix > *operator*(StochasticPropagator< NComp > const &other) const;
+    Field< Dirac::Matrix > operator*(StochasticPropagator< NComp > const &other) const;
 
     StochasticPropagator< NComp > &select_timeslice(size_t const timeslice);
 

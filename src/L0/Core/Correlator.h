@@ -38,7 +38,7 @@ namespace Core
 
 	  public:
 
-	Correlator(Field < Datatype > *d_data);
+	Correlator(Field < Datatype > const &d_data);
 	Correlator(Correlator const &other);
 
 	~Correlator();

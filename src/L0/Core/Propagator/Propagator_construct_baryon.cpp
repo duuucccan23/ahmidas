@@ -3,18 +3,18 @@
 namespace Core
 {
 
-  Field< Dirac::Matrix > *Propagator::construct_baryon(Propagator const &no2, Propagator const &no3,
+  Field< Dirac::Matrix > Propagator::construct_baryon(Propagator const &no2, Propagator const &no3,
                                                        Base::BaryonInterpolatingField const ipol) const
   {
     assert (T()==no2.T() && L()==no2.L() && T()==no3.T() && L()==no3.L());
 
-    Field< Dirac::Matrix > *field = new Field< Dirac::Matrix > (L(), T());
+    Field< Dirac::Matrix > field(L(), T());
 
     Propagator::const_iterator Ia(begin());
     Propagator::const_iterator Ib(no2.begin());
     Propagator::const_iterator Ic(no3.begin());
 
-    Field< Dirac::Matrix >::iterator Id(field->begin());
+    Field< Dirac::Matrix >::iterator Id(field.begin());
 
     while(Ia != this->end())
     {
@@ -33,7 +33,7 @@ namespace Core
     assert(Ia==end());
     assert(Ib==no2.end());
     assert(Ic==no3.end());
-    assert(Id==field->end());
+    assert(Id==field.end());
     return field;
   }
 

@@ -64,16 +64,16 @@ namespace Core
     }
   }
 
-  Field< Dirac::Matrix > *Propagator::operator*(Propagator const &other) const
+  Field< Dirac::Matrix > Propagator::operator*(Propagator const &other) const
   {
     assert (T()==other.T() && L()==other.L());
 
-    Field< Dirac::Matrix > *field = new Field< Dirac::Matrix > (L(), T());
+    Field< Dirac::Matrix > field(L(), T());
 
     Propagator::const_iterator Ia(begin());
     Propagator::const_iterator Ib(other.begin());
 
-    Field< Dirac::Matrix >::iterator Ic(field->begin());
+    Field< Dirac::Matrix >::iterator Ic(field.begin());
 
     while(Ia != end())
     {
@@ -84,7 +84,8 @@ namespace Core
     }
     assert(Ia==end());
     assert(Ib==other.end());
-    assert(Ic==field->end());
+    assert(Ic==field.end());
+
     return field;
   }
 

@@ -403,7 +403,7 @@ namespace Contract
 			++I;
 		}
 
-		Core::Correlator< complex192 > twopoint(&res);
+		Core::Correlator< complex192 > twopoint(res);
 
 		//sum over space
 		twopoint.sumOverSpatialVolume(); 

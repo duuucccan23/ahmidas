@@ -30,16 +30,13 @@ namespace Contract
     Dirac::Gamma< 5 > gamma5;
     Dirac::Gamma< 4 > gamma0;
 
-    Core::Field< Dirac::Matrix > *field_dd;
-    Core::Field< Dirac::Matrix > *field_uu;
-
     for (size_t opNo=0; opNo<ops.size(); opNo++)
     {
-      field_dd = new Core::Field< Dirac::Matrix > (L, T);
-      field_uu = new Core::Field< Dirac::Matrix > (L, T);
+      Core::Field< Dirac::Matrix > field_dd(L, T);
+      Core::Field< Dirac::Matrix > field_uu(L, T);
 
-      Core::Field< Dirac::Matrix >::iterator It_dd(field_dd->begin());
-      Core::Field< Dirac::Matrix >::iterator It_uu(field_uu->begin());
+      Core::Field< Dirac::Matrix >::iterator It_dd(field_dd.begin());
+      Core::Field< Dirac::Matrix >::iterator It_uu(field_uu.begin());
 
       Core::Propagator::const_iterator It_u(u.begin());
       Core::Propagator::const_iterator It_d(d.begin());
@@ -54,7 +51,7 @@ namespace Contract
       size_t count(0);
 
       //y-dependent loop
-      while(It_dd != field_dd->end())
+      while(It_dd != field_dd.end())
       {
         // note that *It_dd is initialized to zero by default thanks to the default constructor
 

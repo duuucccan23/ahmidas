@@ -270,7 +270,7 @@ namespace Contract
 		}
 
 
-		Core::Correlator< complex96 > twopoint(&res);
+		Core::Correlator< complex96 > twopoint(res);
 
 
 

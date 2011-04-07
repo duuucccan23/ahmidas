@@ -6,9 +6,9 @@
 namespace Core
 {
 
-  Core::Field< Dirac::Matrix > *Propagator::contractWithOperatorInsertion(Base::Operator const O, Field< QCD::Gauge > * const gauge_field, Propagator const &fromRight)
+  Core::Field< Dirac::Matrix > Propagator::contractWithOperatorInsertion(Base::Operator const O, Field< QCD::Gauge > * const gauge_field, Propagator const &fromRight)
   {
-    Core::Field< Dirac::Matrix > *result = NULL;
+    Core::Field< Dirac::Matrix > result(L(),T());
     switch (O)
     {
       case Base::op_GAMMA_4:
@@ -137,7 +137,7 @@ namespace Core
         // gamma_mu + identity
         copy *= gamma4;
         copy += (*this);
-        (*result) += (*(copy.contract(tmp)));
+        result += (copy.contract(tmp));
         }
         {
         Propagator tmp(*this);
@@ -148,7 +148,7 @@ namespace Core
         // part 3 : shift this down and multiply it by U_mu^dagger from right ("Field<QCD::Tensor>::leftMultiply")
         tmp.shift(Base::idx_T, Base::dir_DOWN);
         (tmp.d_components)->leftMultiply((*gauge_field).component< SU3::Matrix >(Base::idx_T).dagger());
-        (*result) += *(tmp.contract(fromRight));
+        result += (tmp.contract(fromRight));
         }
         {
         Propagator tmp(*this);
@@ -159,7 +159,7 @@ namespace Core
         // part 4 : multiply this by U_mu from right and and shift it up
         (tmp.d_components)->leftMultiply((*gauge_field).component< SU3::Matrix >(Base::idx_T));
         tmp.shift(Base::idx_T, Base::dir_UP);
-        (*result) += *(tmp.contract(fromRight));
+        result += (tmp.contract(fromRight));
         }
         break;
       }
@@ -189,7 +189,7 @@ namespace Core
         // gamma_mu + identity
         copy *= gamma1;
         copy += (*this);
-        (*result) += (*(copy.contract(tmp)));
+        result += ((copy.contract(tmp)));
         }
         {
         Propagator tmp(*this);
@@ -200,7 +200,7 @@ namespace Core
         // part 3 : shift this down and multiply it by U_mu^dagger from right ("Field<QCD::Tensor>::leftMultiply")
         tmp.shift(Base::idx_X, Base::dir_DOWN);
         (tmp.d_components)->leftMultiply((*gauge_field).component< SU3::Matrix >(Base::idx_X).dagger());
-        (*result) += *(tmp.contract(fromRight));
+        result += (tmp.contract(fromRight));
         }
         {
         Propagator tmp(*this);
@@ -211,7 +211,7 @@ namespace Core
         // part 4 : multiply this by U_mu from right and and shift it up
         (tmp.d_components)->leftMultiply((*gauge_field).component< SU3::Matrix >(Base::idx_X));
         tmp.shift(Base::idx_X, Base::dir_UP);
-        (*result) += *(tmp.contract(fromRight));
+        result += (tmp.contract(fromRight));
         }
         break;
       }
@@ -241,7 +241,7 @@ namespace Core
         // gamma_mu + identity
         copy *= gamma2;
         copy += (*this);
-        (*result) += (*(copy.contract(tmp)));
+        result += ((copy.contract(tmp)));
         }
         {
         Propagator tmp(*this);
@@ -252,7 +252,7 @@ namespace Core
         // part 3 : shift this down and multiply it by U_mu^dagger from right ("Field<QCD::Tensor>::leftMultiply")
         tmp.shift(Base::idx_Y, Base::dir_DOWN);
         (tmp.d_components)->leftMultiply((*gauge_field).component< SU3::Matrix >(Base::idx_Y).dagger());
-        (*result) += *(tmp.contract(fromRight));
+        result += (tmp.contract(fromRight));
         }
         {
         Propagator tmp(*this);
@@ -263,7 +263,7 @@ namespace Core
         // part 4 : multiply this by U_mu from right and and shift it up
         (tmp.d_components)->leftMultiply((*gauge_field).component< SU3::Matrix >(Base::idx_Y));
         tmp.shift(Base::idx_Y, Base::dir_UP);
-        (*result) += *(tmp.contract(fromRight));
+        result += (tmp.contract(fromRight));
         }
         break;
       }
@@ -293,7 +293,7 @@ namespace Core
         // gamma_mu + identity
         copy *= gamma3;
         copy += (*this);
-        (*result) += (*(copy.contract(tmp)));
+        result += ((copy.contract(tmp)));
         }
         {
         Propagator tmp(*this);
@@ -304,7 +304,7 @@ namespace Core
         // part 3 : shift this down and multiply it by U_mu^dagger from right ("Field<QCD::Tensor>::leftMultiply")
         tmp.shift(Base::idx_Z, Base::dir_DOWN);
         (tmp.d_components)->leftMultiply((*gauge_field).component< SU3::Matrix >(Base::idx_Z).dagger());
-        (*result) += *(tmp.contract(fromRight));
+        result += (tmp.contract(fromRight));
         }
         {
         Propagator tmp(*this);
@@ -315,7 +315,7 @@ namespace Core
         // part 4 : multiply this by U_mu from right and and shift it up
         (tmp.d_components)->leftMultiply((*gauge_field).component< SU3::Matrix >(Base::idx_Z));
         tmp.shift(Base::idx_Z, Base::dir_UP);
-        (*result) += *(tmp.contract(fromRight));
+        result += (tmp.contract(fromRight));
         }
         break;
       }
@@ -349,7 +349,7 @@ namespace Core
         // part 2 : multiply fromRight by U_mu^dagger from left and shift it up
         (tmp.d_components)->rightMultiply((*gauge_field).component< SU3::Matrix >(Base::idx_T).dagger());
         tmp.shift(Base::idx_T, Base::dir_UP);
-        (*result) -= (*(contract(tmp)));
+        result -= ((contract(tmp)));
         std::cout << "done." << std::endl;
         }
 
@@ -361,7 +361,7 @@ namespace Core
         // part 3 : shift this down and multiply it by U_mu^dagger from right ("Field<QCD::Tensor>::leftMultiply")
         tmp.shift(Base::idx_T, Base::dir_DOWN);
         (tmp.d_components)->leftMultiply((*gauge_field).component< SU3::Matrix >(Base::idx_T).dagger());
-        (*result) -= *(tmp.contract(fromRight));
+        result -= (tmp.contract(fromRight));
         std::cout << "done." << std::endl;
         }
 
@@ -373,7 +373,7 @@ namespace Core
         // part 4 : multiply this by U_mu from right and and shift it up
         (tmp.d_components)->leftMultiply((*gauge_field).component< SU3::Matrix >(Base::idx_T));
         tmp.shift(Base::idx_T, Base::dir_UP);
-        (*result) += *(tmp.contract(fromRight));
+        result += (tmp.contract(fromRight));
         std::cout << "done." << std::endl;
         }
         break;
@@ -407,7 +407,7 @@ namespace Core
         // part 2 : multiply fromRight by U_mu^dagger from left and shift it up
         (tmp.d_components)->rightMultiply((*gauge_field).component< SU3::Matrix >(Base::idx_X).dagger());
         tmp.shift(Base::idx_X, Base::dir_UP);
-        (*result) -= (*(contract(tmp)));
+        result -= ((contract(tmp)));
         std::cout << "done." << std::endl;
         }
 
@@ -419,7 +419,7 @@ namespace Core
         // part 3 : shift this down and multiply it by U_mu^dagger from right ("Field<QCD::Tensor>::leftMultiply")
         tmp.shift(Base::idx_X, Base::dir_DOWN);
         (tmp.d_components)->leftMultiply((*gauge_field).component< SU3::Matrix >(Base::idx_X).dagger());
-        (*result) -= *(tmp.contract(fromRight));
+        result -= (tmp.contract(fromRight));
         std::cout << "done." << std::endl;
         }
 
@@ -431,7 +431,7 @@ namespace Core
         // part 4 : multiply this by U_mu from right and and shift it up
         (tmp.d_components)->leftMultiply((*gauge_field).component< SU3::Matrix >(Base::idx_X));
         tmp.shift(Base::idx_X, Base::dir_UP);
-        (*result) += *(tmp.contract(fromRight));
+        result += (tmp.contract(fromRight));
         std::cout << "done." << std::endl;
         }
         break;
@@ -465,7 +465,7 @@ namespace Core
         // part 2 : multiply fromRight by U_mu^dagger from left and shift it up
         (tmp.d_components)->rightMultiply((*gauge_field).component< SU3::Matrix >(Base::idx_Y).dagger());
         tmp.shift(Base::idx_Y, Base::dir_UP);
-        (*result) -= (*(contract(tmp)));
+        result -= ((contract(tmp)));
         std::cout << "done." << std::endl;
         }
 
@@ -477,7 +477,7 @@ namespace Core
         // part 3 : shift this down and multiply it by U_mu^dagger from right ("Field<QCD::Tensor>::leftMultiply")
         tmp.shift(Base::idx_Y, Base::dir_DOWN);
         (tmp.d_components)->leftMultiply((*gauge_field).component< SU3::Matrix >(Base::idx_Y).dagger());
-        (*result) -= *(tmp.contract(fromRight));
+        result -= (tmp.contract(fromRight));
         std::cout << "done." << std::endl;
         }
 
@@ -489,7 +489,7 @@ namespace Core
         // part 4 : multiply this by U_mu from right and and shift it up
         (tmp.d_components)->leftMultiply((*gauge_field).component< SU3::Matrix >(Base::idx_Y));
         tmp.shift(Base::idx_Y, Base::dir_UP);
-        (*result) += *(tmp.contract(fromRight));
+        result += (tmp.contract(fromRight));
         std::cout << "done." << std::endl;
         }
 
@@ -524,7 +524,7 @@ namespace Core
         // part 2 : multiply fromRight by U_mu^dagger from left and shift it up
         (tmp.d_components)->rightMultiply((*gauge_field).component< SU3::Matrix >(Base::idx_Z).dagger());
         tmp.shift(Base::idx_Z, Base::dir_UP);
-        (*result) -= (*(contract(tmp)));
+        result -= ((contract(tmp)));
         std::cout << "done." << std::endl;
         }
 
@@ -536,7 +536,7 @@ namespace Core
         // part 3 : shift this down and multiply it by U_mu^dagger from right ("Field<QCD::Tensor>::leftMultiply")
         tmp.shift(Base::idx_Z, Base::dir_DOWN);
         (tmp.d_components)->leftMultiply((*gauge_field).component< SU3::Matrix >(Base::idx_Z).dagger());
-        (*result) -= *(tmp.contract(fromRight));
+        result -= (tmp.contract(fromRight));
         std::cout << "done." << std::endl;
         }
 
@@ -548,7 +548,7 @@ namespace Core
         // part 4 : multiply this by U_mu from right and and shift it up
         (tmp.d_components)->leftMultiply((*gauge_field).component< SU3::Matrix >(Base::idx_Z));
         tmp.shift(Base::idx_Z, Base::dir_UP);
-        (*result) += *(tmp.contract(fromRight));
+        result += (tmp.contract(fromRight));
         std::cout << "done." << std::endl;
         }
 
@@ -557,7 +557,6 @@ namespace Core
       default:
         std::cerr << "Error in void Propagator::contractWithOperatorInsertion(...)\n";
         std::cerr << "Operator with no. " << O << " not implemented!" << std::endl;
-        delete result;
         exit(1);
     }
     return result;

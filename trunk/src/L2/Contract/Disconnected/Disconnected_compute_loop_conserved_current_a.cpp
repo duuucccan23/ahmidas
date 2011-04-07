@@ -266,7 +266,7 @@ Core::Propagator::const_iterator I(xi.begin());
 		}
 
 
-		Core::Correlator< complex96 > twopoint(&res);
+		Core::Correlator< complex96 > twopoint(res);
 
 		twopoint.prepareMomentumProjection(position_offset);
 

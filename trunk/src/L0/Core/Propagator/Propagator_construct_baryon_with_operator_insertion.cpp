@@ -72,7 +72,7 @@ namespace Core
   }
 
 
-  std::vector< Core::Field< Dirac::Matrix > * > construct_proton_with_operator_insertion(
+  std::vector< Core::Field< Dirac::Matrix > > construct_proton_with_operator_insertion(
              Propagator const &S_u, Propagator const &S_d,
              StochasticPropagator< 12 > const &phi_u,
              StochasticPropagator< 12 > const &phi_d,
@@ -80,7 +80,7 @@ namespace Core
              std::vector< Base::Operator > const &ops,
              size_t const t_src, size_t const t_snk)
   {
-    std::vector< Field< Dirac::Matrix > * > fields;
+    std::vector< Field< Dirac::Matrix > > fields;
     if (ops.size() == 0)
       return fields;
 
@@ -269,7 +269,7 @@ namespace Core
              std::vector< Base::Operator > const &ops,
              size_t const t_src, size_t const t_snk)
   {
-    std::vector< Field< Dirac::Matrix > * > fields;
+    std::vector< Field< Dirac::Matrix > > fields;
     if (ops.size() == 0)
       return fields;
 

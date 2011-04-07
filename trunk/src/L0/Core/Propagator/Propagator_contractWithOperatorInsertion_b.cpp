@@ -50,8 +50,8 @@ namespace Core
         copy5 *= gamma5;
         copy  += (*this);
         copy5 += (*this);
-        (*result) += (*(copy.contract(tmp)));
-        (*timesG5) += (*(copy5.contract(tmp)));
+        result += copy.contract(tmp);
+        timesG5 += copy5.contract(tmp);
         }
         {
         Propagator tmp(*this);
@@ -67,8 +67,8 @@ namespace Core
         (tmp.d_components)->leftMultiply((*gauge_field).component< SU3::Matrix >(Base::idx_T).dagger());
         tmp5.shift(Base::idx_T, Base::dir_DOWN);
         (tmp5.d_components)->leftMultiply((*gauge_field).component< SU3::Matrix >(Base::idx_T).dagger());
-        (*result) += (*(tmp.contract(fromRight)));
-        (*timesG5) += (*(tmp5.contract(fromRight)));
+        result += (tmp.contract(fromRight));
+        timesG5 += (tmp5.contract(fromRight));
         }
         {
         Propagator tmp(*this);
@@ -84,8 +84,8 @@ namespace Core
         tmp.shift(Base::idx_T, Base::dir_UP);
         (tmp5.d_components)->leftMultiply((*gauge_field).component< SU3::Matrix >(Base::idx_T));
         tmp5.shift(Base::idx_T, Base::dir_UP);
-        (*result) += *(tmp.contract(fromRight));
-        (*timesG5) += *(tmp5.contract(fromRight));
+        result += tmp.contract(fromRight);
+        timesG5 += tmp5.contract(fromRight);
         }
         break;
       }
@@ -121,8 +121,8 @@ namespace Core
         copy5 *= gamma5;
         copy  += (*this);
         copy5 += (*this);
-        (*result) += (*(copy.contract(tmp)));
-        (*timesG5) += (*(copy5.contract(tmp)));
+        result += copy.contract(tmp);
+        timesG5 += copy5.contract(tmp);
         }
         {
         Propagator tmp(*this);
@@ -138,8 +138,8 @@ namespace Core
         (tmp.d_components)->leftMultiply((*gauge_field).component< SU3::Matrix >(Base::idx_X).dagger());
         tmp5.shift(Base::idx_X, Base::dir_DOWN);
         (tmp5.d_components)->leftMultiply((*gauge_field).component< SU3::Matrix >(Base::idx_X).dagger());
-        (*result) += (*(tmp.contract(fromRight)));
-        (*timesG5) += (*(tmp5.contract(fromRight)));
+        result += (tmp.contract(fromRight));
+        timesG5 += (tmp5.contract(fromRight));
         }
         {
         Propagator tmp(*this);
@@ -155,8 +155,8 @@ namespace Core
         tmp.shift(Base::idx_X, Base::dir_UP);
         (tmp5.d_components)->leftMultiply((*gauge_field).component< SU3::Matrix >(Base::idx_X));
         tmp5.shift(Base::idx_X, Base::dir_UP);
-        (*result) += *(tmp.contract(fromRight));
-        (*timesG5) += *(tmp5.contract(fromRight));
+        result += tmp.contract(fromRight);
+        timesG5 += tmp5.contract(fromRight);
         }
         break;
       }
@@ -192,8 +192,8 @@ namespace Core
         copy5 *= gamma5;
         copy  += (*this);
         copy5 += (*this);
-        (*result) += (*(copy.contract(tmp)));
-        (*timesG5) += (*(copy5.contract(tmp)));
+        result += copy.contract(tmp);
+        timesG5 += copy5.contract(tmp);
         }
         {
         Propagator tmp(*this);
@@ -209,8 +209,8 @@ namespace Core
         (tmp.d_components)->leftMultiply((*gauge_field).component< SU3::Matrix >(Base::idx_Y).dagger());
         tmp5.shift(Base::idx_Y, Base::dir_DOWN);
         (tmp5.d_components)->leftMultiply((*gauge_field).component< SU3::Matrix >(Base::idx_Y).dagger());
-        (*result) += (*(tmp.contract(fromRight)));
-        (*timesG5) += (*(tmp5.contract(fromRight)));
+        result += (tmp.contract(fromRight));
+        timesG5 += (tmp5.contract(fromRight));
         }
         {
         Propagator tmp(*this);
@@ -226,8 +226,8 @@ namespace Core
         tmp.shift(Base::idx_Y, Base::dir_UP);
         (tmp5.d_components)->leftMultiply((*gauge_field).component< SU3::Matrix >(Base::idx_Y));
         tmp5.shift(Base::idx_Y, Base::dir_UP);
-        (*result) += *(tmp.contract(fromRight));
-        (*timesG5) += *(tmp5.contract(fromRight));
+        result += tmp.contract(fromRight);
+        timesG5 += tmp5.contract(fromRight);
         }
         break;
       }
@@ -263,8 +263,8 @@ namespace Core
         copy5 *= gamma5;
         copy  += (*this);
         copy5 += (*this);
-        (*result) += (*(copy.contract(tmp)));
-        (*timesG5) += (*(copy5.contract(tmp)));
+        result += copy.contract(tmp);
+        timesG5 += copy5.contract(tmp);
         }
         {
         Propagator tmp(*this);
@@ -280,8 +280,8 @@ namespace Core
         (tmp.d_components)->leftMultiply((*gauge_field).component< SU3::Matrix >(Base::idx_Z).dagger());
         tmp5.shift(Base::idx_Z, Base::dir_DOWN);
         (tmp5.d_components)->leftMultiply((*gauge_field).component< SU3::Matrix >(Base::idx_Z).dagger());
-        (*result) += (*(tmp.contract(fromRight)));
-        (*timesG5) += (*(tmp5.contract(fromRight)));
+        result += (tmp.contract(fromRight));
+        timesG5 += (tmp5.contract(fromRight));
         }
         {
         Propagator tmp(*this);
@@ -297,8 +297,8 @@ namespace Core
         tmp.shift(Base::idx_Z, Base::dir_UP);
         (tmp5.d_components)->leftMultiply((*gauge_field).component< SU3::Matrix >(Base::idx_Z));
         tmp5.shift(Base::idx_Z, Base::dir_UP);
-        (*result) += *(tmp.contract(fromRight));
-        (*timesG5) += *(tmp5.contract(fromRight));
+        result += tmp.contract(fromRight);
+        timesG5 += tmp5.contract(fromRight);
         }
         break;
       }
@@ -326,8 +326,8 @@ namespace Core
         (tmp.d_components)->rightMultiply((*gauge_field).component< SU3::Matrix >(Base::idx_T).dagger());
         tmp.shift(Base::idx_T, Base::dir_UP);
         Propagator tmp5(gamma5*tmp);
-        (*timesG5) = (*contract(tmp5));
-        (*result) -= (*(contract(tmp)));
+        timesG5 = contract(tmp5);
+        result -= contract(tmp);
         }
         {
         Propagator tmp(*this);
@@ -336,8 +336,8 @@ namespace Core
         tmp.shift(Base::idx_T, Base::dir_DOWN);
         (tmp.d_components)->leftMultiply((*gauge_field).component< SU3::Matrix >(Base::idx_T).dagger());
         Propagator tmp5(tmp*gamma5);
-        (*timesG5) -= *(tmp5.contract(fromRight));
-        (*result) -= *(tmp.contract(fromRight));
+        timesG5 -= tmp5.contract(fromRight);
+        result -= tmp.contract(fromRight);
         }
         {
         Propagator tmp(*this);
@@ -346,8 +346,8 @@ namespace Core
         (tmp.d_components)->leftMultiply((*gauge_field).component< SU3::Matrix >(Base::idx_T));
         tmp.shift(Base::idx_T, Base::dir_UP);
         Propagator tmp5(tmp*gamma5);
-        (*timesG5) -= *(tmp5.contract(fromRight));
-        (*result) += *(tmp.contract(fromRight));
+        timesG5 -= tmp5.contract(fromRight);
+        result += tmp.contract(fromRight);
         }
         break;
       }
@@ -372,8 +372,8 @@ namespace Core
         (tmp.d_components)->rightMultiply((*gauge_field).component< SU3::Matrix >(Base::idx_X).dagger());
         tmp.shift(Base::idx_X, Base::dir_UP);
         Propagator tmp5(gamma5*tmp);
-        (*timesG5) = (*contract(tmp5));
-        (*result) -= (*(contract(tmp)));
+        timesG5 = contract(tmp5);
+        result -= contract(tmp);
         }
         {
         Propagator tmp(*this);
@@ -382,8 +382,8 @@ namespace Core
         tmp.shift(Base::idx_X, Base::dir_DOWN);
         (tmp.d_components)->leftMultiply((*gauge_field).component< SU3::Matrix >(Base::idx_X).dagger());
         Propagator tmp5(tmp*gamma5);
-        (*timesG5) -= *(tmp5.contract(fromRight));
-        (*result) -= *(tmp.contract(fromRight));
+        timesG5 -= tmp5.contract(fromRight);
+        result -= tmp.contract(fromRight);
         }
         {
         Propagator tmp(*this);
@@ -392,8 +392,8 @@ namespace Core
         (tmp.d_components)->leftMultiply((*gauge_field).component< SU3::Matrix >(Base::idx_X));
         tmp.shift(Base::idx_X, Base::dir_UP);
         Propagator tmp5(tmp*gamma5);
-        (*timesG5) -= *(tmp5.contract(fromRight));
-        (*result) += *(tmp.contract(fromRight));
+        timesG5 -= tmp5.contract(fromRight);
+        result += tmp.contract(fromRight);
         }
         break;
       }
@@ -418,8 +418,8 @@ namespace Core
         (tmp.d_components)->rightMultiply((*gauge_field).component< SU3::Matrix >(Base::idx_Y).dagger());
         tmp.shift(Base::idx_Y, Base::dir_UP);
         Propagator tmp5(gamma5*tmp);
-        (*timesG5) = (*contract(tmp5));
-        (*result) -= (*(contract(tmp)));
+        timesG5 = contract(tmp5);
+        result -= contract(tmp);
         }
         {
         Propagator tmp(*this);
@@ -428,8 +428,8 @@ namespace Core
         tmp.shift(Base::idx_Y, Base::dir_DOWN);
         (tmp.d_components)->leftMultiply((*gauge_field).component< SU3::Matrix >(Base::idx_Y).dagger());
         Propagator tmp5(tmp*gamma5);
-        (*timesG5) -= *(tmp5.contract(fromRight));
-        (*result) -= *(tmp.contract(fromRight));
+        timesG5 -= tmp5.contract(fromRight);
+        result -= tmp.contract(fromRight);
         }
         {
         Propagator tmp(*this);
@@ -438,8 +438,8 @@ namespace Core
         (tmp.d_components)->leftMultiply((*gauge_field).component< SU3::Matrix >(Base::idx_Y));
         tmp.shift(Base::idx_Y, Base::dir_UP);
         Propagator tmp5(tmp*gamma5);
-        (*timesG5) -= *(tmp5.contract(fromRight));
-        (*result) += *(tmp.contract(fromRight));
+        timesG5 -= tmp5.contract(fromRight);
+        result += tmp.contract(fromRight);
         }
         break;
       }
@@ -464,8 +464,8 @@ namespace Core
         (tmp.d_components)->rightMultiply((*gauge_field).component< SU3::Matrix >(Base::idx_Z).dagger());
         tmp.shift(Base::idx_Z, Base::dir_UP);
         Propagator tmp5(gamma5*tmp);
-        (*timesG5) = (*contract(tmp5));
-        (*result) -= (*(contract(tmp)));
+        timesG5 = contract(tmp5);
+        result -= contract(tmp);
         }
         {
         Propagator tmp(*this);
@@ -474,8 +474,8 @@ namespace Core
         tmp.shift(Base::idx_Z, Base::dir_DOWN);
         (tmp.d_components)->leftMultiply((*gauge_field).component< SU3::Matrix >(Base::idx_Z).dagger());
         Propagator tmp5(tmp*gamma5);
-        (*timesG5) -= *(tmp5.contract(fromRight));
-        (*result) -= *(tmp.contract(fromRight));
+        timesG5 -= tmp5.contract(fromRight);
+        result -= tmp.contract(fromRight);
         }
         {
         Propagator tmp(*this);
@@ -484,8 +484,8 @@ namespace Core
         (tmp.d_components)->leftMultiply((*gauge_field).component< SU3::Matrix >(Base::idx_Z));
         tmp.shift(Base::idx_Z, Base::dir_UP);
         Propagator tmp5(tmp*gamma5);
-        (*timesG5) -= *(tmp5.contract(fromRight));
-        (*result) += *(tmp.contract(fromRight));
+        timesG5 -= tmp5.contract(fromRight);
+        result += tmp.contract(fromRight);
         }
         break;
       }
@@ -510,8 +510,8 @@ namespace Core
         (tmp.d_components)->rightMultiply((*gauge_field).component< SU3::Matrix >(Base::idx_X).dagger());
         tmp.shift(Base::idx_X, Base::dir_UP);
         Propagator tmp5(gamma5*tmp);
-        (*timesG5) = (*contract(tmp5));
-        (*result) -= (*(contract(tmp)));
+        timesG5 = contract(tmp5);
+        result -= contract(tmp);
         }
         {
         Propagator tmp(*this);
@@ -520,8 +520,8 @@ namespace Core
         tmp.shift(Base::idx_X, Base::dir_DOWN);
         (tmp.d_components)->leftMultiply((*gauge_field).component< SU3::Matrix >(Base::idx_X).dagger());
         Propagator tmp5(tmp*gamma5);
-        (*timesG5) -= *(tmp5.contract(fromRight));
-        (*result) -= *(tmp.contract(fromRight));
+        timesG5 -= tmp5.contract(fromRight);
+        result -= tmp.contract(fromRight);
         }
         {
         Propagator tmp(*this);
@@ -530,8 +530,8 @@ namespace Core
         (tmp.d_components)->leftMultiply((*gauge_field).component< SU3::Matrix >(Base::idx_X));
         tmp.shift(Base::idx_X, Base::dir_UP);
         Propagator tmp5(tmp*gamma5);
-        (*timesG5) -= *(tmp5.contract(fromRight));
-        (*result) += *(tmp.contract(fromRight));
+        timesG5 -= tmp5.contract(fromRight);
+        result += tmp.contract(fromRight);
         }
         break;
       }
@@ -556,8 +556,8 @@ namespace Core
         (tmp.d_components)->rightMultiply((*gauge_field).component< SU3::Matrix >(Base::idx_Y).dagger());
         tmp.shift(Base::idx_Y, Base::dir_UP);
         Propagator tmp5(gamma5*tmp);
-        (*timesG5) = (*contract(tmp5));
-        (*result) -= (*(contract(tmp)));
+        timesG5 = contract(tmp5);
+        result -= contract(tmp);
         }
         {
         Propagator tmp(*this);
@@ -566,8 +566,8 @@ namespace Core
         tmp.shift(Base::idx_Y, Base::dir_DOWN);
         (tmp.d_components)->leftMultiply((*gauge_field).component< SU3::Matrix >(Base::idx_Y).dagger());
         Propagator tmp5(tmp*gamma5);
-        (*timesG5) -= *(tmp5.contract(fromRight));
-        (*result) -= *(tmp.contract(fromRight));
+        timesG5 -= tmp5.contract(fromRight);
+        result -= tmp.contract(fromRight);
         }
         {
         Propagator tmp(*this);
@@ -576,8 +576,8 @@ namespace Core
         (tmp.d_components)->leftMultiply((*gauge_field).component< SU3::Matrix >(Base::idx_Y));
         tmp.shift(Base::idx_Y, Base::dir_UP);
         Propagator tmp5(tmp*gamma5);
-        (*timesG5) -= *(tmp5.contract(fromRight));
-        (*result) += *(tmp.contract(fromRight));
+        timesG5 -= tmp5.contract(fromRight);
+        result += tmp.contract(fromRight);
         }
         break;
       }
@@ -602,8 +602,8 @@ namespace Core
         (tmp.d_components)->rightMultiply((*gauge_field).component< SU3::Matrix >(Base::idx_Z).dagger());
         tmp.shift(Base::idx_Z, Base::dir_UP);
         Propagator tmp5(gamma5*tmp);
-        (*timesG5) = (*contract(tmp5));
-        (*result) -= (*(contract(tmp)));
+        timesG5 = contract(tmp5);
+        result -= contract(tmp);
         }
         {
         Propagator tmp(*this);
@@ -612,8 +612,8 @@ namespace Core
         tmp.shift(Base::idx_Z, Base::dir_DOWN);
         (tmp.d_components)->leftMultiply((*gauge_field).component< SU3::Matrix >(Base::idx_Z).dagger());
         Propagator tmp5(tmp*gamma5);
-        (*timesG5) -= *(tmp5.contract(fromRight));
-        (*result) -= *(tmp.contract(fromRight));
+        timesG5 -= tmp5.contract(fromRight);
+        result -= tmp.contract(fromRight);
         }
         {
         Propagator tmp(*this);
@@ -622,8 +622,8 @@ namespace Core
         (tmp.d_components)->leftMultiply((*gauge_field).component< SU3::Matrix >(Base::idx_Z));
         tmp.shift(Base::idx_Z, Base::dir_UP);
         Propagator tmp5(tmp*gamma5);
-        (*timesG5) -= *(tmp5.contract(fromRight));
-        (*result) += *(tmp.contract(fromRight));
+        timesG5 -= tmp5.contract(fromRight);
+        result += tmp.contract(fromRight);
         }
         break;
       }
@@ -648,8 +648,8 @@ namespace Core
         (tmp.d_components)->rightMultiply((*gauge_field).component< SU3::Matrix >(Base::idx_T).dagger());
         tmp.shift(Base::idx_T, Base::dir_UP);
         Propagator tmp5(gamma5*tmp);
-        (*timesG5) = (*contract(tmp5));
-        (*result) -= (*(contract(tmp)));
+        timesG5 = contract(tmp5);
+        result -= contract(tmp);
         }
         {
         Propagator tmp(*this);
@@ -658,8 +658,8 @@ namespace Core
         tmp.shift(Base::idx_T, Base::dir_DOWN);
         (tmp.d_components)->leftMultiply((*gauge_field).component< SU3::Matrix >(Base::idx_T).dagger());
         Propagator tmp5(tmp*gamma5);
-        (*timesG5) -= *(tmp5.contract(fromRight));
-        (*result) -= *(tmp.contract(fromRight));
+        timesG5 -= tmp5.contract(fromRight);
+        result -= tmp.contract(fromRight);
         }
         {
         Propagator tmp(*this);
@@ -668,8 +668,8 @@ namespace Core
         (tmp.d_components)->leftMultiply((*gauge_field).component< SU3::Matrix >(Base::idx_T));
         tmp.shift(Base::idx_T, Base::dir_UP);
         Propagator tmp5(tmp*gamma5);
-        (*timesG5) -= *(tmp5.contract(fromRight));
-        (*result) += *(tmp.contract(fromRight));
+        timesG5 -= tmp5.contract(fromRight);
+        result += tmp.contract(fromRight);
         }
         break;
       }
@@ -694,8 +694,8 @@ namespace Core
         (tmp.d_components)->rightMultiply((*gauge_field).component< SU3::Matrix >(Base::idx_Y).dagger());
         tmp.shift(Base::idx_Y, Base::dir_UP);
         Propagator tmp5(gamma5*tmp);
-        (*timesG5) = (*contract(tmp5));
-        (*result) -= (*(contract(tmp)));
+        timesG5 = contract(tmp5);
+        result -= contract(tmp);
         }
         {
         Propagator tmp(*this);
@@ -704,8 +704,8 @@ namespace Core
         tmp.shift(Base::idx_Y, Base::dir_DOWN);
         (tmp.d_components)->leftMultiply((*gauge_field).component< SU3::Matrix >(Base::idx_Y).dagger());
         Propagator tmp5(tmp*gamma5);
-        (*timesG5) -= *(tmp5.contract(fromRight));
-        (*result) -= *(tmp.contract(fromRight));
+        timesG5 -= tmp5.contract(fromRight);
+        result -= tmp.contract(fromRight);
         }
         {
         Propagator tmp(*this);
@@ -714,8 +714,8 @@ namespace Core
         (tmp.d_components)->leftMultiply((*gauge_field).component< SU3::Matrix >(Base::idx_Y));
         tmp.shift(Base::idx_Y, Base::dir_UP);
         Propagator tmp5(tmp*gamma5);
-        (*timesG5) -= *(tmp5.contract(fromRight));
-        (*result) += *(tmp.contract(fromRight));
+        timesG5 -= tmp5.contract(fromRight);
+        result += tmp.contract(fromRight);
         }
         break;
       }
@@ -740,8 +740,8 @@ namespace Core
         (tmp.d_components)->rightMultiply((*gauge_field).component< SU3::Matrix >(Base::idx_Z).dagger());
         tmp.shift(Base::idx_Z, Base::dir_UP);
         Propagator tmp5(gamma5*tmp);
-        (*timesG5) = (*contract(tmp5));
-        (*result) -= (*(contract(tmp)));
+        timesG5 = contract(tmp5);
+        result -= contract(tmp);
         }
         {
         Propagator tmp(*this);
@@ -750,8 +750,8 @@ namespace Core
         tmp.shift(Base::idx_Z, Base::dir_DOWN);
         (tmp.d_components)->leftMultiply((*gauge_field).component< SU3::Matrix >(Base::idx_Z).dagger());
         Propagator tmp5(tmp*gamma5);
-        (*timesG5) -= *(tmp5.contract(fromRight));
-        (*result) -= *(tmp.contract(fromRight));
+        timesG5 -= tmp5.contract(fromRight);
+        result -= tmp.contract(fromRight);
         }
         {
         Propagator tmp(*this);
@@ -760,8 +760,8 @@ namespace Core
         (tmp.d_components)->leftMultiply((*gauge_field).component< SU3::Matrix >(Base::idx_Z));
         tmp.shift(Base::idx_Z, Base::dir_UP);
         Propagator tmp5(tmp*gamma5);
-        (*timesG5) -= *(tmp5.contract(fromRight));
-        (*result) += *(tmp.contract(fromRight));
+        timesG5 -= tmp5.contract(fromRight);
+        result += tmp.contract(fromRight);
         }
         break;
       }
@@ -786,8 +786,8 @@ namespace Core
         (tmp.d_components)->rightMultiply((*gauge_field).component< SU3::Matrix >(Base::idx_T).dagger());
         tmp.shift(Base::idx_T, Base::dir_UP);
         Propagator tmp5(gamma5*tmp);
-        (*timesG5) = (*contract(tmp5));
-        (*result) -= (*(contract(tmp)));
+        timesG5 = contract(tmp5);
+        result -= contract(tmp);
         }
         {
         Propagator tmp(*this);
@@ -796,8 +796,8 @@ namespace Core
         tmp.shift(Base::idx_T, Base::dir_DOWN);
         (tmp.d_components)->leftMultiply((*gauge_field).component< SU3::Matrix >(Base::idx_T).dagger());
         Propagator tmp5(tmp*gamma5);
-        (*timesG5) -= *(tmp5.contract(fromRight));
-        (*result) -= *(tmp.contract(fromRight));
+        timesG5 -= tmp5.contract(fromRight);
+        result -= tmp.contract(fromRight);
         }
         {
         Propagator tmp(*this);
@@ -806,8 +806,8 @@ namespace Core
         (tmp.d_components)->leftMultiply((*gauge_field).component< SU3::Matrix >(Base::idx_T));
         tmp.shift(Base::idx_T, Base::dir_UP);
         Propagator tmp5(tmp*gamma5);
-        (*timesG5) -= *(tmp5.contract(fromRight));
-        (*result) += *(tmp.contract(fromRight));
+        timesG5 -= tmp5.contract(fromRight);
+        result += tmp.contract(fromRight);
         }
         break;
       }
@@ -832,8 +832,8 @@ namespace Core
         (tmp.d_components)->rightMultiply((*gauge_field).component< SU3::Matrix >(Base::idx_X).dagger());
         tmp.shift(Base::idx_X, Base::dir_UP);
         Propagator tmp5(gamma5*tmp);
-        (*timesG5) = (*contract(tmp5));
-        (*result) -= (*(contract(tmp)));
+        timesG5 = contract(tmp5);
+        result -= contract(tmp);
         }
         {
         Propagator tmp(*this);
@@ -842,8 +842,8 @@ namespace Core
         tmp.shift(Base::idx_X, Base::dir_DOWN);
         (tmp.d_components)->leftMultiply((*gauge_field).component< SU3::Matrix >(Base::idx_X).dagger());
         Propagator tmp5(tmp*gamma5);
-        (*timesG5) -= *(tmp5.contract(fromRight));
-        (*result) -= *(tmp.contract(fromRight));
+        timesG5 -= tmp5.contract(fromRight);
+        result -= tmp.contract(fromRight);
         }
         {
         Propagator tmp(*this);
@@ -852,8 +852,8 @@ namespace Core
         (tmp.d_components)->leftMultiply((*gauge_field).component< SU3::Matrix >(Base::idx_X));
         tmp.shift(Base::idx_X, Base::dir_UP);
         Propagator tmp5(tmp*gamma5);
-        (*timesG5) -= *(tmp5.contract(fromRight));
-        (*result) += *(tmp.contract(fromRight));
+        timesG5 -= tmp5.contract(fromRight);
+        result += tmp.contract(fromRight);
         }
         break;
       }
@@ -878,8 +878,8 @@ namespace Core
         (tmp.d_components)->rightMultiply((*gauge_field).component< SU3::Matrix >(Base::idx_Z).dagger());
         tmp.shift(Base::idx_Z, Base::dir_UP);
         Propagator tmp5(gamma5*tmp);
-        (*timesG5) = (*contract(tmp5));
-        (*result) -= (*(contract(tmp)));
+        timesG5 = contract(tmp5);
+        result -= contract(tmp);
         }
         {
         Propagator tmp(*this);
@@ -888,8 +888,8 @@ namespace Core
         tmp.shift(Base::idx_Z, Base::dir_DOWN);
         (tmp.d_components)->leftMultiply((*gauge_field).component< SU3::Matrix >(Base::idx_Z).dagger());
         Propagator tmp5(tmp*gamma5);
-        (*timesG5) -= *(tmp5.contract(fromRight));
-        (*result) -= *(tmp.contract(fromRight));
+        timesG5 -= tmp5.contract(fromRight);
+        result -= tmp.contract(fromRight);
         }
         {
         Propagator tmp(*this);
@@ -898,8 +898,8 @@ namespace Core
         (tmp.d_components)->leftMultiply((*gauge_field).component< SU3::Matrix >(Base::idx_Z));
         tmp.shift(Base::idx_Z, Base::dir_UP);
         Propagator tmp5(tmp*gamma5);
-        (*timesG5) -= *(tmp5.contract(fromRight));
-        (*result) += *(tmp.contract(fromRight));
+        timesG5 -= tmp5.contract(fromRight);
+        result += tmp.contract(fromRight);
         }
         break;
       }
@@ -924,8 +924,8 @@ namespace Core
         (tmp.d_components)->rightMultiply((*gauge_field).component< SU3::Matrix >(Base::idx_T).dagger());
         tmp.shift(Base::idx_T, Base::dir_UP);
         Propagator tmp5(gamma5*tmp);
-        (*timesG5) = (*contract(tmp5));
-        (*result) -= (*(contract(tmp)));
+        timesG5 = contract(tmp5);
+        result -= contract(tmp);
         }
         {
         Propagator tmp(*this);
@@ -934,8 +934,8 @@ namespace Core
         tmp.shift(Base::idx_T, Base::dir_DOWN);
         (tmp.d_components)->leftMultiply((*gauge_field).component< SU3::Matrix >(Base::idx_T).dagger());
         Propagator tmp5(tmp*gamma5);
-        (*timesG5) -= *(tmp5.contract(fromRight));
-        (*result) -= *(tmp.contract(fromRight));
+        timesG5 -= tmp5.contract(fromRight);
+        result -= tmp.contract(fromRight);
         }
         {
         Propagator tmp(*this);
@@ -944,8 +944,8 @@ namespace Core
         (tmp.d_components)->leftMultiply((*gauge_field).component< SU3::Matrix >(Base::idx_T));
         tmp.shift(Base::idx_T, Base::dir_UP);
         Propagator tmp5(tmp*gamma5);
-        (*timesG5) -= *(tmp5.contract(fromRight));
-        (*result) += *(tmp.contract(fromRight));
+        timesG5 -= tmp5.contract(fromRight);
+        result += tmp.contract(fromRight);
         }
         break;
       }
@@ -970,8 +970,8 @@ namespace Core
         (tmp.d_components)->rightMultiply((*gauge_field).component< SU3::Matrix >(Base::idx_X).dagger());
         tmp.shift(Base::idx_X, Base::dir_UP);
         Propagator tmp5(gamma5*tmp);
-        (*timesG5) = (*contract(tmp5));
-        (*result) -= (*(contract(tmp)));
+        timesG5 = contract(tmp5);
+        result -= contract(tmp);
         }
         {
         Propagator tmp(*this);
@@ -980,8 +980,8 @@ namespace Core
         tmp.shift(Base::idx_X, Base::dir_DOWN);
         (tmp.d_components)->leftMultiply((*gauge_field).component< SU3::Matrix >(Base::idx_X).dagger());
         Propagator tmp5(tmp*gamma5);
-        (*timesG5) -= *(tmp5.contract(fromRight));
-        (*result) -= *(tmp.contract(fromRight));
+        timesG5 -= tmp5.contract(fromRight);
+        result -= tmp.contract(fromRight);
         }
         {
         Propagator tmp(*this);
@@ -990,8 +990,8 @@ namespace Core
         (tmp.d_components)->leftMultiply((*gauge_field).component< SU3::Matrix >(Base::idx_X));
         tmp.shift(Base::idx_X, Base::dir_UP);
         Propagator tmp5(tmp*gamma5);
-        (*timesG5) -= *(tmp5.contract(fromRight));
-        (*result) += *(tmp.contract(fromRight));
+        timesG5 -= tmp5.contract(fromRight);
+        result += tmp.contract(fromRight);
         }
         break;
       }
@@ -1016,8 +1016,8 @@ namespace Core
         (tmp.d_components)->rightMultiply((*gauge_field).component< SU3::Matrix >(Base::idx_Y).dagger());
         tmp.shift(Base::idx_Y, Base::dir_UP);
         Propagator tmp5(gamma5*tmp);
-        (*timesG5) = (*contract(tmp5));
-        (*result) -= (*(contract(tmp)));
+        timesG5 = contract(tmp5);
+        result -= contract(tmp);
         }
         {
         Propagator tmp(*this);
@@ -1026,8 +1026,8 @@ namespace Core
         tmp.shift(Base::idx_Y, Base::dir_DOWN);
         (tmp.d_components)->leftMultiply((*gauge_field).component< SU3::Matrix >(Base::idx_Y).dagger());
         Propagator tmp5(tmp*gamma5);
-        (*timesG5) -= *(tmp5.contract(fromRight));
-        (*result) -= *(tmp.contract(fromRight));
+        timesG5 -= tmp5.contract(fromRight);
+        result -= tmp.contract(fromRight);
         }
         {
         Propagator tmp(*this);
@@ -1036,8 +1036,8 @@ namespace Core
         (tmp.d_components)->leftMultiply((*gauge_field).component< SU3::Matrix >(Base::idx_Y));
         tmp.shift(Base::idx_Y, Base::dir_UP);
         Propagator tmp5(tmp*gamma5);
-        (*timesG5) -= *(tmp5.contract(fromRight));
-        (*result) += *(tmp.contract(fromRight));
+        timesG5 -= tmp5.contract(fromRight);
+        result += tmp.contract(fromRight);
         }
         break;
       }
@@ -1045,8 +1045,6 @@ namespace Core
       default:
         std::cerr << "Error in void Propagator::contractWithOperatorInsertion(...)\n";
         std::cerr << "Operator with no. " << O << " not implemented!" << std::endl;
-        delete result;
-        delete timesG5;
         exit(1);
     }
     return result;
@@ -1079,8 +1077,8 @@ namespace Core
         (tmp.d_components)->rightMultiply((*gauge_field).component< SU3::Matrix >(Base::idx_NU).dagger());
         tmp.shift(Base::idx_NU, Base::dir_UP);
         Propagator tmp5(gamma5*tmp);
-        (*timesG5) = (*contract(tmp5));
-        (*result) -= (*(contract(tmp)));
+        timesG5 = contract(tmp5);
+        result -= contract(tmp);
         }
         {
         Propagator tmp(*this);
@@ -1089,8 +1087,8 @@ namespace Core
         tmp.shift(Base::idx_NU, Base::dir_DOWN);
         (tmp.d_components)->leftMultiply((*gauge_field).component< SU3::Matrix >(Base::idx_NU).dagger());
         Propagator tmp5(tmp*gamma5);
-        (*timesG5) -= *(tmp5.contract(fromRight));
-        (*result) -= *(tmp.contract(fromRight));
+        timesG5 -= tmp5.contract(fromRight);
+        result -= tmp.contract(fromRight);
         }
         {
         Propagator tmp(*this);
@@ -1099,8 +1097,8 @@ namespace Core
         (tmp.d_components)->leftMultiply((*gauge_field).component< SU3::Matrix >(Base::idx_NU));
         tmp.shift(Base::idx_NU, Base::dir_UP);
         Propagator tmp5(tmp*gamma5);
-        (*timesG5) -= *(tmp5.contract(fromRight));
-        (*result) += *(tmp.contract(fromRight));
+        timesG5 -= tmp5.contract(fromRight);
+        result += tmp.contract(fromRight);
         }
         break;
       }

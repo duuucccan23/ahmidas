@@ -42,6 +42,7 @@ namespace Core
     (*this) *= 0.5; //this is (1/sqrt(2))^2                                                                                  
   }
 
+/*
   template <>
   void StochasticPropagator<12>::rotateToPhysicalBasis(bool const sign)
   {
@@ -63,5 +64,5 @@ namespace Core
 
     (*this) *= 0.5; //this is (1/sqrt(2))^2                                                                                  
   }
-
+*/
 }

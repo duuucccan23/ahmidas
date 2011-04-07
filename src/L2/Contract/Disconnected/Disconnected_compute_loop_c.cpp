@@ -95,7 +95,7 @@ namespace Contract
 				++J;
 				++I;
 			}
-			Core::Correlator< complex12 > twopoint(&res);
+			Core::Correlator< complex12 > twopoint(res);
 
 			twopoint.sumOverSpatialVolume(); 
 			twopoint.deleteField();
@@ -261,7 +261,7 @@ namespace Contract
 		}
 
 
-		Core::Correlator< complex192 > twopoint(&res);
+		Core::Correlator< complex192 > twopoint(res);
 		//sum over space
 		twopoint.sumOverSpatialVolume(); 
 		twopoint.deleteField();

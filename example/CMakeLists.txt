@@ -24,7 +24,11 @@ ADD_EXECUTABLE(generate_sequential_sources_alternative generate_sequential_sourc
 TARGET_LINK_LIBRARIES(generate_sequential_sources_alternative SU3 IO Base Core Dirac Weave Contract Input Smear Ahmidas)
 
 ADD_EXECUTABLE(contract_3point_sequential contract_3point_sequential.cpp)
+IF(USE_MPI)
 TARGET_LINK_LIBRARIES(contract_3point_sequential SU3 IO Base Core Dirac Weave Contract Input Smear Ahmidas lemon)
+ELSE(USE_MPI)
+TARGET_LINK_LIBRARIES(contract_3point_sequential SU3 IO Base Core Dirac Weave Contract Input Smear Ahmidas)
+ENDIF(USE_MPI)
 
 ADD_EXECUTABLE(contract_2point_proton contract_2point_proton.cpp)
 TARGET_LINK_LIBRARIES(contract_2point_proton SU3 IO Base Core Dirac Weave Contract Input Smear Ahmidas)
@@ -42,7 +46,11 @@ ADD_EXECUTABLE(prova_sequential_contraction prova_sequential_contraction.cpp)
 TARGET_LINK_LIBRARIES(prova_sequential_contraction Base Core IO Input Ahmidas) 
 
 ADD_EXECUTABLE(generate_volume_source generate_volume_source.cpp)
+IF(USE_MPI)
 TARGET_LINK_LIBRARIES(generate_volume_source SU3 IO Base Core Dirac Weave Input Smear Ahmidas lemon)
+ELSE(USE_MPI)
+TARGET_LINK_LIBRARIES(generate_volume_source SU3 IO Base Core Dirac Weave Input Smear Ahmidas)
+ENDIF(USE_MPI)
 
 ADD_EXECUTABLE(generate_stochastic_source generate_stochastic_source.cpp)
 IF(USE_MPI)

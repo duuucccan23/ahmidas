@@ -89,7 +89,7 @@ namespace Contract
       ops.push_back(Base::op_CONSERVED_GAMMA_1);
       ops.push_back(Base::op_CONSERVED_GAMMA_2);
       ops.push_back(Base::op_CONSERVED_GAMMA_3);
-      Core::Field< Dirac::Matrix > * axialCurrent = NULL;
+      Core::Field< Dirac::Matrix > axialCurrent(L, T);
       for (size_t iOp=0; iOp<ops.size(); iOp++)
       {
         {
@@ -97,24 +97,24 @@ namespace Contract
           bw_tmp_u.dagger();
           bw_tmp_u *= gamma5;
           Core::BaryonCorrelator p3p_tmp_u(bw_tmp_u.contractWithOperatorInsertion(ops[iOp], gauge_field, fw_prop_u, axialCurrent));
-          p3p_tmp_u.sumOverSpatialVolume();
+          //p3p_tmp_u.sumOverSpatialVolume();
           p3p.push_back(p3p_tmp_u);
           Core::BaryonCorrelator p3p_tmp_u_5(axialCurrent);
           //p3p_tmp_u_5.sumOverSpatialVolume();
           addCorrs->push_back(p3p_tmp_u_5);
-          axialCurrent = NULL;
+          axialCurrent *= 0.0;
         }
         {
           Core::Propagator bw_tmp_d(bw_prop_d);
           bw_tmp_d.dagger();
           bw_tmp_d *= gamma5;
           Core::BaryonCorrelator p3p_tmp_d(bw_tmp_d.contractWithOperatorInsertion(ops[iOp], gauge_field, fw_prop_d, axialCurrent));
-          p3p_tmp_d.sumOverSpatialVolume();
+          //p3p_tmp_d.sumOverSpatialVolume();
           p3p.push_back(p3p_tmp_d);
           Core::BaryonCorrelator p3p_tmp_d_5(axialCurrent);
           //p3p_tmp_d_5.sumOverSpatialVolume();
           addCorrs->push_back(p3p_tmp_d_5);
-          axialCurrent = NULL;
+          axialCurrent  *= 0.0;
         }
       }
     }
@@ -138,7 +138,7 @@ namespace Contract
       ops.push_back(Base::op_O31);
       ops.push_back(Base::op_O32);
       ops.push_back(Base::op_O33);
-      Core::Field< Dirac::Matrix > * axialCurrent = NULL;
+      Core::Field< Dirac::Matrix > axialCurrent(L, T);
       for (size_t iOp=0; iOp<ops.size(); iOp++)
       {
         {
@@ -146,24 +146,24 @@ namespace Contract
           bw_tmp_u.dagger();
           bw_tmp_u *= gamma5;
           Core::BaryonCorrelator p3p_tmp_u(bw_tmp_u.contractWithOperatorInsertion(ops[iOp], gauge_field, fw_prop_u, axialCurrent));
-          p3p_tmp_u.sumOverSpatialVolume();
+          //p3p_tmp_u.sumOverSpatialVolume();
           p3p.push_back(p3p_tmp_u);
           Core::BaryonCorrelator p3p_tmp_u_5(axialCurrent);
           //p3p_tmp_u_5.sumOverSpatialVolume();
           addCorrs->push_back(p3p_tmp_u_5);
-          axialCurrent = NULL;
+          axialCurrent *= 0.0;
         }
         {
           Core::Propagator bw_tmp_d(bw_prop_d);
           bw_tmp_d.dagger();
           bw_tmp_d *= gamma5;
           Core::BaryonCorrelator p3p_tmp_d(bw_tmp_d.contractWithOperatorInsertion(ops[iOp], gauge_field, fw_prop_d, axialCurrent));
-          p3p_tmp_d.sumOverSpatialVolume();
+          //p3p_tmp_d.sumOverSpatialVolume();
           p3p.push_back(p3p_tmp_d);
           Core::BaryonCorrelator p3p_tmp_d_5(axialCurrent);
           //p3p_tmp_d_5.sumOverSpatialVolume();
           addCorrs->push_back(p3p_tmp_d_5);
-          axialCurrent = NULL;
+          axialCurrent *= 0.0;
         }
       }
     }

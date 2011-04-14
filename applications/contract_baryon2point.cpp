@@ -2,21 +2,6 @@
 
 
 
-
-// ################################################################################
-// ## important NOTE:: we don't want to have all operators with all projectors ####
-// ## => use one std::vector< Base::Operator > for each projector #################
-// ################################################################################
-
-
-
-/*
-  This code loads two forward propagators (u,d) and 8 backward propagators (4 different projectors for u and d)
-  and calculates nucleon threepoint functions.
-  Some modifications might have to be done here concerning which correlation function is calculated and
-   what the output is supposed to look like.
-*/
-
 #include <cstring>
 #include <vector>
 #include <map>
@@ -41,17 +26,6 @@
 // (e.g. the HMC inverter does this)
 // for forward and backward propagators separately
 #define __COMPENSATE_UNIFORM_BOUNDARY_CONDITIONS_FW__
-#define __COMPENSATE_UNIFORM_BOUNDARY_CONDITIONS_BW__
-
-// comment this if you don't want the threepoint function to be calculated
-#define __CALCULATE_THREEPOINT__
-
-// comment this if you don't want the twopoint function to be calculated
-#define __CALCULATE_TWOPOINT__
-
-// do we want to use all 4 projectors? (otherwise onlu (1+gamma_0)/2 is used)
-#define __4_PROJECTORS__
-
 
 int main(int argc, char **argv)
 {
@@ -388,7 +362,6 @@ int main(int argc, char **argv)
   forwardProp_u.changeBoundaryConditions_uniformToFixed(timeslice_source, timeslice_boundary);
 #endif
 
-#ifdef __CALCULATE_TWOPOINT__
 
   if (weave.isRoot())
     std::cout << "\n calculating 2-point function\n" << std::endl;
@@ -468,8 +441,6 @@ int main(int argc, char **argv)
 
   }
 
-#endif
-// (#ifdef __CALCULATE_TWOPOINT__)
 
   if (weave.isRoot())
     std::cout << "contractions performed and saved successfully\n" << std::endl;

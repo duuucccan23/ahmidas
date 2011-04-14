@@ -69,6 +69,8 @@ namespace Contract
 		{
 			if (weave.isRoot()) std::cout << "Nop = " << iOp << std::endl;
 
+			if (weave.isRoot()) std::cout << "Not safe function ... exiting ! " << std::endl;
+			exit(0);
 			Core::Propagator Gamma_psi(psi);
 
 			//apply operator X

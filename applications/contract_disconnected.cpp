@@ -48,6 +48,7 @@
 #include <L0/Ahmidas.h>
 
 
+#define _with_Fuzzing_
 #define _with_theta_
 #define _with_Omunu_
 #define _with_MMS_
@@ -161,20 +162,30 @@ int main(int argc, char **argv)
 
 	if (weave.isRoot())
 	{
-		std::cout << "APE    smearing: parameter = " << APE_alpha << ", iterations = " << APE_iterations << std::endl;
+#ifdef _with_Fuzzing__
 		std::cout << "Fuzzing parameter = " << Nlong <<  std::endl;
-		std::cout << "Jacobi smearing: parameter = " << Jac_alpha << ", iterations = " << Jac_iterations << std::endl;
+		
+#endif
 
+#ifdef _with_APE_
+		std::cout << "APE    smearing: parameter = " << APE_alpha << ", iterations = " << APE_iterations << std::endl;
+		std::cout << "Jacobi smearing: parameter = " << Jac_alpha << ", iterations = " << Jac_iterations << std::endl;
+#endif
 	}
 
 
 	if(weave.isRoot()) 
 		std::cout<<"Smear gauge field   ... "; 
 
+#ifdef _with_APE_
 	Smear::APE APE_tool(APE_alpha);
-	Smear::Fuzz Fuzz_tool(Nlong);
 	APE_tool.smear(gauge_field_f, APE_iterations);
+#endif
+
+#ifdef _with_Fuzzing__
+	Smear::Fuzz Fuzz_tool(Nlong);
 	Fuzz_tool.smear(gauge_field_f);
+#endif
 
 	if(weave.isRoot())	
 		std::cout << "done.\n" << std::endl;
@@ -228,6 +239,8 @@ int main(int argc, char **argv)
 
 
 #endif
+			
+			
 			Core::StochasticPropagator< 1 >  phi_f(phi);
 			Smear::Jacobi Jacobi_tool(Jac_alpha);
 			phi_f.smearJacobi(Jac_alpha, Jac_iterations, gauge_field_f);
@@ -276,16 +289,22 @@ int main(int argc, char **argv)
 
 			Core::StochasticPropagator< 1 >  psi(phi);
 			Core::StochasticPropagator< 1 >  g5_phi(phi);
+			Core::StochasticPropagator< 1 >  g5_phi_f(phi_f);
 
 			g5_phi.rightMultiply(gamma5);
+			g5_phi_f.rightMultiply(gamma5);
 
 
 			if (weave.isRoot())
 				std::cout << "Compute loops for vv and v4 method"<<" ... ";
-			// v4 loop
+			// v4 & vv loop local quark fields
 			std::vector< Core::Correlator< Dirac::Matrix > > C_v4 = Contract::compute_loop(xi,phi,my_operators);
-			//vv loop
 			std::vector< Core::Correlator< Dirac::Matrix > > C_vv = Contract::compute_loop(g5_phi,phi,my_operators);
+
+			// v4 & vv loop smeared quark fields
+			std::vector< Core::Correlator< Dirac::Matrix > > C_v4_f = Contract::compute_loop(xi,phi_f,my_operators);
+			std::vector< Core::Correlator< Dirac::Matrix > > C_vv_f = Contract::compute_loop(g5_phi,phi_f,my_operators);
+
 
 
 #ifdef	_with_Omunu_
@@ -454,6 +473,12 @@ int main(int argc, char **argv)
 			if (weave.isRoot())
 				std::cout << "done.\n" << std::endl;
 
+		
+			
+			Core::Propagator  phi_f(phi);
+			Smear::Jacobi Jacobi_tool(Jac_alpha);
+			phi_f.smearJacobi(Jac_alpha, Jac_iterations, gauge_field_f);
+
 
 			//Now compute the source 
 
@@ -506,18 +531,27 @@ int main(int argc, char **argv)
 			if (weave.isRoot())
 				std::cout << "Compute loops for vv and v4 method"<<" ... ";
 
-			// v4 loop
+	// v4 & vv loop local quark fields
 			std::vector< std::complex <double>  > C_v4 = Contract::compute_loop_new(xi,phi,my_operators);
 			std::vector< std::complex <double> > C_conserved_v4 = Contract::compute_loop_conserved_vector_current(gauge_field,xi,phi);
-			//vv loop
+			
 			std::vector< std::complex <double>  > C_vv = Contract::compute_loop_new(g5_phi,phi,my_operators);
 			std::vector< std::complex <double> > C_conserved_vv = Contract::compute_loop_conserved_vector_current(gauge_field,g5_phi,phi);
+
+
+
+
+			// v4 & vv loop smeared quark fields
+			std::vector< std::complex <double> > C_v4_f = Contract::compute_loop_new(xi,phi_f,my_operators);
+			std::vector< std::complex <double> > C_vv_f = Contract::compute_loop_new(g5_phi,phi_f,my_operators);
+
 
 
 
 			for(size_t i=0; i < C_vv.size(); i++)
 			{
 				C_vv[i] *=  std::complex<double>(0,2.0*mu/(8.*kappa));	 // factor + 4 * i kappa mu /( 4 kappa) ^2
+				C_vv_f[i] *=  std::complex<double>(0,2.0*mu/(8.*kappa));	 // factor + 4 * i kappa mu /( 4 kappa) ^2
 			}
 
 			for(size_t i=0; i < C_conserved_vv.size(); i++)
@@ -616,6 +650,10 @@ int main(int argc, char **argv)
 				std::ofstream fout_v4;
 				std::ofstream fout_vv;
 	
+				std::ofstream fout_v4_f;
+				std::ofstream fout_vv_f;
+
+
 #ifdef _with_momentum_projection
 				std::ofstream fout_vv_mom;
 #endif
@@ -636,6 +674,8 @@ int main(int argc, char **argv)
 
 					fout_v4.open("output_disc_v4.dat");
 					fout_vv.open("output_disc_vv.dat");
+					fout_v4_f.open("output_disc_v4_f.dat");
+					fout_vv_f.open("output_disc_vv_f.dat");
 	
 #ifdef _with_momentum_projection
 					fout_vv_mom.open("output_disc_vv_mom.dat");
@@ -656,6 +696,8 @@ int main(int argc, char **argv)
 
 					fout_v4.open("output_disc_v4.dat",std::ios::app);
 					fout_vv.open("output_disc_vv.dat",std::ios::app);
+					fout_v4_f.open("output_disc_v4_f.dat",std::ios::app);
+					fout_vv_f.open("output_disc_vv_f.dat",std::ios::app);
 
 #ifdef _with_momentum_projection
 					fout_vv_mom.open("output_disc_vv_mom.dat",std::ios::app);
@@ -685,22 +727,34 @@ int main(int argc, char **argv)
 							if (i != 0 && i !=8)
 							{
 								fout_v4 << t << std::scientific <<"  "
-									<< i <<"  "<< j + 12*n <<"  "<<C_v4[t +  T*i + 16*T*j].real() <<"  "<< C_v4[t + T*i + 16*T*j].imag() << std::endl;
+									<< i <<"  "<< j + 12*n <<"  "<<C_v4[t +  t*i + 16*t*j].real() <<"  "<< C_v4[t + t*i + 16*t*j].imag() << std::endl;
+								fout_v4_f << t << std::scientific <<"  "
+									<< i <<"  "<< j + 12*n <<"  "<<C_v4_f[t +  t*i + 16*t*j].real() <<"  "<< C_v4_f[t + t*i + 16*t*j].imag() << std::endl;
 							}
 							if (i==0) 
 							{
-								fout_v4 << t << std::scientific <<"  "
+							fout_v4 << t << std::scientific <<"  "
 									<< i <<"  "<< j + 12*n <<"  "<<C_v4[t +  T*i + 16*T*j].real() <<"  "<< C_v4[t + T*i + 16*T*j].imag() +  addimag << std::endl;
+							fout_v4_f << t << std::scientific <<"  "
+									<< i <<"  "<< j + 12*n <<"  "<<C_v4_f[t +  T*i + 16*T*j].real() <<"  "<< C_v4_f[t + T*i + 16*T*j].imag() +  addimag << std::endl;
 							}
 							if (i==8) 
 							{
 								fout_v4 << t << std::scientific <<"  "
 									<< i <<"  "<< j + 12*n <<"  "<<C_v4[t +  T*i + 16*T*j].real() + addreal <<"  "<< C_v4[t + T*i + 16*T*j].imag() << std::endl;
+								fout_v4_f << t << std::scientific <<"  "
+									<< i <<"  "<< j + 12*n <<"  "<<C_v4_f[t +  T*i + 16*T*j].real() + addreal <<"  "<< C_v4_f[t + T*i + 16*T*j].imag() << std::endl;
 							}
 
 
 							fout_vv << t << std::scientific <<"  "
 								<< i <<"  "<< j + 12*n <<"  "<<C_vv[t +  T*i + 16*T*j].real() <<"  "<< C_vv[t + T*i + 16*T*j].imag() << std::endl;
+							fout_vv_f << t << std::scientific <<"  "
+								<< i <<"  "<< j + 12*n <<"  "<<C_vv_f[t +  T*i + 16*T*j].real() <<"  "<< C_vv_f[t + T*i + 16*T*j].imag() << std::endl;
+
+
+							fout_vv_f.flush();
+							fout_v4_f.flush();
 
 							fout_vv.flush();
 							fout_v4.flush();
@@ -710,6 +764,9 @@ int main(int argc, char **argv)
 				}
 				fout_v4.close();
 				fout_vv.close();
+
+				fout_v4_f.close();
+				fout_vv_f.close();
 
 				for(size_t j=0; j<12; j++)
 				{

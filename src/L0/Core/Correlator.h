@@ -35,6 +35,7 @@ namespace Core
     Datatype *d_sumTimeslice_global;
 
 	static Field< int * > *s_xRelative;
+	static Field< size_t > *s_timelabel;
 
 	  public:
 
@@ -99,11 +100,13 @@ namespace Core
 #include "Correlator/Correlator_deleteField.template"
 #include "Correlator/Correlator_destroy.template"
 #include "Correlator/Correlator_isolate.template"
-#include "Correlator/Correlator_momentumProjection.template"
-#include "Correlator/Correlator_prepareMomentumProjection.template"
 #include "Correlator/Correlator_setOffset.template"
 #include "Correlator/Correlator_sumOverSpatialVolume.template"
 
   typedef Correlator< Dirac::Matrix > BaryonCorrelator;
 
 }
+
+#include "Correlator/Correlator_momentumProjection.template"
+#include "Correlator/Correlator_prepareMomentumProjection.template"
+

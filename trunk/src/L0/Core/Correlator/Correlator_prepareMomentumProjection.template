@@ -3,7 +3,7 @@
 
 // performs a summation over timeslices including non-zero momentum projection
 template< typename Datatype >
-void Correlator< Datatype >::prepareMomentumProjection(int const * const position_offset)
+void Core::Correlator< Datatype >::prepareMomentumProjection(int const * const position_offset)
 {
   size_t const L(this->L());
   size_t const T(this->T());
@@ -12,11 +12,19 @@ void Correlator< Datatype >::prepareMomentumProjection(int const * const positio
     s_xRelative =  new Field< int * >(L , T);
   else if (s_xRelative->L() != L ||  s_xRelative->T() != T)
   {
-    for (Field< int *>::iterator I(s_xRelative->begin()); I != s_xRelative->end(); ++I)
+    for (Field< int * >::iterator I(s_xRelative->begin()); I != s_xRelative->end(); ++I)
       delete [] (*I);
     delete s_xRelative; // we can do this here because it is a static pointer,
     // this will affect all instances of Core::Correlator
     s_xRelative =  new Field< int * >(L , T);
+  }
+  if (s_timelabel == NULL)
+    s_timelabel =  new Field< size_t >(L , T);
+  else if (s_timelabel->L() != L ||  s_timelabel->T() != T)
+  {
+    delete s_timelabel; // we can do this here because it is a static pointer,
+    // this will affect all instances of Core::Correlator
+    s_timelabel =  new Field< size_t >(L , T);
   }
 
   size_t localIndex;
@@ -33,6 +41,7 @@ void Correlator< Datatype >::prepareMomentumProjection(int const * const positio
           if (localIndex == d_weave->localVolume())
             continue;
 
+          (*s_timelabel)[localIndex] = idx_T;
           (*s_xRelative)[localIndex] = new int[3];
           ((*s_xRelative)[localIndex])[Base::idx_X] = ((int(idx_X) - position_offset[Base::idx_X]) + L) % L;
           ((*s_xRelative)[localIndex])[Base::idx_Y] = ((int(idx_Y) - position_offset[Base::idx_Y]) + L) % L;

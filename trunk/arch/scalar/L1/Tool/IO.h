@@ -87,6 +87,8 @@ namespace Tool
     void save(Core::StochasticPropagator< 1 > *sPropagator, std::vector< std::string > const &filenames,
               Tool::IO::filetype type);
 
+    int checkILDG(std::string const &filename);
+
     template< typename Element >
     void loadILDG(Core::Field< Element > *field, std::string const &filename);
 

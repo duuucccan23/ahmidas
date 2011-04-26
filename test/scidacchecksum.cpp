@@ -8,15 +8,13 @@
 
 int main(int argc, char **argv)
 {
-  Ahmidas my_ahmidas(&argc, &argv);
-  Core::Field< QCD::Gauge > mygauge(4,8);
-  Tool::IO::loadILDG(&mygauge, "../../test/conf.48");
-  Print("In headers: 0x1c231a18 0x3c553b.\n");
+  if (argc != 4) {
+    fprintf(stderr, "Usage: %s <ildg_conf> <L> <T>\n", argv[0]);
+    exit(EXIT_FAILURE);
+  }
 
-  Core::Field< QCD::Spinor > myspin(4,4);
-  Tool::IO::loadScidac(&myspin, "../../test/source4x4_d.00.inverted");
-  Print("In headers: 0xb3c083ec 0xd4211a35.");
-  Print("This test currently does not get the numbers from the loadScidac function.");
-  Print("The real version should perform an actual comparison, instead of relying on a user to check.");
+  Ahmidas my_ahmidas(&argc, &argv);
+  Core::Field< QCD::Gauge > mygauge(atoi(argv[2]),atoi(argv[3]));
+  Tool::IO::loadILDG(&mygauge, argv[1]);
   return 0;
 }

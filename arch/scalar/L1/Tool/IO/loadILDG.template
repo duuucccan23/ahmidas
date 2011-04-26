@@ -22,28 +22,62 @@ void Tool::IO::loadILDG(Core::Field< Element > *field, std::string const &filena
   assert(reader.good());
 
   Element *dataPtr = field->raw();
-
   Tool::ScidacChecksum calc(0);
+
   if (info.precision.compare("64") == 0)
   {
     reader.read(dataPtr, field->volume());
     calc.aggregate(dataPtr, field->volume(), 0);
-	std::cerr << "Checksums for file " << filename << ".\n";
-	std::cerr << "Calculated: " << std::hex << std::showbase << calc.lower() << ' ' << calc.upper() << ".\n";
+    std::cerr << "Checksums for file " << filename << ".\n";
+    std::cerr << "Calculated: " << std::hex << std::setfill('0') << std::setw(10) << std::internal << std::showbase << calc.lower() << ' ' << calc.upper() << ".\n";
     if (!Base::bigEndian)
       Base::swapEndian(dataPtr, dataPtr + field->volume(), sizeof(double));
-    return;
+  } else {
+    size_t const elSize = sizeof(Element) / sizeof(double);
+    uint32_t elem32[elSize];
+
+    for (size_t ctr = 0; ctr < field->volume(); ++ctr, ++dataPtr)
+    {
+      reader.read(elem32, elSize);
+      if (!Base::bigEndian)
+        Base::swapEndian(elem32, elem32 + elSize);
+      std::copy(reinterpret_cast< float* >(elem32), reinterpret_cast< float* >(elem32) + elSize,
+                reinterpret_cast< double* >(dataPtr));
+    }
   }
 
-  size_t const elSize = sizeof(Element) / sizeof(double);
-  uint32_t elem32[elSize];
-
-  for (size_t ctr = 0; ctr < field->volume(); ++ctr, ++dataPtr)
+  reader.retrieveRecord(reader.findRecord("scidac-checksum"));
+  if (reader.fail())
   {
-    reader.read(elem32, elSize);
-    if (!Base::bigEndian)
-      Base::swapEndian(elem32, elem32 + elSize);
-    std::copy(reinterpret_cast< float* >(elem32), reinterpret_cast< float* >(elem32) + elSize,
-              reinterpret_cast< double* >(dataPtr));
+    std::cerr << "Lime reader could not find a scidac-checksum record in file: " << filename << std::endl;
+    exit(EXIT_FAILURE);
+    return;
+  }
+  assert(reader.good());
+
+  char mymesg[reader.recordSize()];
+  reader.read(mymesg, reader.recordSize());
+
+  uint32_t reada;
+  uint32_t readb;
+  char *pos = strtok(mymesg, "<> \n\t");
+
+  while (pos)
+  {
+    if (!strncmp(pos, "suma", 4)) {
+      pos = strtok(0, "<> \n\t");
+      sscanf(pos, "%x", &reada);
+    }
+    if (!strncmp(pos, "sumb", 4)) {
+      pos = strtok(0, "<> \n\t");
+      sscanf(pos, "%x", &readb);
+    }
+    pos = strtok(0, "<> \n\t");
+  }
+  std::cerr << "Read:       " << std::hex << std::showbase << std::internal << std::setfill('0') << std::setw(10) << reada << ' ' << readb << ".\n";
+
+  if (reada != calc.lower() || readb != calc.upper()) {
+    std::cerr << "WARNING! SciDAC checksum does not match!\n";
+    exit(EXIT_FAILURE);
   }
 }

@@ -58,6 +58,9 @@ ADD_EXECUTABLE(scidacchecksum scidacchecksum.cpp)
 TARGET_LINK_LIBRARIES(scidacchecksum QCD IO Print Ahmidas)
 ADD_TEST(scidac_checksum scidacchecksum)
 
+ADD_EXECUTABLE(checkILDG checkILDG.cpp)
+TARGET_LINK_LIBRARIES(checkILDG IO)
+
 ADD_EXECUTABLE(sequential_sources sequential_sources.cpp)
 TARGET_LINK_LIBRARIES(sequential_sources SU3 QCD IO Base Core Weave Contract Ahmidas)
 ADD_TEST(generate_sequential_source sequential_sources)

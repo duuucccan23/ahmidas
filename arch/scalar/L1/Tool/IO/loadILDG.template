@@ -55,7 +55,7 @@ void Tool::IO::loadILDG(Core::Field< Element > *field, std::string const &filena
   }
   assert(reader.good());
 
-  char mymesg[reader.recordSize()];
+  char mymesg[200];
   reader.read(mymesg, reader.recordSize());
 
   uint32_t reada;

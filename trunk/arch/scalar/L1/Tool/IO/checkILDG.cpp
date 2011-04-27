@@ -38,7 +38,7 @@ int Tool::IO::checkILDG(std::string const &filename)
   }
   assert(reader.good());
 
-  char mymesg[reader.recordSize()];
+  char mymesg[200];
   reader.read(mymesg, reader.recordSize());
 
   uint32_t reada;

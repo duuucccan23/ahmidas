@@ -206,8 +206,6 @@ int main(int argc, char **argv)
 		for (size_t n=0;n<N;n++)
 		{
 
-			Core::Propagator source(L,T);
-			Core::Propagator tmp(L, T);
 
 			std::vector<std::string> filename;
 			for (size_t k=0; k<12;k++) filename.push_back(propaStochaFiles[k+12*n]);
@@ -227,20 +225,26 @@ int main(int argc, char **argv)
 				for (size_t I=0; I<filename_light.size(); I++)	std::cout << filename_light[I] << std::endl;
 
 			}
-			Core::Propagator light_DD_prop(L, T);
-			Core::Propagator prop_light_out(L, T);
-			Core::Propagator prop_light_out_opp(L, T);
 
-			Tool::IO::load(&light_DD_prop,filename_light, Tool::IO::fileSCIDAC,32);
+				Core::Propagator phi_light(L,T);
+				Core::Propagator phi_light_opp(L,T);
 
-			prop_light_out=light_DD_prop.applyDiracOperator(gauge_field,kappa,-mu_l,thetat,thetax,thetay,thetaz);
-			prop_light_out.rightMultiply(gamma5); //this is required because D=Q*g5 and g5 is not put by applyDiracOperator
-			Core::Propagator phi_light(prop_light_out);
+			{
+				Core::Propagator light_DD_prop(L, T);
+				Core::Propagator prop_light_out(L, T);
+				Core::Propagator prop_light_out_opp(L, T);
 
-			prop_light_out_opp=light_DD_prop.applyDiracOperator(gauge_field,kappa,mu_l,thetat,thetax,thetay,thetaz);
-			prop_light_out_opp.rightMultiply(gamma5); //this is required because D=Q*g5 and g5 is not put by applyDiracOperator
+				Tool::IO::load(&light_DD_prop,filename_light, Tool::IO::fileSCIDAC,32);
 
-			Core::Propagator phi_light_opp(prop_light_out_opp);
+				prop_light_out=light_DD_prop.applyDiracOperator(gauge_field,kappa,-mu_l,thetat,thetax,thetay,thetaz);
+				prop_light_out.rightMultiply(gamma5); //this is required because D=Q*g5 and g5 is not put by applyDiracOperator
+			    phi_light = prop_light_out;
+
+				prop_light_out_opp=light_DD_prop.applyDiracOperator(gauge_field,kappa,mu_l,thetat,thetax,thetay,thetaz);
+				prop_light_out_opp.rightMultiply(gamma5); //this is required because D=Q*g5 and g5 is not put by applyDiracOperator
+
+				phi_light_opp=prop_light_out_opp;
+			}
 
 			if (weave.isRoot())
 				std::cout << "done.\n" << std::endl;
@@ -259,20 +263,26 @@ int main(int argc, char **argv)
 			if(weave.isRoot()) 
 				std::cout << "MMS compilation  1/(Ddagger D) is read so  Ddagger is applied to get the propagator" <<" ...";
 
-			Core::Propagator DD_prop(L, T);
-			Core::Propagator prop_out(L, T);
+				Core::Propagator phi(L,T);
+				Core::Propagator phi_opp(L,T);
 
-			Tool::IO::load(&DD_prop,filename, Tool::IO::fileSCIDAC,32);
+			{
+				Core::Propagator DD_prop(L, T);
+				Core::Propagator prop_out(L, T);
 
-			prop_out=DD_prop.applyDiracOperator(gauge_field,kappa,-mu_h,thetat,thetax,thetay,thetaz);
-			prop_out.rightMultiply(gamma5); //this is required because D=Q*g5 and g5 is not put by applyDiracOperator
+				Tool::IO::load(&DD_prop,filename, Tool::IO::fileSCIDAC,32);
 
-			Core::Propagator phi(prop_out);
-			//build the propagator with opposite mass
-			Core::Propagator prop_opp(L, T);
-			prop_opp=DD_prop.applyDiracOperator(gauge_field,kappa,mu_h,thetat,thetax,thetay,thetaz);
-			prop_opp.rightMultiply(gamma5); //this is required because D=Q*g5 and g5 is not put by applyDiracOperator
-			Core::Propagator phi_opp(prop_opp);
+				prop_out=DD_prop.applyDiracOperator(gauge_field,kappa,-mu_h,thetat,thetax,thetay,thetaz);
+				prop_out.rightMultiply(gamma5); //this is required because D=Q*g5 and g5 is not put by applyDiracOperator
+
+				phi = prop_out;
+
+				//build the propagator with opposite mass
+				Core::Propagator prop_opp(L, T);
+				prop_opp=DD_prop.applyDiracOperator(gauge_field,kappa,mu_h,thetat,thetax,thetay,thetaz);
+				prop_opp.rightMultiply(gamma5); //this is required because D=Q*g5 and g5 is not put by applyDiracOperator
+				phi_opp = prop_opp;
+			}
 
 #endif
 
@@ -294,15 +304,15 @@ int main(int argc, char **argv)
 
 
 
-//			Core::Propagator phi_light_conj(phi_light);
-		
+			//			Core::Propagator phi_light_conj(phi_light);
+
 			Core::Propagator  g5_phi_light(phi_light);
 			g5_phi_light.rightMultiply(gamma5);
 
 			Core::Propagator  g5_phi_light_opp(phi_light_opp);
 			g5_phi_light_opp.rightMultiply(gamma5);
 
-		// compute for the bilinear operator first
+			// compute for the bilinear operator first
 			//1/M_u  - 1/M_s
 			std::vector< std::complex <double>  > C_hl1 = Contract::compute_loop_new(g5_phi_light_opp,phi,my_operators);
 			//1/M_d  - 1/tilde{M}_s
@@ -374,280 +384,280 @@ int main(int argc, char **argv)
 					std::copy(&(momenta_raw[3*I]), &(momenta_raw[3*I]) + 3, momenta[I]);
 			}
 
-			  
+
 			//1/M_u  - 1/M_s
 			std::vector< std::complex <double>  > C_hl1_mom=Contract::compute_loop_new(g5_phi_light_opp,phi,my_operators,sourcePos,momenta,timeslice_source);
-			 //1/M_d  - 1/tilde{M}_s
-			 std::vector< std::complex <double>  >C_hl2_mom=Contract::compute_loop_new(g5_phi_light,phi_opp,my_operators,sourcePos,momenta,timeslice_source);
+			//1/M_d  - 1/tilde{M}_s
+			std::vector< std::complex <double>  >C_hl2_mom=Contract::compute_loop_new(g5_phi_light,phi_opp,my_operators,sourcePos,momenta,timeslice_source);
 
 
-			 std::vector< std::complex <double> > C_conserved_hl1_mom = Contract::compute_loop_conserved_vector_current(gauge_field,g5_phi_light_opp,phi,sourcePos,momenta,timeslice_source);
-			 std::vector< std::complex <double> > C_conserved_hl2_mom = Contract::compute_loop_conserved_vector_current(gauge_field,g5_phi_light,phi,sourcePos,momenta,timeslice_source);
-
-
-
-			 for(size_t i=0; i < C_conserved_hl1_mom.size(); i++)
-			 {
-				 C_conserved_hl1_mom[i] *=  std::complex<double>(0,(mu_l - mu_h)/(8.*kappa));         
-				 C_conserved_hl2_mom[i] *=  std::complex<double>(0,(mu_l - mu_h)/(8.*kappa));         
-			 }
+			std::vector< std::complex <double> > C_conserved_hl1_mom = Contract::compute_loop_conserved_vector_current(gauge_field,g5_phi_light_opp,phi,sourcePos,momenta,timeslice_source);
+			std::vector< std::complex <double> > C_conserved_hl2_mom = Contract::compute_loop_conserved_vector_current(gauge_field,g5_phi_light,phi,sourcePos,momenta,timeslice_source);
 
 
 
-		 for(size_t i=0; i < C_hl1_mom.size(); i++)
-			 {
-			 C_hl1_mom[i] *=  std::complex<double>(0,(mu_l - mu_h)/(8.*kappa));         
-			 C_hl2_mom[i] *=  std::complex<double>(0,(mu_l - mu_h)/(8.*kappa));         
-			 }
+			for(size_t i=0; i < C_conserved_hl1_mom.size(); i++)
+			{
+				C_conserved_hl1_mom[i] *=  std::complex<double>(0,(mu_l - mu_h)/(8.*kappa));         
+				C_conserved_hl2_mom[i] *=  std::complex<double>(0,(mu_l - mu_h)/(8.*kappa));         
+			}
 
-			 if (weave.isRoot())
-				 std::cout << "done.\n" << std::endl;
+
+
+			for(size_t i=0; i < C_hl1_mom.size(); i++)
+			{
+				C_hl1_mom[i] *=  std::complex<double>(0,(mu_l - mu_h)/(8.*kappa));         
+				C_hl2_mom[i] *=  std::complex<double>(0,(mu_l - mu_h)/(8.*kappa));         
+			}
+
+			if (weave.isRoot())
+				std::cout << "done.\n" << std::endl;
 
 
 
 #endif
-			 for(size_t i=0; i < C_hl1.size(); i++)
-			 {
-				 C_hl1[i] *=  std::complex<double>(0,(mu_l-mu_h)/(8.*kappa));	 // factor:  +2 * i kappa (mu_l - mu_s) /( 4 kappa) ^2
-				 C_hl2[i] *=  std::complex<double>(0,(mu_l-mu_h)/(8.*kappa));	 
-			 }
+			for(size_t i=0; i < C_hl1.size(); i++)
+			{
+				C_hl1[i] *=  std::complex<double>(0,(mu_l-mu_h)/(8.*kappa));	 // factor:  +2 * i kappa (mu_l - mu_s) /( 4 kappa) ^2
+				C_hl2[i] *=  std::complex<double>(0,(mu_l-mu_h)/(8.*kappa));	 
+			}
 
-			 for(size_t i=0; i < C_conserved_hl1.size(); i++)
-			 {
-				 C_conserved_hl1[i] *=  std::complex<double>(0,(mu_l - mu_h)/(8.*kappa));         
-				 C_conserved_hl2[i] *=  std::complex<double>(0,(mu_l - mu_h)/(8.*kappa));         
-			 }
+			for(size_t i=0; i < C_conserved_hl1.size(); i++)
+			{
+				C_conserved_hl1[i] *=  std::complex<double>(0,(mu_l - mu_h)/(8.*kappa));         
+				C_conserved_hl2[i] *=  std::complex<double>(0,(mu_l - mu_h)/(8.*kappa));         
+			}
 
 
 #ifdef _with_Omunu_
-			 for(size_t i=0; i < C_twist2_hl1.size(); i++)
-			 {
-				 C_twist2_hl1[i] *=  std::complex<double>(0,(mu_l-mu_h)/(8.*kappa));	 // factor:  +2 * i kappa (mu_l - mu_s) /( 4 kappa) ^2
-				 C_twist2_hl2[i] *=  std::complex<double>(0,(mu_l-mu_h)/(8.*kappa));	 
-				 C_twist2_pol_hl1[i] *=  std::complex<double>(0,(mu_l-mu_h)/(8.*kappa));	 // factor:  +2 * i kappa (mu_l - mu_s) /( 4 kappa) ^2
-				 C_twist2_pol_hl2[i] *=  std::complex<double>(0,(mu_l-mu_h)/(8.*kappa));	 // factor:  +2 * i kappa (mu_l - mu_s) /( 4 kappa) ^2
-			 }
+			for(size_t i=0; i < C_twist2_hl1.size(); i++)
+			{
+				C_twist2_hl1[i] *=  std::complex<double>(0,(mu_l-mu_h)/(8.*kappa));	 // factor:  +2 * i kappa (mu_l - mu_s) /( 4 kappa) ^2
+				C_twist2_hl2[i] *=  std::complex<double>(0,(mu_l-mu_h)/(8.*kappa));	 
+				C_twist2_pol_hl1[i] *=  std::complex<double>(0,(mu_l-mu_h)/(8.*kappa));	 // factor:  +2 * i kappa (mu_l - mu_s) /( 4 kappa) ^2
+				C_twist2_pol_hl2[i] *=  std::complex<double>(0,(mu_l-mu_h)/(8.*kappa));	 // factor:  +2 * i kappa (mu_l - mu_s) /( 4 kappa) ^2
+			}
 
 #endif
 
 
 
 
-			 if (weave.isRoot())	
-			 {
+			if (weave.isRoot())	
+			{
 
-				 std::ofstream fout_hl1;
-				 std::ofstream fout_hl2;
+				std::ofstream fout_hl1;
+				std::ofstream fout_hl2;
 
-				 std::ofstream fout_conserved_hl1;
-				 std::ofstream fout_conserved_hl2;
+				std::ofstream fout_conserved_hl1;
+				std::ofstream fout_conserved_hl2;
 
 #ifdef _with_momentum_projection_                                                                                                                        
-				 std::ofstream fout_hl1_mom;
-				 std::ofstream fout_hl2_mom;
+				std::ofstream fout_hl1_mom;
+				std::ofstream fout_hl2_mom;
 
-				 std::ofstream fout_conserved_hl1_mom;
-				 std::ofstream fout_conserved_hl2_mom;
+				std::ofstream fout_conserved_hl1_mom;
+				std::ofstream fout_conserved_hl2_mom;
 #endif
 
 #ifdef _with_Omunu_
-				 std::ofstream fout_twist2_hl1;
-				 std::ofstream fout_twist2_pol_hl1;
-				 std::ofstream fout_twist2_hl2;
-				 std::ofstream fout_twist2_pol_hl2;
+				std::ofstream fout_twist2_hl1;
+				std::ofstream fout_twist2_pol_hl1;
+				std::ofstream fout_twist2_hl2;
+				std::ofstream fout_twist2_pol_hl2;
 #endif
 
-				 if (n==0)
-				 {
+				if (n==0)
+				{
 
-					 fout_hl1.open("output_disc_hl1.dat");
-					 fout_hl2.open("output_disc_hl2.dat");
+					fout_hl1.open("output_disc_hl1.dat");
+					fout_hl2.open("output_disc_hl2.dat");
 
-					 fout_conserved_hl1.open("output_disc_conserved_hl1.dat");
-					 fout_conserved_hl2.open("output_disc_conserved_hl2.dat");
+					fout_conserved_hl1.open("output_disc_conserved_hl1.dat");
+					fout_conserved_hl2.open("output_disc_conserved_hl2.dat");
 
 #ifdef _with_momentum_projection_                                                                                                                        
-					 fout_hl1_mom.open("output_disc_hl1_mom.dat");
-					 fout_hl2_mom.open("output_disc_hl2_mom.dat");
+					fout_hl1_mom.open("output_disc_hl1_mom.dat");
+					fout_hl2_mom.open("output_disc_hl2_mom.dat");
 
-					 fout_conserved_hl1_mom.open("output_disc_conserved_hl1_mom.dat");
-					 fout_conserved_hl2_mom.open("output_disc_conserved_hl2_mom.dat");
+					fout_conserved_hl1_mom.open("output_disc_conserved_hl1_mom.dat");
+					fout_conserved_hl2_mom.open("output_disc_conserved_hl2_mom.dat");
 #endif
 
 #ifdef _with_Omunu_
-					 fout_twist2_hl1.open("output_disc_twist2_hl1.dat");
-					 fout_twist2_pol_hl1.open("output_disc_twist2_pol_hl1.dat");
-					 fout_twist2_hl2.open("output_disc_twist2_hl2.dat");
-					 fout_twist2_pol_hl2.open("output_disc_twist2_pol_hl2.dat");
+					fout_twist2_hl1.open("output_disc_twist2_hl1.dat");
+					fout_twist2_pol_hl1.open("output_disc_twist2_pol_hl1.dat");
+					fout_twist2_hl2.open("output_disc_twist2_hl2.dat");
+					fout_twist2_pol_hl2.open("output_disc_twist2_pol_hl2.dat");
 #endif
-				 }
-				 else	
-				 {
-					 fout_hl1.open("output_disc_hl1.dat",std::ios::app);
-					 fout_hl2.open("output_disc_hl2.dat",std::ios::app);
+				}
+				else	
+				{
+					fout_hl1.open("output_disc_hl1.dat",std::ios::app);
+					fout_hl2.open("output_disc_hl2.dat",std::ios::app);
 
-					 fout_conserved_hl1.open("output_disc_conserved_hl1.dat",std::ios::app);
-					 fout_conserved_hl2.open("output_disc_conserved_hl2.dat",std::ios::app);
+					fout_conserved_hl1.open("output_disc_conserved_hl1.dat",std::ios::app);
+					fout_conserved_hl2.open("output_disc_conserved_hl2.dat",std::ios::app);
 
 #ifdef _with_momentum_projection_                                                                                                                        
-					 fout_hl1_mom.open("output_disc_hl1_mom.dat",std::ios::app);
-					 fout_hl2_mom.open("output_disc_hl2_mom.dat",std::ios::app);
-					 fout_conserved_hl1_mom.open("output_disc_conserved_hl1_mom.dat",std::ios::app);
-					 fout_conserved_hl2_mom.open("output_disc_conserved_hl2_mom.dat",std::ios::app);
+					fout_hl1_mom.open("output_disc_hl1_mom.dat",std::ios::app);
+					fout_hl2_mom.open("output_disc_hl2_mom.dat",std::ios::app);
+					fout_conserved_hl1_mom.open("output_disc_conserved_hl1_mom.dat",std::ios::app);
+					fout_conserved_hl2_mom.open("output_disc_conserved_hl2_mom.dat",std::ios::app);
 
 #endif
 
 #ifdef _with_Omunu_
-					 fout_twist2_hl1.open("output_disc_twist2_hl1.dat",std::ios::app);
-					 fout_twist2_pol_hl1.open("output_disc_twist2_pol_hl1.dat",std::ios::app);
-					 fout_twist2_hl2.open("output_disc_twist2_hl2.dat",std::ios::app);
-					 fout_twist2_pol_hl2.open("output_disc_twist2_pol_hl2.dat",std::ios::app);
+					fout_twist2_hl1.open("output_disc_twist2_hl1.dat",std::ios::app);
+					fout_twist2_pol_hl1.open("output_disc_twist2_pol_hl1.dat",std::ios::app);
+					fout_twist2_hl2.open("output_disc_twist2_hl2.dat",std::ios::app);
+					fout_twist2_pol_hl2.open("output_disc_twist2_pol_hl2.dat",std::ios::app);
 #endif
-				 }
+				}
 
-				 std::cout << "write output for sources from " << 12*n << " to " << 11+12*n<<" ... "  << std::endl;
+				std::cout << "write output for sources from " << 12*n << " to " << 11+12*n<<" ... "  << std::endl;
 
-				 for(size_t j=0; j<12; j++)
-				 {
+				for(size_t j=0; j<12; j++)
+				{
 
-					 for(size_t i=0; i<my_operators.size(); i++)
-					 {
+					for(size_t i=0; i<my_operators.size(); i++)
+					{
 
-						 for(size_t t = 0; t < T; t++)
-						 {
+						for(size_t t = 0; t < T; t++)
+						{
 
-							 fout_hl1 << t << std::scientific <<"  "
-								 << i <<"  "<< j + 12*n <<"  "<<C_hl1[t +  T*i + 16*T*j].real() <<"  "<< C_hl1[t + T*i + 16*T*j].imag() << std::endl;
+							fout_hl1 << t << std::scientific <<"  "
+								<< i <<"  "<< j + 12*n <<"  "<<C_hl1[t +  T*i + 16*T*j].real() <<"  "<< C_hl1[t + T*i + 16*T*j].imag() << std::endl;
 
-							 fout_hl2 << t << std::scientific <<"  "
-								 << i <<"  "<< j + 12*n <<"  "<<C_hl2[t +  T*i + 16*T*j].real() <<"  "<< C_hl2[t + T*i + 16*T*j].imag() << std::endl;
+							fout_hl2 << t << std::scientific <<"  "
+								<< i <<"  "<< j + 12*n <<"  "<<C_hl2[t +  T*i + 16*T*j].real() <<"  "<< C_hl2[t + T*i + 16*T*j].imag() << std::endl;
 
-							 fout_hl1.flush();
-							 fout_hl2.flush();
+							fout_hl1.flush();
+							fout_hl2.flush();
 
-						 }
-					 }			
-				 }
-				 fout_hl1.close();
-				 fout_hl2.close();
+						}
+					}			
+				}
+				fout_hl1.close();
+				fout_hl2.close();
 
-				 for(size_t j=0; j<12; j++)
-				 {
-					 for(size_t i=0; i<4; i++)
-					 {
-						 for(size_t k=0; k<2; k++)
-						 {
-							 for(size_t t = 0; t < T; t++)
-							 {
-								 fout_conserved_hl1<< t << std::scientific <<"  "
-									 << i <<"  "<< j+12*n <<"  "<<k <<"  "<< C_conserved_hl1[t+ T*k + 2*T*i + 2*T*4*j].real
-									 () <<"  "<< C_conserved_hl1[t+ T*k + 2*T*i + 2*T*4*j].imag() << std::endl;
+				for(size_t j=0; j<12; j++)
+				{
+					for(size_t i=0; i<4; i++)
+					{
+						for(size_t k=0; k<2; k++)
+						{
+							for(size_t t = 0; t < T; t++)
+							{
+								fout_conserved_hl1<< t << std::scientific <<"  "
+									<< i <<"  "<< j+12*n <<"  "<<k <<"  "<< C_conserved_hl1[t+ T*k + 2*T*i + 2*T*4*j].real
+									() <<"  "<< C_conserved_hl1[t+ T*k + 2*T*i + 2*T*4*j].imag() << std::endl;
 
-								 fout_conserved_hl2 << t << std::scientific <<"  "
-									 << i <<"  "<< j+12*n <<"  "<<k <<"  "<< C_conserved_hl2[t+ T*k + 2*T*i + 2*T*4*j].real
-									 () <<"  "<< C_conserved_hl2[t+ T*k + 2*T*i + 2*T*4*j].imag() << std::endl;
-							 }
-						 }
-					 }
-				 }
+								fout_conserved_hl2 << t << std::scientific <<"  "
+									<< i <<"  "<< j+12*n <<"  "<<k <<"  "<< C_conserved_hl2[t+ T*k + 2*T*i + 2*T*4*j].real
+									() <<"  "<< C_conserved_hl2[t+ T*k + 2*T*i + 2*T*4*j].imag() << std::endl;
+							}
+						}
+					}
+				}
 
-				 fout_conserved_hl1.close();
-				 fout_conserved_hl2.close();
+				fout_conserved_hl1.close();
+				fout_conserved_hl2.close();
 
 
 #ifdef _with_Omunu_
 
-				 for(size_t j=0; j<12; j++)
-				 {
-					 for(size_t i=0; i<4; i++)
-					 {
-						 for(size_t k=0; k<4; k++)
-						 {
-							 for(size_t t = 0; t < T; t++)
-							 {
+				for(size_t j=0; j<12; j++)
+				{
+					for(size_t i=0; i<4; i++)
+					{
+						for(size_t k=0; k<4; k++)
+						{
+							for(size_t t = 0; t < T; t++)
+							{
 
 
-								 fout_twist2_hl1 << t << std::scientific <<"  "
-									 << i <<"  "<< j + 12*n <<"  "<< k <<"  " <<C_twist2_hl1[t  + T*k + 4*T*i + 4*T*4*j ].real() <<"  "<< C_twist2_hl1[t + T*k + 4*T*i +4*T*4*j ].imag() << std::endl;
-								 fout_twist2_pol_hl1 << t << std::scientific <<"  "
-									 << i <<"  "<< j + 12*n <<"  "<< k <<"  " <<C_twist2_pol_hl1[t  + T*k + 4*T*i + 4*T*4*j ].real() <<"  "<< C_twist2_pol_hl1[t + T*k + 4*T*i +4*T*4*j ].imag() << std::endl;
+								fout_twist2_hl1 << t << std::scientific <<"  "
+									<< i <<"  "<< j + 12*n <<"  "<< k <<"  " <<C_twist2_hl1[t  + T*k + 4*T*i + 4*T*4*j ].real() <<"  "<< C_twist2_hl1[t + T*k + 4*T*i +4*T*4*j ].imag() << std::endl;
+								fout_twist2_pol_hl1 << t << std::scientific <<"  "
+									<< i <<"  "<< j + 12*n <<"  "<< k <<"  " <<C_twist2_pol_hl1[t  + T*k + 4*T*i + 4*T*4*j ].real() <<"  "<< C_twist2_pol_hl1[t + T*k + 4*T*i +4*T*4*j ].imag() << std::endl;
 
-								 fout_twist2_hl2 << t << std::scientific <<"  "
-									 << i <<"  "<< j + 12*n <<"  "<< k <<"  " <<C_twist2_hl2[t  + T*k + 4*T*i + 4*T*4*j ].real() <<"  "<< C_twist2_hl2[t + T*k + 4*T*i +4*T*4*j ].imag() << std::endl;
-								 fout_twist2_pol_hl2 << t << std::scientific <<"  "
-									 << i <<"  "<< j + 12*n <<"  "<< k <<"  " <<C_twist2_pol_hl2[t  + T*k + 4*T*i + 4*T*4*j ].real() <<"  "<< C_twist2_pol_hl2[t + T*k + 4*T*i +4*T*4*j ].imag() << std::endl;
+								fout_twist2_hl2 << t << std::scientific <<"  "
+									<< i <<"  "<< j + 12*n <<"  "<< k <<"  " <<C_twist2_hl2[t  + T*k + 4*T*i + 4*T*4*j ].real() <<"  "<< C_twist2_hl2[t + T*k + 4*T*i +4*T*4*j ].imag() << std::endl;
+								fout_twist2_pol_hl2 << t << std::scientific <<"  "
+									<< i <<"  "<< j + 12*n <<"  "<< k <<"  " <<C_twist2_pol_hl2[t  + T*k + 4*T*i + 4*T*4*j ].real() <<"  "<< C_twist2_pol_hl2[t + T*k + 4*T*i +4*T*4*j ].imag() << std::endl;
 
 
-								 fout_twist2_hl1.flush();
-								 fout_twist2_hl2.flush();
-								 fout_twist2_pol_hl1.flush();
-								 fout_twist2_pol_hl2.flush();
+								fout_twist2_hl1.flush();
+								fout_twist2_hl2.flush();
+								fout_twist2_pol_hl1.flush();
+								fout_twist2_pol_hl2.flush();
 
-							 }/*t*/
-						 }/*end loop on the 4 terms contributing to a symmetrized covariant derivative */
-					 } /*i loop on the 4 operators : O_mumu (unpo1arized) and Omumu g5 (polarized) */
-				 } /*loop on the 12 sources*/
+							}/*t*/
+						}/*end loop on the 4 terms contributing to a symmetrized covariant derivative */
+					} /*i loop on the 4 operators : O_mumu (unpo1arized) and Omumu g5 (polarized) */
+				} /*loop on the 12 sources*/
 
-				 fout_twist2_hl1.close();
-				 fout_twist2_pol_hl2.close();
+				fout_twist2_hl1.close();
+				fout_twist2_pol_hl2.close();
 #endif
 
 #ifdef _with_momentum_projection_                                                                                                                        
-				 int N=momenta.size();
-				 int index;	
+				int N=momenta.size();
+				int index;	
 
-				 for(size_t I = 0; I < momenta.size(); I++)
-				 {
-					 for(size_t j=0; j<12; j++)
-					 {
-						 for(size_t i=0; i<16; i++)
-						 {
-							 for(size_t t = 0; t < T; t++)
-							 {
-								 index = t + T*i  +T*16*j + T*16*12*I;
+				for(size_t I = 0; I < momenta.size(); I++)
+				{
+					for(size_t j=0; j<12; j++)
+					{
+						for(size_t i=0; i<16; i++)
+						{
+							for(size_t t = 0; t < T; t++)
+							{
+								index = t + T*i  +T*16*j + T*16*12*I;
 
-								 fout_hl1_mom << t << std::scientific <<"  " << momenta[I][0] << "  "<< momenta[I][1] << "  "<< momenta[I][2] << "  "
-									 << i <<"  "<< j + 12*n <<"  "<<C_hl1_mom[index].real() <<"  "<< C_hl1_mom[index].imag() << std::endl;
-								 fout_hl2_mom << t << std::scientific <<"  " << momenta[I][0] << "  "<< momenta[I][1] << "  "<< momenta[I][2] << "  "
-									 << i <<"  "<< j + 12*n <<"  "<<C_hl2_mom[index].real() <<"  "<< C_hl2_mom[index].imag() << std::endl;
+								fout_hl1_mom << t << std::scientific <<"  " << momenta[I][0] << "  "<< momenta[I][1] << "  "<< momenta[I][2] << "  "
+									<< i <<"  "<< j + 12*n <<"  "<<C_hl1_mom[index].real() <<"  "<< C_hl1_mom[index].imag() << std::endl;
+								fout_hl2_mom << t << std::scientific <<"  " << momenta[I][0] << "  "<< momenta[I][1] << "  "<< momenta[I][2] << "  "
+									<< i <<"  "<< j + 12*n <<"  "<<C_hl2_mom[index].real() <<"  "<< C_hl2_mom[index].imag() << std::endl;
 
-							 }
-						 }			
-					 }
-				 }
-				 fout_hl1_mom.close();
-				 fout_hl2_mom.close();
+							}
+						}			
+					}
+				}
+				fout_hl1_mom.close();
+				fout_hl2_mom.close();
 
 
-				 for(size_t I = 0; I < momenta.size(); I++)
-				 {
-					 for(size_t j=0; j<12; j++)
-					 {
-						 for(size_t i=0; i<4; i++)
-						 {
-							 for(size_t k=0; k<2; k++)
-							 {
-								 for(size_t t = 0; t < T; t++)
-								 {
-									 fout_conserved_hl1_mom<< t << std::scientific <<"  "
-										 << momenta[I][0] << "  "<< momenta[I][1] << "  "<< momenta[I][2] << "  "<< i <<"  "<< j+12*n <<"  "<<k <<"  "<< C_conserved_hl1_mom[t+ T*k + 2*T*i + 2*T*4*j + 2*T*4*12*I].real() <<"  "<< C_conserved_hl1_mom[t+ T*k + 2*T*i + 2*T*4*j + 2*T*4*12*I].imag() << std::endl;
+				for(size_t I = 0; I < momenta.size(); I++)
+				{
+					for(size_t j=0; j<12; j++)
+					{
+						for(size_t i=0; i<4; i++)
+						{
+							for(size_t k=0; k<2; k++)
+							{
+								for(size_t t = 0; t < T; t++)
+								{
+									fout_conserved_hl1_mom<< t << std::scientific <<"  "
+										<< momenta[I][0] << "  "<< momenta[I][1] << "  "<< momenta[I][2] << "  "<< i <<"  "<< j+12*n <<"  "<<k <<"  "<< C_conserved_hl1_mom[t+ T*k + 2*T*i + 2*T*4*j + 2*T*4*12*I].real() <<"  "<< C_conserved_hl1_mom[t+ T*k + 2*T*i + 2*T*4*j + 2*T*4*12*I].imag() << std::endl;
 
-									 fout_conserved_hl2_mom<< t << std::scientific <<"  "
-										 << momenta[I][0] << "  "<< momenta[I][1] << "  "<< momenta[I][2] << "  "<< i <<"  "<< j+12*n <<"  "<<k <<"  "<< C_conserved_hl2_mom[t+ T*k + 2*T*i + 2*T*4*j + 2*T*4*12*I].real() <<"  "<< C_conserved_hl2_mom[t+ T*k + 2*T*i + 2*T*4*j + 2*T*4*12*I].imag() << std::endl;
+									fout_conserved_hl2_mom<< t << std::scientific <<"  "
+										<< momenta[I][0] << "  "<< momenta[I][1] << "  "<< momenta[I][2] << "  "<< i <<"  "<< j+12*n <<"  "<<k <<"  "<< C_conserved_hl2_mom[t+ T*k + 2*T*i + 2*T*4*j + 2*T*4*12*I].real() <<"  "<< C_conserved_hl2_mom[t+ T*k + 2*T*i + 2*T*4*j + 2*T*4*12*I].imag() << std::endl;
 
-								 }
-							 }
-						 }
-					 }
-				 }
+								}
+							}
+						}
+					}
+				}
 
-				 fout_conserved_hl1_mom.close();
-				 fout_conserved_hl2_mom.close();
+				fout_conserved_hl1_mom.close();
+				fout_conserved_hl2_mom.close();
 
 #endif 
-				 std::cout << "done.\n" << std::endl;
+				std::cout << "done.\n" << std::endl;
 
-			 }/* end if weave.isRoot() */
+			}/* end if weave.isRoot() */
 		} /* loop on Nsample */
 	}/* end case N%12 = 0 */
 

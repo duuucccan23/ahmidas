@@ -164,7 +164,7 @@ int main(int argc, char **argv)
 	{
 #ifdef _with_Fuzzing__
 		std::cout << "Fuzzing parameter = " << Nlong <<  std::endl;
-		
+
 #endif
 
 #ifdef _with_APE_
@@ -239,8 +239,8 @@ int main(int argc, char **argv)
 
 
 #endif
-			
-			
+
+
 			Core::StochasticPropagator< 1 >  phi_f(phi);
 			Smear::Jacobi Jacobi_tool(Jac_alpha);
 			phi_f.smearJacobi(Jac_alpha, Jac_iterations, gauge_field_f);
@@ -435,9 +435,6 @@ int main(int argc, char **argv)
 		for (size_t n=0;n<N;n++)
 		{
 
-			Core::Propagator source(L,T);
-			Core::Propagator tmp(L, T);
-
 			std::vector<std::string> filename;
 			for (size_t k=0; k<12;k++) filename.push_back(propaStochaFiles[k+12*n]);
 
@@ -459,34 +456,38 @@ int main(int argc, char **argv)
 			if(weave.isRoot()) 
 				std::cout << "MMS compilation  1/(Ddagger D) is read so  Ddagger is applied to get the propagator" <<" ...";
 
-			Core::Propagator DD_prop(L, T);
-			Core::Propagator prop_out(L, T);
+			Core::Propagator phi(L ,T );
 
-			Tool::IO::load(&DD_prop,filename, Tool::IO::fileSCIDAC,32);
+			{
+				Core::Propagator prop_out(L, T);
+				Core::Propagator DD_prop(L, T);
+				Tool::IO::load(&DD_prop,filename, Tool::IO::fileSCIDAC,32);
 
-			prop_out=DD_prop.applyDiracOperator(gauge_field,kappa,-mu,thetat,thetax,thetay,thetaz);
-			prop_out.rightMultiply(gamma5); //this is required because D=Q*g5 and g5 is not put by applyDiracOperator
+				prop_out=DD_prop.applyDiracOperator(gauge_field,kappa,-mu,thetat,thetax,thetay,thetaz);
+				prop_out.rightMultiply(gamma5); //this is required because D=Q*g5 and g5 is not put by applyDiracOperator
 
-			Core::Propagator phi(prop_out);
+				phi = prop_out;
+			}
 #endif
 
 			if (weave.isRoot())
 				std::cout << "done.\n" << std::endl;
 
-		
-			
+
+
 			Core::Propagator  phi_f(phi);
 			Smear::Jacobi Jacobi_tool(Jac_alpha);
 			phi_f.smearJacobi(Jac_alpha, Jac_iterations, gauge_field_f);
 
 
-			//Now compute the source 
-
+			//Now compute the source x gamma5 
+			Core::Propagator  xi(L,T);
 
 			if(weave.isRoot()) 
-				std::cout << "Apply Dirac operator to get the source " << " ... ";
+				std::cout << "Apply Dirac operator to get the source and multiply by gamma_5 " << " ... ";
 
-			source = phi.applyDiracOperator(gauge_field,kappa,mu,thetat,thetax,thetay,thetaz,Base::Full); 
+			xi = phi.applyDiracOperator(gauge_field,kappa,mu,thetat,thetax,thetay,thetaz,Base::Full); 
+			xi.rightMultiply(gamma5);
 
 			if (weave.isRoot())
 				std::cout << "done.\n" << std::endl;
@@ -495,12 +496,12 @@ int main(int argc, char **argv)
 			if(weave.isRoot()) 
 				std::cout<<"Compute g5 [B^dagger H]^4 g5 times the source field "<< " ... ";
 
-			Core::Propagator  xi(source);
 
-			xi.rightMultiply(gamma5);
+
 
 			for(size_t i=0;i<4;i++)
 			{	
+				Core::Propagator tmp(L, T);
 				/* apply Hopping part ...*/
 				tmp = xi.applyDiracOperator(gauge_field,kappa,mu,thetat,thetax,thetay,thetaz,Base::H);
 				/* apply Bdagger ... */
@@ -518,8 +519,6 @@ int main(int argc, char **argv)
 
 			//to have the same normalization than carsten . Origin ?
 			xi *= 1./(4.*kappa);
-			//xi.conjugate();
-			//phi.conjugate();
 
 			// for "vv" correlators
 
@@ -531,10 +530,10 @@ int main(int argc, char **argv)
 			if (weave.isRoot())
 				std::cout << "Compute loops for vv and v4 method"<<" ... ";
 
-	// v4 & vv loop local quark fields
+			// v4 & vv loop local quark fields
 			std::vector< std::complex <double>  > C_v4 = Contract::compute_loop_new(xi,phi,my_operators);
 			std::vector< std::complex <double> > C_conserved_v4 = Contract::compute_loop_conserved_vector_current(gauge_field,xi,phi);
-			
+
 			std::vector< std::complex <double>  > C_vv = Contract::compute_loop_new(g5_phi,phi,my_operators);
 			std::vector< std::complex <double> > C_conserved_vv = Contract::compute_loop_conserved_vector_current(gauge_field,g5_phi,phi);
 
@@ -634,7 +633,7 @@ int main(int argc, char **argv)
 
 
 			if (weave.isRoot())
-			std::cout << "done.\n" << std::endl;
+				std::cout << "done.\n" << std::endl;
 #endif
 
 
@@ -649,7 +648,7 @@ int main(int argc, char **argv)
 
 				std::ofstream fout_v4;
 				std::ofstream fout_vv;
-	
+
 				std::ofstream fout_v4_f;
 				std::ofstream fout_vv_f;
 
@@ -676,7 +675,7 @@ int main(int argc, char **argv)
 					fout_vv.open("output_disc_vv.dat");
 					fout_v4_f.open("output_disc_v4_f.dat");
 					fout_vv_f.open("output_disc_vv_f.dat");
-	
+
 #ifdef _with_momentum_projection
 					fout_vv_mom.open("output_disc_vv_mom.dat");
 #endif
@@ -733,9 +732,9 @@ int main(int argc, char **argv)
 							}
 							if (i==0) 
 							{
-							fout_v4 << t << std::scientific <<"  "
+								fout_v4 << t << std::scientific <<"  "
 									<< i <<"  "<< j + 12*n <<"  "<<C_v4[t +  T*i + 16*T*j].real() <<"  "<< C_v4[t + T*i + 16*T*j].imag() +  addimag << std::endl;
-							fout_v4_f << t << std::scientific <<"  "
+								fout_v4_f << t << std::scientific <<"  "
 									<< i <<"  "<< j + 12*n <<"  "<<C_v4_f[t +  T*i + 16*T*j].real() <<"  "<< C_v4_f[t + T*i + 16*T*j].imag() +  addimag << std::endl;
 							}
 							if (i==8) 

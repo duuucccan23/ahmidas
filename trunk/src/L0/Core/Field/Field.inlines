@@ -17,6 +17,12 @@ namespace Core
   {
     return d_weave.T();
   }
+  
+  template< typename Element >
+  inline std::complex<double> Field< Element >::weave(Base::weaveOperator wea_SUM, std::complex<double> result) const
+  {
+    return d_weave.sum(result);
+  }
 
   template< typename Element >
   inline double Field< Element >::weave(Base::weaveOperator wea_SUM, double result) const

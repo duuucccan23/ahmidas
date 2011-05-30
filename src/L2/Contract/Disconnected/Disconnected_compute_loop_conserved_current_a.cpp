@@ -53,7 +53,6 @@ namespace Contract
 		Base::Weave weave(xi.L(), xi.T());
 		std::vector<  std::complex<double>  > twopoints;
 
-		if (weave.isRoot()) std::cout <<"merde" <<std::endl;
 
 		Core::Propagator Gamma_psi(L,T);
 
@@ -96,7 +95,6 @@ namespace Contract
 		//V_0  
 
 
-		if (weave.isRoot()) std::cout <<"merde2" <<std::endl;
 		// part1 tr (g0 -1) U_0(x) psi(x+0) xi^star(x)
 		{	Core::Propagator tmp(psi);
 			tmp.isolate();

@@ -17,7 +17,7 @@ namespace Core
     else tmp *= std::complex< double >(0,+1);
     (*this) += tmp;
 
-    (*this) *= 1/sqrt(2);
+    (*this) *= 1/sqrt(2.0);
   }
 
   template< >

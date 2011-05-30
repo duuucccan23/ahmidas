@@ -226,24 +226,20 @@ int main(int argc, char **argv)
 
 			}
 
-				Core::Propagator phi_light(L,T);
-				Core::Propagator phi_light_opp(L,T);
+				Core::Propagator g5_phi_light(L,T);
+				Core::Propagator g5_phi_light_opp(L,T);
 
 			{
 				Core::Propagator light_DD_prop(L, T);
-				Core::Propagator prop_light_out(L, T);
-				Core::Propagator prop_light_out_opp(L, T);
 
 				Tool::IO::load(&light_DD_prop,filename_light, Tool::IO::fileSCIDAC,32);
 
-				prop_light_out=light_DD_prop.applyDiracOperator(gauge_field,kappa,-mu_l,thetat,thetax,thetay,thetaz);
-				prop_light_out.rightMultiply(gamma5); //this is required because D=Q*g5 and g5 is not put by applyDiracOperator
-			    phi_light = prop_light_out;
+				g5_phi_light=light_DD_prop.applyDiracOperator(gauge_field,kappa,-mu_l,thetat,thetax,thetay,thetaz);
+//				prop_light_out.rightMultiply(gamma5); //this is required because D=Q*g5 and g5 is not put by applyDiracOperator
 
-				prop_light_out_opp=light_DD_prop.applyDiracOperator(gauge_field,kappa,mu_l,thetat,thetax,thetay,thetaz);
-				prop_light_out_opp.rightMultiply(gamma5); //this is required because D=Q*g5 and g5 is not put by applyDiracOperator
+		    	g5_phi_light_opp=light_DD_prop.applyDiracOperator(gauge_field,kappa,mu_l,thetat,thetax,thetay,thetaz);
+//				prop_light_out_opp.rightMultiply(gamma5); //this is required because D=Q*g5 and g5 is not put by applyDiracOperator
 
-				phi_light_opp=prop_light_out_opp;
 			}
 
 			if (weave.isRoot())
@@ -292,25 +288,9 @@ int main(int argc, char **argv)
 
 			// for "vv" correlators
 
-			Core::Propagator  g5_phi(phi);
-			Core::Propagator  g5_phi_opp(phi_opp);
-
-			g5_phi.rightMultiply(gamma5);
-			g5_phi_opp.rightMultiply(gamma5);
-
 			if (weave.isRoot())
 				std::cout << "Compute loops of the form 1/M_u + 1/M_d  - 2/M_s "<<" ... ";
 
-
-
-
-			//			Core::Propagator phi_light_conj(phi_light);
-
-			Core::Propagator  g5_phi_light(phi_light);
-			g5_phi_light.rightMultiply(gamma5);
-
-			Core::Propagator  g5_phi_light_opp(phi_light_opp);
-			g5_phi_light_opp.rightMultiply(gamma5);
 
 			// compute for the bilinear operator first
 			//1/M_u  - 1/M_s
@@ -328,10 +308,11 @@ int main(int argc, char **argv)
 
 
 #ifdef	_with_Omunu_
+
 			std::vector< std::complex<double> > C_twist2_hl1 = Contract::compute_loop_twist2_operator(gauge_field,g5_phi_light_opp,phi);
-			std::vector< std::complex<double> > C_twist2_pol_hl1 = Contract::compute_loop_twist2_operator(gauge_field,g5_phi_light_opp,g5_phi);
 			std::vector< std::complex<double> > C_twist2_hl2 =  Contract::compute_loop_twist2_operator(gauge_field,g5_phi_light,phi_opp);
-			std::vector< std::complex<double> > C_twist2_pol_hl2 = Contract::compute_loop_twist2_operator(gauge_field,g5_phi_light,g5_phi_opp);
+			std::vector< std::complex<double> > C_twist2_pol_hl1 = Contract::compute_loop_twist2_operator(gauge_field,g5_phi_light_opp,phi,true);
+			std::vector< std::complex<double> > C_twist2_pol_hl2 = Contract::compute_loop_twist2_operator(gauge_field,g5_phi_light,phi_opp,true);
 
 #endif
 #ifdef _with_momentum_projection_                                                                                                                        

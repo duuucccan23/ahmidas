@@ -12,6 +12,7 @@ class complex12
 	
     inline complex12() { std::fill_n(data,12,0.0); }
     inline complex12(std::complex<double> c) { std::fill_n(data,12,c); }
+// inline ~complex12() { delete data ;}
 	inline std::complex<double> &operator[](size_t index){ return data[index]; } 
 	inline complex12 &operator+=(complex12 const &other){ std::transform (this->data, this->data + 12, other.data, this->data, std::plus< std::complex< double > >()); return *this; }
 };
@@ -26,6 +27,7 @@ class complex192
 
 		inline complex192() { std::fill_n(data,192,0.0); }
 		inline complex192(std::complex<double> c) { std::fill_n(data,192,c); }
+//		inline ~complex192() { delete data ;}
 		inline std::complex<double> &operator[](size_t index){ return data[index]; } 
 		inline complex192 &operator+=(complex192 const &other){ std::transform (this->data, this->data + 192, other.data, this->data, std::plus< std::complex< double > >()); return *this; }
 		inline complex192 &operator=(complex192 const &other) {
@@ -197,6 +199,7 @@ namespace Contract
 
 
 		//declare iterator of 192 complex. To 
+		
 		Core::Field< complex192 > res(xi.L(),xi.T());
 		Core::Field< complex192 >::iterator K(res.begin());
 
@@ -264,6 +267,7 @@ namespace Contract
 
 
 		Core::Correlator< complex192 > twopoint(res);
+		
 		//sum over space
 		twopoint.sumOverSpatialVolume(); 
 		twopoint.deleteField();

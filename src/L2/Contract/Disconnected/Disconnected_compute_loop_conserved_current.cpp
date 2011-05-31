@@ -15,6 +15,7 @@ class complex96
 
 		inline complex96() { std::fill_n(data,96,0.0); }
 		inline complex96(std::complex<double> c) { std::fill_n(data,96,c); }
+		//inline ~complex96() { delete data ;} 
 		inline std::complex<double> &operator[](size_t index){ return data[index]; }
 		inline complex96 &operator+=(complex96 const &other){ std::transform (this->data, this->data + 96, other.data, this->data, std::plus< std::complex< double > >()); return *this; }
 
@@ -55,7 +56,7 @@ namespace Contract
 		Base::Weave weave(xi.L(), xi.T());
 		std::vector<  std::complex<double>  > twopoints;
 
-		Core::Propagator Gamma_psi(L,T);
+//		Core::Propagator Gamma_psi(L,T);
 
 		Core::Propagator xi_shifted_T_UP(xi);
 		Core::Propagator xi_shifted_T_DOWN(xi);
@@ -105,7 +106,7 @@ namespace Contract
 			tmp.rightMultiply(gamma4);
 			tmp -= tmp2;
 			Gamma_psi0 = tmp;
-			Gamma_psi0.isolate();
+//			Gamma_psi0.isolate();
 		}
 
 
@@ -118,7 +119,7 @@ namespace Contract
 			tmp.rightMultiply(gamma4);
 			tmp +=tmp2;
 			Gamma_psi1 = tmp;
-			Gamma_psi1.isolate();
+//			Gamma_psi1.isolate();
 		}
 
 
@@ -133,7 +134,7 @@ namespace Contract
 			tmp.rightMultiply(gamma1);
 			tmp -= tmp2;
 			Gamma_psi2 = tmp;
-			Gamma_psi2.isolate();
+//			Gamma_psi2.isolate();
 		}
 
 
@@ -146,7 +147,7 @@ namespace Contract
 			tmp.rightMultiply(gamma1);
 			tmp +=tmp2;
 			Gamma_psi3 = tmp;
-			Gamma_psi3.isolate();
+//			Gamma_psi3.isolate();
 		}
 
 		//V2
@@ -160,7 +161,7 @@ namespace Contract
 			tmp.rightMultiply(gamma2);
 			tmp -= tmp2;
 			Gamma_psi4 = tmp;
-			Gamma_psi4.isolate();
+//			Gamma_psi4.isolate();
 		}
 
 
@@ -173,7 +174,7 @@ namespace Contract
 			tmp.rightMultiply(gamma2);
 			tmp +=tmp2;
 			Gamma_psi5 = tmp;
-			Gamma_psi5.isolate();
+//			Gamma_psi5.isolate();
 		}
 
 		//V3
@@ -187,7 +188,7 @@ namespace Contract
 			tmp.rightMultiply(gamma3);
 			tmp -= tmp2;
 			Gamma_psi6 = tmp;
-			Gamma_psi6.isolate();
+//			Gamma_psi6.isolate();
 		}
 
 
@@ -200,18 +201,18 @@ namespace Contract
 			tmp.rightMultiply(gamma3);
 			tmp +=tmp2;
 			Gamma_psi7 = tmp;
-			Gamma_psi7.isolate();
+//			Gamma_psi7.isolate();
 		}
 
 
 		Core::Propagator::const_iterator I(xi.begin());
-		Core::Propagator::const_iterator I0(xi_shifted_T_UP.begin());
+//		Core::Propagator::const_iterator I0(xi_shifted_T_UP.begin());
 		Core::Propagator::const_iterator I1(xi_shifted_T_DOWN.begin());
-		Core::Propagator::const_iterator I2(xi_shifted_X_UP.begin());
+//		Core::Propagator::const_iterator I2(xi_shifted_X_UP.begin());
 		Core::Propagator::const_iterator I3(xi_shifted_X_DOWN.begin());
-		Core::Propagator::const_iterator I4(xi_shifted_Y_UP.begin());
+//		Core::Propagator::const_iterator I4(xi_shifted_Y_UP.begin());
 		Core::Propagator::const_iterator I5(xi_shifted_Y_DOWN.begin());
-		Core::Propagator::const_iterator I6(xi_shifted_Z_UP.begin());
+//		Core::Propagator::const_iterator I6(xi_shifted_Z_UP.begin());
 		Core::Propagator::const_iterator I7(xi_shifted_Z_DOWN.begin());
 
 		Core::Propagator::const_iterator J0(Gamma_psi0.begin());

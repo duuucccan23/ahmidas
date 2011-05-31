@@ -292,6 +292,16 @@ int main(int argc, char **argv)
 				std::cout << "Compute loops of the form 1/M_u + 1/M_d  - 2/M_s "<<" ... ";
 
 
+#ifdef	_with_Omunu_
+
+			std::vector< std::complex<double> > C_twist2_hl1 = Contract::compute_loop_twist2_operator(gauge_field,g5_phi_light_opp,phi);
+			std::vector< std::complex<double> > C_twist2_hl2 =  Contract::compute_loop_twist2_operator(gauge_field,g5_phi_light,phi_opp);
+			std::vector< std::complex<double> > C_twist2_pol_hl1 = Contract::compute_loop_twist2_operator(gauge_field,g5_phi_light_opp,phi,true);
+			std::vector< std::complex<double> > C_twist2_pol_hl2 = Contract::compute_loop_twist2_operator(gauge_field,g5_phi_light,phi_opp,true);
+
+#endif
+
+
 			// compute for the bilinear operator first
 			//1/M_u  - 1/M_s
 			std::vector< std::complex <double>  > C_hl1 = Contract::compute_loop_new(g5_phi_light_opp,phi,my_operators);
@@ -305,16 +315,6 @@ int main(int argc, char **argv)
 				std::cout << "done.\n" << std::endl;
 
 
-
-
-#ifdef	_with_Omunu_
-
-			std::vector< std::complex<double> > C_twist2_hl1 = Contract::compute_loop_twist2_operator(gauge_field,g5_phi_light_opp,phi);
-			std::vector< std::complex<double> > C_twist2_hl2 =  Contract::compute_loop_twist2_operator(gauge_field,g5_phi_light,phi_opp);
-			std::vector< std::complex<double> > C_twist2_pol_hl1 = Contract::compute_loop_twist2_operator(gauge_field,g5_phi_light_opp,phi,true);
-			std::vector< std::complex<double> > C_twist2_pol_hl2 = Contract::compute_loop_twist2_operator(gauge_field,g5_phi_light,phi_opp,true);
-
-#endif
 #ifdef _with_momentum_projection_                                                                                                                        
 
 			if (weave.isRoot())

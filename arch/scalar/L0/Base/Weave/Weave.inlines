@@ -45,80 +45,86 @@ namespace Base
     return result;
   }
 
-  template< typename Element >
-  inline void Weave::fieldShift(Base::SpaceTimeIndex const, Base::Direction const, Element *, size_t const *) const
-  {}
-
-  inline size_t Weave::globalCoordToLocalIndex(size_t x, size_t y, size_t z) const
-  {
-    if (!isLocallyAvailable(x, y, z))
-      return d_localVolume; // this is our error condition
-    return (fromGlobal(x, Base::idx_X) * localSurface(Base::idx_X) + fromGlobal(y, Base::idx_Y) * localSurface(Base::idx_Y)
-            + fromGlobal(z, Base::idx_Z) * localSurface(Base::idx_Z));
-  }
-
-  inline size_t Weave::globalCoordToLocalIndex(size_t x, size_t y, size_t z, size_t t) const
-  {
-    if (!isLocallyAvailable(x, y, z, t))
-      return d_localVolume; // error condition
-    return (fromGlobal(x, Base::idx_X) * localSurface(Base::idx_X) + fromGlobal(y, Base::idx_Y) * localSurface(Base::idx_Y)
-            + fromGlobal(z, Base::idx_Z) * localSurface(Base::idx_Z) + fromGlobal(t, Base::idx_T) * localSurface(Base::idx_T));
-  }
+   inline std::complex< double > Weave::sum(std::complex< double > result) const
+   {
+	   return result;
+   }
 
 
-  // we need to change this!!! The naming is misleading, it is supposed to do what its name indicates!
-  inline void Weave::sumOverTimeSlices(std::complex< double > const *data_send,
-                                       std::complex< double > *data_recv, size_t const count) const
-  {
-    std::copy(data_send, data_send + count*d_T, data_recv);
-  }
+   template< typename Element >
+	   inline void Weave::fieldShift(Base::SpaceTimeIndex const, Base::Direction const, Element *, size_t const *) const
+	   {}
+
+   inline size_t Weave::globalCoordToLocalIndex(size_t x, size_t y, size_t z) const
+   {
+	   if (!isLocallyAvailable(x, y, z))
+		   return d_localVolume; // this is our error condition
+	   return (fromGlobal(x, Base::idx_X) * localSurface(Base::idx_X) + fromGlobal(y, Base::idx_Y) * localSurface(Base::idx_Y)
+			   + fromGlobal(z, Base::idx_Z) * localSurface(Base::idx_Z));
+   }
+
+   inline size_t Weave::globalCoordToLocalIndex(size_t x, size_t y, size_t z, size_t t) const
+   {
+	   if (!isLocallyAvailable(x, y, z, t))
+		   return d_localVolume; // error condition
+	   return (fromGlobal(x, Base::idx_X) * localSurface(Base::idx_X) + fromGlobal(y, Base::idx_Y) * localSurface(Base::idx_Y)
+			   + fromGlobal(z, Base::idx_Z) * localSurface(Base::idx_Z) + fromGlobal(t, Base::idx_T) * localSurface(Base::idx_T));
+   }
 
 
-  inline void Weave::barrier() const
-  {}
+   // we need to change this!!! The naming is misleading, it is supposed to do what its name indicates!
+   inline void Weave::sumOverTimeSlices(std::complex< double > const *data_send,
+		   std::complex< double > *data_recv, size_t const count) const
+   {
+	   std::copy(data_send, data_send + count*d_T, data_recv);
+   }
 
-  template< typename Element >
-  inline void Weave::broadcast(Element *, size_t const, int) const
-  {}
 
-  template< typename Element >
-  inline void Weave::allReduce(Element const *data_send, Element *data_recv, size_t const count) const
-  {
-    std::copy(data_send, data_send + count, data_recv);
-  }
+   inline void Weave::barrier() const
+   {}
 
-  inline bool Weave::isLocallyAvailable(size_t const, size_t const, size_t const) const
-  {
-    return true;
-  }
+   template< typename Element >
+	   inline void Weave::broadcast(Element *, size_t const, int) const
+	   {}
 
-  inline bool Weave::isLocallyAvailable(size_t const, size_t const, size_t const, size_t const) const
-  {
-    return true;
-  }
+   template< typename Element >
+	   inline void Weave::allReduce(Element const *data_send, Element *data_recv, size_t const count) const
+	   {
+		   std::copy(data_send, data_send + count, data_recv);
+	   }
 
-  inline bool Weave::isRoot() const
-  {
-    return true;
-  }
+   inline bool Weave::isLocallyAvailable(size_t const, size_t const, size_t const) const
+   {
+	   return true;
+   }
 
-  inline size_t Weave::fromGlobal(size_t const idx, Base::SpaceTimeIndex const mu) const
-  {
-    return idx;
-  }
+   inline bool Weave::isLocallyAvailable(size_t const, size_t const, size_t const, size_t const) const
+   {
+	   return true;
+   }
 
-  inline size_t Weave::rank() const
-  {
-    return 0;
-  }
+   inline bool Weave::isRoot() const
+   {
+	   return true;
+   }
 
-  inline size_t Weave::rank(size_t index) const
-  {
-    return 0;
-  }
+   inline size_t Weave::fromGlobal(size_t const idx, Base::SpaceTimeIndex const mu) const
+   {
+	   return idx;
+   }
 
-  inline size_t Weave::rank(size_t const *coords) const
-  {
-    return 0;
-  }
+   inline size_t Weave::rank() const
+   {
+	   return 0;
+   }
+
+   inline size_t Weave::rank(size_t index) const
+   {
+	   return 0;
+   }
+
+   inline size_t Weave::rank(size_t const *coords) const
+   {
+	   return 0;
+   }
 }

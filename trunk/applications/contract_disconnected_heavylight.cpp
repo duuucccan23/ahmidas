@@ -294,8 +294,8 @@ int main(int argc, char **argv)
 
 #ifdef	_with_Omunu_
 
-			std::vector< std::complex<double> > C_twist2_hl1 = Contract::compute_loop_twist2_operator(gauge_field,g5_phi_light_opp,phi);
-			std::vector< std::complex<double> > C_twist2_hl2 =  Contract::compute_loop_twist2_operator(gauge_field,g5_phi_light,phi_opp);
+			std::vector< std::complex<double> > C_twist2_hl1 = Contract::compute_loop_twist2_operator(gauge_field,g5_phi_light_opp,phi,false);
+			std::vector< std::complex<double> > C_twist2_hl2 =  Contract::compute_loop_twist2_operator(gauge_field,g5_phi_light,phi_opp,false);
 			std::vector< std::complex<double> > C_twist2_pol_hl1 = Contract::compute_loop_twist2_operator(gauge_field,g5_phi_light_opp,phi,true);
 			std::vector< std::complex<double> > C_twist2_pol_hl2 = Contract::compute_loop_twist2_operator(gauge_field,g5_phi_light,phi_opp,true);
 
@@ -309,7 +309,7 @@ int main(int argc, char **argv)
 			std::vector< std::complex <double>  > C_hl2 = Contract::compute_loop_new(g5_phi_light,phi_opp,my_operators);
 
 			std::vector< std::complex <double> > C_conserved_hl1 = Contract::compute_loop_conserved_vector_current(gauge_field,g5_phi_light_opp,phi);
-			std::vector< std::complex <double> > C_conserved_hl2 = Contract::compute_loop_conserved_vector_current(gauge_field,g5_phi_light,phi);
+			std::vector< std::complex <double> > C_conserved_hl2 = Contract::compute_loop_conserved_vector_current(gauge_field,g5_phi_light,phi_opp);
 			//loop involving twist 2 operators
 			if (weave.isRoot())
 				std::cout << "done.\n" << std::endl;
@@ -373,7 +373,8 @@ int main(int argc, char **argv)
 
 
 			std::vector< std::complex <double> > C_conserved_hl1_mom = Contract::compute_loop_conserved_vector_current(gauge_field,g5_phi_light_opp,phi,sourcePos,momenta,timeslice_source);
-			std::vector< std::complex <double> > C_conserved_hl2_mom = Contract::compute_loop_conserved_vector_current(gauge_field,g5_phi_light,phi,sourcePos,momenta,timeslice_source);
+
+			std::vector< std::complex <double> > C_conserved_hl2_mom = Contract::compute_loop_conserved_vector_current(gauge_field,g5_phi_light,phi_opp,sourcePos,momenta,timeslice_source);
 
 
 

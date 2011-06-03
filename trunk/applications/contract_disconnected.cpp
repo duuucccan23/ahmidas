@@ -459,14 +459,14 @@ int main(int argc, char **argv)
 			Core::Propagator phi(L ,T );
 
 			{
-				Core::Propagator prop_out(L, T);
+			//	Core::Propagator prop_out(L, T);
 				Core::Propagator DD_prop(L, T);
 				Tool::IO::load(&DD_prop,filename, Tool::IO::fileSCIDAC,32);
 
-				prop_out=DD_prop.applyDiracOperator(gauge_field,kappa,-mu,thetat,thetax,thetay,thetaz);
-				prop_out.rightMultiply(gamma5); //this is required because D=Q*g5 and g5 is not put by applyDiracOperator
+				phi=DD_prop.applyDiracOperator(gauge_field,kappa,-mu,thetat,thetax,thetay,thetaz);
+				phi.rightMultiply(gamma5); //this is required because D=Q*g5 and g5 is not put by applyDiracOperator
 
-				phi = prop_out;
+//				phi = prop_out;
 			}
 #endif
 
@@ -474,76 +474,90 @@ int main(int argc, char **argv)
 				std::cout << "done.\n" << std::endl;
 
 
+				// for "vv" correlators
 
-			Core::Propagator  phi_f(phi);
-			Smear::Jacobi Jacobi_tool(Jac_alpha);
-			phi_f.smearJacobi(Jac_alpha, Jac_iterations, gauge_field_f);
+				Core::Propagator  g5_phi(phi);
+				g5_phi.rightMultiply(gamma5);
+
 
 
 			//Now compute the source x gamma5 
-			Core::Propagator  xi(L,T);
+			std::vector< std::complex <double>  > C_v4;
+			std::vector< std::complex <double> > C_conserved_v4;
 
-			if(weave.isRoot()) 
-				std::cout << "Apply Dirac operator to get the source and multiply by gamma_5 " << " ... ";
-
-			xi = phi.applyDiracOperator(gauge_field,kappa,mu,thetat,thetax,thetay,thetaz,Base::Full); 
-			xi.rightMultiply(gamma5);
-
-			if (weave.isRoot())
-				std::cout << "done.\n" << std::endl;
-
-			// Now compute g5 [B^dagger H]^4 g5
-			if(weave.isRoot()) 
-				std::cout<<"Compute g5 [B^dagger H]^4 g5 times the source field "<< " ... ";
+			std::vector< std::complex <double> > C_v4_f;
+			std::vector< std::complex <double> > C_vv_f;
 
 
+#ifdef _with_Omunu_
+			std::vector< std::complex<double> > C_twist2;
+			std::vector< std::complex<double> > C_twist2_pol;
+#endif
+
+			{
+				Core::Propagator  phi_f(phi);
+				Smear::Jacobi Jacobi_tool(Jac_alpha);
+				phi_f.smearJacobi(Jac_alpha, Jac_iterations, gauge_field_f);
 
 
-			for(size_t i=0;i<4;i++)
-			{	
-				Core::Propagator tmp(L, T);
-				/* apply Hopping part ...*/
-				tmp = xi.applyDiracOperator(gauge_field,kappa,mu,thetat,thetax,thetay,thetaz,Base::H);
-				/* apply Bdagger ... */
-				xi = tmp.applyDiracOperator(gauge_field,kappa,mu,thetat,thetax,thetay,thetaz,Base::Bdagger);
+
+				{
+					if(weave.isRoot()) 
+						std::cout << "Apply Dirac operator to get the source and multiply by gamma_5 " << " ... ";
+
+
+					Core::Propagator  xi(L,T);
+					xi = phi.applyDiracOperator(gauge_field,kappa,mu,thetat,thetax,thetay,thetaz,Base::Full); 
+					xi.rightMultiply(gamma5);
+
+					if (weave.isRoot())
+						std::cout << "done.\n" << std::endl;
+
+					// Now compute g5 [B^dagger H]^4 g5
+					if(weave.isRoot()) 
+						std::cout<<"Compute g5 [B^dagger H]^4 g5 times the source field "<< " ... ";
+
+
+					for(size_t i=0;i<4;i++)
+					{	
+						/* apply Hopping part ...*/
+						xi = xi.applyDiracOperator(gauge_field,kappa,mu,thetat,thetax,thetay,thetaz,Base::H);
+						/* apply Bdagger ... */
+						xi = xi.applyDiracOperator(gauge_field,kappa,mu,thetat,thetax,thetay,thetaz,Base::Bdagger);				
+					}
+					xi.rightMultiply(gamma5);
+
+
+					if (weave.isRoot())
+						std::cout << "done.\n" << std::endl;
+
+					//to have the same normalization than carsten . Origin ?
+					xi *= 1./(4.*kappa);
+
+					// v4  local quark fields
+					C_v4 = Contract::compute_loop_new(xi,phi,my_operators);
+					C_conserved_v4 = Contract::compute_loop_conserved_vector_current(gauge_field,xi,phi);
+
+					//v4  smeared
+					C_v4_f = Contract::compute_loop_new(xi,phi_f,my_operators);
+
+#ifdef _with_Omunu_
+					C_twist2 = Contract::compute_loop_twist2_operator(gauge_field,xi,phi);
+					C_twist2_pol = Contract::compute_loop_twist2_operator(gauge_field,xi,g5_phi);
+#endif
+
+
+				}
+
+				// vv loop smeared quark fields
+				C_vv_f = Contract::compute_loop_new(g5_phi,phi_f,my_operators);
 			}
-
-			xi.rightMultiply(gamma5);
-
-
-			if (weave.isRoot())
-				std::cout << "done.\n" << std::endl;
-
-
-			//g5 [B^dagger H]^4 g5 computed
-
-			//to have the same normalization than carsten . Origin ?
-			xi *= 1./(4.*kappa);
-
-			// for "vv" correlators
-
-			Core::Propagator  g5_phi(phi);
-			g5_phi.rightMultiply(gamma5);
-
 
 
 			if (weave.isRoot())
 				std::cout << "Compute loops for vv and v4 method"<<" ... ";
-
-			// v4 & vv loop local quark fields
-			std::vector< std::complex <double>  > C_v4 = Contract::compute_loop_new(xi,phi,my_operators);
-			std::vector< std::complex <double> > C_conserved_v4 = Contract::compute_loop_conserved_vector_current(gauge_field,xi,phi);
-
 			std::vector< std::complex <double>  > C_vv = Contract::compute_loop_new(g5_phi,phi,my_operators);
 			std::vector< std::complex <double> > C_conserved_vv = Contract::compute_loop_conserved_vector_current(gauge_field,g5_phi,phi);
-
-
-
-
-			// v4 & vv loop smeared quark fields
-			std::vector< std::complex <double> > C_v4_f = Contract::compute_loop_new(xi,phi_f,my_operators);
-			std::vector< std::complex <double> > C_vv_f = Contract::compute_loop_new(g5_phi,phi_f,my_operators);
-
 
 
 
@@ -558,22 +572,30 @@ int main(int argc, char **argv)
 				C_conserved_vv[i] *=  std::complex<double>(0,2.0*mu/(8.*kappa));	 // factor + 4 * i kappa mu /( 4 kappa) ^2
 			}
 
-
-#ifdef _with_Omunu_
-			std::vector< std::complex<double> > C_twist2 = Contract::compute_loop_twist2_operator(gauge_field,xi,phi);
-			std::vector< std::complex<double> > C_twist2_pol = Contract::compute_loop_twist2_operator(gauge_field,xi,g5_phi);
-
-			std::vector< std::complex<double> > C_twist2_vv = Contract::compute_loop_twist2_operator(gauge_field,g5_phi,phi);
-			std::vector< std::complex<double> > C_twist2_pol_vv = Contract::compute_loop_twist2_operator(gauge_field,g5_phi,g5_phi);
-
-#endif
-
 			if (weave.isRoot())
 				std::cout << "done.\n" << std::endl;
 
 
 
+#ifdef _with_Omunu_
+			if (weave.isRoot())
+				std::cout << "Twist 2 operators  "<<" ... ";
+
+
+			std::vector< std::complex<double> > C_twist2_vv = Contract::compute_loop_twist2_operator(gauge_field,g5_phi,phi,false);
+			std::vector< std::complex<double> > C_twist2_pol_vv = Contract::compute_loop_twist2_operator(gauge_field,g5_phi,phi,true);
+
+			if (weave.isRoot())
+				std::cout << "done.\n" << std::endl;
+
+
+#endif
+
+
+
 #ifdef _with_momentum_projection
+
+			std::vector< std::complex <double>  > C_vv_mom;
 			if (weave.isRoot())
 				std::cout << "Non zero momentum "<<" ... ";
 
@@ -618,22 +640,25 @@ int main(int argc, char **argv)
 
 
 
-				for(size_t I=0; I<momenta.size(); I++)
-					std::copy(&(momenta_raw[3*I]), &(momenta_raw[3*I]) + 3, momenta[I]);
+				{
+
+					for(size_t I=0; I<momenta.size(); I++)
+						std::copy(&(momenta_raw[3*I]), &(momenta_raw[3*I]) + 3, momenta[I]);
+				}
+
+				C_vv_mom=Contract::compute_loop_new(g5_phi,phi,my_operators,sourcePos,momenta,timeslice_source);
+
+
+				for(size_t i=0; i < C_vv_mom.size(); i++)
+				{
+					C_vv_mom[i] *=  std::complex<double>(0,2.0*mu/(8.*kappa)); 
+				}
+
+
+
+				if (weave.isRoot())
+					std::cout << "done.\n" << std::endl;
 			}
-
-			std::vector< std::complex <double>  > C_vv_mom=Contract::compute_loop_new(g5_phi,phi,my_operators,sourcePos,momenta,timeslice_source);
-
-
-			for(size_t i=0; i < C_vv_mom.size(); i++)
-			{
-				C_vv_mom[i] *=  std::complex<double>(0,2.0*mu/(8.*kappa)); 
-			}
-
-
-
-			if (weave.isRoot())
-				std::cout << "done.\n" << std::endl;
 #endif
 
 

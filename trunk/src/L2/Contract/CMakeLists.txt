@@ -3,10 +3,11 @@ SET(Sources_Meson Meson.h
                   Meson/Meson_light_meson_twopoint_stochastic_a.cpp
                   Meson/Meson_light_meson_twopoint_stochastic_b.cpp
                   Meson/Meson_light_meson_twopoint_ultrastochastic.cpp
-		  Meson/Meson_BK_threepoint_disconnected_stochastic.cpp
-		  Meson/Meson_BK_threepoint_connected_stochastic.cpp)
+            		  Meson/Meson_BK_threepoint_disconnected_stochastic.cpp
+		              Meson/Meson_BK_threepoint_connected_stochastic.cpp)
 SET(Sources_Baryon Baryon.h
                    Baryon/Baryon_proton_twopoint.cpp
+                   Baryon/Baryon_proton_twopoint_alternative.cpp
                    Baryon/Baryon_create_sequential_source_proton_d_a.cpp
                    Baryon/Baryon_create_sequential_source_proton_d_b.cpp
                    Baryon/Baryon_create_sequential_source_proton_d_c.cpp

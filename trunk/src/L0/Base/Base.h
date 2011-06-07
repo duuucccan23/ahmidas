@@ -86,7 +86,8 @@ namespace Base
   // Definitions to be used for baryon contractions
   enum BaryonInterpolatingField
   {
-	  bar_PROTON
+	  bar_PROTON,
+	  bar_PROTON_VAR
   };
 
   enum BaryonPropagatorProjector

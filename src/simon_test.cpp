@@ -1,113 +1,562 @@
-#include <L0/Print.h>
-#include <L0/Ahmidas.h>
-
-#include <complex>
 #include <cstring>
-#include <map>
 #include <vector>
+#include <map>
+#include <complex>
 #include <iomanip>
 #include <iostream>
+#include <fstream>
+#include <sstream>
+
 #include <L0/Ahmidas.h>
-#include <L0/Base/Weave.h>
-#include <L0/Core/Field.h>
+#include <L0/QCD/Gauge.h>
 #include <L0/Core/Propagator.h>
+#include <L2/Contract/Baryon.h>
 #include <L1/Tool/IO.h>
+#include <L1/Smear.h>
+#include <L1/Smear/APE.h>
+#include <L1/Smear/Jacobi.h>
 #include <L2/Input/FileReader.h>
 
 
-int main(int narg,char **arg)
+// comment this in if propagators have uniform temporal boundary contitions
+// (e.g. the HMC inverter does this)
+// for forward and backward propagators separately
+#define __COMPENSATE_UNIFORM_BOUNDARY_CONDITIONS_FW__
+#define __COMPENSATE_UNIFORM_BOUNDARY_CONDITIONS_BW__
+
+// comment this if you don't want the threepoint function to be calculated
+// #define __CALCULATE_THREEPOINT__
+
+// comment this if you don't want the twopoint function to be calculated
+#define __CALCULATE_TWOPOINT__
+
+
+#define __MOMENTUM_PROJECTION__
+
+// use operator involving gamma_1
+// #define __GAMMA_1__
+// use operator involving gamma_2
+// #define __GAMMA_2__
+// use operator involving gamma_3
+// #define __GAMMA_3__
+// use operator involving gamma_4
+#define __GAMMA_4__
+
+int main(int argc, char **argv)
 {
-  Ahmidas my_ahmidas(&narg, &arg);
-  size_t L,T;
-  std::string suff[2]={".0",".1"}; //suffix for output files (up,down)
+  Ahmidas my_ahmidas(&argc, &argv);
+  size_t L_tmp = 0;
+  size_t T_tmp = 0;
 
-  if(narg<2)
+
+#ifdef __MOMENTUM_PROJECTION__
+
+  std::vector< int* > momenta;
+  for(size_t I=0; I<257; I++)
+    momenta.push_back( new int[3]);
   {
-    std::cerr<<"Use: "<<arg[0]<<" parameters_file"<<std::endl;
-    exit(1);
+    int momenta_raw[771] = {
+    +0, +0, +0,
+     1, +0, +0,
+    -1, +0, +0,
+    +0,  1, +0,
+    +0, -1, +0,
+    +0, +0,  1,
+    +0, +0, -1,
+     1, +0,  1,
+    -1, +0, -1,
+     1, +0, -1,
+    -1, +0,  1,
+     1,  1, +0,
+    -1, -1, +0,
+     1, -1, +0,
+    -1,  1, +0,
+    +0,  1,  1,
+    +0, -1, -1,
+    +0,  1, -1,
+    +0, -1,  1,
+     1,  1,  1,
+    -1, -1, -1,
+     1,  1, -1,
+    -1, -1,  1,
+     1, -1,  1,
+    -1,  1, -1,
+     1, -1, -1,
+    -1,  1,  1,
+     2, +0, +0,
+    -2, +0, +0,
+    +0,  2, +0,
+    +0, -2, +0,
+    +0, +0,  2,
+    +0, +0, -2,
+     2,  1, +0,
+    -2, -1, +0,
+     2, -1, +0,
+    -2,  1, +0,
+     2, +0,  1,
+    -2, +0, -1,
+     2, +0, -1,
+    -2, +0,  1,
+     1,  2, +0,
+    -1, -2, +0,
+     1, -2, +0,
+    -1,  2, +0,
+     1, +0,  2,
+    -1, +0, -2,
+     1, +0, -2,
+    -1, +0,  2,
+    +0,  2,  1,
+    +0, -2, -1,
+    +0,  2, -1,
+    +0, -2,  1,
+    +0,  1,  2,
+    +0, -1, -2,
+    +0,  1, -2,
+    +0, -1,  2,
+     2,  1,  1,
+    -2, -1, -1,
+     2,  1, -1,
+    -2, -1,  1,
+     2, -1,  1,
+    -2,  1, -1,
+     2, -1, -1,
+    -2,  1,  1,
+     1,  2,  1,
+    -1, -2, -1,
+     1,  2, -1,
+    -1, -2,  1,
+    -1,  2,  1,
+     1, -2, -1,
+    -1,  2, -1,
+     1, -2,  1,
+     1,  1,  2,
+    -1, -1, -2,
+     1, -1,  2,
+    -1,  1, -2,
+    -1,  1,  2,
+     1, -1, -2,
+    -1, -1,  2,
+     1,  1, -2,
+     2, +0,  2,
+    -2, +0, -2,
+     2, +0, -2,
+    -2, +0,  2,
+     2,  2, +0,
+    -2, -2, +0,
+     2, -2, +0,
+    -2,  2, +0,
+    +0,  2,  2,
+    +0, -2, -2,
+    +0,  2, -2,
+    +0, -2,  2,
+     3, +0, +0,
+    -3, +0, +0,
+    +0,  3, +0,
+    +0, -3, +0,
+    +0, +0,  3,
+    +0, +0, -3,
+     1,  2,  2,
+    -1, -2, -2,
+     1,  2, -2,
+    -1, -2,  2,
+     1, -2,  2,
+    -1,  2, -2,
+     1, -2, -2,
+    -1,  2,  2,
+     2,  1,  2,
+    -2, -1, -2,
+     2,  1, -2,
+    -2, -1,  2,
+    -2,  1,  2,
+     2, -1, -2,
+    -2,  1, -2,
+     2, -1,  2,
+     2,  2,  1,
+    -2, -2, -1,
+     2, -2,  1,
+    -2,  2, -1,
+    -2,  2,  1,
+     2, -2, -1,
+    -2, -2,  1,
+     2,  2, -1,
+     3,  1, +0,
+    -3, -1, +0,
+     3, -1, +0,
+    -3,  1, +0,
+     3, +0,  1,
+    -3, +0, -1,
+     3, +0, -1,
+    -3, +0,  1,
+     1,  3, +0,
+    -1, -3, +0,
+     1, -3, +0,
+    -1,  3, +0,
+     1, +0,  3,
+    -1, +0, -3,
+     1, +0, -3,
+    -1, +0,  3,
+    +0,  3,  1,
+    +0, -3, -1,
+    +0,  3, -1,
+    +0, -3,  1,
+    +0,  1,  3,
+    +0, -1, -3,
+    +0,  1, -3,
+    +0, -1,  3,
+     3,  1,  1,
+    -3, -1, -1,
+     3,  1, -1,
+    -3, -1,  1,
+     3, -1,  1,
+    -3,  1, -1,
+     3, -1, -1,
+    -3,  1,  1,
+     1,  3,  1,
+    -1, -3, -1,
+     1,  3, -1,
+    -1, -3,  1,
+    -1,  3,  1,
+     1, -3, -1,
+    -1,  3, -1,
+     1, -3,  1,
+     1,  1,  3,
+    -1, -1, -3,
+     1, -1,  3,
+    -1,  1, -3,
+    -1,  1,  3,
+     1, -1, -3,
+    -1, -1,  3,
+     1,  1, -3,
+     2,  2,  2,
+    -2, -2, -2,
+     2,  2, -2,
+    -2, -2,  2,
+     2, -2,  2,
+    -2,  2, -2,
+     2, -2, -2,
+    -2,  2,  2,
+     3,  2, +0,
+    -3, -2, +0,
+     3, -2, +0,
+    -3,  2, +0,
+     3, +0,  2,
+    -3, +0, -2,
+     3, +0, -2,
+    -3, +0,  2,
+     2,  3, +0,
+    -2, -3, +0,
+     2, -3, +0,
+    -2,  3, +0,
+     2, +0,  3,
+    -2, +0, -3,
+     2, +0, -3,
+    -2, +0,  3,
+    +0,  3,  2,
+    +0, -3, -2,
+    +0,  3, -2,
+    +0, -3,  2,
+    +0,  2,  3,
+    +0, -2, -3,
+    +0,  2, -3,
+    +0, -2,  3,
+     3,  2,  1,
+    -3, -2, -1,
+    -3,  2,  1,
+     3, -2, -1,
+     3, -2,  1,
+    -3,  2, -1,
+     3,  2, -1,
+    -3, -2,  1,
+     2,  3,  1,
+    -2, -3, -1,
+    -2,  3,  1,
+     2, -3, -1,
+     2, -3,  1,
+    -2,  3, -1,
+     2,  3, -1,
+    -2, -3,  1,
+     3,  1,  2,
+    -3, -1, -2,
+    -3,  1,  2,
+     3, -1, -2,
+     3, -1,  2,
+    -3,  1, -2,
+     3,  1, -2,
+    -3, -1,  2,
+     2,  1,  3,
+    -2, -1, -3,
+    -2,  1,  3,
+     2, -1, -3,
+     2, -1,  3,
+    -2,  1, -3,
+     2,  1, -3,
+    -2, -1,  3,
+     1,  2,  3,
+    -1, -2, -3,
+    -1,  2,  3,
+     1, -2, -3,
+     1, -2,  3,
+    -1,  2, -3,
+     1,  2, -3,
+    -1, -2,  3,
+     1,  3,  2,
+    -1, -3, -2,
+    -1,  3,  2,
+     1, -3, -2,
+     1, -3,  2,
+    -1,  3, -2,
+     1,  3, -2,
+    -1, -3,  2,
+     4, +0, +0,
+    -4, +0, +0,
+    +0,  4, +0,
+    +0, -4, +0,
+    +0, +0,  4,
+    +0, +0, -4};
+
+    for(size_t I=0; I<momenta.size(); I++)
+      std::copy(&(momenta_raw[3*I]), &(momenta_raw[3*I]) + 3, momenta[I]);
+  }
+#endif
+
+  Input::FileReader reader("./simon_test_input.xml");
+
+  std::map< std::string, double > floats;
+  std::vector< size_t * > positions;
+  std::vector< int > operators;
+  std::vector< std::vector< std::string > > files;
+
+  reader.initializeParameters(L_tmp, T_tmp, files, floats, positions, operators);
+
+  size_t const L(L_tmp);
+  size_t const T(T_tmp);
+
+  Base::Weave weave(L, T);
+
+  if (weave.isRoot())
+    std::cout << "Lattice size: " << L << "x" << L << "x" << L << "x" << T << std::endl;
+
+  double kappa = floats["kappa"];
+  double mu    = floats["mu"];
+  if (weave.isRoot())
+    std::cout << "kappa = " << kappa << ", mu = " << mu << std::endl;
+
+  size_t const sourceSinkSeparation = size_t(floats["sourceSinkSeparation"]);
+  assert(sourceSinkSeparation > 0 && sourceSinkSeparation < T-1);
+
+
+  size_t const * const source_position = positions[0];
+  size_t const timeslice_source = source_position[Base::idx_T] % T;
+  if (weave.isRoot())
+    std::cout << "timeslice (source) = " << timeslice_source << std::endl;
+  size_t const timeslice_sink = (timeslice_source +  sourceSinkSeparation) % T;
+  if (weave.isRoot())
+    std::cout << "timeslice (sink) = " << timeslice_sink << std::endl;
+
+  // make sure the boundary is not crossed by source-sink correlaton function
+  size_t const timeslice_boundary = (timeslice_source + (T/2)) % T;
+//   size_t const timeslice_boundary = (timeslice_sink + 1) % T;
+  if (weave.isRoot())
+    std::cout << "timeslice (boundary) = " << timeslice_boundary << std::endl;
+
+  std::vector< std::string > const &propfilesD(files[0]);
+  std::vector< std::string > const &propfilesU(files[1]);
+  std::vector< std::string > const &gaugeFieldFiles(files[2]);
+  std::vector< std::string > const &seqPropFilesD(files[3]);
+  std::vector< std::string > const &seqPropFilesU(files[4]);
+
+  Core::Field< QCD::Gauge > gauge_field(L, T);
+  if (weave.isRoot())
+    std::cout << "gauge field to be read from " << gaugeFieldFiles[0] << " ... ";
+  Tool::IO::load(&gauge_field, gaugeFieldFiles[0], Tool::IO::fileILDG);
+  if (weave.isRoot())
+    std::cout << "done.\n" << std::endl;
+
+  Core::Propagator forwardProp_u(L, T);
+  Tool::IO::load(&forwardProp_u, propfilesU, Tool::IO::fileSCIDAC);
+  if (weave.isRoot())
+    std::cout << "u quark forward propagator successfully loaded\n" << std::endl;
+
+  Core::Propagator forwardProp_d(L, T);
+  Tool::IO::load(&forwardProp_d, propfilesD, Tool::IO::fileSCIDAC);
+  if (weave.isRoot())
+    std::cout << "d quark forward propagator successfully loaded\n" << std::endl;
+
+
+#ifdef __COMPENSATE_UNIFORM_BOUNDARY_CONDITIONS_FW__
+  forwardProp_d.changeBoundaryConditions_uniformToFixed(timeslice_source, timeslice_boundary);
+  forwardProp_u.changeBoundaryConditions_uniformToFixed(timeslice_source, timeslice_boundary);
+#endif
+
+
+#ifdef __CALCULATE_THREEPOINT__
+
+  Core::Propagator backwardProp_u(L, T);
+  Core::Propagator backwardProp_d(L, T);
+
+  Tool::IO::load(&backwardProp_u, seqPropFilesU, Tool::IO::fileSCIDAC);
+  if (weave.isRoot())
+    std::cout << "u quark backward propagator successfully loaded\n" << std::endl;
+
+  Tool::IO::load(&backwardProp_d, seqPropFilesD, Tool::IO::fileSCIDAC);
+  if (weave.isRoot())
+    std::cout << "d quark backward propagator successfully loaded\n" << std::endl;
+
+
+#ifdef __COMPENSATE_UNIFORM_BOUNDARY_CONDITIONS_BW__
+  backwardProp_u.changeBoundaryConditions_uniformToFixed(timeslice_sink, timeslice_boundary);
+  backwardProp_d.changeBoundaryConditions_uniformToFixed(timeslice_sink, timeslice_boundary);
+#endif
+
+
+  std::vector< Base::Operator > my_operators;
+
+#ifdef __GAMMA_1__
+  my_operators.push_back(Base::op_GAMMA_15);
+#endif
+#ifdef __GAMMA_2__
+  my_operators.push_back(Base::op_GAMMA_25);
+#endif
+#ifdef __GAMMA_3__
+  my_operators.push_back(Base::op_GAMMA_35);
+#endif
+#ifdef __GAMMA_4__
+  my_operators.push_back(Base::op_O44);
+#endif
+
+
+  if (weave.isRoot())
+    std::cout << "\n calculating 3-point function(s) \n" << std::endl;
+
+
+  std::vector< Core::BaryonCorrelator > C3p = Contract::proton_threepoint_sequential(backwardProp_u, forwardProp_u,
+                                                                               backwardProp_d, forwardProp_d,
+                                                                               &gauge_field,
+                                                                               my_operators);
+
+  for(size_t i=0; i<2*my_operators.size(); i++)
+    (C3p[i]).setOffset(timeslice_source);
+
+  if (weave.isRoot())
+  {
+   #ifdef __GAMMA_1__
+   std::ofstream fout("output_3point_axial_1_uu.dat");
+   #endif
+   #ifdef __GAMMA_2__
+   std::ofstream fout("output_3point_axial_2_uu.dat");
+   #endif
+   #ifdef __GAMMA_3__
+   std::ofstream fout("output_3point_axial_3_uu.dat");
+   #endif
+   #ifdef __GAMMA_4__
+   std::ofstream fout("output_3point_vector_4_uu.dat");
+   #endif
+   fout << C3p[0] << std::endl;
+   fout.close();
+   #ifdef __GAMMA_1__
+   fout.open("output_3point_axial_1_dd.dat");
+   #endif
+   #ifdef __GAMMA_2__
+   fout.open("output_3point_axial_2_dd.dat");
+   #endif
+   #ifdef __GAMMA_3__
+   fout.open("output_3point_axial_3_dd.dat");
+   #endif
+   #ifdef __GAMMA_4__
+   fout.open("output_3point_vector_4_dd.dat");
+   #endif
+   fout << C3p[1] << std::endl;
+   fout.close();
   }
 
-  //read inputs from parameter file
-  std::map<std::string,double> floats;
-  std::vector<std::vector<std::string> > files;
-  std::vector<std::string> file_out[2];
-  Input::FileReader reader(arg[1]);
-  reader.initializeParameters(L,T,files,floats);
-  double kappa=floats["kappa"];
-  double mu=floats["mu"];
-  double thetax=floats["thetax"];
-  double thetay=floats["thetay"];
-  double thetaz=floats["thetaz"];
-  double thetat=floats["thetat"];
-  bool debug=(bool)floats["debug"]; //0=no,!=0 =yes
-  bool phys_base=(bool)floats["phys_base"]; //0=no,!=0 =yes
+#endif
 
-  //the weave!
-  Base::Weave weave(L,T);
+#ifdef __CALCULATE_TWOPOINT__
 
-  //Prepare output file names
-  for(size_t iud=0;iud<2;iud++)
-    for(size_t j=0;j<files[1].size();j++)
-      file_out[iud].push_back(files[1][j]+suff[iud]);
+  if (weave.isRoot())
+    std::cout << "\n calculating 2-point function \n" << std::endl;
 
-  //write some output concerning what is going to be read
-  if(weave.isRoot())
+  double const APE_alpha      = floats["APE_param"];
+  size_t const APE_iterations = size_t(floats["APE_steps"]);
+  double const Jac_alpha      = floats["Jac_param"];
+  size_t const Jac_iterations = size_t(floats["Jac_steps"]);
+
+  if (weave.isRoot())
   {
-    std::cout<<"Lattice size: "<<L<<"x"<<L<<"x"<<L<<"x"<<T<<std::endl;
-    std::cout<<"kappa="<<kappa<<", mu="<<mu<<std::endl;
-    std::cout<<"thetax="<<thetax<<", ";
-    std::cout<<"thetay="<<thetay<<", ";
-    std::cout<<"thetaz="<<thetaz<<", ";
-    std::cout<<"thetat="<<thetat<<std::endl;
-    std::cout<<"will ";
-    if(phys_base!=true) std::cout<<"not ";
-    std::cout<<"write output in physical base"<<std::endl;
+    std::cout << "APE    smearing: parameter = " << APE_alpha << ", iterations = " << APE_iterations << std::endl;
+    std::cout << "Jacobi smearing: parameter = " << Jac_alpha << ", iterations = " << Jac_iterations << std::endl;
   }
 
-  if(weave.isRoot() and debug==true)
+  Smear::APE APE_tool(APE_alpha);
+  Smear::Jacobi Jacobi_tool(Jac_alpha);
+
+  APE_tool.smear(gauge_field, APE_iterations);
+
+  forwardProp_u.smearJacobi(Jac_alpha, Jac_iterations, gauge_field);
+  forwardProp_d.smearJacobi(Jac_alpha, Jac_iterations, gauge_field);
+
+  if (weave.isRoot())
+    std::cout << "propagators and gauge field smeared successfully\n" << std::endl;
+
+  Core::BaryonCorrelator C2_P = Contract::proton_twopoint_alternative(forwardProp_u, forwardProp_u, forwardProp_d, Base::proj_NO_PROJECTOR);
+
+#ifdef __MOMENTUM_PROJECTION__
+
+  int const sourcePos[3] = {source_position[0], source_position[1], source_position[2]};
+  C2_P.prepareMomentumProjection(sourcePos);
+
+  std::vector< Core::BaryonCorrelator > all_corrs(C2_P.momentumProjection(momenta));
+
+  std::ofstream *fout = NULL;
+  if (weave.isRoot())
   {
-    std::cout<<"The following files are going to be read:"<<std::endl;
+    fout =  new std::ofstream("output_2point.dat");
+  }
 
-    for(size_t i=0;i<files.size();i++)
-      for(size_t j=0;j<files[i].size();j++)
-        std::cout<<(files[i])[j]<<std::endl;
+  for(size_t I=0; I<momenta.size(); I++)
+  {
 
-    for(size_t iud=0;iud<2;iud++)
+    all_corrs[I] *= Base::proj_PARITY_PLUS_TM;
+    all_corrs[I].setOffset(timeslice_source);
+    if (weave.isRoot())
     {
-      std::cout<<std::endl<<"Output files for quark "<<iud<<std::endl;
-      for(size_t j=0;j<files[1].size();j++)
-        std::cout<<file_out[iud][j]<<std::endl;
+      all_corrs[I].printWithMomentum(*fout, momenta[I]);
     }
+    delete [] momenta[I];
   }
 
-  //read the gauge configuration, needed to create u and d propagators
-  Core::Field<QCD::Gauge> gauge_field(L,T);
-  Tool::IO::load(&gauge_field, files[0][0],Tool::IO::fileILDG);
-  if(weave.isRoot()) std::cout<<std::endl<<"gauge field successfully loaded"<<std::endl<<std::endl;
-
-  //read the solution of (DD^-1)
-  Core::Propagator DD_prop(L,T);
-  Tool::IO::load(&DD_prop,files[1],Tool::IO::fileSCIDAC);
-  if(weave.isRoot()) std::cout<<"(D+D-)^-1 prop successfully loaded"<<std::endl<<std::endl;
-
-  //prduce the u and d propagator from the D+D-
-  //we have defined 0 as up, which requires the application of Q-
-  Core::Propagator ud_prop[2]={Core::Propagator(L,T),Core::Propagator(L,T)};
-  DD_prop.reconstruct_doublet(ud_prop[1],ud_prop[0],gauge_field,kappa,mu,thetat,thetax,thetay,thetaz); //this include the gamma5
-  for(size_t iud=0;iud<2;iud++)
+  if (weave.isRoot())
   {
-    if(phys_base)
-    {
-      ud_prop[iud].rotateToPhysicalBasis(iud); //0,1 = +- inside routine
-      if(debug and weave.isRoot())
-        std::cout<<"quark "<<iud<<" rotated"<<std::endl;
-    }
-    Tool::IO::save(&(ud_prop[iud]),file_out[iud],Tool::IO::fileSCIDAC);
-    if(weave.isRoot())
-      std::cout<<"quark "<<iud<<" file successfully saved"<<std::endl;
+    fout->close();
   }
 
-  if(weave.isRoot()) std::cout<<std::endl<<"everything ok so exiting!"<<std::endl<<std::endl;
+  momenta.clear();
+  delete fout;
+
+#else
+
+  C2_P *= Base::proj_PARITY_PLUS_TM;
+  C2_P.setOffset(timeslice_source);
+
+  if (weave.isRoot())
+  {
+    std::ofstream fout("output_2point.dat");
+
+    std::cout << "proton two point" << std::endl;
+    std::cout << C2_P << std::endl;
+
+    fout << C2_P << std::endl;
+    fout.close();
+  }
+
+#endif
+
+
+
+#endif
+
+  if (weave.isRoot())
+    std::cout << "contractions performed and saved successfully\n" << std::endl;
 
   return EXIT_SUCCESS;
 }

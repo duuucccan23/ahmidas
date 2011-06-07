@@ -14,8 +14,7 @@ SET(CMAKE_INCLUDE_PATH ${PROJECT_SOURCE_DIR}/eigen)
 OPTION(BUILD_TESTS "Build all tests packaged with Ahmidas" ON)
 
 INCLUDE_DIRECTORIES(BEFORE SYSTEM src)
-#SET(CMAKE_CXX_FLAGS "-O3 -qstrict -qarch=450d -qtune=450 -I/workgpfs/rech/cib/rcib044/binaires/lemon_babel_cxx/include -L/workgpfs/rech/cib/rcib044/binaires/lemon_babel_cxx/lib")
- SET(CMAKE_CXX_FLAGS "-g -Wall -pedantic")
+SET(CMAKE_CXX_FLAGS "-O3 -Wall -pedantic")
 
 FIND_PACKAGE(Eigen3)
 IF(EIGEN3_FOUND)
@@ -60,7 +59,11 @@ TARGET_LINK_LIBRARIES(main Debug Print Ahmidas)
 
 
 ADD_EXECUTABLE(simon_test src/simon_test.cpp)
-TARGET_LINK_LIBRARIES(simon_test Print Ahmidas SU3 QCD IO Base Core Dirac Weave Contract Input)
+IF(USE_MPI)
+TARGET_LINK_LIBRARIES(simon_test SU3 IO Base Core Dirac Weave Contract Input Smear Ahmidas lemon)
+ELSE(USE_MPI)
+TARGET_LINK_LIBRARIES(simon_test SU3 IO Base Core Dirac Weave Contract Input Smear Ahmidas)
+ENDIF(USE_MPI)
 
 MESSAGE(STATUS "Compiler is " ${CMAKE_CXX_COMPILER})
 MESSAGE(STATUS "MPI is " ${USE_MPI})

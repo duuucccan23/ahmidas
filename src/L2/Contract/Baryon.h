@@ -14,6 +14,10 @@ namespace Contract
   Core::BaryonCorrelator proton_twopoint(Core::Propagator const &u1, Core::Propagator const &u2, Core::Propagator const &d,
                                    Base::BaryonPropagatorProjector const projector);
 
+  Core::BaryonCorrelator proton_twopoint_alternative(Core::Propagator const &u1, Core::Propagator const &u2, 
+                                                     Core::Propagator const &d,
+                                                     Base::BaryonPropagatorProjector const projector);
+
   /* ---------------------------------------------------------------------------------------------- */
 
   // keep full source and sink Dirac index dependence of the proton

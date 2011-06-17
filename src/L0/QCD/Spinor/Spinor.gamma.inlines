@@ -125,5 +125,15 @@ namespace QCD
     upper().leftMultiply(Dirac::Pauli< 3 >(), std::complex< double >(0,+1));
     lower().leftMultiply(Dirac::Pauli< 3 >(), std::complex< double >(0,-1));
   }
+  
+  template< >
+  inline void Spinor::leftMultiply(Dirac::Gamma< 245 > const)
+  {
+    upper().leftMultiply(Dirac::Pauli< 2 >(), std::complex< double >(0,+1));
+    lower().leftMultiply(Dirac::Pauli< 2 >(), std::complex< double >(0,-1));
+    lower() *= -1;
+    
+  }
+
 
 }

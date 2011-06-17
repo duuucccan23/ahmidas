@@ -15,16 +15,22 @@ namespace QCD
     switch(iPol)
     {
       case Base::bar_PROTON:
+      {
         B_.left_multiply_proton();
         B_.right_multiply_proton();
         B_.transposeFull();
-      break;
+        break;
+      }
       case Base::bar_PROTON_VAR:
+      {
         Dirac::Gamma< 24 > g2g0;
+        std::complex< double > const I(0.0, 1.0);
         B_*=g2g0;
-        B_.rightMultiply(g2g0);
+        B_*= I*I;
+        B_ = g2g0 * B_;
         B_.transposeFull();
-      break;
+        break;
+      }
       default:
       std::cerr << "unknown interpolating field in Matrix::Matrix(3 x QCD::Tensor, Base::BaryonInterpolatingField)!"
                 << std::endl;
@@ -156,8 +162,14 @@ namespace QCD
 
     switch(iPol)
     {
-      case Base::bar_PROTON:
       case Base::bar_PROTON_VAR:
+//       {
+//         Dirac::Gamma< 5 > gamma5;
+//         result = gamma5 * result;
+//         result *= gamma5;
+//         
+//       }
+      case Base::bar_PROTON:
 
         result += rrA*((ggB*bbC).trace());
         result -= rrA*((gbB*bgC).trace());

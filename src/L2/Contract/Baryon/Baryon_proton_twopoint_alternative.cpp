@@ -21,17 +21,23 @@ namespace Contract
     }
 
     Dirac::Gamma< 5 > gamma5;
-    Core::Propagator u1g5(u1);
-    u1g5 *= gamma5;
+    // Core::Propagator u1g5(gamma5*u1);
+    // u1g5 *= gamma5;
+    // Core::BaryonCorrelator twopoint(u1g5.construct_baryon(d, u2, Base::bar_PROTON_VAR));
     // order of d and u in Propagator::construct_baryon is important!
-    Core::BaryonCorrelator twopoint(u1g5.construct_baryon(d, u2, Base::bar_PROTON_VAR));
+    
+    Core::Field< Dirac::Matrix > tmp_twopoint(u1.construct_baryon(d, u2, Base::bar_PROTON_VAR));
+  
+    // now the complete Field has to be multiplied by gamma5 from left and right 
+    for(Core::Field< Dirac::Matrix >::iterator Id(tmp_twopoint.begin()); Id != tmp_twopoint.end(); ++Id)
+    {
+      (*Id) = gamma5 * (*Id);
+      (*Id) *= gamma5;
+    }
+    
+    Core::BaryonCorrelator twopoint(tmp_twopoint);
+    
     twopoint.sumOverSpatialVolume();
-//     std::cout << "\nFull proton two point function:\n" << std::endl;
-//     for (size_t t=0; t<u1.T(); t++)
-//     {
-//       std::cout << "t = " << t << std::endl;
-//       std::cout << twopoint[t] << std::endl;
-//     }
     twopoint *= projector;
     return twopoint;
   }

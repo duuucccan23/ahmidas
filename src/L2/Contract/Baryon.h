@@ -1,6 +1,8 @@
 #pragma once
 
 #include <vector>
+#include <L0/Dirac/Gamma.h>
+#include <L0/Dirac/Matrix.h>
 #include <L0/QCD/Gauge.h>
 #include <L0/Core/Field.h>
 #include <L0/Core/Propagator.h>
@@ -17,6 +19,19 @@ namespace Contract
   Core::BaryonCorrelator proton_twopoint_alternative(Core::Propagator const &u1, Core::Propagator const &u2, 
                                                      Core::Propagator const &d,
                                                      Base::BaryonPropagatorProjector const projector);
+
+  // for arbitrary interpolating field
+  // G1a and G1b are the indices of the Gamma structures at source
+  // G2a and G2b are associated to the sink Gamma structures
+  template< size_t G1a, size_t G1b, size_t G2a, size_t G2b >
+  Core::BaryonCorrelator nucleon_twopoint(Core::Propagator const &DoubleFlavourPhysBaseA, 
+                                          Core::Propagator const &DoubleFlavourPhysBaseB,
+                                          Core::Propagator const &SingleFlavorPhysBase,
+                                          std::complex< double > const&globalFactor,
+                                          Dirac::Gamma< G1a > const &GammaSourceA, 
+                                          Dirac::Gamma< G1b > const &GammaSourceB, 
+                                          Dirac::Gamma< G2a > const &GammaSinkA, 
+                                          Dirac::Gamma< G2b > const &GammaSinkB); 
 
   /* ---------------------------------------------------------------------------------------------- */
 
@@ -176,3 +191,6 @@ namespace Contract
                                                 std::vector< Base::Operator > const &my_operators,
                                                 Base::BaryonPropagatorProjector const my_projector);
 }
+
+#include "Baryon/Baryon_nucleon_twopoint.template"
+

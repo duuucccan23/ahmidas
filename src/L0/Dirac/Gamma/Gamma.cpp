@@ -104,4 +104,15 @@ namespace Dirac
   template< >
   std::complex< double > const Gamma< 34 >::s_sign[4] = {I, -I, -I, I};
 
+  template< >
+  size_t const Gamma< 245 >::s_perm[4] = {1, 0, 3, 2};
+  template< >
+  std::complex< double > const Gamma< 245 >::s_sign[4] = {1, -1, 1, -1};
+
+  // workaround in order to handle unity in functions that expect a Gamma
+  template< >
+  size_t const Gamma< -1 >::s_perm[4] = {0, 1, 2, 3};
+  template< >
+  std::complex< double > const Gamma< -1 >::s_sign[4] = {1, 1, 1, 1};
+
 }

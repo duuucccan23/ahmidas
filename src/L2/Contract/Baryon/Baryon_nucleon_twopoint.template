@@ -1,0 +1,225 @@
+#include "Baryon.ih"
+
+namespace Contract
+{
+
+  // for arbitrary interpolating field
+  // G1a and G1b are the indices of the Gamma structures at source
+  // G2a and G2b are associated to the sink Gamma structures
+  template< size_t G1a, size_t G1b, size_t G2a, size_t G2b >
+  Core::BaryonCorrelator nucleon_twopoint(Core::Propagator const &DoubleFlavourPhysBaseA, 
+                                          Core::Propagator const &DoubleFlavourPhysBaseB,
+                                          Core::Propagator const &SingleFlavorPhysBase,
+                                          std::complex< double > const&globalFactor,
+                                          Dirac::Gamma< G1a > const &GammaSourceA, 
+                                          Dirac::Gamma< G1b > const &GammaSourceB, 
+                                          Dirac::Gamma< G2a > const &GammaSinkA, 
+                                          Dirac::Gamma< G2b > const &GammaSinkB) 
+  {
+    assert(DoubleFlavourPhysBaseA.L() == DoubleFlavourPhysBaseB.L() && DoubleFlavourPhysBaseA.T() == DoubleFlavourPhysBaseB.T() 
+        && DoubleFlavourPhysBaseA.L() == SingleFlavorPhysBase.L() && DoubleFlavourPhysBaseA.T() == SingleFlavorPhysBase.T());
+
+//------------------------------------------------------------------------------------------------
+    Core::Field< Dirac::Matrix > field(DoubleFlavourPhysBaseA.L(), DoubleFlavourPhysBaseA.T());
+
+    Core::Propagator::const_iterator Ia(DoubleFlavourPhysBaseA.begin());
+    Core::Propagator::const_iterator Ib(SingleFlavorPhysBase.begin());
+    Core::Propagator::const_iterator Ic(DoubleFlavourPhysBaseB.begin());
+
+    for(Core::Field< Dirac::Matrix >::iterator Id(field.begin()); Id != field.end(); ++Id)
+    { 
+      (*Id) = Dirac::Matrix(std::complex< double >(0, 0));
+      
+      // QCD::Tensor B((*Ib));
+      // B.right_multiply_proton();
+      // B.left_multiply_proton();
+      // B.transposeFull();
+      
+      QCD::Tensor B(GammaSinkB * (*Ib));
+      B *= GammaSourceB;
+      B.transposeFull();
+      
+      // For each of the nine colour combinations for QCD::Tensor A there are only
+      // four combinations of colour for the other tensors B and C
+      // that yield a non-zero epsilon.
+      // Those are, in terms of the Matrixs:
+      //  +(rrA, ggB, bbC), -(rrA, gbB, bgC), -(rrA, bgB, gbC), +(rrA, bbB, ggC)
+      //  -(rgA, grB, bbC), +(rgA, gbB, brC), +(rgA, brB, gbC), -(rgA, bbB, grC)
+      //  +(rbA, grB, bgC), -(rbA, ggB, brC), -(rbA, brB, ggC), +(rbA, bgB, grC)
+      //  ---
+      //  +(grA, bgB, rbC), -(grA, bbB, rgC), -(grA, rgB, bbC), +(grA, rbB, bgC)
+      //  +(ggA, bbB, rrC), -(ggA, brB, rbC), -(ggA, rbB, brC), +(ggA, rrB, bbC)
+      //  -(gbA, bgB, rrC), +(gbA, brB, rgC), +(gbA, rgB, brC), -(gbA, rrB, bgC)
+      //  ---
+      //  +(brA, rgB, gbC), -(brA, rbB, ggC), -(brA, ggB, rbC), +(brA, gbB, rgC)
+      //  +(bgA, rbB, grC), -(bgA, rrB, gbC), -(bgA, gbB, rrC), +(bgA, grB, rbC)
+      //  -(bbA, rgB, grC), +(bbA, rrB, ggC), +(bbA, ggB, rrC), -(bbA, grB, rgC)
+
+      Dirac::Matrix rrA;
+      Dirac::Matrix rgA;
+      Dirac::Matrix rbA;
+      Dirac::Matrix grA;
+      Dirac::Matrix ggA;
+      Dirac::Matrix gbA;
+      Dirac::Matrix brA;
+      Dirac::Matrix bgA;
+      Dirac::Matrix bbA;
+
+      Dirac::Matrix rrB;
+      Dirac::Matrix rgB;
+      Dirac::Matrix rbB;
+      Dirac::Matrix grB;
+      Dirac::Matrix ggB;
+      Dirac::Matrix gbB;
+      Dirac::Matrix brB;
+      Dirac::Matrix bgB;
+      Dirac::Matrix bbB;
+
+      Dirac::Matrix rrC;
+      Dirac::Matrix rgC;
+      Dirac::Matrix rbC;
+      Dirac::Matrix grC;
+      Dirac::Matrix ggC;
+      Dirac::Matrix gbC;
+      Dirac::Matrix brC;
+      Dirac::Matrix bgC;
+      Dirac::Matrix bbC;
+
+      (*Ia).getDiracMatrix(rrA, Base::col_RED,   Base::col_RED);
+      (*Ia).getDiracMatrix(rgA, Base::col_RED,   Base::col_GREEN);
+      (*Ia).getDiracMatrix(rbA, Base::col_RED,   Base::col_BLUE);
+      (*Ia).getDiracMatrix(grA, Base::col_GREEN, Base::col_RED);
+      (*Ia).getDiracMatrix(ggA, Base::col_GREEN, Base::col_GREEN);
+      (*Ia).getDiracMatrix(gbA, Base::col_GREEN, Base::col_BLUE);
+      (*Ia).getDiracMatrix(brA, Base::col_BLUE,  Base::col_RED);
+      (*Ia).getDiracMatrix(bgA, Base::col_BLUE,  Base::col_GREEN);
+      (*Ia).getDiracMatrix(bbA, Base::col_BLUE,  Base::col_BLUE);
+
+      // the source and sink colours are interchanged due to transposing
+      B.getDiracMatrix(rrB, Base::col_RED,   Base::col_RED);
+      B.getDiracMatrix(rgB, Base::col_GREEN, Base::col_RED);
+      B.getDiracMatrix(rbB, Base::col_BLUE,  Base::col_RED);
+      B.getDiracMatrix(grB, Base::col_RED,   Base::col_GREEN);
+      B.getDiracMatrix(ggB, Base::col_GREEN, Base::col_GREEN);
+      B.getDiracMatrix(gbB, Base::col_BLUE,  Base::col_GREEN);
+      B.getDiracMatrix(brB, Base::col_RED,   Base::col_BLUE);
+      B.getDiracMatrix(bgB, Base::col_GREEN, Base::col_BLUE);
+      B.getDiracMatrix(bbB, Base::col_BLUE,  Base::col_BLUE);
+
+      (*Ic).getDiracMatrix(rrC, Base::col_RED,   Base::col_RED);
+      (*Ic).getDiracMatrix(rgC, Base::col_RED,   Base::col_GREEN);
+      (*Ic).getDiracMatrix(rbC, Base::col_RED,   Base::col_BLUE);
+      (*Ic).getDiracMatrix(grC, Base::col_GREEN, Base::col_RED);
+      (*Ic).getDiracMatrix(ggC, Base::col_GREEN, Base::col_GREEN);
+      (*Ic).getDiracMatrix(gbC, Base::col_GREEN, Base::col_BLUE);
+      (*Ic).getDiracMatrix(brC, Base::col_BLUE,  Base::col_RED);
+      (*Ic).getDiracMatrix(bgC, Base::col_BLUE,  Base::col_GREEN);
+      (*Ic).getDiracMatrix(bbC, Base::col_BLUE,  Base::col_BLUE);
+
+      (*Id) += rrC*(ggB*bbA);
+      (*Id) -= rrC*(gbB*bgA);
+      (*Id) -= rrC*(bgB*gbA);
+      (*Id) += rrC*(bbB*ggA);
+      //  ---
+      (*Id) -= rgC*(grB*bbA);
+      (*Id) += rgC*(gbB*brA);
+      (*Id) += rgC*(brB*gbA);
+      (*Id) -= rgC*(bbB*grA);
+      //  ---
+      (*Id) += rbC*(grB*bgA);
+      (*Id) -= rbC*(ggB*brA);
+      (*Id) -= rbC*(brB*ggA);
+      (*Id) += rbC*(bgB*grA);
+      //  --- ---  ---
+      (*Id) += grC*(bgB*rbA);
+      (*Id) -= grC*(bbB*rgA);
+      (*Id) -= grC*(rgB*bbA);
+      (*Id) += grC*(rbB*bgA);
+      //  ---
+      (*Id) += ggC*(bbB*rrA);
+      (*Id) -= ggC*(brB*rbA);
+      (*Id) -= ggC*(rbB*brA);
+      (*Id) += ggC*(rrB*bbA);
+      //  ---
+      (*Id) -= gbC*(bgB*rrA);
+      (*Id) += gbC*(brB*rgA);
+      (*Id) += gbC*(rgB*brA);
+      (*Id) -= gbC*(rrB*bgA);
+      //  --- ---  ---
+      (*Id) += brC*(rgB*gbA);
+      (*Id) -= brC*(rbB*ggA);
+      (*Id) -= brC*(ggB*rbA);
+      (*Id) += brC*(gbB*rgA);
+      //  ---
+      (*Id) += bgC*(rbB*grA);
+      (*Id) -= bgC*(rrB*gbA);
+      (*Id) -= bgC*(gbB*rrA);
+      (*Id) += bgC*(grB*rbA);
+      //  ---
+      (*Id) -= bbC*(rgB*grA);
+      (*Id) += bbC*(rrB*ggA);
+      (*Id) += bbC*(ggB*rrA);
+      (*Id) -= bbC*(grB*rgA);
+
+      //------------------------------------
+      
+      (*Id) += rrA*((ggB*bbC).trace());
+      (*Id) -= rrA*((gbB*bgC).trace());
+      (*Id) -= rrA*((bgB*gbC).trace());
+      (*Id) += rrA*((bbB*ggC).trace());
+      //  ---
+      (*Id) -= rgA*((grB*bbC).trace());
+      (*Id) += rgA*((gbB*brC).trace());
+      (*Id) += rgA*((brB*gbC).trace());
+      (*Id) -= rgA*((bbB*grC).trace());
+      //  ---
+      (*Id) += rbA*((grB*bgC).trace());
+      (*Id) -= rbA*((ggB*brC).trace());
+      (*Id) -= rbA*((brB*ggC).trace());
+      (*Id) += rbA*((bgB*grC).trace());
+      //  --- --- ---
+      (*Id) += grA*((bgB*rbC).trace());
+      (*Id) -= grA*((bbB*rgC).trace());
+      (*Id) -= grA*((rgB*bbC).trace());
+      (*Id) += grA*((rbB*bgC).trace());
+      //  ---
+      (*Id) += ggA*((bbB*rrC).trace());
+      (*Id) -= ggA*((brB*rbC).trace());
+      (*Id) -= ggA*((rbB*brC).trace());
+      (*Id) += ggA*((rrB*bbC).trace());
+      //  ---
+      (*Id) -= gbA*((bgB*rrC).trace());
+      (*Id) += gbA*((brB*rgC).trace());
+      (*Id) += gbA*((rgB*brC).trace());
+      (*Id) -= gbA*((rrB*bgC).trace());
+      //  --- --- ---
+      (*Id) += brA*((rgB*gbC).trace());
+      (*Id) -= brA*((rbB*ggC).trace());
+      (*Id) -= brA*((ggB*rbC).trace());
+      (*Id) += brA*((gbB*rgC).trace());
+      //  ---
+      (*Id) += bgA*((rbB*grC).trace());
+      (*Id) -= bgA*((rrB*gbC).trace());
+      (*Id) -= bgA*((gbB*rrC).trace());
+      (*Id) += bgA*((grB*rbC).trace());
+      //  ---
+      (*Id) -= bbA*((rgB*grC).trace());
+      (*Id) += bbA*((rrB*ggC).trace());
+      (*Id) += bbA*((ggB*rrC).trace());
+      (*Id) -= bbA*((grB*rgC).trace());
+
+
+      (*Id) = GammaSinkA * (*Id);
+      (*Id) *= GammaSourceA;
+
+      ++Ia;
+      ++Ib;
+      ++Ic;
+    }
+
+    field *= globalFactor;
+
+    Core::BaryonCorrelator twopoint(field);
+    return twopoint;
+  }
+}

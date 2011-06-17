@@ -2,10 +2,14 @@ ADD_EXECUTABLE(generate_sequential_sources_nucleon generate_sequential_sources_n
 TARGET_LINK_LIBRARIES(generate_sequential_sources_nucleon SU3 QCD IO Base Core Dirac Weave Contract Input Smear Ahmidas)
 
 ADD_EXECUTABLE(contract_nucleon3point contract_nucleon3point.cpp)
-TARGET_LINK_LIBRARIES(contract_nucleon3point SU3 QCD IO Base Core Dirac Weave Contract Input Smear Ahmidas)
+TARGET_LINK_LIBRARIES(contract_nucleon3point SU3 QCD IO Base Core Dirac Weave Contract Input Smear Ahmidas lemon)
 
 ADD_EXECUTABLE(contract_baryon2point contract_baryon2point.cpp)
+IF(USE_MPI)
 TARGET_LINK_LIBRARIES(contract_baryon2point SU3 QCD IO Base Core Dirac Weave Contract Input Smear Ahmidas lemon)
+ELSE(USE_MPI)
+TARGET_LINK_LIBRARIES(contract_baryon2point SU3 QCD IO Base Core Dirac Weave Contract Input Smear Ahmidas)
+ENDIF(USE_MPI)
 
 ADD_EXECUTABLE(contract_meson_2pts contract_meson_2pts.cpp)
 TARGET_LINK_LIBRARIES(contract_meson_2pts SU3 QCD IO Base Core Dirac Contract Input Ahmidas Print)

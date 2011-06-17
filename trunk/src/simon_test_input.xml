@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding='UTF-8'?>
 <ahmidas>
   <params>
-    <L> 4 </L>
-    <T> 8 </T>
+    <L> 32 </L>
+    <T> 64 </T>
     <!-- position of point source (x,y,z,t) -->
-    <position> 0 0 0 0 </position>
-    <sourceSinkSeparation> 4 </sourceSinkSeparation>
-    <kappa> 0.10 </kappa>
-    <mu> 0.10 </mu>
+    <position> 12 30 7 43 </position>
+    <sourceSinkSeparation> 12 </sourceSinkSeparation>
+    <kappa> 0.161236 </kappa>
+    <mu> 0.0055 </mu>
     <APE_steps>  0  </APE_steps>
     <APE_param>  0.5 </APE_param>
     <Jac_steps>  0   </Jac_steps>
@@ -17,7 +17,7 @@
     <!-- u and d quark propagators -->
     <file>
       <type>propagator</type>
-      <directory>../../../crosscheck_dru/point_source_d_propagators/</directory>
+      <directory>d_propagators/</directory>
       <filenameBase>source.</filenameBase>
       <filenameEnding>.inverted</filenameEnding>
       <firstIndex>0</firstIndex>
@@ -26,7 +26,7 @@
     </file>
     <file>
       <type>propagator</type>
-      <directory>../../../crosscheck_dru/point_source_u_propagators</directory>
+      <directory>u_propagators</directory>
       <filenameBase>source.</filenameBase>
       <filenameEnding>.inverted</filenameEnding>
       <firstIndex>0</firstIndex>
@@ -36,17 +36,17 @@
     <!-- gauge field -->
     <file>
       <type>gauge</type>
-      <directory>../../../crosscheck_dru/</directory>
+      <directory>./</directory>
       <filenameBase>conf.</filenameBase>
-      <firstIndex>0</firstIndex>
-      <lastIndex>0</lastIndex>
+      <firstIndex>9999</firstIndex>
+      <lastIndex>9999</lastIndex>
       <indexWidth>4</indexWidth>
     </file>
     <!-- sequential propagators -->
     <file>
       <type>source</type>
-      <directory>../../../crosscheck_dru/sequential_sources</directory>
-      <filenameBase>sequential_source_d.</filenameBase>
+      <directory>sequential_sources_d</directory>
+      <filenameBase>source.</filenameBase>
       <filenameEnding>.inverted</filenameEnding>
       <firstIndex>0</firstIndex>
       <lastIndex>11</lastIndex>
@@ -54,8 +54,8 @@
     </file>
     <file>
       <type>source</type>
-      <directory>../../../crosscheck_dru/sequential_sources</directory>
-      <filenameBase>sequential_source_u.</filenameBase>
+      <directory>sequential_sources_u</directory>
+      <filenameBase>source.</filenameBase>
       <filenameEnding>.inverted</filenameEnding>
       <firstIndex>0</firstIndex>
       <lastIndex>11</lastIndex>

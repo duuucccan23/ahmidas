@@ -352,7 +352,7 @@ namespace QCD
   /* ############################################################################################## */
 
 
-inline void Tensor::left_multiply_proton()
+  inline void Tensor::left_multiply_proton()
   {
 
 // this would be the corresponding Gamma structure
@@ -363,7 +363,7 @@ inline void Tensor::left_multiply_proton()
 
     std::swap_ranges(d_data,      d_data +  36, d_data +  36);
     std::swap_ranges(d_data + 72, d_data + 108, d_data + 108);
-    // actually we have -Gamma2*Gamma0*Gamma5, which is considered below
+    // actually we have -i*Gamma2*Gamma0*Gamma5, which is considered below
     std::transform(d_data,       d_data +  36, d_data,
                    std::bind1st(std::multiplies< std::complex< double > >(), std::complex< double >(0, -1)));
     std::transform(d_data +  36, d_data +  72, d_data +  36,

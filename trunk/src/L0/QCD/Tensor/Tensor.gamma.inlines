@@ -8,9 +8,21 @@ namespace QCD
     // does never appear (but when multiplying Dirac::Sigma matrices),
     // i.e. gamma.perm(0) = {0,2,3}, gamma.perm(1) = {1,2,3}.
     // so regarding the permutation the following two lines will do the job
-    std::swap_ranges(d_data,       d_data +  36, d_data + 36*gamma.perm(0));
-    std::swap_ranges(d_data +  36, d_data +  72, d_data + 36*gamma.perm(1));
-
+    
+    // actually, the upper statement is true for the simple gamma matrices
+    //  but the case mentioned can appear in arbitrary products of gamma matrices
+    if(gamma.perm(0) == 1)
+    {
+      // swaps within upper and lower blocks
+      std::swap_ranges(d_data,       d_data +  36,  d_data + 36*gamma.perm(0));
+      std::swap_ranges(d_data +  72, d_data +  108, d_data + 36*gamma.perm(2));
+    }
+    else
+    {
+      // either gamma is diagonal or swaps only between upper and lower blocks
+      std::swap_ranges(d_data,       d_data +  36, d_data + 36*gamma.perm(0));
+      std::swap_ranges(d_data +  36, d_data +  72, d_data + 36*gamma.perm(1));
+    }
     std::transform(d_data,       d_data +  36, d_data,
                    std::bind1st(std::multiplies< std::complex< double > >(), gamma.sign(0)));
     std::transform(d_data +  36, d_data +  72, d_data +  36,
@@ -32,15 +44,15 @@ namespace QCD
   }
 
 
-  template< >
-  inline void Tensor::operator*=(Dirac::Gamma< 0 > const &gamma)
-  {
-
-    std::transform(reinterpret_cast< double * > (d_data),
-                   reinterpret_cast< double * > (d_data + 144),
-                   reinterpret_cast< double * > (d_data),
-                   std::bind1st(std::multiplies< double >(), -1));
-  }
+//   template< >
+//   inline void Tensor::operator*=(Dirac::Gamma< 0 > const &gamma)
+//   {
+// 
+//     std::transform(reinterpret_cast< double * > (d_data),
+//                    reinterpret_cast< double * > (d_data + 144),
+//                    reinterpret_cast< double * > (d_data),
+//                    std::bind1st(std::multiplies< double >(), -1));
+//   }
 
 
   inline void Tensor::operator*=(Dirac::Identity const &gamma)
@@ -75,7 +87,7 @@ namespace QCD
 
   // ------ non-member operators ---------------------------------------------
 
-
+  /*
   template< size_t Index >
   inline void operator*=(Dirac::Gamma< Index > const &gamma, Tensor &tensor)
   {
@@ -89,6 +101,7 @@ namespace QCD
   {
     // nothing to do
   }
+  */
 
   template< size_t Index >
   inline Tensor operator*(Dirac::Gamma< Index > const &gamma, Tensor const &tensor)

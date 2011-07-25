@@ -4,27 +4,52 @@ template< typename Datatype >
 void Correlator< Datatype >::sumOverSpatialVolume()
 {
   isolate();
-  size_t x1, x2, x3, x4, localIndex;
-  for(x4=0; x4 < T(); x4++)
+
+  size_t const L(this->L());
+  size_t const T(this->T());
+
+  if (s_timelabel == NULL || s_timelabel->L() != L ||  s_timelabel->T() != T)
   {
-    d_sumTimeslice[x4] = Datatype(std::complex< double >(0.0, 0.0));
-    for(x3=0; x3 < L(); x3++)
+    if (s_timelabel != NULL)
+      delete s_timelabel; // we can do this here because it is a static pointer,
+
+    // this will affect all instances of Core::Correlator
+    s_timelabel =  new Field< size_t >(L , T);
+
+    size_t localIndex;
+    for(size_t idx_T = 0; idx_T < T; idx_T++)
     {
-      for(x2=0; x2 < L(); x2++)
+      for(size_t idx_Z = 0; idx_Z < L; idx_Z++)
       {
-        for(x1=0; x1 < L(); x1++)
+        for(size_t idx_Y = 0; idx_Y < L; idx_Y++)
         {
-
-          localIndex = d_weave->globalCoordToLocalIndex(x1, x2, x3, x4);
-          /* globalCoordToLocalIndex returns local volume if local data is not available on this cpu */
-          if (localIndex == d_weave->localVolume())
-            continue;
-
-          d_sumTimeslice[x4] += (*d_data)[localIndex];
+          for(size_t idx_X = 0; idx_X < L; idx_X++)
+          {
+            localIndex = d_weave->globalCoordToLocalIndex(idx_X, idx_Y, idx_Z, idx_T);
+            if (localIndex == d_weave->localVolume())
+              continue;
+            (*s_timelabel)[localIndex] = idx_T;
+          }
         }
       }
     }
   }
+
+  for (size_t idx_T = 0;  idx_T < T; idx_T++)
+  {
+    d_sumTimeslice[idx_T] = Datatype(std::complex< double >(0.0, 0.0));
+  }
+
+  Core::Field< size_t >::const_iterator It(s_timelabel->begin());
+
+  for(typename Core::Field< Datatype >::const_iterator Id(d_data->begin()); Id != d_data->end(); ++Id)
+  {
+    d_sumTimeslice[*It] += (*Id);
+    ++It;
+  }
+
+  assert(It == s_timelabel->end());
+
   d_weave->sumOverTimeSlices(reinterpret_cast< std::complex< double> const * >(d_sumTimeslice),
                               reinterpret_cast< std::complex< double> * >(d_sumTimeslice_global),
                               sizeof(Datatype)/sizeof(std::complex< double >));

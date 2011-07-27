@@ -5,6 +5,8 @@ namespace Core
   // personal note (SD):
   // at some point I should add an additional parameter "size_t const * sink_momentum" for an obvious reason
 
+/*
+
   std::vector< Core::Field< Dirac::Matrix >  > construct_proton_with_operator_insertion(
     Propagator const &S_u, Core::Propagator const &S_d,
     StochasticPropagator< 12 > const &phi_u, StochasticPropagator< 12 > const &phi_d,
@@ -18,65 +20,68 @@ namespace Core
     std::vector< Base::Operator > const &ops,
     size_t const t_src, size_t const t_snk);
 
-  std::vector< Core::Field< Dirac::Matrix >  >
-           Propagator::construct_baryon_with_operator_insertion(
-             Propagator const &no2, Propagator const &no3,
-             StochasticPropagator< 12 > const &phi_no1,
-             StochasticPropagator< 12 > const &phi_no2,
-             StochasticPropagator< 12 > const &phi_no3,
-             StochasticSource< 12 > const &xi,
-             Base::BaryonInterpolatingField const iPol,
-             std::vector< Base::Operator > const &ops,
-             size_t const t_src, size_t const t_snk) const
-  {
-    switch (iPol)
-    {
-      case Base::bar_PROTON:
-        return construct_proton_with_operator_insertion(*this, no2, phi_no1, phi_no2, xi, ops, t_src, t_snk);
-        break;
-      default:
-      std::cerr << "unknown interpolating field in "
-                << "std::vector< Core::Field< Dirac::Matrix > * > Propagator::construct_baryon_with_operator_insertion(...)!"
-                << std::endl;
-      std::cerr << "Aborting..." << std::endl;
-      exit(1);
-    }
-
-  }
-
-  std::vector< Core::Field< Dirac::Matrix > >
-             Propagator::construct_baryon_with_non_local_operator_insertion(
-             Propagator const &no2, Propagator const &no3,
-             StochasticPropagator< 12 > const &phi_no1,
-             StochasticPropagator< 12 > const &phi_no2,
-             StochasticPropagator< 12 > const &phi_no3,
-             StochasticSource< 12 > const &xi,
-             Field<QCD::Gauge> const& gauge_field,
-             Base::BaryonInterpolatingField const iPol,
-             std::vector< Base::Operator > const &ops,
-             size_t const t_src, size_t const t_snk) const
-  {
-    switch (iPol)
-    {
-      case Base::bar_PROTON:
-        return construct_proton_with_non_local_operator_insertion(*this, no2, phi_no1, phi_no2, xi, gauge_field, ops, t_src, t_snk);
-        break;
-      default:
-      std::cerr << "unknown interpolating field in "
-                << "std::vector< Core::Field< Dirac::Matrix > * > Propagator::construct_baryon_with_operator_insertion(...)!"
-                << std::endl;
-      std::cerr << "Aborting..." << std::endl;
-      exit(1);
-    }
-
-  }
+//   std::vector< Core::Field< Dirac::Matrix >  >
+//            Propagator::construct_baryon_with_operator_insertion(
+//              Propagator const &no2, Propagator const &no3,
+//              StochasticPropagator< 12 > const &phi_no1,
+//              StochasticPropagator< 12 > const &phi_no2,
+//              StochasticPropagator< 12 > const &phi_no3,
+//              StochasticSource< 12 > const &xi,
+//              Base::BaryonInterpolatingField const iPol,
+//              std::vector< Base::Operator > const &ops,
+//              size_t const t_src, size_t const t_snk) const
+//   {
+//     switch (iPol)
+//     {
+//       case Base::bar_PROTON:
+//         return construct_proton_with_operator_insertion(*this, no2, phi_no1, phi_no2, xi, ops, t_src, t_snk);
+//         break;
+//       default:
+//       std::cerr << "unknown interpolating field in "
+//                 << "std::vector< Core::Field< Dirac::Matrix > * > Propagator::construct_baryon_with_operator_insertion(...)!"
+//                 << std::endl;
+//       std::cerr << "Aborting..." << std::endl;
+//       exit(1);
+//     }
+// 
+//   }
+// 
+//   std::vector< Core::Field< Dirac::Matrix > >
+//              Propagator::construct_baryon_with_non_local_operator_insertion(
+//              Propagator const &no2, Propagator const &no3,
+//              StochasticPropagator< 12 > const &phi_no1,
+//              StochasticPropagator< 12 > const &phi_no2,
+//              StochasticPropagator< 12 > const &phi_no3,
+//              StochasticSource< 12 > const &xi_no1,
+//              StochasticSource< 12 > const &xi_no2,
+//              StochasticSource< 12 > const &xi_no3,
+//              Field<QCD::Gauge> const& gauge_field,
+//              Base::BaryonInterpolatingField const iPol,
+//              std::vector< Base::Operator > const &ops,
+//              size_t const t_src, size_t const t_snk) const
+//   {
+//     switch (iPol)
+//     {
+//       case Base::bar_PROTON:
+//         return construct_proton_with_non_local_operator_insertion(*this, no2, phi_no1, phi_no2, xi, gauge_field, ops, t_src, t_snk);
+//         break;
+//       default:
+//       std::cerr << "unknown interpolating field in "
+//                 << "std::vector< Core::Field< Dirac::Matrix > * > Propagator::construct_baryon_with_operator_insertion(...)!"
+//                 << std::endl;
+//       std::cerr << "Aborting..." << std::endl;
+//       exit(1);
+//     }
+// 
+//   }
 
 
   std::vector< Core::Field< Dirac::Matrix > > construct_proton_with_operator_insertion(
              Propagator const &S_u, Propagator const &S_d,
              StochasticPropagator< 12 > const &phi_u,
              StochasticPropagator< 12 > const &phi_d,
-             StochasticSource< 12 > const &xi,
+             StochasticSource< 12 > const &xi_u,
+             StochasticSource< 12 > const &xi_d,
              std::vector< Base::Operator > const &ops,
              size_t const t_src, size_t const t_snk)
   {
@@ -137,7 +142,7 @@ namespace Core
       for(size_t x1=0; x1<L; x1++)
       {
         localIndex = weave.globalCoordToLocalIndex(x1, x2, x3, t_snk);
-        /* globalCoordToLocalIndex returns local volume if local data is not available on this cpu */
+        // globalCoordToLocalIndex returns local volume if local data is not available on this cpu 
         if (localIndex == weave.localVolume())
           continue;
 
@@ -264,7 +269,8 @@ namespace Core
              Propagator const &S_u, Propagator const &S_d,
              StochasticPropagator< 12 > const &phi_u,
              StochasticPropagator< 12 > const &phi_d,
-             StochasticSource< 12 > const &xi,
+             StochasticSource< 12 > const &xi_u,
+             StochasticSource< 12 > const &xi_d,
              Field<QCD::Gauge> const& gauge_field,
              std::vector< Base::Operator > const &ops,
              size_t const t_src, size_t const t_snk)
@@ -368,7 +374,7 @@ namespace Core
       for(size_t x1=0; x1<L; x1++)
       {
         localIndex = weave.globalCoordToLocalIndex(x1, x2, x3, t_snk);
-        /* globalCoordToLocalIndex returns local volume if local data is not available on this cpu */
+        // globalCoordToLocalIndex returns local volume if local data is not available on this cpu
         if (localIndex == weave.localVolume())
           continue;
 
@@ -536,6 +542,6 @@ namespace Core
     }
     return fields;
   }
-
+*/
 
 }

@@ -6,9 +6,12 @@ namespace Contract
 {
   std::vector< Core::BaryonCorrelator > proton_threepoint_stochastic_naive(Core::Propagator const &u,
                                                           Core::Propagator const &d,
+                                                          Core::Propagator const &u_local,
+                                                          Core::Propagator const &d_local,
                                                           Core::StochasticPropagator<12> const &u_stoch_at_sink,
                                                           Core::StochasticPropagator<12> const &d_stoch_at_sink,
-                                                          Core::StochasticSource<12> const &xi_at_sink,
+                                                          Core::StochasticSource<12> const &xi_u_at_sink,
+                                                          Core::StochasticSource<12> const &xi_d_at_sink,
                                                           Core::Field < QCD::Gauge > const * const gauge_field,
                                                           std::vector< Base::Operator > const &ops,
                                                           size_t const t_src, size_t const t_snk)
@@ -28,7 +31,6 @@ namespace Contract
     Base::Weave weave(L, T);
 
     Dirac::Gamma< 5 > gamma5;
-    Dirac::Gamma< 4 > gamma0;
 
     for (size_t opNo=0; opNo<ops.size(); opNo++)
     {
@@ -38,8 +40,8 @@ namespace Contract
       Core::Field< Dirac::Matrix >::iterator It_dd(field_dd.begin());
       Core::Field< Dirac::Matrix >::iterator It_uu(field_uu.begin());
 
-      Core::Propagator::const_iterator It_u(u.begin());
-      Core::Propagator::const_iterator It_d(d.begin());
+      Core::Propagator::const_iterator It_u(u_local.begin());
+      Core::Propagator::const_iterator It_d(d_local.begin());
       Core::Propagator::const_iterator It_phi_d(u_stoch_at_sink.begin());
       Core::Propagator::const_iterator It_phi_u(d_stoch_at_sink.begin());
 
@@ -66,22 +68,25 @@ namespace Contract
             {
               pos_snk[Base::idx_Z] = idx_Z;
 
-              QCD::Tensor const xi_snk(xi_at_sink(pos_snk));
+
+              // note: flavour change (of stoch. propagators "phi")
+              // introduced by hermiticity trick in twisted mass
+              // has already been accounted for in declaration of iterators, see above!
+              // therefore, we interchange the flavours for the stochastic sources as well.
+
+              // actually, we are missing a transpose here, but source is supposed to be diagonal
+
+              QCD::Tensor const xi_u_snk(xi_d_at_sink(pos_snk));
+              QCD::Tensor const xi_d_snk(xi_u_at_sink(pos_snk));
 
               QCD::Tensor const tmp_d_from_source(*It_d);
               QCD::Tensor const tmp_u_from_source(*It_u);
-//               if (count == 65 && idx_X+idx_Y+idx_Z == 0)
-//               {
-//                   std::cout << tmp_d_from_source << std::endl;
-//               }
-              // note: flavour change introduced by hermiticity trick in twisted mass
-              // has already been accounted for in declaration of iterators, see above!
 
               QCD::Tensor tmp_d_from_sink(*It_phi_d);
               QCD::Tensor tmp_u_from_sink(*It_phi_u);
 
-              tmp_d_from_sink.leftMultiplySpinColorDilutedConj(xi_snk);
-              tmp_u_from_sink.leftMultiplySpinColorDilutedConj(xi_snk);
+              tmp_d_from_sink.leftMultiplySpinColorDilutedConj(xi_d_snk);
+              tmp_u_from_sink.leftMultiplySpinColorDilutedConj(xi_u_snk);
 
 
               // note that the following would do the same but more inefficiently,
@@ -100,7 +105,8 @@ namespace Contract
 //                 exit(1);
 //               }
 
-              // important note: QCD::Tensor::dagger() does not change the QCD::Tensor it is applied to but returns a QCD::hcTensor
+              // important note: QCD::Tensor::dagger() does not change the QCD::Tensor it is applied to
+              // but returns a QCD::hcTensor
 
               // apply gamma5 hermiticity trick
               tmp_d_from_sink = QCD::Tensor(tmp_d_from_sink.dagger());
@@ -114,9 +120,40 @@ namespace Contract
               switch (ops[opNo])
               {
                 case Base::op_GAMMA_4:
+                {
+                  Dirac::Gamma< 4 > gamma0;
                   tmp_d_from_sink *= gamma0;
                   tmp_u_from_sink *= gamma0;
                   break;
+                }
+                case Base::op_GAMMA_45:
+                {
+                  Dirac::Gamma< 45 > gamma0gamma5;
+                  tmp_d_from_sink *= gamma0gamma5;
+                  tmp_u_from_sink *= gamma0gamma5;
+                  break;
+                }
+                case Base::op_GAMMA_15:
+                {
+                  Dirac::Gamma< 15 > gamma1gamma5;
+                  tmp_d_from_sink *= gamma1gamma5;
+                  tmp_u_from_sink *= gamma1gamma5;
+                  break;
+                }
+                case Base::op_GAMMA_25:
+                {
+                  Dirac::Gamma< 25 > gamma2gamma5;
+                  tmp_d_from_sink *= gamma2gamma5;
+                  tmp_u_from_sink *= gamma2gamma5;
+                  break;
+                }
+                case Base::op_GAMMA_35:
+                {
+                  Dirac::Gamma< 35 > gamma3gamma5;
+                  tmp_d_from_sink *= gamma3gamma5;
+                  tmp_u_from_sink *= gamma3gamma5;
+                  break;
+                }
                 case Base::op_UNITY:
                   // nothing  to do
                   // tmp_d_from_sink *= gamma5;
@@ -128,8 +165,6 @@ namespace Contract
                           << "std::vector< Core::Field< Dirac::Matrix > * > construct_proton_with_operator_insertion(...):\n"
                           << "Operator with index " << ops[opNo] << " not implemented yet!" << std::endl;
               }
-
-
 
               tmp_d_from_sink.leftMultiply(tmp_d_from_source);
               tmp_u_from_sink.leftMultiply(tmp_u_from_source);
@@ -162,8 +197,8 @@ namespace Contract
       Core::BaryonCorrelator tp_uu(field_uu);
       tp_dd.sumOverSpatialVolume();
       tp_uu.sumOverSpatialVolume();
-      threepoints_all.push_back(tp_dd);
       threepoints_all.push_back(tp_uu);
+      threepoints_all.push_back(tp_dd);
     }
 
     return threepoints_all;

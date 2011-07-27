@@ -361,8 +361,7 @@ int main(int argc, char **argv)
     std::cout << "timeslice (sink) = " << timeslice_sink << std::endl;
 
   // make sure the boundary is not crossed by source-sink correlaton function
-//   size_t const timeslice_boundary = (timeslice_source + (T/2)) % T;
-  size_t const timeslice_boundary = (timeslice_sink + 2) % T;
+  size_t const timeslice_boundary = (timeslice_source + T/2) % T;
   if (weave.isRoot())
     std::cout << "timeslice (boundary) = " << timeslice_boundary << std::endl;
 
@@ -492,7 +491,7 @@ int main(int argc, char **argv)
   if (weave.isRoot())
     std::cout << "\n local currents ... \n" << std::endl;
 
-/*
+
   // ********************************************************************************************
   // local currents *****************************************************************************
   // ********************************************************************************************
@@ -626,7 +625,7 @@ int main(int argc, char **argv)
   #endif
   }
 
-*/
+
   if (weave.isRoot())
     std::cout << "\n conserved currents ... \n" << std::endl;
 

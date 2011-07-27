@@ -124,7 +124,7 @@ namespace Contract
 										   Core::Field< QCD::Gauge > &gauge_field,
 										   Core::Propagator const &u,
 										   Core::Propagator const &d,
-										     size_t const t_op, Base::Operator op);
+										   size_t const t_op, Base::Operator op);
 
 
   /* ---------------------------------------------------------------------------------------------- */
@@ -162,9 +162,12 @@ namespace Contract
   // the gauge field is sometimes not needed, in this case NULL can be passed;
   std::vector< Core::BaryonCorrelator > proton_threepoint_stochastic_naive(Core::Propagator const &u,
                                                           Core::Propagator const &d,
+                                                          Core::Propagator const &u_local,
+                                                          Core::Propagator const &d_local,
                                                           Core::StochasticPropagator<12> const &u_stoch_at_sink,
                                                           Core::StochasticPropagator<12> const &d_stoch_at_sink,
-                                                          Core::StochasticSource<12> const &xi_at_sink,
+                                                          Core::StochasticSource<12> const &xi_u_at_sink,
+                                                          Core::StochasticSource<12> const &xi_d_at_sink,
                                                           Core::Field < QCD::Gauge > const * const gauge_field,
                                                           std::vector< Base::Operator > const &ops,
                                                           size_t const t_src, size_t const t_snk);
@@ -172,21 +175,28 @@ namespace Contract
 
   std::vector< Core::BaryonCorrelator > proton_threepoint_stochastic(Core::Propagator const &u,
                                                 Core::Propagator const &d,
+                                                Core::Propagator const &u_local,
+                                                Core::Propagator const &d_local,
                                                 Core::StochasticPropagator <12> const &phi_u,
                                                 Core::StochasticPropagator <12> const &phi_d,
-                                                Core::StochasticSource <12> const &xi,
-                                                size_t t_source, size_t t_sink,
+                                                Core::StochasticSource <12> const &xi_u,
+                                                Core::StochasticSource <12> const &xi_d,
+                                                size_t const t_source, size_t const t_sink,
                                                 /* this allows for more than one operator */
                                                 std::vector< Base::Operator > const &my_operators,
-                                                Base::BaryonPropagatorProjector const my_projector);
+                                                std::vector< Base::BaryonPropagatorProjector > const &my_projectors_u,
+                                                std::vector< Base::BaryonPropagatorProjector > const &my_projectors_);
 
   std::vector< Core::BaryonCorrelator > proton_threepoint_stochastic_non_local(Core::Propagator const &u,
                                                 Core::Propagator const &d,
+                                                Core::Propagator const &u_local,
+                                                Core::Propagator const &d_local,
                                                 Core::StochasticPropagator <12> const &phi_u,
                                                 Core::StochasticPropagator <12> const &phi_d,
-                                                Core::StochasticSource <12> const &xi,
+                                                Core::StochasticSource <12> const &xi_u,
+                                                Core::StochasticSource <12> const &xi_d,
                                                 Core::Field<QCD::Gauge> const &gauge_field,
-                                                size_t t_source, size_t t_sink,
+                                                size_t const t_source, size_t const t_sink,
                                                 /* this allows for more than one operator */
                                                 std::vector< Base::Operator > const &my_operators,
                                                 Base::BaryonPropagatorProjector const my_projector);

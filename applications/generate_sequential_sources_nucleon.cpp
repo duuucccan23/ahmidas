@@ -189,13 +189,13 @@ int main(int argc, char **argv)
 
   Contract::create_sequential_source_proton_d(sequentialSource1, *uProp, *uProp,
                                               gauge_field, Smear::sm_Jacobi, Jac_iterations, Jac_alpha,
-                                              timeslice_sink, Base::proj_1_PLUS_TM);
+                                              timeslice_sink, Base::proj_1__MINUS_TM);
   Contract::create_sequential_source_proton_d(sequentialSource2, *uProp, *uProp,
                                               gauge_field, Smear::sm_Jacobi, Jac_iterations, Jac_alpha,
-                                              timeslice_sink, Base::proj_2_PLUS_TM);
+                                              timeslice_sink, Base::proj_2_MINUS_TM);
   Contract::create_sequential_source_proton_d(sequentialSource3, *uProp, *uProp,
                                               gauge_field, Smear::sm_Jacobi, Jac_iterations, Jac_alpha,
-                                              timeslice_sink, Base::proj_3_PLUS_TM);
+                                              timeslice_sink, Base::proj_3_MINUS_TM);
   Contract::create_sequential_source_proton_d(sequentialSource4, *uProp, *uProp,
                                               gauge_field, Smear::sm_Jacobi, Jac_iterations, Jac_alpha,
                                               timeslice_sink, Base::proj_PARITY_PLUS_TM);

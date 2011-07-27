@@ -16,7 +16,7 @@ namespace Dirac
   template< >
   size_t const Gamma< 2 >::s_perm[4] = {3, 2, 1, 0};
   template< >
-  std::complex< double > const Gamma< 2 >::s_sign[4] = {1, -1, -1, 1};
+  std::complex< double > const Gamma< 2 >::s_sign[4] = {-1, +1, +1, -1};
 
   template< >
   size_t const Gamma< 3 >::s_perm[4] = {2, 3, 0, 1};

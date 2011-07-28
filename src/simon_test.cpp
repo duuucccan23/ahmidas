@@ -89,14 +89,14 @@ int main(int argc, char **argv)
 
   Core::Propagator uProp = Core::Propagator(L, T);
 
-  Tool::IO::load(&uProp, propfilesU, Tool::IO::fileSCIDAC, 64);
+  Tool::IO::load(&uProp, propfilesU, Tool::IO::fileSCIDAC);
 
   if (weave.isRoot())
     std::cout << "u quark propagator successfully loaded\n" << std::endl;
 
   Core::Propagator dProp = Core::Propagator(L, T);
 
-  Tool::IO::load(&dProp, propfilesD, Tool::IO::fileSCIDAC, 64);
+  Tool::IO::load(&dProp, propfilesD, Tool::IO::fileSCIDAC);
 
   if (weave.isRoot())
     std::cout << "d quark propagator successfully loaded\n" << std::endl;
@@ -110,22 +110,22 @@ int main(int argc, char **argv)
   // the load function with last parameter (size_t) precision is sort of a quick and dirty version
   // but it also reads files without a proper header
   Tool::IO::load(dynamic_cast< Core::Propagator *> (&stochastic_dProp),
-                 stochasticPropFilesD, Tool::IO::fileSCIDAC, 64);
+                 stochasticPropFilesD, Tool::IO::fileSCIDAC);
   if (weave.isRoot())
     std::cout << "stochastic d quark propagator successfully loaded\n" << std::endl;
 
   Tool::IO::load(dynamic_cast< Core::Propagator *> (&stochastic_uProp),
-                 stochasticPropFilesU, Tool::IO::fileSCIDAC, 64);
+                 stochasticPropFilesU, Tool::IO::fileSCIDAC);
   if (weave.isRoot())
     std::cout << "stochastic u quark propagator successfully loaded\n" << std::endl;
 
   Tool::IO::load(dynamic_cast< Core::Propagator *> (&stochasticSourceD),
-                 stochasticSourceFilesD, Tool::IO::fileSCIDAC, 64);
+                 stochasticSourceFilesD, Tool::IO::fileSCIDAC);
   if (weave.isRoot())
     std::cout << "stochastic source (d) successfully loaded\n" << std::endl;
 
   Tool::IO::load(dynamic_cast< Core::Propagator *> (&stochasticSourceU),
-                 stochasticSourceFilesU, Tool::IO::fileSCIDAC, 64);
+                 stochasticSourceFilesU, Tool::IO::fileSCIDAC);
   if (weave.isRoot())
     std::cout << "stochastic source (u) successfully loaded\n" << std::endl;
 
@@ -166,13 +166,15 @@ int main(int argc, char **argv)
   // ****************************************************************************************************
   // ****************************************************************************************************
 
+  std::vector< Core::BaryonCorrelator > p3p;
+  
   // STOCHASTIC TWOPOINT VERSION 1
-
-  std::vector< Core::BaryonCorrelator > p3p = Contract::proton_threepoint_stochastic_naive(uProp_smeared, dProp_smeared,
+/*
+  p3p = Contract::proton_threepoint_stochastic_naive(uProp_smeared, dProp_smeared,
                                                           uProp, dProp,
                                                           stochastic_uProp, stochastic_dProp,
                                                           stochasticSourceU, stochasticSourceD,
-                                                          NULL, /*&gauge_field,*/
+                                                          NULL, //&gauge_field,
                                                           my_operators,
                                                           timeslice_source, timeslice_sink);
   p3p[0] *= Base::proj_1_PLUS_TM;
@@ -208,7 +210,7 @@ int main(int argc, char **argv)
   }
   weave.barrier();
   p3p.clear();
-
+*/
   // ****************************************************************************************************
   // ****************************************************************************************************
   // ****************************************************************************************************

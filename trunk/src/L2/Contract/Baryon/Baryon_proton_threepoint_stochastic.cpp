@@ -59,13 +59,6 @@ namespace Contract
 
     for (size_t opNo=0; opNo<my_operators.size(); opNo++)
     {
-      Core::Field< Dirac::Matrix >field_uu(L, T);
-      Core::Field< Dirac::Matrix >field_dd(L, T);
-
-      Core::Propagator::const_iterator It_u(S_u_local.begin());
-      Core::Propagator::const_iterator It_d(S_d_local.begin());
-      Core::Propagator::const_iterator It_phi_u(phi_d.begin());
-      Core::Propagator::const_iterator It_phi_d(phi_u.begin());
 
       // additional iterators for summation over sink timeslice
       Core::Propagator::const_iterator It_fw_u(S_u.begin());
@@ -92,27 +85,13 @@ namespace Contract
       std::complex<double> const I (0, 1);
       std::complex<double> const COMPLEX_ZERO (0, 0);
 
-
-      QCD::Tensor dd_part2_local, uu_part2_local;
-      dd_part2_local *= COMPLEX_ZERO;
-      uu_part2_local *= COMPLEX_ZERO;
+      // standard constructor fills Tensor with zeros
+      QCD::Tensor dd_part2_local = QCD::Tensor();
+      QCD::Tensor uu_part2_local = QCD::Tensor();
 
       // this part is only summed over sink timeslice (here one could insert momentum ...)
-//       size_t localIndex;
-//       for(size_t x3=0; x3<L; x3++)
-//       {
-//       for(size_t x2=0; x2<L; x2++)
-//       {
-//       for(size_t x1=0; x1<L; x1++)
-//       {
-
       for (Core::Field< size_t >::const_iterator It_t = timeLabel.begin(); It_t != timeLabel.end(); ++It_t)
       {
-
-//         localIndex = weave.globalCoordToLocalIndex(x1, x2, x3, t_sink);
-        /* globalCoordToLocalIndex returns local volume if local data is not available on this cpu */
-//         if (localIndex == weave.localVolume())
-//           continue;
 
         if (*It_t != t_sink)
         {
@@ -128,23 +107,24 @@ namespace Contract
         QCD::Tensor xi_d_snk((*It_xi_d)*gamma5);
         // actually we leave a transposeFull() here since xi is diagonal
 
-//         assert(xi_d_snk(0)   != COMPLEX_ZERO);
-//         assert(xi_d_snk(1)   == COMPLEX_ZERO);
-//         assert(xi_d_snk(2)   == COMPLEX_ZERO);
-//         assert(xi_d_snk(3)   == COMPLEX_ZERO);
-//         assert(xi_d_snk(7)   == COMPLEX_ZERO);
-//         assert(xi_d_snk(11)  == COMPLEX_ZERO);
-//         assert(xi_d_snk(13)  != COMPLEX_ZERO);
-//         assert(xi_d_snk(143) != COMPLEX_ZERO);
-//         assert(xi_u_snk(0)   != COMPLEX_ZERO);
-//         assert(xi_u_snk(1)   == COMPLEX_ZERO);
-//         assert(xi_u_snk(2)   == COMPLEX_ZERO);
-//         assert(xi_u_snk(3)   == COMPLEX_ZERO);
-//         assert(xi_u_snk(7)   == COMPLEX_ZERO);
-//         assert(xi_u_snk(11)  == COMPLEX_ZERO);
-//         assert(xi_u_snk(13)  != COMPLEX_ZERO);
-//         assert(xi_u_snk(143) != COMPLEX_ZERO);
-
+        /*
+        assert(xi_d_snk(0)   != COMPLEX_ZERO);
+        assert(xi_d_snk(1)   == COMPLEX_ZERO);
+        assert(xi_d_snk(2)   == COMPLEX_ZERO);
+        assert(xi_d_snk(3)   == COMPLEX_ZERO);
+        assert(xi_d_snk(7)   == COMPLEX_ZERO);
+        assert(xi_d_snk(11)  == COMPLEX_ZERO);
+        assert(xi_d_snk(13)  != COMPLEX_ZERO);
+        assert(xi_d_snk(143) != COMPLEX_ZERO);
+        assert(xi_u_snk(0)   != COMPLEX_ZERO);
+        assert(xi_u_snk(1)   == COMPLEX_ZERO);
+        assert(xi_u_snk(2)   == COMPLEX_ZERO);
+        assert(xi_u_snk(3)   == COMPLEX_ZERO);
+        assert(xi_u_snk(7)   == COMPLEX_ZERO);
+        assert(xi_u_snk(11)  == COMPLEX_ZERO);
+        assert(xi_u_snk(13)  != COMPLEX_ZERO);
+        assert(xi_u_snk(143) != COMPLEX_ZERO);
+        */
 
         QCD::Tensor S_d_xf(*It_fw_d);
         S_d_xf.left_multiply_proton();
@@ -161,15 +141,13 @@ namespace Contract
 
 
         xi_d_snk.right_multiply_proton();
-
-
-        //tmp_d_ti_xi.leftMultiply(xi_d_snk);
         xi_d_snk.transposeFull();
         tmp_d_ti_xi.rightMultiply(xi_d_snk);
         tmp_u_ti_xi.leftMultiply(xi_u_snk);
 
         dd_part2_local += tmp_d_ti_xi;
         uu_part2_local += tmp_u_ti_xi;
+
 
         ++It_fw_u;
         ++It_fw_d;
@@ -178,21 +156,37 @@ namespace Contract
 
       }
 
-//       }
-//       }
-//       }
+      assert(It_fw_u == S_u.end());
 
-      QCD::Tensor dd_part2;
-      weave.allReduce(&dd_part2_local, &dd_part2);
-      QCD::Tensor uu_part2;
-      weave.allReduce(&uu_part2_local, &uu_part2);
+      
+      std::complex< double > tmp_complex_array_local[144];
+      std::complex< double > tmp_complex_array[144];
+
+      for(size_t i=0; i<144; i++)
+        tmp_complex_array_local[i] = dd_part2_local(i);
+
+      weave.allReduce(tmp_complex_array_local, tmp_complex_array, 144);
+      QCD::Tensor const dd_part2(tmp_complex_array);
+
+      for(size_t i=0; i<144; i++)
+        tmp_complex_array_local[i] = uu_part2_local(i);
+
+      weave.allReduce(tmp_complex_array_local, tmp_complex_array, 144);
+      QCD::Tensor const uu_part2(tmp_complex_array);
+
 
       Dirac::Matrix colorDiag;
-
       QCD::Tensor tmp;
 
+      Core::Field< Dirac::Matrix >field_uu(L, T);
+      Core::Field< Dirac::Matrix >field_dd(L, T);
       Core::Field< Dirac::Matrix >::iterator It_dd(field_dd.begin());
       Core::Field< Dirac::Matrix >::iterator It_uu(field_uu.begin());
+
+      Core::Propagator::const_iterator It_u(S_u_local.begin());
+      Core::Propagator::const_iterator It_d(S_d_local.begin());
+      Core::Propagator::const_iterator It_phi_u(phi_d.begin());
+      Core::Propagator::const_iterator It_phi_d(phi_u.begin());
 
       //y-dependent loop
       while(It_dd != field_dd.end())

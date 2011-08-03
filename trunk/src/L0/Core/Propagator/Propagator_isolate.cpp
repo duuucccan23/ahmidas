@@ -14,6 +14,8 @@ namespace Core
     *d_references -= 1;
     d_references = new size_t(1);
 
+
+    d_components->destroy();
     d_components = new Field< QCD::Tensor > (*d_components);
     (*d_components).isolate();
 

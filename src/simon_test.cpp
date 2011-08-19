@@ -1,5 +1,6 @@
 
 #include <cstring>
+#include <ctime>
 #include <vector>
 #include <map>
 #include <complex>
@@ -24,6 +25,9 @@
 int main(int argc, char **argv)
 {
   Ahmidas my_ahmidas(&argc, &argv);
+
+  time_t start,end;
+  double dif;
 
   size_t L_tmp = 0;
   size_t T_tmp = 0;
@@ -56,8 +60,11 @@ int main(int argc, char **argv)
 
   size_t const timeslice_source = (positions[0])[Base::idx_T];
   size_t const timeslice_boundary((timeslice_source + T/2) % T);
-  size_t const timeslice_stochSource = timeslice_source + size_t(floats["sourceSinkSeparation"]);
+  size_t const timeslice_stochSource = (timeslice_source + size_t(floats["sourceSinkSeparation"])) % T;
   assert(timeslice_stochSource != timeslice_source);
+  assert(timeslice_source < T);
+  assert(timeslice_boundary < T);
+  assert(timeslice_stochSource < T);
   size_t const timeslice_sink = timeslice_stochSource;
 
   if (weave.isRoot())
@@ -137,17 +144,21 @@ int main(int argc, char **argv)
   Core::Propagator uProp_smeared(uProp);
   Core::Propagator dProp_smeared(dProp);
 
-  {
-    Smear::APE APE_tool(APE_alpha);
-    Smear::Jacobi Jacobi_tool(Jac_alpha);
+  
+  Smear::APE APE_tool(APE_alpha);
+  Smear::Jacobi Jacobi_tool(Jac_alpha);
 
-    // we still need the unsmeared gauge field for the contractions, therefore we make a copy here
-    Core::Field< QCD::Gauge > gauge_field_APE(gauge_field);
-    APE_tool.smear(gauge_field_APE, APE_iterations);
+  // we still need the unsmeared gauge field for the contractions, therefore we make a copy here
+  Core::Field< QCD::Gauge > gauge_field_APE(gauge_field);
+  APE_tool.smear(gauge_field_APE, APE_iterations);
 
-    uProp_smeared.smearJacobi(Jac_alpha, Jac_iterations, gauge_field_APE);
-    dProp_smeared.smearJacobi(Jac_alpha, Jac_iterations, gauge_field_APE);
-  }
+  uProp_smeared.smearJacobi(Jac_alpha, Jac_iterations, gauge_field_APE);
+  dProp_smeared.smearJacobi(Jac_alpha, Jac_iterations, gauge_field_APE);
+  
+
+  if (weave.isRoot())
+    std::cout << "forward propagators smeared successfully\n" << std::endl;
+  
 
   stochastic_dProp.changeBoundaryConditions_uniformToFixed(timeslice_stochSource, timeslice_boundary);
   stochastic_uProp.changeBoundaryConditions_uniformToFixed(timeslice_stochSource, timeslice_boundary);
@@ -165,11 +176,20 @@ int main(int argc, char **argv)
   // ****************************************************************************************************
   // ****************************************************************************************************
   // ****************************************************************************************************
-
+  
   std::vector< Core::BaryonCorrelator > p3p;
   
+  
   // STOCHASTIC TWOPOINT VERSION 1
+
 /*
+  if (weave.isRoot())
+    std::cout << "starting contractions version 1" << std::endl;
+  
+  weave.barrier();
+  time (&start);
+                
+
   p3p = Contract::proton_threepoint_stochastic_naive(uProp_smeared, dProp_smeared,
                                                           uProp, dProp,
                                                           stochastic_uProp, stochastic_dProp,
@@ -177,12 +197,19 @@ int main(int argc, char **argv)
                                                           NULL, //&gauge_field,
                                                           my_operators,
                                                           timeslice_source, timeslice_sink);
+  
+  weave.barrier();
+  time (&end);
+  dif = difftime (end,start);
+  if (weave.isRoot())
+    std::cout << "done in " << dif << "seconds\n" << std::endl;
+
   p3p[0] *= Base::proj_1_PLUS_TM;
-  p3p[1] *= Base::proj_1_MINUS_TM;
+  p3p[1] *= Base::proj_1_PLUS_TM;
   p3p[2] *= Base::proj_2_PLUS_TM;
-  p3p[3] *= Base::proj_2_MINUS_TM;
+  p3p[3] *= Base::proj_2_PLUS_TM;
   p3p[4] *= Base::proj_3_PLUS_TM;
-  p3p[5] *= Base::proj_3_MINUS_TM;
+  p3p[5] *= Base::proj_3_PLUS_TM;
 
 
   if (weave.isRoot())
@@ -211,27 +238,60 @@ int main(int argc, char **argv)
   weave.barrier();
   p3p.clear();
 */
+
   // ****************************************************************************************************
   // ****************************************************************************************************
   // ****************************************************************************************************
 
   // STOCHASTIC TWOPOINT VERSION 2
 
-//   assert (my_operators.size() >= 5);
+  if (weave.isRoot())
+    std::cout << "starting contractions version 2\n" << std::endl;
+  
+  {
+  weave.barrier();
+  time (&start);
+
+
+  my_operators.push_back(Base::op_O44);
+  my_operators.push_back(Base::op_O11);
+  my_operators.push_back(Base::op_O22);
+  my_operators.push_back(Base::op_O33);
   std::vector< Base::BaryonPropagatorProjector > my_projectors_u;
   my_projectors_u.push_back(Base::proj_1_PLUS_TM);
   my_projectors_u.push_back(Base::proj_2_PLUS_TM);
   my_projectors_u.push_back(Base::proj_3_PLUS_TM);
-  std::vector< Base::BaryonPropagatorProjector > my_projectors_d;
-  my_projectors_d.push_back(Base::proj_1_MINUS_TM);
-  my_projectors_d.push_back(Base::proj_2_MINUS_TM);
-  my_projectors_d.push_back(Base::proj_3_MINUS_TM);
+  my_projectors_u.push_back(Base::proj_PARITY_PLUS_TM);
+  my_projectors_u.push_back(Base::proj_PARITY_PLUS_TM);
+  my_projectors_u.push_back(Base::proj_PARITY_PLUS_TM);
+  my_projectors_u.push_back(Base::proj_PARITY_PLUS_TM);
+  std::vector< Base::BaryonPropagatorProjector > my_projectors_d(my_projectors_u);
+//   my_projectors_d.push_back(Base::proj_1_MINUS_TM);
+//   my_projectors_d.push_back(Base::proj_2_MINUS_TM);
+//   my_projectors_d.push_back(Base::proj_3_MINUS_TM);
 
-  p3p = Contract::proton_threepoint_stochastic(uProp_smeared, dProp_smeared, uProp, dProp,
+  p3p = Contract::proton_threepoint_stochastic_non_local(
+//   p3p = Contract::proton_threepoint_stochastic(
+                                               uProp_smeared, dProp_smeared, uProp, dProp,
                                                stochastic_uProp, stochastic_dProp,
                                                stochasticSourceU, stochasticSourceD,
+                                               &gauge_field,
                                                timeslice_source, timeslice_stochSource,
                                                my_operators, my_projectors_u, my_projectors_d);
+
+  // FIX THIS: problem with Gamma multiplication
+  p3p[2*1]   *= -1.0;
+  p3p[2*1+1] *= -1.0;
+  p3p[2*5]   *= -1.0;
+  p3p[2*5+1] *= -1.0;
+
+
+
+  weave.barrier();
+  time (&end);
+  dif = difftime (end,start);
+  if (weave.isRoot())
+    std::cout << "done in " << dif << "seconds\n" << std::endl;
 
   if (weave.isRoot())
   {
@@ -257,40 +317,63 @@ int main(int argc, char **argv)
     fout->close();
   }
   p3p.clear();
+  }
 
-//   p3p = Contract::proton_threepoint_stochastic_non_local(uProp, dProp,
-//                                                stochastic_uProp, stochastic_dProp,
-//                                                stochasticSourceU, stochasticSourceD,
-//                                                gauge_field,
-//                                                timeslice_source, timeslice_stochSource,
-//                                                my_operators_proj0, Base::proj_PARITY_PLUS_TM);
-// 
-// 
-//   if (weave.isRoot())
-//   {
-//     fout = new std::ofstream("output_3point_proton_stochastic_uu.dat", std::fstream::ate);
-//     for (size_t i=0; i<p3p.size(); i+=2)
-//     {
-//       p3p[i].setOffset(timeslice_source);
-//       if (weave.isRoot())
-//       {
-//         *fout << p3p[i] << std::endl;
-//       }
-//     }
-//     fout->close();
-//     fout->open("output_3point_proton_stochastic_dd.dat", std::fstream::ate);
-//     for (size_t i=1; i<p3p.size(); i+=2)
-//     {
-//       p3p[i].setOffset(timeslice_source);
-//       if (weave.isRoot())
-//       {
-//         *fout << p3p[i] << std::endl;
-//       }
-//     }
-//     fout->close();
-//   }
-// 
-//   p3p.clear();
+/*
+  if (weave.isRoot())
+    std::cout << "starting contractions version 2, non-local\n" << std::endl;
+{
+  weave.barrier();
+  time (&start);
+
+//   assert (my_operators.size() >= 5);
+  std::vector< Base::BaryonPropagatorProjector > my_projectors_u;
+  my_projectors_u.push_back(Base::proj_1_PLUS_TM);
+  my_projectors_u.push_back(Base::proj_2_PLUS_TM);
+  my_projectors_u.push_back(Base::proj_3_PLUS_TM);
+  std::vector< Base::BaryonPropagatorProjector > my_projectors_d(my_projectors_u);
+//   my_projectors_d.push_back(Base::proj_1_MINUS_TM);
+//   my_projectors_d.push_back(Base::proj_2_MINUS_TM);
+//   my_projectors_d.push_back(Base::proj_3_MINUS_TM);
+
+  p3p = Contract::proton_threepoint_stochastic_non-local(uProp_smeared, dProp_smeared, uProp, dProp,
+                                               stochastic_uProp, stochastic_dProp,
+                                               stochasticSourceU, stochasticSourceD,
+                                               timeslice_source, timeslice_stochSource,
+                                               my_operators, my_projectors_u, my_projectors_d);
+
+  weave.barrier();
+  time (&end);
+  dif = difftime (end,start);
+  if (weave.isRoot())
+    std::cout << "done in " << dif << "seconds\n" << std::endl;
+
+  if (weave.isRoot())
+  {
+    fout = new std::ofstream("output_3point_proton_stochastic_uu.dat");
+    for (size_t i=0; i<p3p.size(); i+=2)
+    {
+      p3p[i].setOffset(timeslice_source);
+      if (weave.isRoot())
+      {
+        *fout << p3p[i] << std::endl;
+      }
+    }
+    fout->close();
+    fout->open("output_3point_proton_stochastic_dd.dat");
+    for (size_t i=1; i<p3p.size(); i+=2)
+    {
+      p3p[i].setOffset(timeslice_source);
+      if (weave.isRoot())
+      {
+        *fout << p3p[i] << std::endl;
+      }
+    }
+    fout->close();
+  }
+  p3p.clear();
+  }
+*/
 
   // ****************************************************************************************************
   // ****************************************************************************************************
@@ -298,7 +381,14 @@ int main(int argc, char **argv)
 
   // 2-POINT FUNCTION
 
+  if (weave.isRoot())
+    std::cout << "starting 2-point contractions\n" << std::endl;
+
  {
+
+  // now that the threepoint contractions are done, we can smear the stochastic propagators
+  stochastic_uProp.smearJacobi(Jac_alpha, Jac_iterations, gauge_field_APE);
+  stochastic_dProp.smearJacobi(Jac_alpha, Jac_iterations, gauge_field_APE);
 
   size_t const * const source_position = positions[0];
 
@@ -307,24 +397,26 @@ int main(int argc, char **argv)
   Core::Propagator dProp_stochEst((stochasticSourceU.createStochasticPropagator_fixedSink(stochastic_uProp, source_position)).revert());
   Core::Propagator uProp_stochEst((stochasticSourceD.createStochasticPropagator_fixedSink(stochastic_dProp, source_position)).revert());
 
+
+  uProp_stochEst.rotateToPhysicalBasis(true);
+  dProp_stochEst.rotateToPhysicalBasis(false);
+
   // int const * const dummy_momentum({0, 0, 0});
 
-  uProp.rotateToPhysicalBasis(true);
-  dProp.rotateToPhysicalBasis(false);
-  uProp_stochEst.rotateToPhysicalBasis(true); // maybe do this before creating the stochastic estimates?!
-  dProp_stochEst.rotateToPhysicalBasis(false);
+  uProp_smeared.rotateToPhysicalBasis(true);
+  dProp_smeared.rotateToPhysicalBasis(false);
 
   // STOCHASTIC and EXACT 2-POINT FUNCTION
 
-  Core::BaryonCorrelator C2_P = Contract::proton_twopoint(uProp, uProp, dProp, Base::proj_NO_PROJECTOR);
+  Core::BaryonCorrelator C2_P = Contract::proton_twopoint(uProp_smeared, uProp_smeared, dProp_smeared, Base::proj_NO_PROJECTOR);
 
   // d line stochastically estimated
-  Core::BaryonCorrelator C2_P_stochD     = Contract::proton_twopoint(uProp, uProp, dProp_stochEst, Base::proj_NO_PROJECTOR);
+  Core::BaryonCorrelator C2_P_stochD     = Contract::proton_twopoint(uProp_smeared, uProp_smeared, dProp_stochEst, Base::proj_NO_PROJECTOR);
   C2_P_stochD.deleteField();
 
   // one u line stochastically estimated (symmetrized)
-  Core::BaryonCorrelator C2_P_stochU     = Contract::proton_twopoint(uProp_stochEst, uProp, dProp, Base::proj_NO_PROJECTOR);
-  Core::BaryonCorrelator C2_P_stochU_tmp = Contract::proton_twopoint(uProp, uProp_stochEst, dProp, Base::proj_NO_PROJECTOR);
+  Core::BaryonCorrelator C2_P_stochU     = Contract::proton_twopoint(uProp_stochEst, uProp_smeared, dProp_smeared, Base::proj_NO_PROJECTOR);
+  Core::BaryonCorrelator C2_P_stochU_tmp = Contract::proton_twopoint(uProp_smeared, uProp_stochEst, dProp_smeared, Base::proj_NO_PROJECTOR);
   C2_P_stochU_tmp.deleteField();
   C2_P_stochU.deleteField();
   C2_P_stochU += C2_P_stochU_tmp;

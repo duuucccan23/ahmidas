@@ -154,6 +154,13 @@ namespace Contract
                   tmp_u_from_sink *= gamma3gamma5;
                   break;
                 }
+//                 case Base::op_O44:
+//                 {
+//                  // does not work like this!!!! have to fill a Propagator with the entries of tmp_d_from_sink
+                    // and tmp_d_from_source and then use
+//                   field_dd = tmp_d_from_sink.contractWithOperatorInsertion(Base::op_O44, gauge_field, tmp_d_from_source);
+//                   break;
+//                 }
                 case Base::op_UNITY:
                   // nothing  to do
                   // tmp_d_from_sink *= gamma5;

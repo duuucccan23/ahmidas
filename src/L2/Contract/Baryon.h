@@ -185,7 +185,7 @@ namespace Contract
                                                 /* this allows for more than one operator */
                                                 std::vector< Base::Operator > const &my_operators,
                                                 std::vector< Base::BaryonPropagatorProjector > const &my_projectors_u,
-                                                std::vector< Base::BaryonPropagatorProjector > const &my_projectors_);
+                                                std::vector< Base::BaryonPropagatorProjector > const &my_projectors_d);
 
   std::vector< Core::BaryonCorrelator > proton_threepoint_stochastic_non_local(Core::Propagator const &u,
                                                 Core::Propagator const &d,
@@ -195,11 +195,12 @@ namespace Contract
                                                 Core::StochasticPropagator <12> const &phi_d,
                                                 Core::StochasticSource <12> const &xi_u,
                                                 Core::StochasticSource <12> const &xi_d,
-                                                Core::Field<QCD::Gauge> const &gauge_field,
+                                                Core::Field<QCD::Gauge> const * const gauge_field,
                                                 size_t const t_source, size_t const t_sink,
                                                 /* this allows for more than one operator */
                                                 std::vector< Base::Operator > const &my_operators,
-                                                Base::BaryonPropagatorProjector const my_projector);
+                                                std::vector< Base::BaryonPropagatorProjector > const &my_projectors_u,
+                                                std::vector< Base::BaryonPropagatorProjector > const &my_projectors_d);
 }
 
 #include "Baryon/Baryon_nucleon_twopoint.template"

@@ -128,6 +128,8 @@ namespace Base
                              data_recv, count * sizeof(Element), MPI::BYTE, source,      rtag++);
   }
 
+// This does not really make sense since one cannot cast all types to double and MPI::Byte cannot be summed
+/* 
   template< typename Element >
   inline void Weave::allReduce(Element const *data_send, Element *data_recv, size_t const count) const
   {
@@ -135,8 +137,9 @@ namespace Base
     d_grid->grid().Barrier();
 
     // call MPI::Intracomm::Allreduce(...)
-    (d_grid->grid()).Allreduce(data_send, data_recv, count * sizeof(Element), MPI::BYTE, MPI::SUM);
+    (d_grid->grid()).Allreduce(data_send, data_recv, count * sizeof(Element)/sizeof(double), MPI::DOUBLE, MPI::SUM);
   }
+*/
 
   inline void Weave::allReduce(std::complex< double > const *data_send, std::complex< double > *data_recv, size_t const count) const
   {

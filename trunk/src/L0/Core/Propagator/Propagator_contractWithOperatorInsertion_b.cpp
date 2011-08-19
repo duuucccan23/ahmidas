@@ -7,7 +7,7 @@ namespace Core
 {
 
   // for 1-derivative operators or conserved vector current
-  Field< Dirac::Matrix > Propagator::contractWithOperatorInsertion(Base::Operator const O, Field< QCD::Gauge > * const gauge_field, Propagator const &fromRight, Core::Field< Dirac::Matrix > &timesG5)
+  Field< Dirac::Matrix > Propagator::contractWithOperatorInsertion(Base::Operator const O, Field< QCD::Gauge > const * const gauge_field, Propagator const &fromRight, Core::Field< Dirac::Matrix > &timesG5)
   {
 
     assert(gauge_field != NULL);

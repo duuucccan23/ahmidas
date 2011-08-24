@@ -81,7 +81,7 @@ namespace Contract
         }
       }
     }
-    else if(identifier == "noether")//just placeholder at the moment
+    else if(identifier == "noether")
     {
       assert(addCorrs != NULL);
       std::vector< Base::Operator > ops;
@@ -118,7 +118,7 @@ namespace Contract
         }
       }
     }
-    else if(identifier == "1D")//just placeholder at the moment
+    else if(identifier == "1D")
     {
       assert(addCorrs != NULL);
       std::vector< Base::Operator > ops;

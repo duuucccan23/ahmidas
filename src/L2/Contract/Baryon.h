@@ -172,20 +172,28 @@ namespace Contract
                                                           std::vector< Base::Operator > const &ops,
                                                           size_t const t_src, size_t const t_snk);
 
-
-  std::vector< Core::BaryonCorrelator > proton_threepoint_stochastic(Core::Propagator const &u,
-                                                Core::Propagator const &d,
-                                                Core::Propagator const &u_local,
-                                                Core::Propagator const &d_local,
+  // does a set of contractions depending on the identifier
+  /* identifier  --  operators
+   * "local"         all Base::HermitianBilinearOperators in the order specified in Base.h
+   * "1D"            gamma_mu D_nu (mu,nu=1,...,4, nu faster running index)
+   *  -> addCorrs:   gamma_5 gamma_mu D_nu (mu,nu=1,...,4, nu faster running index)
+   * "noether"       conserved vector current
+   *  -> addCorrs:   conserved axial current
+   */
+  std::vector< Core::BaryonCorrelator > proton_threepoint_stochastic(
+                                                Core::Propagator const &S_u,
+                                                Core::Propagator const &S_d,
+                                                Core::Propagator const &S_u_local,
+                                                Core::Propagator const &S_d_local,
                                                 Core::StochasticPropagator <12> const &phi_u,
                                                 Core::StochasticPropagator <12> const &phi_d,
                                                 Core::StochasticSource <12> const &xi_u,
                                                 Core::StochasticSource <12> const &xi_d,
+                                                Core::Field<QCD::Gauge> const * const gauge_field,
                                                 size_t const t_source, size_t const t_sink,
-                                                /* this allows for more than one operator */
-                                                std::vector< Base::Operator > const &my_operators,
-                                                std::vector< Base::BaryonPropagatorProjector > const &my_projectors_u,
-                                                std::vector< Base::BaryonPropagatorProjector > const &my_projectors_d);
+                                                std::string const &operator_flag,
+                                                Base::BaryonPropagatorProjector const my_projector,
+                                                std::vector< Core::BaryonCorrelator > &addCorrs);
 
   std::vector< Core::BaryonCorrelator > proton_threepoint_stochastic_non_local(Core::Propagator const &u,
                                                 Core::Propagator const &d,

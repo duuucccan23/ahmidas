@@ -39,7 +39,7 @@ int main(int argc, char **argv)
 
   for (int idx=0; idx<3; idx++)
   {
-	assert(spinor1[0][idx] == minus_i*refData[3*3+idx]);
+    assert(spinor1[0][idx] == minus_i*refData[3*3+idx]);
     assert(spinor1[1][idx] == minus_i*refData[2*3+idx]);
     assert(spinor1[2][idx] == plus_i*refData[1*3+idx]);
     assert(spinor1[3][idx] == plus_i*refData[0*3+idx]);
@@ -53,7 +53,7 @@ int main(int argc, char **argv)
 
   for (int idx=0; idx<3; idx++)
   {
-	assert(spinor2[0][idx] == -refData[3*3+idx]);
+    assert(spinor2[0][idx] == -refData[3*3+idx]);
     assert(spinor2[1][idx] ==  refData[2*3+idx]);
     assert(spinor2[2][idx] ==  refData[1*3+idx]);
     assert(spinor2[3][idx] == -refData[0*3+idx]);
@@ -67,7 +67,7 @@ int main(int argc, char **argv)
 
   for (int idx=0; idx<3; idx++)
   {
-	assert(spinor3[0][idx] == minus_i*refData[2*3+idx]);
+    assert(spinor3[0][idx] == minus_i*refData[2*3+idx]);
     assert(spinor3[1][idx] == plus_i*refData[3*3+idx]);
     assert(spinor3[2][idx] == plus_i*refData[0*3+idx]);
     assert(spinor3[3][idx] == minus_i*refData[1*3+idx]);
@@ -81,7 +81,7 @@ int main(int argc, char **argv)
 
   for (int idx=0; idx<3; idx++)
   {
-	assert(spinor4[0][idx] == -refData[2*3+idx]);
+    assert(spinor4[0][idx] == -refData[2*3+idx]);
     assert(spinor4[1][idx] == -refData[3*3+idx]);
     assert(spinor4[2][idx] == -refData[0*3+idx]);
     assert(spinor4[3][idx] == -refData[1*3+idx]);
@@ -125,12 +125,52 @@ int main(int argc, char **argv)
     assert(spinor6[3][idx] + spinor7[3][idx] ==  0.);
   }
 
-  Print("left multiplication by {gamma5 ,gamma1} ok");
+  Print("left multiplication by {gamma5, gamma1} ok");
 
 
+  // check left and right multiplication of a Tensor for consistancy
+  // (gamma * Tensor^T)^T =  Tensor * gamma^T
 
+  complex< double > refDataT[144];
+  for (size_t idx = 0; idx < 144; idx++)
+   refDataT[idx] = complex< double >((idx+45.6)/(idx-23.5), (idx-3.1)*(idx+1.5));
+  QCD::Tensor tensor1(refDataT);
+  tensor1 *= gamma1;
+  QCD::Tensor tensor2(refDataT);
+  tensor2 *= gamma2;
+  QCD::Tensor tensor3(refDataT);
+  tensor3 *= gamma3;
+  QCD::Tensor tensor4(refDataT);
+  tensor4 *= gamma4;
+  QCD::Tensor tensorT(refDataT);
+  tensorT.transposeDirac();
 
+  // gamma1^T = -gamma1
+  QCD::Tensor tensor1x(gamma1 * tensorT);
+  tensor1x.transposeDirac();
+  tensor1x += tensor1;
+  // gamma2^T = +gamma2
+  QCD::Tensor tensor2x(gamma2 * tensorT);
+  tensor2x.transposeDirac();
+  tensor2x -= tensor2;
+  // gamma3^T = -gamma3
+  QCD::Tensor tensor3x(gamma3 * tensorT);
+  tensor3x.transposeDirac();
+  tensor3x += tensor3;
+  // gamma4^T = +gamma4
+  QCD::Tensor tensor4x(gamma4 * tensorT);
+  tensor4x.transposeDirac();
+  tensor4x -= tensor4;
 
+  for (size_t idx=0; idx<144; idx++)
+  {
+    assert(tensor1x(idx) == 0.);
+    assert(tensor2x(idx) == 0.);
+    assert(tensor3x(idx) == 0.);
+    assert(tensor4x(idx) == 0.);
+  }
+
+  Print("Tensor (left and right multiplication) by gamma_mu (mu=1,2,3,4) consistent");
 
   return EXIT_SUCCESS;
 }

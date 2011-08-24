@@ -1,5 +1,5 @@
 #include "Correlator.ih"
-#include <ctime>
+// #include <ctime>
 
 
 // performs a summation over timeslices including non-zero momentum projection
@@ -22,12 +22,11 @@ std::vector< Core::Correlator< Datatype > > Core::Correlator< Datatype >::moment
   for (size_t idx_M = 0;  idx_M < momenta.size(); idx_M++)
   {
     d_weave->barrier();
-    double const start(clock());
+//     double const start(clock());
     Core::Correlator< Datatype > corr_tmp(*this);
 
     corr_tmp.deleteField();
-//    corr_tmp.isolate(); // seem useless
-    
+
     for (size_t idx_T = 0;  idx_T < T; idx_T++)
     {
       corr_tmp.d_sumTimeslice[idx_T] = Datatype(std::complex< double >(0.0, 0.0));
@@ -35,10 +34,11 @@ std::vector< Core::Correlator< Datatype > > Core::Correlator< Datatype >::moment
 
     Core::Field< int * >::const_iterator Ix(s_xRelative->begin());
     Core::Field< size_t >::const_iterator It(s_timelabel->begin());
-   
+
     for(typename Core::Field< Datatype >::const_iterator Id(d_data->begin()); Id != d_data->end(); ++Id)
     {
-      corr_tmp.d_sumTimeslice[*It] += (*Id) * exp(factor * double(std::inner_product(momenta[idx_M], momenta[idx_M] + 3, (*Ix), 0)));
+      corr_tmp.d_sumTimeslice[*It]
+        += (*Id) * exp(factor * double(std::inner_product(momenta[idx_M], momenta[idx_M] + 3, (*Ix), 0)));
       ++Ix;
       ++It;
     }
@@ -46,8 +46,6 @@ std::vector< Core::Correlator< Datatype > > Core::Correlator< Datatype >::moment
     assert(Ix == s_xRelative->end());
     assert(It == s_timelabel->end());
 
-      
-    
     // this routine just collects the data (it calls MPI::Allreduce in case we are running in parallel)
     d_weave->sumOverTimeSlices(reinterpret_cast< std::complex< double> const * >(corr_tmp.d_sumTimeslice),
                                reinterpret_cast< std::complex< double> * >(corr_tmp.d_sumTimeslice_global),
@@ -55,15 +53,15 @@ std::vector< Core::Correlator< Datatype > > Core::Correlator< Datatype >::moment
     results.push_back(corr_tmp);
 
     d_weave->barrier();
-    double const end(clock());
-    if (d_weave->isRoot())
-    {  
-     std::cout << "momentum no. ";
-     std::cout.width(4);
-     std::cout << idx_M << " done in ";
-     std::cout.width(10);
-     std::cout << (end-start)/double(CLOCKS_PER_SEC) << " seconds." << std::endl; 
-    }
+//     double const end(clock());
+//     if (d_weave->isRoot())
+//     {  
+//      std::cout << "momentum no. ";
+//      std::cout.width(4);
+//      std::cout << idx_M << " done in ";
+//      std::cout.width(10);
+//      std::cout << (end-start)/double(CLOCKS_PER_SEC) << " seconds." << std::endl; 
+//     }
   }
   return results;
 }

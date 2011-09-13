@@ -98,6 +98,14 @@ namespace Input
                               std::vector< int > &rcombinations,
 			      std::string &outputname) const;
 
+     void initializeParameters(size_t &L, size_t &T,
+                              std::vector< std::vector< std::string > > &filenames,
+                              std::map< std::string, double > &floats,
+                              std::vector< size_t * > &positions,
+                              std::vector< int > &operators,
+							  std::vector< std::string > &flags) const;
+
+
 
   };
 }

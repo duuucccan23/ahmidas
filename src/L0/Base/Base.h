@@ -175,7 +175,8 @@ namespace Base
     A = 0,
     H = 1,
     B = 2,
-    Bdagger = 3
+    Bdagger = 3,
+    C = 4		 // for the vvSum method ~(1+H)^dagger
   };
 
 

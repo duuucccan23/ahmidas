@@ -538,8 +538,7 @@ namespace Core
 
 #ifdef __Hermitian_basis_disc_cc__
 
-  void Propagator::rightMultiplyOperator(Base::HermitianBilinearOperator const O)
-  {
+  void Propagator::rightMultiplyOperator(Base::HermitianBilinearOperator const O,  bool const twisted_basis)  {
 
     Dirac::Gamma< 1 > gamma1;
     Dirac::Gamma< 2 > gamma2;

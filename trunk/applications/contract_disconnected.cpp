@@ -51,8 +51,6 @@
 #define _with_Fuzzing_
 #define _with_theta_
 #define _with_Omunu_
-#define _with_MMS_
-//#define _without_MMS_
 #define _with_momentum_projection
 
 
@@ -91,9 +89,14 @@ int main(int argc, char **argv)
 	double thetat=floats["thetat"];
 
 
+    bool const flag_mms = bool(floats["MMS"] != 0.0); // 0=no,!=0 =yes
+    bool debug=(bool)floats["debug"]; // 0=no,!=0 =yes
 
-
-	if(weave.isRoot())
+	 if(weave.isRoot() and debug==true) std::cout<<"Debug mode !" <<std::endl;
+	 if(weave.isRoot() and flag_mms==true) std::cout<<"Input propagators are assumed to be of the form (D^dag D)^-1" <<std::endl;
+	 if(weave.isRoot() and flag_mms==false) std::cout<<"Input propagators are assumed to be of the form D^-1" <<std::endl;
+	
+	 if(weave.isRoot())
 	{
 		std::cout<<"Lattice size: "<<L<<"x"<<L<<"x"<<L<<"x"<<T<<std::endl;
 		std::cout<<"kappa="<<kappa<<", mu="<<mu<<std::endl;
@@ -210,35 +213,36 @@ int main(int argc, char **argv)
 			std::vector<std::string> filename;
 			filename.push_back(propaStochaFiles[n]);
 
-
-#ifdef _without_MMS_
-			if(weave.isRoot()) std::cout<< "Stochastic propagator " <<n<< " to be read from " << propaStochaFiles[n] <<" ... "; 
-
 			Core::StochasticPropagator< 1 > phi(L, T);
-			Tool::IO::load(&phi,filename, Tool::IO::fileSCIDAC);
-			if (weave.isRoot())
-				std::cout << "done.\n" << std::endl;
-#endif
+			
+			if (flag_mms==false)
+			{
+				if(weave.isRoot()) std::cout<< "Stochastic propagator " <<n<< " to be read from " << propaStochaFiles[n] <<" ... "; 
+
+
+				Tool::IO::load(&phi,filename, Tool::IO::fileSCIDAC);
+				if (weave.isRoot())
+					std::cout << "done.\n" << std::endl;
+			}
 			// if source have been produced using MMS ... read (D+D-)^-1
-#ifdef _with_MMS_
-			if(weave.isRoot())	
-				std::cout << "MMS :" << propaStochaFiles[n] << " is 1/(Ddagger D) so apply Ddagger to get the propagator" <<" ...";
+			if (flag_mms==true)
+			{
+				if(weave.isRoot())	
+					std::cout << "MMS :" << propaStochaFiles[n] << " is 1/(Ddagger D) so apply Ddagger to get the propagator" <<" ...";
 
-			Core::StochasticPropagator< 1 > DD_prop(L, T);
-			Core::StochasticPropagator< 1 > prop_out(L, T);
+				Core::StochasticPropagator< 1 > DD_prop(L, T);
+				Core::StochasticPropagator< 1 > prop_out(L, T);
 
-			Tool::IO::load(&DD_prop,filename, Tool::IO::fileSCIDAC,32);
+				Tool::IO::load(&DD_prop,filename, Tool::IO::fileSCIDAC,32);
 
-			prop_out=DD_prop.applyDiracOperator(gauge_field,kappa,-mu,thetat,thetax,thetay,thetaz);
-			prop_out.rightMultiply(gamma5); //this is required because D=Q*g5 and g5 is not put by applyDiracOperator
+				prop_out=DD_prop.applyDiracOperator(gauge_field,kappa,-mu,thetat,thetax,thetay,thetaz);
+				prop_out.rightMultiply(gamma5); //this is required because D=Q*g5 and g5 is not put by applyDiracOperator
 
-			Core::StochasticPropagator< 1 > phi(prop_out);
+				Core::StochasticPropagator< 1 > phi(prop_out);
 
-			if(weave.isRoot())	
-				std::cout << "done.\n" << std::endl;
-
-
-#endif
+				if(weave.isRoot())	
+					std::cout << "done.\n" << std::endl;
+			}
 
 
 			Core::StochasticPropagator< 1 >  phi_f(phi);
@@ -445,39 +449,31 @@ int main(int argc, char **argv)
 
 			}
 
-
-#ifdef _without_MMS_
 			Core::Propagator phi(L, T);
-			Tool::IO::load(&phi,filename, Tool::IO::fileSCIDAC);
-#endif
-			// if source have been produced using MMS ... read (D+D-)^-1
-#ifdef _with_MMS_
+			
+			if (flag_mms==false) Tool::IO::load(&phi,filename, Tool::IO::fileSCIDAC);
 
-			if(weave.isRoot()) 
-				std::cout << "MMS compilation  1/(Ddagger D) is read so  Ddagger is applied to get the propagator" <<" ...";
 
-			Core::Propagator phi(L ,T );
-
+			if (flag_mms==true)
 			{
-			//	Core::Propagator prop_out(L, T);
-				Core::Propagator DD_prop(L, T);
-				Tool::IO::load(&DD_prop,filename, Tool::IO::fileSCIDAC,32);
+				{
+					//	Core::Propagator prop_out(L, T);
+					Core::Propagator DD_prop(L, T);
+					Tool::IO::load(&DD_prop,filename, Tool::IO::fileSCIDAC,32);
 
-				phi=DD_prop.applyDiracOperator(gauge_field,kappa,-mu,thetat,thetax,thetay,thetaz);
-				phi.rightMultiply(gamma5); //this is required because D=Q*g5 and g5 is not put by applyDiracOperator
-
-//				phi = prop_out;
+					phi=DD_prop.applyDiracOperator(gauge_field,kappa,-mu,thetat,thetax,thetay,thetaz);
+					phi.rightMultiply(gamma5); //this is required because D=Q*g5 and g5 is not put by applyDiracOperator
+					//				phi = prop_out;
+				}
 			}
-#endif
 
 			if (weave.isRoot())
-				std::cout << "done.\n" << std::endl;
+				std::cout << "\nReading done.\n" << std::endl;
 
+			// for "vv" correlators
 
-				// for "vv" correlators
-
-				Core::Propagator  g5_phi(phi);
-				g5_phi.rightMultiply(gamma5);
+			Core::Propagator  g5_phi(phi);
+			g5_phi.rightMultiply(gamma5);
 
 
 
@@ -495,11 +491,10 @@ int main(int argc, char **argv)
 #endif
 
 			{
+
 				Core::Propagator  phi_f(phi);
 				Smear::Jacobi Jacobi_tool(Jac_alpha);
 				phi_f.smearJacobi(Jac_alpha, Jac_iterations, gauge_field_f);
-
-
 
 				{
 					if(weave.isRoot()) 
@@ -560,7 +555,6 @@ int main(int argc, char **argv)
 			std::vector< std::complex <double> > C_conserved_vv = Contract::compute_loop_conserved_vector_current(gauge_field,g5_phi,phi);
 
 
-
 			for(size_t i=0; i < C_vv.size(); i++)
 			{
 				C_vv[i] *=  std::complex<double>(0,2.0*mu/(8.*kappa));	 // factor + 4 * i kappa mu /( 4 kappa) ^2
@@ -572,9 +566,24 @@ int main(int argc, char **argv)
 				C_conserved_vv[i] *=  std::complex<double>(0,2.0*mu/(8.*kappa));	 // factor + 4 * i kappa mu /( 4 kappa) ^2
 			}
 
-			if (weave.isRoot())
-				std::cout << "done.\n" << std::endl;
+			if (weave.isRoot()) std::cout << "done.\n" << std::endl;
 
+
+			//sum_disc ? 
+//			if (weave.isRoot())
+//				std::cout << "Compute loops for vv_sum  method"<<" ..."; 
+
+//			Core::Propagator  xi(L,T);
+//			xi = phi.conjugate();
+//			xi.rightMultiply(gamma5);
+//			xi.leftMultiply(gamma5);
+//			xi = xi.applyDiracOperator(gauge_field,kappa,0,thetat,thetax,thetay,thetaz,Base::Full); //  D(mu=0) = 1+H
+//			xi *= 2;
+//			xi.conjugate();
+
+//			std::vector< std::complex <double>  > C_vv_sum = Contract::compute_loop_new(xi,phi,my_operators);
+
+//			if (weave.isRoot()) std::cout << "done.\n" << std::endl;
 
 
 #ifdef _with_Omunu_
@@ -604,7 +613,7 @@ int main(int argc, char **argv)
 			size_t const timeslice_source = source_position[Base::idx_T] % T;
 
 			if(weave.isRoot())
-				std::cout << "\nsource position: " << source_position[0] << " " << source_position[1] << " "
+				std::cout << " The position of the source is (x,y,z,t) = " << source_position[0] << " " << source_position[1] << " "
 					<< source_position[2] << " " << source_position[3] << std::endl;
 
 
@@ -673,6 +682,7 @@ int main(int argc, char **argv)
 
 				std::ofstream fout_v4;
 				std::ofstream fout_vv;
+//				std::ofstream fout_vv_sum;
 
 				std::ofstream fout_v4_f;
 				std::ofstream fout_vv_f;
@@ -698,6 +708,7 @@ int main(int argc, char **argv)
 
 					fout_v4.open("output_disc_v4.dat");
 					fout_vv.open("output_disc_vv.dat");
+				//	fout_vv_sum.open("output_disc_vv_sum.dat");
 					fout_v4_f.open("output_disc_v4_f.dat");
 					fout_vv_f.open("output_disc_vv_f.dat");
 
@@ -720,6 +731,7 @@ int main(int argc, char **argv)
 
 					fout_v4.open("output_disc_v4.dat",std::ios::app);
 					fout_vv.open("output_disc_vv.dat",std::ios::app);
+				//	fout_vv_sum.open("output_disc_vv_sum.dat",std::ios::app);
 					fout_v4_f.open("output_disc_v4_f.dat",std::ios::app);
 					fout_vv_f.open("output_disc_vv_f.dat",std::ios::app);
 
@@ -751,9 +763,9 @@ int main(int argc, char **argv)
 							if (i != 0 && i !=8)
 							{
 								fout_v4 << t << std::scientific <<"  "
-									<< i <<"  "<< j + 12*n <<"  "<<C_v4[t +  t*i + 16*t*j].real() <<"  "<< C_v4[t + t*i + 16*t*j].imag() << std::endl;
+									<< i <<"  "<< j + 12*n <<"  "<<C_v4[t +  T*i + 16*T*j].real() <<"  "<< C_v4[t + T*i + 16*T*j].imag() << std::endl;
 								fout_v4_f << t << std::scientific <<"  "
-									<< i <<"  "<< j + 12*n <<"  "<<C_v4_f[t +  t*i + 16*t*j].real() <<"  "<< C_v4_f[t + t*i + 16*t*j].imag() << std::endl;
+									<< i <<"  "<< j + 12*n <<"  "<<C_v4_f[t +  T*i + 16*T*j].real() <<"  "<< C_v4_f[t + T*i + 16*T*j].imag() << std::endl;
 							}
 							if (i==0) 
 							{
@@ -776,11 +788,14 @@ int main(int argc, char **argv)
 							fout_vv_f << t << std::scientific <<"  "
 								<< i <<"  "<< j + 12*n <<"  "<<C_vv_f[t +  T*i + 16*T*j].real() <<"  "<< C_vv_f[t + T*i + 16*T*j].imag() << std::endl;
 
+				//			fout_vv_sum << t << std::scientific <<"  "
+				//				<< i <<"  "<< j + 12*n <<"  "<<C_vv_sum[t +  T*i + 16*T*j].real() <<"  "<< C_vv_sum[t + T*i + 16*T*j].imag() << std::endl;
 
 							fout_vv_f.flush();
 							fout_v4_f.flush();
 
 							fout_vv.flush();
+				//			fout_vv_sum.flush();
 							fout_v4.flush();
 
 						}
@@ -788,6 +803,7 @@ int main(int argc, char **argv)
 				}
 				fout_v4.close();
 				fout_vv.close();
+			//	fout_vv_sum.close();
 
 				fout_v4_f.close();
 				fout_vv_f.close();

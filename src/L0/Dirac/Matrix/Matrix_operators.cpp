@@ -10,12 +10,7 @@ namespace Dirac
     Matrix tmpL(*this);
     std::complex< double > zero(0, 0);
     //transpose in order to use inner_product of ranges
-    std::swap(tmpR.d_data[ 1], tmpR.d_data[ 4]);
-    std::swap(tmpR.d_data[ 2], tmpR.d_data[ 8]);
-    std::swap(tmpR.d_data[ 3], tmpR.d_data[12]);
-    std::swap(tmpR.d_data[ 6], tmpR.d_data[ 9]);
-    std::swap(tmpR.d_data[ 7], tmpR.d_data[13]);
-    std::swap(tmpR.d_data[11], tmpR.d_data[14]);
+    tmpR.transpose();
     d_data[ 0] = std::inner_product(tmpL.d_data     , tmpL.d_data +  4, tmpR.d_data,      zero);
     d_data[ 1] = std::inner_product(tmpL.d_data     , tmpL.d_data +  4, tmpR.d_data +  4, zero);
     d_data[ 2] = std::inner_product(tmpL.d_data     , tmpL.d_data +  4, tmpR.d_data +  8, zero);

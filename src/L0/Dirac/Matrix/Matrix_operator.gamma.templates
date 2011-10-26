@@ -1,12 +1,12 @@
 template< size_t Index >
-Matrix Matrix::operator*(Gamma< Index > const &gamma) const
+Matrix Matrix::operator*(Gamma< Index > const &gamma) const //matrix = matrix * gamma
 {
   Matrix out(*this);
-  for (size_t itr = 0; itr < 16; itr++) 
-    out.d_data[itr] *= gamma.sign(itr % 4);
+  for (size_t itr = 0; itr < 16; itr++)
+    out.d_data[itr] *= gamma.sign(itr % 4); // columnwise multiply by sign
   for (size_t itr = 0; itr < 3; itr++) {
     if (gamma.perm(itr) > itr) {
-      for (size_t rowitr = 0; rowitr < 4; rowitr++)
+      for (size_t rowitr = 0; rowitr < 4; rowitr++) // permute columns, iterate over rows
         std::swap(*(out.d_data + 4 * rowitr + itr), *(out.d_data + 4 * rowitr + gamma.perm(itr)));
     }
   }
@@ -14,33 +14,48 @@ Matrix Matrix::operator*(Gamma< Index > const &gamma) const
 }
 
 template< size_t Index >
-void Matrix::operator*=(Gamma< Index > const &gamma)
+void Matrix::operator*=(Gamma< Index > const &gamma) //matrix *= gamma
 {
   for (size_t itr = 0; itr < 16; itr++) 
-    this->d_data[itr] *= gamma.sign(itr%4);
+    this->d_data[itr] *= gamma.sign(itr%4); // columnwise multiply by sign
   for (size_t itr = 0; itr < 3; itr++) {
     if (gamma.perm(itr) > itr) {
-      for (size_t rowitr = 0; rowitr < 4; rowitr++)
+      for (size_t rowitr = 0; rowitr < 4; rowitr++) // swap columns, iterate over rows
         std::swap(*(this->d_data + 4 * rowitr + itr), *(this->d_data + 4 * rowitr + gamma.perm(itr)));
     }
   }
 }
 
 template< size_t Index >
-Matrix operator*(Gamma< Index > const &gamma, Matrix const &mat)
+void Matrix::right_multiply(Gamma< Index > const &gamma) //matrix *= gamma
 {
-  Matrix tmp;
-  std::copy(mat.d_data   , mat.d_data+ 4, tmp.d_data+4*gamma.perm(0));
-  std::copy(mat.d_data+ 4, mat.d_data+ 8, tmp.d_data+4*gamma.perm(1));
-  std::copy(mat.d_data+ 8, mat.d_data+12, tmp.d_data+4*gamma.perm(2));
-  std::copy(mat.d_data+12, mat.d_data+16, tmp.d_data+4*gamma.perm(3));
-  std::transform(tmp.d_data   , tmp.d_data+ 4, tmp.d_data,
-                  std::bind2nd(std::multiplies< std::complex< double > >(), gamma.sign(0)));
-  std::transform(tmp.d_data+ 4, tmp.d_data+ 8, tmp.d_data+ 4,
-                  std::bind2nd(std::multiplies< std::complex< double > >(), gamma.sign(1)));
-  std::transform(tmp.d_data+ 8, tmp.d_data+12, tmp.d_data+ 8,
-                  std::bind2nd(std::multiplies< std::complex< double > >(), gamma.sign(2)));
-  std::transform(tmp.d_data+12, tmp.d_data+16, tmp.d_data+12,
-                  std::bind2nd(std::multiplies< std::complex< double > >(), gamma.sign(3)));
-  return tmp;
+  (*this)*=gamma;
+}
+
+template< size_t Index >
+Matrix operator*(Gamma< Index > const &gamma, Matrix const &mat) //matrix = gamma * matrix
+{
+  Matrix out(mat);
+  for (size_t itr = 0; itr < 3; itr++) {
+    if (gamma.perm(itr) > itr) {
+      for (size_t colitr = 0; colitr < 4; colitr++) // swap rows, iterate over columns
+        std::swap(*(out.d_data + 4 * itr + colitr), *(out.d_data + 4 * gamma.perm(itr) + colitr));
+    }
+  }
+  for (size_t itr = 0; itr < 16; itr++) 
+    out.d_data[itr] *= gamma.sign(itr/4); //rowwise multiply by sign
+  return out;
+}
+
+template< size_t Index >
+void Matrix::left_multiply(Gamma< Index > const &gamma) //gamma * matrix
+{
+  for (size_t itr = 0; itr < 3; itr++) {
+    if (gamma.perm(itr) > itr) {
+      for (size_t colitr = 0; colitr < 4; colitr++) // swap rows, iterate over columns
+        std::swap(*(this->d_data + 4 * itr + colitr), *(this->d_data + 4 * gamma.perm(itr) + colitr));
+    }
+  }
+  for (size_t itr = 0; itr < 16; itr++) 
+    this->d_data[itr] *= gamma.sign(itr/4); //rowwise multiply by sign
 }

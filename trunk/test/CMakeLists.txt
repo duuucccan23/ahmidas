@@ -56,7 +56,6 @@ ADD_TEST(proton_two_point proton)
 
 ADD_EXECUTABLE(scidacchecksum scidacchecksum.cpp)
 TARGET_LINK_LIBRARIES(scidacchecksum QCD IO Print Ahmidas)
-ADD_TEST(scidac_checksum scidacchecksum)
 
 ADD_EXECUTABLE(checkILDG checkILDG.cpp)
 TARGET_LINK_LIBRARIES(checkILDG IO)

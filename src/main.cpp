@@ -24,7 +24,10 @@ int main(int argc, char **argv)
   std::cout << "diracId" << std::endl << diracId << std::endl;
   std::cout << "diracId*g2" << std::endl << diracId*g2 << std::endl;
   std::cout << "g2*diracId" << std::endl << g2*diracId << std::endl;
-  
-
+  diracId*=g2;
+  std::cout << "diracId*=g2" << std::endl << diracId << std::endl;
+  Dirac::Matrix diracId2(Id_tmp);
+  diracId2.left_multiply(g2);
+  std::cout << "diracId.left_multiply(g2)" << std::endl << diracId2 << std::endl;
   return 0;
 }

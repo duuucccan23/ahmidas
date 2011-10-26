@@ -18,6 +18,7 @@ Matrix Matrix::operator*(Gamma< Index > const &gamma) const
 template< size_t Index >
 void Matrix::operator*=(Gamma< Index > const &gamma)
 {
+  Matrix tmp(*this);
   for (size_t itr=0; itr < 3; itr++) {
     if (gamma.perm(itr) > itr) {
       std::swap(*(tmp.d_data + itr), *(tmp.d_data + gamma.perm(itr)));

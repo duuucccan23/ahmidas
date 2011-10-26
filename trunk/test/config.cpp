@@ -8,10 +8,10 @@
 int main(int argc, char **argv)
 {
   Ahmidas my_ahmidas(&argc, &argv);
-  Core::Field< QCD::Gauge > myfield(8,8);
-  Tool::IO::load(&myfield, "../../test/conf.88", Tool::IO::fileILDG);
+  Core::Field< QCD::Gauge > myfield(4,8);
+  Tool::IO::load(&myfield, "../../test/conf.48", Tool::IO::fileILDG);
 
-  double stored = 0.5998194411656625;
+  double stored = 0.63500557222887;
   double prec = 1e-14;
   double plaqs = Tool::spatialPlaquette(myfield);
   double plaqds = Tool::spatialDownPlaquette(myfield);

@@ -2,80 +2,32 @@ template< size_t Index >
 Matrix Matrix::operator*(Gamma< Index > const &gamma) const
 {
   Matrix tmp(*this);
-  std::swap(*(tmp.d_data)   , *(tmp.d_data+   gamma.perm(0)));
-  std::swap(*(tmp.d_data+ 1), *(tmp.d_data+   gamma.perm(1)));
-  std::swap(*(tmp.d_data+ 2), *(tmp.d_data+   gamma.perm(2)));
-  std::swap(*(tmp.d_data+ 3), *(tmp.d_data+   gamma.perm(3)));
-  std::swap(*(tmp.d_data+ 4), *(tmp.d_data+ 4+gamma.perm(0)));
-  std::swap(*(tmp.d_data+ 5), *(tmp.d_data+ 4+gamma.perm(1)));
-  std::swap(*(tmp.d_data+ 6), *(tmp.d_data+ 4+gamma.perm(2)));
-  std::swap(*(tmp.d_data+ 7), *(tmp.d_data+ 4+gamma.perm(3)));
-  std::swap(*(tmp.d_data+ 8), *(tmp.d_data+ 8+gamma.perm(0)));
-  std::swap(*(tmp.d_data+ 9), *(tmp.d_data+ 8+gamma.perm(1)));
-  std::swap(*(tmp.d_data+10), *(tmp.d_data+ 8+gamma.perm(2)));
-  std::swap(*(tmp.d_data+11), *(tmp.d_data+ 8+gamma.perm(3)));
-  std::swap(*(tmp.d_data+12), *(tmp.d_data+12+gamma.perm(0)));
-  std::swap(*(tmp.d_data+13), *(tmp.d_data+12+gamma.perm(1)));
-  std::swap(*(tmp.d_data+14), *(tmp.d_data+12+gamma.perm(2)));
-  std::swap(*(tmp.d_data+15), *(tmp.d_data+12+gamma.perm(3)));
-  tmp.d_data[ 0] *= gamma.sign(0);
-  tmp.d_data[ 1] *= gamma.sign(1);
-  tmp.d_data[ 2] *= gamma.sign(2);
-  tmp.d_data[ 3] *= gamma.sign(3);
-  tmp.d_data[ 4] *= gamma.sign(0);
-  tmp.d_data[ 5] *= gamma.sign(1);
-  tmp.d_data[ 6] *= gamma.sign(2);
-  tmp.d_data[ 7] *= gamma.sign(3);
-  tmp.d_data[ 8] *= gamma.sign(0);
-  tmp.d_data[ 9] *= gamma.sign(1);
-  tmp.d_data[10] *= gamma.sign(2);
-  tmp.d_data[11] *= gamma.sign(3);
-  tmp.d_data[12] *= gamma.sign(0);
-  tmp.d_data[13] *= gamma.sign(1);
-  tmp.d_data[14] *= gamma.sign(2);
-  tmp.d_data[15] *= gamma.sign(3);
+  for (size_t itr=0; itr < 3; itr++) {
+    if (gamma.perm(itr) > itr) {
+      std::swap(*(tmp.d_data + itr), *(tmp.d_data + gamma.perm(itr)));
+      std::swap(*(tmp.d_data + 4 + itr), *(tmp.d_data + 4 + gamma.perm(itr)));
+      std::swap(*(tmp.d_data + 8 + itr), *(tmp.d_data + 8 + gamma.perm(itr)));
+      std::swap(*(tmp.d_data + 12 + itr), *(tmp.d_data + 12 + gamma.perm(itr)));
+    }
+  }
+  for (size_t itr=0; itr < 16; itr++) 
+    tmp.d_data[itr] *= gamma.sign(itr%4);
   return tmp;
 }
 
-// NOTE: specialization could speed up this routine
 template< size_t Index >
 void Matrix::operator*=(Gamma< Index > const &gamma)
 {
-  //std::complex<double> data[16);
-  std::swap(*(d_data)   , *(d_data+   gamma.perm(0)));
-  std::swap(*(d_data+ 1), *(d_data+   gamma.perm(1)));
-  std::swap(*(d_data+ 2), *(d_data+   gamma.perm(2)));
-  std::swap(*(d_data+ 3), *(d_data+   gamma.perm(3)));
-  std::swap(*(d_data+ 4), *(d_data+ 4+gamma.perm(0)));
-  std::swap(*(d_data+ 5), *(d_data+ 4+gamma.perm(1)));
-  std::swap(*(d_data+ 6), *(d_data+ 4+gamma.perm(2)));
-  std::swap(*(d_data+ 7), *(d_data+ 4+gamma.perm(3)));
-  std::swap(*(d_data+ 8), *(d_data+ 8+gamma.perm(0)));
-  std::swap(*(d_data+ 9), *(d_data+ 8+gamma.perm(1)));
-  std::swap(*(d_data+10), *(d_data+ 8+gamma.perm(2)));
-  std::swap(*(d_data+11), *(d_data+ 8+gamma.perm(3)));
-  std::swap(*(d_data+12), *(d_data+12+gamma.perm(0)));
-  std::swap(*(d_data+13), *(d_data+12+gamma.perm(1)));
-  std::swap(*(d_data+14), *(d_data+12+gamma.perm(2)));
-  std::swap(*(d_data+15), *(d_data+12+gamma.perm(3)));
-  d_data[ 0] *= gamma.sign(0);
-  d_data[ 1] *= gamma.sign(1);
-  d_data[ 2] *= gamma.sign(2);
-  d_data[ 3] *= gamma.sign(3);
-  d_data[ 4] *= gamma.sign(0);
-  d_data[ 5] *= gamma.sign(1);
-  d_data[ 6] *= gamma.sign(2);
-  d_data[ 7] *= gamma.sign(3);
-  d_data[ 8] *= gamma.sign(0);
-  d_data[ 9] *= gamma.sign(1);
-  d_data[10] *= gamma.sign(2);
-  d_data[11] *= gamma.sign(3);
-  d_data[12] *= gamma.sign(0);
-  d_data[13] *= gamma.sign(1);
-  d_data[14] *= gamma.sign(2);
-  d_data[15] *= gamma.sign(3);
-
-  //std::copy(data, data+16, d_data);
+  for (size_t itr=0; itr < 3; itr++) {
+    if (gamma.perm(itr) > itr) {
+      std::swap(*(tmp.d_data + itr), *(tmp.d_data + gamma.perm(itr)));
+      std::swap(*(tmp.d_data + 4 + itr), *(tmp.d_data + 4 + gamma.perm(itr)));
+      std::swap(*(tmp.d_data + 8 + itr), *(tmp.d_data + 8 + gamma.perm(itr)));
+      std::swap(*(tmp.d_data + 12 + itr), *(tmp.d_data + 12 + gamma.perm(itr)));
+    }
+  }
+  for (size_t itr=0; itr < 16; itr++) 
+    tmp.d_data[itr] *= gamma.sign(itr%4);
 }
 
 template< size_t Index >

@@ -24,7 +24,6 @@ namespace Dirac
 
   class Matrix
   {
-
     std::complex< double > d_data[16];
 
     public:
@@ -52,8 +51,12 @@ namespace Dirac
 
       template< size_t Index >
       void operator*=(Gamma< Index > const &gamma);
+      
       template< size_t Index >
-      void left_multiply(Gamma< Index > const &gamma); //does the same
+      void right_multiply(Gamma< Index > const &gamma); //applies matrix*=gamma, supplied for consistency
+
+      template< size_t Index >
+      void left_multiply(Gamma< Index > const &gamma); //gamma * matrix
 
       Matrix operator*(double const &factor) const;
       Matrix operator*(std::complex< double > const &factor) const;
@@ -99,6 +102,5 @@ namespace Dirac
   #include "Matrix/Matrix.inlines"
   #include "Matrix/Matrix.constructors.inlines"
   #include "Matrix/Matrix.operators.inlines"
-  #include "Matrix/Matrix.gamma.inlines"
   #include "Matrix/Matrix_operator.gamma.templates"
 }

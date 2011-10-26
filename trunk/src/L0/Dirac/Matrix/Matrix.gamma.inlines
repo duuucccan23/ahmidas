@@ -1,5 +1,0 @@
-template< size_t Index >
-inline void Matrix::left_multiply(Gamma< Index > const &gamma)
-{
-  (*this)*=gamma;
-}

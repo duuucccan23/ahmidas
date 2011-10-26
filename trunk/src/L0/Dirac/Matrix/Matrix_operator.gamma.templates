@@ -1,32 +1,27 @@
 template< size_t Index >
 Matrix Matrix::operator*(Gamma< Index > const &gamma) const
 {
-  Matrix tmp(*this);
-  for (size_t itr=0; itr < 16; itr++) 
-    tmp.d_data[itr] *= gamma.sign(itr%4);
-  for (size_t itr=0; itr < 3; itr++) {
+  Matrix out(*this);
+  for (size_t itr = 0; itr < 16; itr++) 
+    out.d_data[itr] *= gamma.sign(itr % 4);
+  for (size_t itr = 0; itr < 3; itr++) {
     if (gamma.perm(itr) > itr) {
-      std::swap(*(tmp.d_data + itr), *(tmp.d_data + gamma.perm(itr)));
-      std::swap(*(tmp.d_data + 4 + itr), *(tmp.d_data + 4 + gamma.perm(itr)));
-      std::swap(*(tmp.d_data + 8 + itr), *(tmp.d_data + 8 + gamma.perm(itr)));
-      std::swap(*(tmp.d_data + 12 + itr), *(tmp.d_data + 12 + gamma.perm(itr)));
+      for (size_t rowitr = 0; rowitr < 4; rowitr++)
+        std::swap(*(out.d_data + 4 * rowitr + itr), *(out.d_data + 4 * rowitr + gamma.perm(itr)));
     }
   }
-  return tmp;
+  return out;
 }
 
 template< size_t Index >
 void Matrix::operator*=(Gamma< Index > const &gamma)
 {
-  Matrix tmp(*this);
-  for (size_t itr=0; itr < 16; itr++) 
-    tmp.d_data[itr] *= gamma.sign(itr%4);
-  for (size_t itr=0; itr < 3; itr++) {
+  for (size_t itr = 0; itr < 16; itr++) 
+    this->d_data[itr] *= gamma.sign(itr%4);
+  for (size_t itr = 0; itr < 3; itr++) {
     if (gamma.perm(itr) > itr) {
-      std::swap(*(tmp.d_data + itr), *(tmp.d_data + gamma.perm(itr)));
-      std::swap(*(tmp.d_data + 4 + itr), *(tmp.d_data + 4 + gamma.perm(itr)));
-      std::swap(*(tmp.d_data + 8 + itr), *(tmp.d_data + 8 + gamma.perm(itr)));
-      std::swap(*(tmp.d_data + 12 + itr), *(tmp.d_data + 12 + gamma.perm(itr)));
+      for (size_t rowitr = 0; rowitr < 4; rowitr++)
+        std::swap(*(this->d_data + 4 * rowitr + itr), *(this->d_data + 4 * rowitr + gamma.perm(itr)));
     }
   }
 }

@@ -2,6 +2,8 @@ template< size_t Index >
 Matrix Matrix::operator*(Gamma< Index > const &gamma) const
 {
   Matrix tmp(*this);
+  for (size_t itr=0; itr < 16; itr++) 
+    tmp.d_data[itr] *= gamma.sign(itr%4);
   for (size_t itr=0; itr < 3; itr++) {
     if (gamma.perm(itr) > itr) {
       std::swap(*(tmp.d_data + itr), *(tmp.d_data + gamma.perm(itr)));
@@ -10,8 +12,6 @@ Matrix Matrix::operator*(Gamma< Index > const &gamma) const
       std::swap(*(tmp.d_data + 12 + itr), *(tmp.d_data + 12 + gamma.perm(itr)));
     }
   }
-  for (size_t itr=0; itr < 16; itr++) 
-    tmp.d_data[itr] *= gamma.sign(itr%4);
   return tmp;
 }
 
@@ -19,6 +19,8 @@ template< size_t Index >
 void Matrix::operator*=(Gamma< Index > const &gamma)
 {
   Matrix tmp(*this);
+  for (size_t itr=0; itr < 16; itr++) 
+    tmp.d_data[itr] *= gamma.sign(itr%4);
   for (size_t itr=0; itr < 3; itr++) {
     if (gamma.perm(itr) > itr) {
       std::swap(*(tmp.d_data + itr), *(tmp.d_data + gamma.perm(itr)));
@@ -27,8 +29,6 @@ void Matrix::operator*=(Gamma< Index > const &gamma)
       std::swap(*(tmp.d_data + 12 + itr), *(tmp.d_data + 12 + gamma.perm(itr)));
     }
   }
-  for (size_t itr=0; itr < 16; itr++) 
-    tmp.d_data[itr] *= gamma.sign(itr%4);
 }
 
 template< size_t Index >

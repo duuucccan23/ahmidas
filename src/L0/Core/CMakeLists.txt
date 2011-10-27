@@ -2,6 +2,7 @@ SET(Sources_Correlator Correlator/Correlator.cpp
                        Correlator/Correlator_projection.cpp
                        Correlator/Correlator_printWithMomentum.cpp
                        Correlator/Correlator_printWithMomentum_full.cpp
+                       Correlator/Correlator_printWithMomentum_full_Cstyle.cpp
                        Correlator/Correlator_rotateToPhysicalBasis.cpp
                        Correlator/Correlator_cout_operator_lshift.cpp)
 SET(Sources_Propagator Propagator/StochasticPropagator.cpp

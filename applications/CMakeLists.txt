@@ -4,6 +4,13 @@ TARGET_LINK_LIBRARIES(generate_sequential_sources_nucleon SU3 QCD IO Base Core D
 ADD_EXECUTABLE(contract_nucleon3point contract_nucleon3point.cpp)
 TARGET_LINK_LIBRARIES(contract_nucleon3point SU3 QCD IO Base Core Dirac Weave Contract Input Smear Ahmidas lemon)
 
+ADD_EXECUTABLE(contract_nucleon3point_stochastic contract_nucleon3point_stochastic.cpp)
+IF(USE_MPI)
+TARGET_LINK_LIBRARIES(contract_nucleon3point_stochastic SU3 IO Base Core Dirac Weave Contract Input Smear Ahmidas lemon)
+ELSE(USE_MPI)
+TARGET_LINK_LIBRARIES(contract_nucleon3point_stochastic SU3 IO Base Core Dirac Weave Contract Input Smear Ahmidas)
+ENDIF(USE_MPI)
+
 ADD_EXECUTABLE(contract_baryon2point contract_baryon2point.cpp)
 IF(USE_MPI)
 TARGET_LINK_LIBRARIES(contract_baryon2point SU3 QCD IO Base Core Dirac Weave Contract Input Smear Ahmidas lemon)

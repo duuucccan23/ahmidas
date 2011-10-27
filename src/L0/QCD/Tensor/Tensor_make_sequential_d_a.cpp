@@ -172,7 +172,8 @@ namespace QCD
         alpha_f_factors.push_back(0.5*COMPLEX_M_1);
       break;
       default:
-      std::cerr << "Unknown projector in QCD::make_sequential_d() " << std::endl;
+        std::cerr << "Unknown projector in QCD::make_sequential_d() " << std::endl;
+        exit(1);
     }
 
     std::fill_n(result.d_data, result.size(), COMPLEX_0);

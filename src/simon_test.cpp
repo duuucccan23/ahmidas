@@ -22,6 +22,9 @@
 #include <L2/Input/FileReader.h>
 
 
+#define __2POINTS__
+
+
 int main(int argc, char **argv)
 {
   Ahmidas my_ahmidas(&argc, &argv);
@@ -76,10 +79,12 @@ int main(int argc, char **argv)
   }
 
   std::vector< int* > momenta;
-  for(size_t I=0; I<257; I++)
+  // for(size_t I=0; I<257; I++)
+  for(size_t I=0; I<195; I++)
     momenta.push_back( new int[3]);
   {
-    int momenta_raw[771] = {
+    // int momenta_raw[771] = {
+    int momenta_raw[585] = {
     +0, +0, +0,
      1, +0, +0,
     -1, +0, +0,
@@ -259,84 +264,85 @@ int main(int argc, char **argv)
     -2,  2, -2,
      2, -2, -2,
     -2,  2,  2,
-     3,  2, +0,
-    -3, -2, +0,
-     3, -2, +0,
-    -3,  2, +0,
-     3, +0,  2,
-    -3, +0, -2,
-     3, +0, -2,
-    -3, +0,  2,
-     2,  3, +0,
-    -2, -3, +0,
-     2, -3, +0,
-    -2,  3, +0,
-     2, +0,  3,
-    -2, +0, -3,
-     2, +0, -3,
-    -2, +0,  3,
-    +0,  3,  2,
-    +0, -3, -2,
-    +0,  3, -2,
-    +0, -3,  2,
-    +0,  2,  3,
-    +0, -2, -3,
-    +0,  2, -3,
-    +0, -2,  3,
-     3,  2,  1,
-    -3, -2, -1,
-    -3,  2,  1,
-     3, -2, -1,
-     3, -2,  1,
-    -3,  2, -1,
-     3,  2, -1,
-    -3, -2,  1,
-     2,  3,  1,
-    -2, -3, -1,
-    -2,  3,  1,
-     2, -3, -1,
-     2, -3,  1,
-    -2,  3, -1,
-     2,  3, -1,
-    -2, -3,  1,
-     3,  1,  2,
-    -3, -1, -2,
-    -3,  1,  2,
-     3, -1, -2,
-     3, -1,  2,
-    -3,  1, -2,
-     3,  1, -2,
-    -3, -1,  2,
-     2,  1,  3,
-    -2, -1, -3,
-    -2,  1,  3,
-     2, -1, -3,
-     2, -1,  3,
-    -2,  1, -3,
-     2,  1, -3,
-    -2, -1,  3,
-     1,  2,  3,
-    -1, -2, -3,
-    -1,  2,  3,
-     1, -2, -3,
-     1, -2,  3,
-    -1,  2, -3,
-     1,  2, -3,
-    -1, -2,  3,
-     1,  3,  2,
-    -1, -3, -2,
-    -1,  3,  2,
-     1, -3, -2,
-     1, -3,  2,
-    -1,  3, -2,
-     1,  3, -2,
-    -1, -3,  2,
-     4, +0, +0,
-    -4, +0, +0,
-    +0,  4, +0,
-    +0, -4, +0,
-    +0, +0,  4,
-    +0, +0, -4};
+//      3,  2, +0,
+//     -3, -2, +0,
+//      3, -2, +0,
+//     -3,  2, +0,
+//      3, +0,  2,
+//     -3, +0, -2,
+//      3, +0, -2,
+//     -3, +0,  2,
+//      2,  3, +0,
+//     -2, -3, +0,
+//      2, -3, +0,
+//     -2,  3, +0,
+//      2, +0,  3,
+//     -2, +0, -3,
+//      2, +0, -3,
+//     -2, +0,  3,
+//     +0,  3,  2,
+//     +0, -3, -2,
+//     +0,  3, -2,
+//     +0, -3,  2,
+//     +0,  2,  3,
+//     +0, -2, -3,
+//     +0,  2, -3,
+//     +0, -2,  3,
+//      3,  2,  1,
+//     -3, -2, -1,
+//     -3,  2,  1,
+//      3, -2, -1,
+//      3, -2,  1,
+//     -3,  2, -1,
+//      3,  2, -1,
+//     -3, -2,  1,
+//      2,  3,  1,
+//     -2, -3, -1,
+//     -2,  3,  1,
+//      2, -3, -1,
+//      2, -3,  1,
+//     -2,  3, -1,
+//      2,  3, -1,
+//     -2, -3,  1,
+//      3,  1,  2,
+//     -3, -1, -2,
+//     -3,  1,  2,
+//      3, -1, -2,
+//      3, -1,  2,
+//     -3,  1, -2,
+//      3,  1, -2,
+//     -3, -1,  2,
+//      2,  1,  3,
+//     -2, -1, -3,
+//     -2,  1,  3,
+//      2, -1, -3,
+//      2, -1,  3,
+//     -2,  1, -3,
+//      2,  1, -3,
+//     -2, -1,  3,
+//      1,  2,  3,
+//     -1, -2, -3,
+//     -1,  2,  3,
+//      1, -2, -3,
+//      1, -2,  3,
+//     -1,  2, -3,
+//      1,  2, -3,
+//     -1, -2,  3,
+//      1,  3,  2,
+//     -1, -3, -2,
+//     -1,  3,  2,
+//      1, -3, -2,
+//      1, -3,  2,
+//     -1,  3, -2,
+//      1,  3, -2,
+//     -1, -3,  2,
+//      4, +0, +0,
+//     -4, +0, +0,
+//     +0,  4, +0,
+//     +0, -4, +0,
+//     +0, +0,  4,
+//     +0, +0, -4
+    };
 
     for(size_t I=0; I<momenta.size(); I++)
       std::copy(&(momenta_raw[3*I]), &(momenta_raw[3*I]) + 3, momenta[I]);
@@ -444,6 +450,8 @@ int main(int argc, char **argv)
   // local currents *****************************************************************************
   // ********************************************************************************************
 
+ 
+  
   if (weave.isRoot())
     std::cout << "\n local currents (proton) ... \n" << std::endl;
 
@@ -453,92 +461,47 @@ int main(int argc, char **argv)
 
     std::vector< Core::BaryonCorrelator > C3p_dummy;
 
-    std::vector< Core::BaryonCorrelator > C3p_proj0_local
+    std::vector< Core::BaryonCorrelator > C3p_local
        = Contract::proton_threepoint_stochastic(uProp_smeared, dProp_smeared, uProp, dProp,
                                                 stochastic_uProp, stochastic_dProp,
                                                 stochasticSourceU, stochasticSourceD,
                                                 &gauge_field,
                                                 timeslice_source, timeslice_stochSource,
-                                                "local", Base::proj_PARITY_PLUS_TM, C3p_dummy);
-    std::vector< Core::BaryonCorrelator > C3p_proj1_local
-       = Contract::proton_threepoint_stochastic(uProp_smeared, dProp_smeared, uProp, dProp,
-                                                stochastic_uProp, stochastic_dProp,
-                                                stochasticSourceU, stochasticSourceD,
-                                                &gauge_field,
-                                                timeslice_source, timeslice_stochSource,
-                                                "local", Base::proj_1_PLUS_TM, C3p_dummy);
-    std::vector< Core::BaryonCorrelator > C3p_proj2_local
-       = Contract::proton_threepoint_stochastic(uProp_smeared, dProp_smeared, uProp, dProp,
-                                                stochastic_uProp, stochastic_dProp,
-                                                stochasticSourceU, stochasticSourceD,
-                                                &gauge_field,
-                                                timeslice_source, timeslice_stochSource,
-                                                "local", Base::proj_2_PLUS_TM, C3p_dummy);
-    std::vector< Core::BaryonCorrelator > C3p_proj3_local
-       = Contract::proton_threepoint_stochastic(uProp_smeared, dProp_smeared, uProp, dProp,
-                                                stochastic_uProp, stochastic_dProp,
-                                                stochasticSourceU, stochasticSourceD,
-                                                &gauge_field,
-                                                timeslice_source, timeslice_stochSource,
-                                                "local", Base::proj_3_PLUS_TM, C3p_dummy);
+                                                "local", C3p_dummy);
 
     int const sourcePos[3] = {source_position[0], source_position[1], source_position[2]};
-    C3p_proj0_local[0].prepareMomentumProjection(sourcePos);
+    C3p_local[0].prepareMomentumProjection(sourcePos);
 
-    std::ofstream *fout_proj0_uu = NULL;
-    std::ofstream *fout_proj0_dd = NULL;
-    std::ofstream *fout_proj1_uu = NULL;
-    std::ofstream *fout_proj1_dd = NULL;
-    std::ofstream *fout_proj2_uu = NULL;
-    std::ofstream *fout_proj2_dd = NULL;
-    std::ofstream *fout_proj3_uu = NULL;
-    std::ofstream *fout_proj3_dd = NULL;
+    std::ofstream *fout_uu = NULL;
+    std::ofstream *fout_dd = NULL;
 
     if (weave.isRoot())
     {
-      fout_proj0_uu =  new std::ofstream("output_3point_proton_stochastic_local_proj0_uu.dat");
-      fout_proj0_dd =  new std::ofstream("output_3point_proton_stochastic_local_proj0_dd.dat");
-      fout_proj1_uu =  new std::ofstream("output_3point_proton_stochastic_local_proj1_uu.dat");
-      fout_proj1_dd =  new std::ofstream("output_3point_proton_stochastic_local_proj1_dd.dat");
-      fout_proj2_uu =  new std::ofstream("output_3point_proton_stochastic_local_proj2_uu.dat");
-      fout_proj2_dd =  new std::ofstream("output_3point_proton_stochastic_local_proj2_dd.dat");
-      fout_proj3_uu =  new std::ofstream("output_3point_proton_stochastic_local_proj3_uu.dat");
-      fout_proj3_dd =  new std::ofstream("output_3point_proton_stochastic_local_proj3_dd.dat");
+      fout_uu =  new std::ofstream("output_3point_proton_stochastic_local_uu.dat");
+      fout_dd =  new std::ofstream("output_3point_proton_stochastic_local_dd.dat");
     }
 
-    assert(C3p_proj0_local.size() == 32);
+    assert(C3p_local.size() == 32);
 
-    for(size_t i=0; i<C3p_proj0_local.size(); i++)
+    for(size_t i=0; i<C3p_local.size(); i++)
     {
-      std::vector< Core::BaryonCorrelator > all_corrs_proj0(C3p_proj0_local[i].momentumProjection(momenta));
-      std::vector< Core::BaryonCorrelator > all_corrs_proj1(C3p_proj1_local[i].momentumProjection(momenta));
-      std::vector< Core::BaryonCorrelator > all_corrs_proj2(C3p_proj2_local[i].momentumProjection(momenta));
-      std::vector< Core::BaryonCorrelator > all_corrs_proj3(C3p_proj3_local[i].momentumProjection(momenta));
+      std::vector< Core::BaryonCorrelator > all_corrs(C3p_local[i].momentumProjection(momenta));
 
       for(size_t I=0; I<momenta.size(); I++)
       {
         std::ostringstream oss;
         oss << std::setw(3) << i/2 << " " << std::flush;
         std::string const prefix(oss.str());
-        all_corrs_proj0[I].setOffset(timeslice_source);
-        all_corrs_proj1[I].setOffset(timeslice_source);
-        all_corrs_proj2[I].setOffset(timeslice_source);
-        all_corrs_proj3[I].setOffset(timeslice_source);
+        all_corrs[I].setOffset(timeslice_source);
         if (weave.isRoot())
         {
           if(i%2 == 0)
           {
-            all_corrs_proj0[I].printWithMomentum(*fout_proj0_uu, momenta[I], prefix);
-            all_corrs_proj1[I].printWithMomentum(*fout_proj1_uu, momenta[I], prefix);
-            all_corrs_proj2[I].printWithMomentum(*fout_proj2_uu, momenta[I], prefix);
-            all_corrs_proj3[I].printWithMomentum(*fout_proj3_uu, momenta[I], prefix);
+            all_corrs[I].printWithMomentum_full(*fout_uu, momenta[I], prefix);
           }
           else
           {
-            all_corrs_proj0[I].printWithMomentum(*fout_proj0_dd, momenta[I], prefix);
-            all_corrs_proj1[I].printWithMomentum(*fout_proj1_dd, momenta[I], prefix);
-            all_corrs_proj2[I].printWithMomentum(*fout_proj2_dd, momenta[I], prefix);
-            all_corrs_proj3[I].printWithMomentum(*fout_proj3_dd, momenta[I], prefix);
+            all_corrs[I].printWithMomentum_full(*fout_dd, momenta[I], prefix);
           }
         }
       }
@@ -547,24 +510,12 @@ int main(int argc, char **argv)
 
     if (weave.isRoot())
     {
-      fout_proj0_uu->close();
-      fout_proj0_dd->close();
-      fout_proj1_uu->close();
-      fout_proj1_dd->close();
-      fout_proj2_uu->close();
-      fout_proj2_dd->close();
-      fout_proj3_uu->close();
-      fout_proj3_dd->close();
+      fout_uu->close();
+      fout_dd->close();
     }
 
-    delete fout_proj0_uu;
-    delete fout_proj0_dd;
-    delete fout_proj1_uu;
-    delete fout_proj1_dd;
-    delete fout_proj2_uu;
-    delete fout_proj2_dd;
-    delete fout_proj3_uu;
-    delete fout_proj3_dd;
+    delete fout_uu;
+    delete fout_dd;
 
     weave.barrier();
     time (&end);
@@ -583,62 +534,29 @@ int main(int argc, char **argv)
 
     std::vector< Core::BaryonCorrelator > C3n_dummy;
 
-    std::vector< Core::BaryonCorrelator > C3n_proj0_local
+    std::vector< Core::BaryonCorrelator > C3n_local
        = Contract::proton_threepoint_stochastic(dProp_smeared, uProp_smeared, dProp, uProp,
                                                 stochastic_dProp, stochastic_uProp,
                                                 stochasticSourceD, stochasticSourceU,
                                                 &gauge_field,
                                                 timeslice_source, timeslice_stochSource,
-                                                "local", Base::proj_PARITY_PLUS_TM, C3n_dummy);
-    std::vector< Core::BaryonCorrelator > C3n_proj1_local
-       = Contract::proton_threepoint_stochastic(dProp_smeared, uProp_smeared, dProp, uProp,
-                                                stochastic_dProp, stochastic_uProp,
-                                                stochasticSourceD, stochasticSourceU,
-                                                &gauge_field,
-                                                timeslice_source, timeslice_stochSource,
-                                                "local", Base::proj_1_PLUS_TM, C3n_dummy);
-    std::vector< Core::BaryonCorrelator > C3n_proj2_local
-       = Contract::proton_threepoint_stochastic(dProp_smeared, uProp_smeared, dProp, uProp,
-                                                stochastic_dProp, stochastic_uProp,
-                                                stochasticSourceD, stochasticSourceU,
-                                                &gauge_field,
-                                                timeslice_source, timeslice_stochSource,
-                                                "local", Base::proj_2_PLUS_TM, C3n_dummy);
-    std::vector< Core::BaryonCorrelator > C3n_proj3_local
-       = Contract::proton_threepoint_stochastic(dProp_smeared, uProp_smeared, dProp, uProp,
-                                                stochastic_dProp, stochastic_uProp,
-                                                stochasticSourceD, stochasticSourceU,
-                                                &gauge_field,
-                                                timeslice_source, timeslice_stochSource,
-                                                "local", Base::proj_3_PLUS_TM, C3n_dummy);
+                                                "local", C3n_dummy);
 
     int const sourcePos[3] = {source_position[0], source_position[1], source_position[2]};
-    C3n_proj0_local[0].prepareMomentumProjection(sourcePos);
+    C3n_local[0].prepareMomentumProjection(sourcePos);
 
-    std::ofstream *fout_proj0_uu = NULL;
-    std::ofstream *fout_proj0_dd = NULL;
-    std::ofstream *fout_proj1_uu = NULL;
-    std::ofstream *fout_proj1_dd = NULL;
-    std::ofstream *fout_proj2_uu = NULL;
-    std::ofstream *fout_proj2_dd = NULL;
-    std::ofstream *fout_proj3_uu = NULL;
-    std::ofstream *fout_proj3_dd = NULL;
+    std::ofstream *fout_uu = NULL;
+    std::ofstream *fout_dd = NULL;
 
     if (weave.isRoot())
     {
-      fout_proj0_uu =  new std::ofstream("output_3point_neutron_stochastic_local_proj0_uu.dat");
-      fout_proj0_dd =  new std::ofstream("output_3point_neutron_stochastic_local_proj0_dd.dat");
-      fout_proj1_uu =  new std::ofstream("output_3point_neutron_stochastic_local_proj1_uu.dat");
-      fout_proj1_dd =  new std::ofstream("output_3point_neutron_stochastic_local_proj1_dd.dat");
-      fout_proj2_uu =  new std::ofstream("output_3point_neutron_stochastic_local_proj2_uu.dat");
-      fout_proj2_dd =  new std::ofstream("output_3point_neutron_stochastic_local_proj2_dd.dat");
-      fout_proj3_uu =  new std::ofstream("output_3point_neutron_stochastic_local_proj3_uu.dat");
-      fout_proj3_dd =  new std::ofstream("output_3point_neutron_stochastic_local_proj3_dd.dat");
+      fout_uu =  new std::ofstream("output_3point_neutron_stochastic_local_uu.dat");
+      fout_dd =  new std::ofstream("output_3point_neutron_stochastic_local_dd.dat");
     }
 
-    assert(C3n_proj0_local.size() == 32);
+    assert(C3n_local.size() == 32);
 
-    for(size_t i=0; i<C3n_proj0_local.size(); i++)
+    for(size_t i=0; i<C3n_local.size(); i++)
     {
 
       // ***************************************************************
@@ -663,47 +581,32 @@ int main(int argc, char **argv)
         case 29:
         case 30:
         case 31:
-          C3n_proj0_local[i] *= -1.0;
-          C3n_proj1_local[i] *= -1.0;
-          C3n_proj2_local[i] *= -1.0;
-          C3n_proj3_local[i] *= -1.0;
+          C3n_local[i] *= -1.0;
           break;
         default:
           // do nothing
           break;
       }
 
-      std::vector< Core::BaryonCorrelator > all_corrs_proj0(C3n_proj0_local[i].momentumProjection(momenta));
-      std::vector< Core::BaryonCorrelator > all_corrs_proj1(C3n_proj1_local[i].momentumProjection(momenta));
-      std::vector< Core::BaryonCorrelator > all_corrs_proj2(C3n_proj2_local[i].momentumProjection(momenta));
-      std::vector< Core::BaryonCorrelator > all_corrs_proj3(C3n_proj3_local[i].momentumProjection(momenta));
+      std::vector< Core::BaryonCorrelator > all_corrs(C3n_local[i].momentumProjection(momenta));
 
       for(size_t I=0; I<momenta.size(); I++)
       {
         std::ostringstream oss;
         oss << std::setw(3) << i/2 << " " << std::flush;
         std::string const prefix(oss.str());
-        all_corrs_proj0[I].setOffset(timeslice_source);
-        all_corrs_proj1[I].setOffset(timeslice_source);
-        all_corrs_proj2[I].setOffset(timeslice_source);
-        all_corrs_proj3[I].setOffset(timeslice_source);
+        all_corrs[I].setOffset(timeslice_source);
         if (weave.isRoot())
         {
           // since u and d currents are swapped for the neutron the d current comes first
           // which is contrary to the proton threepoint
           if(i%2 == 0)
           {
-            all_corrs_proj0[I].printWithMomentum(*fout_proj0_dd, momenta[I], prefix);
-            all_corrs_proj1[I].printWithMomentum(*fout_proj1_dd, momenta[I], prefix);
-            all_corrs_proj2[I].printWithMomentum(*fout_proj2_dd, momenta[I], prefix);
-            all_corrs_proj3[I].printWithMomentum(*fout_proj3_dd, momenta[I], prefix);
+            all_corrs[I].printWithMomentum_full(*fout_dd, momenta[I], prefix);
           }
           else
           {
-            all_corrs_proj0[I].printWithMomentum(*fout_proj0_uu, momenta[I], prefix);
-            all_corrs_proj1[I].printWithMomentum(*fout_proj1_uu, momenta[I], prefix);
-            all_corrs_proj2[I].printWithMomentum(*fout_proj2_uu, momenta[I], prefix);
-            all_corrs_proj3[I].printWithMomentum(*fout_proj3_uu, momenta[I], prefix);
+            all_corrs[I].printWithMomentum_full(*fout_uu, momenta[I], prefix);
           }
         }
       }
@@ -712,24 +615,12 @@ int main(int argc, char **argv)
 
     if (weave.isRoot())
     {
-      fout_proj0_uu->close();
-      fout_proj0_dd->close();
-      fout_proj1_uu->close();
-      fout_proj1_dd->close();
-      fout_proj2_uu->close();
-      fout_proj2_dd->close();
-      fout_proj3_uu->close();
-      fout_proj3_dd->close();
+      fout_uu->close();
+      fout_dd->close();
     }
 
-    delete fout_proj0_uu;
-    delete fout_proj0_dd;
-    delete fout_proj1_uu;
-    delete fout_proj1_dd;
-    delete fout_proj2_uu;
-    delete fout_proj2_dd;
-    delete fout_proj3_uu;
-    delete fout_proj3_dd;
+    delete fout_uu;
+    delete fout_dd;
 
     weave.barrier();
     time (&end);
@@ -743,6 +634,7 @@ int main(int argc, char **argv)
   // conserved currents *************************************************************************
   // ********************************************************************************************
 
+
   if (weave.isRoot())
     std::cout << "\n conserved currents (proton) ... \n" << std::endl;
 
@@ -750,97 +642,49 @@ int main(int argc, char **argv)
     weave.barrier();
     time (&start);
 
-    std::vector< Core::BaryonCorrelator > C3p_proj0_conservedA;
-    std::vector< Core::BaryonCorrelator > C3p_proj1_conservedA;
-    std::vector< Core::BaryonCorrelator > C3p_proj2_conservedA;
-    std::vector< Core::BaryonCorrelator > C3p_proj3_conservedA;
+    std::vector< Core::BaryonCorrelator > C3p_conservedA;
 
-    std::vector< Core::BaryonCorrelator > C3p_proj0_conserved
+    std::vector< Core::BaryonCorrelator > C3p_conserved
        = Contract::proton_threepoint_stochastic(uProp_smeared, dProp_smeared, uProp, dProp,
                                                 stochastic_uProp, stochastic_dProp,
                                                 stochasticSourceU, stochasticSourceD,
                                                 &gauge_field,
                                                 timeslice_source, timeslice_stochSource,
-                                                "noether", Base::proj_PARITY_PLUS_TM, C3p_proj0_conservedA);
-    std::vector< Core::BaryonCorrelator > C3p_proj1_conserved
-       = Contract::proton_threepoint_stochastic(uProp_smeared, dProp_smeared, uProp, dProp,
-                                                stochastic_uProp, stochastic_dProp,
-                                                stochasticSourceU, stochasticSourceD,
-                                                &gauge_field,
-                                                timeslice_source, timeslice_stochSource,
-                                                "noether", Base::proj_1_PLUS_TM, C3p_proj1_conservedA);
-    std::vector< Core::BaryonCorrelator > C3p_proj2_conserved
-       = Contract::proton_threepoint_stochastic(uProp_smeared, dProp_smeared, uProp, dProp,
-                                                stochastic_uProp, stochastic_dProp,
-                                                stochasticSourceU, stochasticSourceD,
-                                                &gauge_field,
-                                                timeslice_source, timeslice_stochSource,
-                                                "noether", Base::proj_2_PLUS_TM, C3p_proj2_conservedA);
-    std::vector< Core::BaryonCorrelator > C3p_proj3_conserved
-       = Contract::proton_threepoint_stochastic(uProp_smeared, dProp_smeared, uProp, dProp,
-                                                stochastic_uProp, stochastic_dProp,
-                                                stochasticSourceU, stochasticSourceD,
-                                                &gauge_field,
-                                                timeslice_source, timeslice_stochSource,
-                                                "noether", Base::proj_3_PLUS_TM, C3p_proj3_conservedA);
+                                                "noether", C3p_conservedA);
 
     int const sourcePos[3] = {source_position[0], source_position[1], source_position[2]};
-    C3p_proj0_conserved[0].prepareMomentumProjection(sourcePos);
+    C3p_conserved[0].prepareMomentumProjection(sourcePos);
 
-    std::ofstream *fout_proj0_uu = NULL;
-    std::ofstream *fout_proj0_dd = NULL;
-    std::ofstream *fout_proj1_uu = NULL;
-    std::ofstream *fout_proj1_dd = NULL;
-    std::ofstream *fout_proj2_uu = NULL;
-    std::ofstream *fout_proj2_dd = NULL;
-    std::ofstream *fout_proj3_uu = NULL;
-    std::ofstream *fout_proj3_dd = NULL;
+    std::ofstream *fout_uu = NULL;
+    std::ofstream *fout_dd = NULL;
 
     if (weave.isRoot())
     {
-      fout_proj0_uu =  new std::ofstream("output_3point_proton_stochastic_conserved_vector_proj0_uu.dat");
-      fout_proj0_dd =  new std::ofstream("output_3point_proton_stochastic_conserved_vector_proj0_dd.dat");
-      fout_proj1_uu =  new std::ofstream("output_3point_proton_stochastic_conserved_vector_proj1_uu.dat");
-      fout_proj1_dd =  new std::ofstream("output_3point_proton_stochastic_conserved_vector_proj1_dd.dat");
-      fout_proj2_uu =  new std::ofstream("output_3point_proton_stochastic_conserved_vector_proj2_uu.dat");
-      fout_proj2_dd =  new std::ofstream("output_3point_proton_stochastic_conserved_vector_proj2_dd.dat");
-      fout_proj3_uu =  new std::ofstream("output_3point_proton_stochastic_conserved_vector_proj3_uu.dat");
-      fout_proj3_dd =  new std::ofstream("output_3point_proton_stochastic_conserved_vector_proj3_dd.dat");
+      fout_uu =  new std::ofstream("output_3point_proton_stochastic_conserved_vector_uu.dat");
+      fout_dd =  new std::ofstream("output_3point_proton_stochastic_conserved_vector_dd.dat");
     }
 
-    assert(C3p_proj0_conserved.size() == 8);
+    assert(C3p_conserved.size() == 8);
 
-    for(size_t i=0; i<C3p_proj0_conserved.size(); i++)
+    for(size_t i=0; i<C3p_conserved.size(); i++)
     {
-      std::vector< Core::BaryonCorrelator > all_corrs_proj0(C3p_proj0_conserved[i].momentumProjection(momenta));
-      std::vector< Core::BaryonCorrelator > all_corrs_proj1(C3p_proj1_conserved[i].momentumProjection(momenta));
-      std::vector< Core::BaryonCorrelator > all_corrs_proj2(C3p_proj2_conserved[i].momentumProjection(momenta));
-      std::vector< Core::BaryonCorrelator > all_corrs_proj3(C3p_proj3_conserved[i].momentumProjection(momenta));
+      std::vector< Core::BaryonCorrelator > all_corrs(C3p_conserved[i].momentumProjection(momenta));
 
       for(size_t I=0; I<momenta.size(); I++)
       {
         std::ostringstream oss;
         oss << std::setw(3) << i/2 << " " << std::flush;
         std::string const prefix(oss.str());
-        all_corrs_proj0[I].setOffset(timeslice_source);
-        all_corrs_proj1[I].setOffset(timeslice_source);
-        all_corrs_proj2[I].setOffset(timeslice_source);
-        all_corrs_proj3[I].setOffset(timeslice_source);
+        all_corrs[I].setOffset(timeslice_source);
         if (weave.isRoot())
         {
           if(i%2 == 0)
           {
-            all_corrs_proj0[I].printWithMomentum(*fout_proj0_uu, momenta[I], prefix);
-            all_corrs_proj1[I].printWithMomentum(*fout_proj1_uu, momenta[I], prefix);
-            all_corrs_proj2[I].printWithMomentum(*fout_proj2_uu, momenta[I], prefix);
-            all_corrs_proj3[I].printWithMomentum(*fout_proj3_uu, momenta[I], prefix);
+            all_corrs[I].printWithMomentum_full(*fout_uu, momenta[I], prefix);
           }
           else
           {
-            all_corrs_proj0[I].printWithMomentum(*fout_proj0_dd, momenta[I], prefix);
-            all_corrs_proj1[I].printWithMomentum(*fout_proj1_dd, momenta[I], prefix);
-            all_corrs_proj2[I].printWithMomentum(*fout_proj2_dd, momenta[I], prefix);
-            all_corrs_proj3[I].printWithMomentum(*fout_proj3_dd, momenta[I], prefix);
+            all_corrs[I].printWithMomentum_full(*fout_dd, momenta[I], prefix);
           }
         }
       }
@@ -849,70 +693,40 @@ int main(int argc, char **argv)
 
     if (weave.isRoot())
     {
-      fout_proj0_uu->close();
-      fout_proj0_dd->close();
-      fout_proj1_uu->close();
-      fout_proj1_dd->close();
-      fout_proj2_uu->close();
-      fout_proj2_dd->close();
-      fout_proj3_uu->close();
-      fout_proj3_dd->close();
+      fout_uu->close();
+      fout_dd->close();
     }
 
-    delete fout_proj0_uu;
-    delete fout_proj0_dd;
-    delete fout_proj1_uu;
-    delete fout_proj1_dd;
-    delete fout_proj2_uu;
-    delete fout_proj2_dd;
-    delete fout_proj3_uu;
-    delete fout_proj3_dd;
+    delete fout_uu;
+    delete fout_dd;
 
     if (weave.isRoot())
     {
-      fout_proj0_uu =  new std::ofstream("output_3point_proton_stochastic_conserved_axial_proj0_uu.dat");
-      fout_proj0_dd =  new std::ofstream("output_3point_proton_stochastic_conserved_axial_proj0_dd.dat");
-      fout_proj1_uu =  new std::ofstream("output_3point_proton_stochastic_conserved_axial_proj1_uu.dat");
-      fout_proj1_dd =  new std::ofstream("output_3point_proton_stochastic_conserved_axial_proj1_dd.dat");
-      fout_proj2_uu =  new std::ofstream("output_3point_proton_stochastic_conserved_axial_proj2_uu.dat");
-      fout_proj2_dd =  new std::ofstream("output_3point_proton_stochastic_conserved_axial_proj2_dd.dat");
-      fout_proj3_uu =  new std::ofstream("output_3point_proton_stochastic_conserved_axial_proj3_uu.dat");
-      fout_proj3_dd =  new std::ofstream("output_3point_proton_stochastic_conserved_axial_proj3_dd.dat");
+      fout_uu =  new std::ofstream("output_3point_proton_stochastic_conserved_axial_uu.dat");
+      fout_dd =  new std::ofstream("output_3point_proton_stochastic_conserved_axial_dd.dat");
     }
 
-    assert(C3p_proj0_conservedA.size() == 8);
+    assert(C3p_conservedA.size() == 8);
 
-    for(size_t i=0; i<C3p_proj0_conserved.size(); i++)
+    for(size_t i=0; i<C3p_conserved.size(); i++)
     {
-      std::vector< Core::BaryonCorrelator > all_corrs_proj0(C3p_proj0_conservedA[i].momentumProjection(momenta));
-      std::vector< Core::BaryonCorrelator > all_corrs_proj1(C3p_proj1_conservedA[i].momentumProjection(momenta));
-      std::vector< Core::BaryonCorrelator > all_corrs_proj2(C3p_proj2_conservedA[i].momentumProjection(momenta));
-      std::vector< Core::BaryonCorrelator > all_corrs_proj3(C3p_proj3_conservedA[i].momentumProjection(momenta));
+      std::vector< Core::BaryonCorrelator > all_corrs(C3p_conservedA[i].momentumProjection(momenta));
 
       for(size_t I=0; I<momenta.size(); I++)
       {
         std::ostringstream oss;
         oss << std::setw(3) << i/2 << " " << std::flush;
         std::string const prefix(oss.str());
-        all_corrs_proj0[I].setOffset(timeslice_source);
-        all_corrs_proj1[I].setOffset(timeslice_source);
-        all_corrs_proj2[I].setOffset(timeslice_source);
-        all_corrs_proj3[I].setOffset(timeslice_source);
+        all_corrs[I].setOffset(timeslice_source);
         if (weave.isRoot())
         {
           if(i%2 == 0)
           {
-            all_corrs_proj0[I].printWithMomentum(*fout_proj0_uu, momenta[I], prefix);
-            all_corrs_proj1[I].printWithMomentum(*fout_proj1_uu, momenta[I], prefix);
-            all_corrs_proj2[I].printWithMomentum(*fout_proj2_uu, momenta[I], prefix);
-            all_corrs_proj3[I].printWithMomentum(*fout_proj3_uu, momenta[I], prefix);
+            all_corrs[I].printWithMomentum_full(*fout_uu, momenta[I], prefix);
           }
           else
           {
-            all_corrs_proj0[I].printWithMomentum(*fout_proj0_dd, momenta[I], prefix);
-            all_corrs_proj1[I].printWithMomentum(*fout_proj1_dd, momenta[I], prefix);
-            all_corrs_proj2[I].printWithMomentum(*fout_proj2_dd, momenta[I], prefix);
-            all_corrs_proj3[I].printWithMomentum(*fout_proj3_dd, momenta[I], prefix);
+            all_corrs[I].printWithMomentum_full(*fout_dd, momenta[I], prefix);
           }
         }
       }
@@ -921,24 +735,12 @@ int main(int argc, char **argv)
 
     if (weave.isRoot())
     {
-      fout_proj0_uu->close();
-      fout_proj0_dd->close();
-      fout_proj1_uu->close();
-      fout_proj1_dd->close();
-      fout_proj2_uu->close();
-      fout_proj2_dd->close();
-      fout_proj3_uu->close();
-      fout_proj3_dd->close();
+      fout_uu->close();
+      fout_dd->close();
     }
 
-    delete fout_proj0_uu;
-    delete fout_proj0_dd;
-    delete fout_proj1_uu;
-    delete fout_proj1_dd;
-    delete fout_proj2_uu;
-    delete fout_proj2_dd;
-    delete fout_proj3_uu;
-    delete fout_proj3_dd;
+    delete fout_uu;
+    delete fout_dd;
 
     weave.barrier();
     time (&end);
@@ -948,6 +750,7 @@ int main(int argc, char **argv)
   }
 
 
+
   if (weave.isRoot())
     std::cout << "\n conserved currents (neutron) ... \n" << std::endl;
 
@@ -955,100 +758,52 @@ int main(int argc, char **argv)
     weave.barrier();
     time (&start);
 
-    std::vector< Core::BaryonCorrelator > C3n_proj0_conservedA;
-    std::vector< Core::BaryonCorrelator > C3n_proj1_conservedA;
-    std::vector< Core::BaryonCorrelator > C3n_proj2_conservedA;
-    std::vector< Core::BaryonCorrelator > C3n_proj3_conservedA;
+    std::vector< Core::BaryonCorrelator > C3n_conservedA;
 
-    std::vector< Core::BaryonCorrelator > C3n_proj0_conserved
+    std::vector< Core::BaryonCorrelator > C3n_conserved
        = Contract::proton_threepoint_stochastic(dProp_smeared, uProp_smeared, dProp, uProp,
                                                 stochastic_dProp, stochastic_uProp,
                                                 stochasticSourceD, stochasticSourceU,
                                                 &gauge_field,
                                                 timeslice_source, timeslice_stochSource,
-                                                "noether", Base::proj_PARITY_PLUS_TM, C3n_proj0_conservedA);
-    std::vector< Core::BaryonCorrelator > C3n_proj1_conserved
-       = Contract::proton_threepoint_stochastic(dProp_smeared, uProp_smeared, dProp, uProp,
-                                                stochastic_dProp, stochastic_uProp,
-                                                stochasticSourceD, stochasticSourceU,
-                                                &gauge_field,
-                                                timeslice_source, timeslice_stochSource,
-                                                "noether", Base::proj_1_PLUS_TM, C3n_proj1_conservedA);
-    std::vector< Core::BaryonCorrelator > C3n_proj2_conserved
-       = Contract::proton_threepoint_stochastic(dProp_smeared, uProp_smeared, dProp, uProp,
-                                                stochastic_dProp, stochastic_uProp,
-                                                stochasticSourceD, stochasticSourceU,
-                                                &gauge_field,
-                                                timeslice_source, timeslice_stochSource,
-                                                "noether", Base::proj_2_PLUS_TM, C3n_proj2_conservedA);
-    std::vector< Core::BaryonCorrelator > C3n_proj3_conserved
-       = Contract::proton_threepoint_stochastic(dProp_smeared, uProp_smeared, dProp, uProp,
-                                                stochastic_dProp, stochastic_uProp,
-                                                stochasticSourceD, stochasticSourceU,
-                                                &gauge_field,
-                                                timeslice_source, timeslice_stochSource,
-                                                "noether", Base::proj_3_PLUS_TM, C3n_proj3_conservedA);
+                                                "noether", C3n_conservedA);
 
     int const sourcePos[3] = {source_position[0], source_position[1], source_position[2]};
-    C3n_proj0_conserved[0].prepareMomentumProjection(sourcePos);
+    C3n_conserved[0].prepareMomentumProjection(sourcePos);
 
-    std::ofstream *fout_proj0_uu = NULL;
-    std::ofstream *fout_proj0_dd = NULL;
-    std::ofstream *fout_proj1_uu = NULL;
-    std::ofstream *fout_proj1_dd = NULL;
-    std::ofstream *fout_proj2_uu = NULL;
-    std::ofstream *fout_proj2_dd = NULL;
-    std::ofstream *fout_proj3_uu = NULL;
-    std::ofstream *fout_proj3_dd = NULL;
+    std::ofstream *fout_uu = NULL;
+    std::ofstream *fout_dd = NULL;
 
     if (weave.isRoot())
     {
-      fout_proj0_uu =  new std::ofstream("output_3point_neutron_stochastic_conserved_vector_proj0_uu.dat");
-      fout_proj0_dd =  new std::ofstream("output_3point_neutron_stochastic_conserved_vector_proj0_dd.dat");
-      fout_proj1_uu =  new std::ofstream("output_3point_neutron_stochastic_conserved_vector_proj1_uu.dat");
-      fout_proj1_dd =  new std::ofstream("output_3point_neutron_stochastic_conserved_vector_proj1_dd.dat");
-      fout_proj2_uu =  new std::ofstream("output_3point_neutron_stochastic_conserved_vector_proj2_uu.dat");
-      fout_proj2_dd =  new std::ofstream("output_3point_neutron_stochastic_conserved_vector_proj2_dd.dat");
-      fout_proj3_uu =  new std::ofstream("output_3point_neutron_stochastic_conserved_vector_proj3_uu.dat");
-      fout_proj3_dd =  new std::ofstream("output_3point_neutron_stochastic_conserved_vector_proj3_dd.dat");
+      fout_uu =  new std::ofstream("output_3point_neutron_stochastic_conserved_vector_uu.dat");
+      fout_dd =  new std::ofstream("output_3point_neutron_stochastic_conserved_vector_dd.dat");
     }
 
-    assert(C3n_proj0_conserved.size() == 8);
+    assert(C3n_conserved.size() == 8);
 
-    for(size_t i=0; i<C3n_proj0_conserved.size(); i++)
+    for(size_t i=0; i<C3n_conserved.size(); i++)
     {
 
-      std::vector< Core::BaryonCorrelator > all_corrs_proj0(C3n_proj0_conserved[i].momentumProjection(momenta));
-      std::vector< Core::BaryonCorrelator > all_corrs_proj1(C3n_proj1_conserved[i].momentumProjection(momenta));
-      std::vector< Core::BaryonCorrelator > all_corrs_proj2(C3n_proj2_conserved[i].momentumProjection(momenta));
-      std::vector< Core::BaryonCorrelator > all_corrs_proj3(C3n_proj3_conserved[i].momentumProjection(momenta));
+      std::vector< Core::BaryonCorrelator > all_corrs(C3n_conserved[i].momentumProjection(momenta));
 
       for(size_t I=0; I<momenta.size(); I++)
       {
         std::ostringstream oss;
         oss << std::setw(3) << i/2 << " " << std::flush;
         std::string const prefix(oss.str());
-        all_corrs_proj0[I].setOffset(timeslice_source);
-        all_corrs_proj1[I].setOffset(timeslice_source);
-        all_corrs_proj2[I].setOffset(timeslice_source);
-        all_corrs_proj3[I].setOffset(timeslice_source);
+        all_corrs[I].setOffset(timeslice_source);
         if (weave.isRoot())
         {
           // since u and d currents are swapped for the neutron the d current comes first
           // which is contrary to the proton threepoint
           if(i%2 == 0)
           {
-            all_corrs_proj0[I].printWithMomentum(*fout_proj0_dd, momenta[I], prefix);
-            all_corrs_proj1[I].printWithMomentum(*fout_proj1_dd, momenta[I], prefix);
-            all_corrs_proj2[I].printWithMomentum(*fout_proj2_dd, momenta[I], prefix);
-            all_corrs_proj3[I].printWithMomentum(*fout_proj3_dd, momenta[I], prefix);
+            all_corrs[I].printWithMomentum_full(*fout_dd, momenta[I], prefix);
           }
           else
           {
-            all_corrs_proj0[I].printWithMomentum(*fout_proj0_uu, momenta[I], prefix);
-            all_corrs_proj1[I].printWithMomentum(*fout_proj1_uu, momenta[I], prefix);
-            all_corrs_proj2[I].printWithMomentum(*fout_proj2_uu, momenta[I], prefix);
-            all_corrs_proj3[I].printWithMomentum(*fout_proj3_uu, momenta[I], prefix);
+            all_corrs[I].printWithMomentum_full(*fout_uu, momenta[I], prefix);
           }
         }
       }
@@ -1057,73 +812,43 @@ int main(int argc, char **argv)
 
     if (weave.isRoot())
     {
-      fout_proj0_uu->close();
-      fout_proj0_dd->close();
-      fout_proj1_uu->close();
-      fout_proj1_dd->close();
-      fout_proj2_uu->close();
-      fout_proj2_dd->close();
-      fout_proj3_uu->close();
-      fout_proj3_dd->close();
+      fout_uu->close();
+      fout_dd->close();
     }
 
-    delete fout_proj0_uu;
-    delete fout_proj0_dd;
-    delete fout_proj1_uu;
-    delete fout_proj1_dd;
-    delete fout_proj2_uu;
-    delete fout_proj2_dd;
-    delete fout_proj3_uu;
-    delete fout_proj3_dd;
+    delete fout_uu;
+    delete fout_dd;
 
     if (weave.isRoot())
     {
-      fout_proj0_uu =  new std::ofstream("output_3point_neutron_stochastic_conserved_axial_proj0_uu.dat");
-      fout_proj0_dd =  new std::ofstream("output_3point_neutron_stochastic_conserved_axial_proj0_dd.dat");
-      fout_proj1_uu =  new std::ofstream("output_3point_neutron_stochastic_conserved_axial_proj1_uu.dat");
-      fout_proj1_dd =  new std::ofstream("output_3point_neutron_stochastic_conserved_axial_proj1_dd.dat");
-      fout_proj2_uu =  new std::ofstream("output_3point_neutron_stochastic_conserved_axial_proj2_uu.dat");
-      fout_proj2_dd =  new std::ofstream("output_3point_neutron_stochastic_conserved_axial_proj2_dd.dat");
-      fout_proj3_uu =  new std::ofstream("output_3point_neutron_stochastic_conserved_axial_proj3_uu.dat");
-      fout_proj3_dd =  new std::ofstream("output_3point_neutron_stochastic_conserved_axial_proj3_dd.dat");
+      fout_uu =  new std::ofstream("output_3point_neutron_stochastic_conserved_axial_uu.dat");
+      fout_dd =  new std::ofstream("output_3point_neutron_stochastic_conserved_axial_dd.dat");
     }
 
-    assert(C3n_proj0_conservedA.size() == 8);
+    assert(C3n_conservedA.size() == 8);
 
-    for(size_t i=0; i<C3n_proj0_conserved.size(); i++)
+    for(size_t i=0; i<C3n_conserved.size(); i++)
     {
 
-      std::vector< Core::BaryonCorrelator > all_corrs_proj0(C3n_proj0_conservedA[i].momentumProjection(momenta));
-      std::vector< Core::BaryonCorrelator > all_corrs_proj1(C3n_proj1_conservedA[i].momentumProjection(momenta));
-      std::vector< Core::BaryonCorrelator > all_corrs_proj2(C3n_proj2_conservedA[i].momentumProjection(momenta));
-      std::vector< Core::BaryonCorrelator > all_corrs_proj3(C3n_proj3_conservedA[i].momentumProjection(momenta));
+      std::vector< Core::BaryonCorrelator > all_corrs(C3n_conservedA[i].momentumProjection(momenta));
 
       for(size_t I=0; I<momenta.size(); I++)
       {
         std::ostringstream oss;
         oss << std::setw(3) << i/2 << " " << std::flush;
         std::string const prefix(oss.str());
-        all_corrs_proj0[I].setOffset(timeslice_source);
-        all_corrs_proj1[I].setOffset(timeslice_source);
-        all_corrs_proj2[I].setOffset(timeslice_source);
-        all_corrs_proj3[I].setOffset(timeslice_source);
+        all_corrs[I].setOffset(timeslice_source);
         if (weave.isRoot())
         {
           // since u and d currents are swapped for the neutron the d current comes first
           // which is contrary to the proton threepoint
           if(i%2 == 0)
           {
-            all_corrs_proj0[I].printWithMomentum(*fout_proj0_dd, momenta[I], prefix);
-            all_corrs_proj1[I].printWithMomentum(*fout_proj1_dd, momenta[I], prefix);
-            all_corrs_proj2[I].printWithMomentum(*fout_proj2_dd, momenta[I], prefix);
-            all_corrs_proj3[I].printWithMomentum(*fout_proj3_dd, momenta[I], prefix);
+            all_corrs[I].printWithMomentum_full(*fout_dd, momenta[I], prefix);
           }
           else
           {
-            all_corrs_proj0[I].printWithMomentum(*fout_proj0_uu, momenta[I], prefix);
-            all_corrs_proj1[I].printWithMomentum(*fout_proj1_uu, momenta[I], prefix);
-            all_corrs_proj2[I].printWithMomentum(*fout_proj2_uu, momenta[I], prefix);
-            all_corrs_proj3[I].printWithMomentum(*fout_proj3_uu, momenta[I], prefix);
+            all_corrs[I].printWithMomentum_full(*fout_uu, momenta[I], prefix);
           }
         }
       }
@@ -1132,24 +857,12 @@ int main(int argc, char **argv)
 
     if (weave.isRoot())
     {
-      fout_proj0_uu->close();
-      fout_proj0_dd->close();
-      fout_proj1_uu->close();
-      fout_proj1_dd->close();
-      fout_proj2_uu->close();
-      fout_proj2_dd->close();
-      fout_proj3_uu->close();
-      fout_proj3_dd->close();
+      fout_uu->close();
+      fout_dd->close();
     }
 
-    delete fout_proj0_uu;
-    delete fout_proj0_dd;
-    delete fout_proj1_uu;
-    delete fout_proj1_dd;
-    delete fout_proj2_uu;
-    delete fout_proj2_dd;
-    delete fout_proj3_uu;
-    delete fout_proj3_dd;
+    delete fout_uu;
+    delete fout_dd;
 
     weave.barrier();
     time (&end);
@@ -1163,6 +876,7 @@ int main(int argc, char **argv)
   // derivative operators ***********************************************************************
   // ********************************************************************************************
 
+
   if (weave.isRoot())
     std::cout << "\n 1D currents (proton) ... \n" << std::endl;
 
@@ -1170,97 +884,49 @@ int main(int argc, char **argv)
     weave.barrier();
     time (&start);
 
-    std::vector< Core::BaryonCorrelator > C3p_proj0_1DA;
-    std::vector< Core::BaryonCorrelator > C3p_proj1_1DA;
-    std::vector< Core::BaryonCorrelator > C3p_proj2_1DA;
-    std::vector< Core::BaryonCorrelator > C3p_proj3_1DA;
+    std::vector< Core::BaryonCorrelator > C3p_1DA;
 
-    std::vector< Core::BaryonCorrelator > C3p_proj0_1D
+    std::vector< Core::BaryonCorrelator > C3p_1D
        = Contract::proton_threepoint_stochastic(uProp_smeared, dProp_smeared, uProp, dProp,
                                                 stochastic_uProp, stochastic_dProp,
                                                 stochasticSourceU, stochasticSourceD,
                                                 &gauge_field,
                                                 timeslice_source, timeslice_stochSource,
-                                                "1D", Base::proj_PARITY_PLUS_TM, C3p_proj0_1DA);
-    std::vector< Core::BaryonCorrelator > C3p_proj1_1D
-       = Contract::proton_threepoint_stochastic(uProp_smeared, dProp_smeared, uProp, dProp,
-                                                stochastic_uProp, stochastic_dProp,
-                                                stochasticSourceU, stochasticSourceD,
-                                                &gauge_field,
-                                                timeslice_source, timeslice_stochSource,
-                                                "1D", Base::proj_1_PLUS_TM, C3p_proj1_1DA);
-    std::vector< Core::BaryonCorrelator > C3p_proj2_1D
-       = Contract::proton_threepoint_stochastic(uProp_smeared, dProp_smeared, uProp, dProp,
-                                                stochastic_uProp, stochastic_dProp,
-                                                stochasticSourceU, stochasticSourceD,
-                                                &gauge_field,
-                                                timeslice_source, timeslice_stochSource,
-                                                "1D", Base::proj_2_PLUS_TM, C3p_proj2_1DA);
-    std::vector< Core::BaryonCorrelator > C3p_proj3_1D
-       = Contract::proton_threepoint_stochastic(uProp_smeared, dProp_smeared, uProp, dProp,
-                                                stochastic_uProp, stochastic_dProp,
-                                                stochasticSourceU, stochasticSourceD,
-                                                &gauge_field,
-                                                timeslice_source, timeslice_stochSource,
-                                                "1D", Base::proj_3_PLUS_TM, C3p_proj3_1DA);
+                                                "1D", C3p_1DA);
 
     int const sourcePos[3] = {source_position[0], source_position[1], source_position[2]};
-    C3p_proj0_1D[0].prepareMomentumProjection(sourcePos);
+    C3p_1D[0].prepareMomentumProjection(sourcePos);
 
-    std::ofstream *fout_proj0_uu = NULL;
-    std::ofstream *fout_proj0_dd = NULL;
-    std::ofstream *fout_proj1_uu = NULL;
-    std::ofstream *fout_proj1_dd = NULL;
-    std::ofstream *fout_proj2_uu = NULL;
-    std::ofstream *fout_proj2_dd = NULL;
-    std::ofstream *fout_proj3_uu = NULL;
-    std::ofstream *fout_proj3_dd = NULL;
+    std::ofstream *fout_uu = NULL;
+    std::ofstream *fout_dd = NULL;
 
     if (weave.isRoot())
     {
-      fout_proj0_uu =  new std::ofstream("output_3point_proton_stochastic_1D_unpolarized_proj0_uu.dat");
-      fout_proj0_dd =  new std::ofstream("output_3point_proton_stochastic_1D_unpolarized_proj0_dd.dat");
-      fout_proj1_uu =  new std::ofstream("output_3point_proton_stochastic_1D_unpolarized_proj1_uu.dat");
-      fout_proj1_dd =  new std::ofstream("output_3point_proton_stochastic_1D_unpolarized_proj1_dd.dat");
-      fout_proj2_uu =  new std::ofstream("output_3point_proton_stochastic_1D_unpolarized_proj2_uu.dat");
-      fout_proj2_dd =  new std::ofstream("output_3point_proton_stochastic_1D_unpolarized_proj2_dd.dat");
-      fout_proj3_uu =  new std::ofstream("output_3point_proton_stochastic_1D_unpolarized_proj3_uu.dat");
-      fout_proj3_dd =  new std::ofstream("output_3point_proton_stochastic_1D_unpolarized_proj3_dd.dat");
+      fout_uu =  new std::ofstream("output_3point_proton_stochastic_1D_unpolarized_uu.dat");
+      fout_dd =  new std::ofstream("output_3point_proton_stochastic_1D_unpolarized_dd.dat");
     }
 
-    assert(C3p_proj0_1D.size() == 32);
+    assert(C3p_1D.size() == 32);
 
-    for(size_t i=0; i<C3p_proj0_1D.size(); i++)
+    for(size_t i=0; i<C3p_1D.size(); i++)
     {
-      std::vector< Core::BaryonCorrelator > all_corrs_proj0(C3p_proj0_1D[i].momentumProjection(momenta));
-      std::vector< Core::BaryonCorrelator > all_corrs_proj1(C3p_proj1_1D[i].momentumProjection(momenta));
-      std::vector< Core::BaryonCorrelator > all_corrs_proj2(C3p_proj2_1D[i].momentumProjection(momenta));
-      std::vector< Core::BaryonCorrelator > all_corrs_proj3(C3p_proj3_1D[i].momentumProjection(momenta));
+      std::vector< Core::BaryonCorrelator > all_corrs(C3p_1D[i].momentumProjection(momenta));
 
       for(size_t I=0; I<momenta.size(); I++)
       {
         std::ostringstream oss;
         oss << std::setw(3) << i/2 << " " << std::flush;
         std::string const prefix(oss.str());
-        all_corrs_proj0[I].setOffset(timeslice_source);
-        all_corrs_proj1[I].setOffset(timeslice_source);
-        all_corrs_proj2[I].setOffset(timeslice_source);
-        all_corrs_proj3[I].setOffset(timeslice_source);
+        all_corrs[I].setOffset(timeslice_source);
         if (weave.isRoot())
         {
           if(i%2 == 0)
           {
-            all_corrs_proj0[I].printWithMomentum(*fout_proj0_uu, momenta[I], prefix);
-            all_corrs_proj1[I].printWithMomentum(*fout_proj1_uu, momenta[I], prefix);
-            all_corrs_proj2[I].printWithMomentum(*fout_proj2_uu, momenta[I], prefix);
-            all_corrs_proj3[I].printWithMomentum(*fout_proj3_uu, momenta[I], prefix);
+            all_corrs[I].printWithMomentum_full(*fout_uu, momenta[I], prefix);
           }
           else
           {
-            all_corrs_proj0[I].printWithMomentum(*fout_proj0_dd, momenta[I], prefix);
-            all_corrs_proj1[I].printWithMomentum(*fout_proj1_dd, momenta[I], prefix);
-            all_corrs_proj2[I].printWithMomentum(*fout_proj2_dd, momenta[I], prefix);
-            all_corrs_proj3[I].printWithMomentum(*fout_proj3_dd, momenta[I], prefix);
+            all_corrs[I].printWithMomentum_full(*fout_dd, momenta[I], prefix);
           }
         }
       }
@@ -1269,70 +935,40 @@ int main(int argc, char **argv)
 
     if (weave.isRoot())
     {
-      fout_proj0_uu->close();
-      fout_proj0_dd->close();
-      fout_proj1_uu->close();
-      fout_proj1_dd->close();
-      fout_proj2_uu->close();
-      fout_proj2_dd->close();
-      fout_proj3_uu->close();
-      fout_proj3_dd->close();
+      fout_uu->close();
+      fout_dd->close();
     }
 
-    delete fout_proj0_uu;
-    delete fout_proj0_dd;
-    delete fout_proj1_uu;
-    delete fout_proj1_dd;
-    delete fout_proj2_uu;
-    delete fout_proj2_dd;
-    delete fout_proj3_uu;
-    delete fout_proj3_dd;
+    delete fout_uu;
+    delete fout_dd;
 
     if (weave.isRoot())
     {
-      fout_proj0_uu =  new std::ofstream("output_3point_proton_stochastic_1D_polarized_proj0_uu.dat");
-      fout_proj0_dd =  new std::ofstream("output_3point_proton_stochastic_1D_polarized_proj0_dd.dat");
-      fout_proj1_uu =  new std::ofstream("output_3point_proton_stochastic_1D_polarized_proj1_uu.dat");
-      fout_proj1_dd =  new std::ofstream("output_3point_proton_stochastic_1D_polarized_proj1_dd.dat");
-      fout_proj2_uu =  new std::ofstream("output_3point_proton_stochastic_1D_polarized_proj2_uu.dat");
-      fout_proj2_dd =  new std::ofstream("output_3point_proton_stochastic_1D_polarized_proj2_dd.dat");
-      fout_proj3_uu =  new std::ofstream("output_3point_proton_stochastic_1D_polarized_proj3_uu.dat");
-      fout_proj3_dd =  new std::ofstream("output_3point_proton_stochastic_1D_polarized_proj3_dd.dat");
+      fout_uu =  new std::ofstream("output_3point_proton_stochastic_1D_polarized_uu.dat");
+      fout_dd =  new std::ofstream("output_3point_proton_stochastic_1D_polarized_dd.dat");
     }
 
-    assert(C3p_proj0_1DA.size() == 32);
+    assert(C3p_1DA.size() == 32);
 
-    for(size_t i=0; i<C3p_proj0_1D.size(); i++)
+    for(size_t i=0; i<C3p_1D.size(); i++)
     {
-      std::vector< Core::BaryonCorrelator > all_corrs_proj0(C3p_proj0_1DA[i].momentumProjection(momenta));
-      std::vector< Core::BaryonCorrelator > all_corrs_proj1(C3p_proj1_1DA[i].momentumProjection(momenta));
-      std::vector< Core::BaryonCorrelator > all_corrs_proj2(C3p_proj2_1DA[i].momentumProjection(momenta));
-      std::vector< Core::BaryonCorrelator > all_corrs_proj3(C3p_proj3_1DA[i].momentumProjection(momenta));
+      std::vector< Core::BaryonCorrelator > all_corrs(C3p_1DA[i].momentumProjection(momenta));
 
       for(size_t I=0; I<momenta.size(); I++)
       {
         std::ostringstream oss;
         oss << std::setw(3) << i/2 << " " << std::flush;
         std::string const prefix(oss.str());
-        all_corrs_proj0[I].setOffset(timeslice_source);
-        all_corrs_proj1[I].setOffset(timeslice_source);
-        all_corrs_proj2[I].setOffset(timeslice_source);
-        all_corrs_proj3[I].setOffset(timeslice_source);
+        all_corrs[I].setOffset(timeslice_source);
         if (weave.isRoot())
         {
           if(i%2 == 0)
           {
-            all_corrs_proj0[I].printWithMomentum(*fout_proj0_uu, momenta[I], prefix);
-            all_corrs_proj1[I].printWithMomentum(*fout_proj1_uu, momenta[I], prefix);
-            all_corrs_proj2[I].printWithMomentum(*fout_proj2_uu, momenta[I], prefix);
-            all_corrs_proj3[I].printWithMomentum(*fout_proj3_uu, momenta[I], prefix);
+            all_corrs[I].printWithMomentum_full(*fout_uu, momenta[I], prefix);
           }
           else
           {
-            all_corrs_proj0[I].printWithMomentum(*fout_proj0_dd, momenta[I], prefix);
-            all_corrs_proj1[I].printWithMomentum(*fout_proj1_dd, momenta[I], prefix);
-            all_corrs_proj2[I].printWithMomentum(*fout_proj2_dd, momenta[I], prefix);
-            all_corrs_proj3[I].printWithMomentum(*fout_proj3_dd, momenta[I], prefix);
+            all_corrs[I].printWithMomentum_full(*fout_dd, momenta[I], prefix);
           }
         }
       }
@@ -1341,24 +977,12 @@ int main(int argc, char **argv)
 
     if (weave.isRoot())
     {
-      fout_proj0_uu->close();
-      fout_proj0_dd->close();
-      fout_proj1_uu->close();
-      fout_proj1_dd->close();
-      fout_proj2_uu->close();
-      fout_proj2_dd->close();
-      fout_proj3_uu->close();
-      fout_proj3_dd->close();
+      fout_uu->close();
+      fout_dd->close();
     }
 
-    delete fout_proj0_uu;
-    delete fout_proj0_dd;
-    delete fout_proj1_uu;
-    delete fout_proj1_dd;
-    delete fout_proj2_uu;
-    delete fout_proj2_dd;
-    delete fout_proj3_uu;
-    delete fout_proj3_dd;
+    delete fout_uu;
+    delete fout_dd;
 
     weave.barrier();
     time (&end);
@@ -1366,6 +990,7 @@ int main(int argc, char **argv)
     if (weave.isRoot())
       std::cout << "done in " << dif << " seconds\n" << std::endl;
   }
+
 
 
   if (weave.isRoot())
@@ -1375,100 +1000,52 @@ int main(int argc, char **argv)
     weave.barrier();
     time (&start);
 
-    std::vector< Core::BaryonCorrelator > C3n_proj0_1DA;
-    std::vector< Core::BaryonCorrelator > C3n_proj1_1DA;
-    std::vector< Core::BaryonCorrelator > C3n_proj2_1DA;
-    std::vector< Core::BaryonCorrelator > C3n_proj3_1DA;
+    std::vector< Core::BaryonCorrelator > C3n_1DA;
 
-    std::vector< Core::BaryonCorrelator > C3n_proj0_1D
+    std::vector< Core::BaryonCorrelator > C3n_1D
        = Contract::proton_threepoint_stochastic(dProp_smeared, uProp_smeared, dProp, uProp,
                                                 stochastic_dProp, stochastic_uProp,
                                                 stochasticSourceD, stochasticSourceU,
                                                 &gauge_field,
                                                 timeslice_source, timeslice_stochSource,
-                                                "1D", Base::proj_PARITY_PLUS_TM, C3n_proj0_1DA);
-    std::vector< Core::BaryonCorrelator > C3n_proj1_1D
-       = Contract::proton_threepoint_stochastic(dProp_smeared, uProp_smeared, dProp, uProp,
-                                                stochastic_dProp, stochastic_uProp,
-                                                stochasticSourceD, stochasticSourceU,
-                                                &gauge_field,
-                                                timeslice_source, timeslice_stochSource,
-                                                "1D", Base::proj_1_PLUS_TM, C3n_proj1_1DA);
-    std::vector< Core::BaryonCorrelator > C3n_proj2_1D
-       = Contract::proton_threepoint_stochastic(dProp_smeared, uProp_smeared, dProp, uProp,
-                                                stochastic_dProp, stochastic_uProp,
-                                                stochasticSourceD, stochasticSourceU,
-                                                &gauge_field,
-                                                timeslice_source, timeslice_stochSource,
-                                                "1D", Base::proj_2_PLUS_TM, C3n_proj2_1DA);
-    std::vector< Core::BaryonCorrelator > C3n_proj3_1D
-       = Contract::proton_threepoint_stochastic(dProp_smeared, uProp_smeared, dProp, uProp,
-                                                stochastic_dProp, stochastic_uProp,
-                                                stochasticSourceD, stochasticSourceU,
-                                                &gauge_field,
-                                                timeslice_source, timeslice_stochSource,
-                                                "1D", Base::proj_3_PLUS_TM, C3n_proj3_1DA);
+                                                "1D", C3n_1DA);
 
     int const sourcePos[3] = {source_position[0], source_position[1], source_position[2]};
-    C3n_proj0_1D[0].prepareMomentumProjection(sourcePos);
+    C3n_1D[0].prepareMomentumProjection(sourcePos);
 
-    std::ofstream *fout_proj0_uu = NULL;
-    std::ofstream *fout_proj0_dd = NULL;
-    std::ofstream *fout_proj1_uu = NULL;
-    std::ofstream *fout_proj1_dd = NULL;
-    std::ofstream *fout_proj2_uu = NULL;
-    std::ofstream *fout_proj2_dd = NULL;
-    std::ofstream *fout_proj3_uu = NULL;
-    std::ofstream *fout_proj3_dd = NULL;
+    std::ofstream *fout_uu = NULL;
+    std::ofstream *fout_dd = NULL;
 
     if (weave.isRoot())
     {
-      fout_proj0_uu =  new std::ofstream("output_3point_neutron_stochastic_1D_unpolarized_proj0_uu.dat");
-      fout_proj0_dd =  new std::ofstream("output_3point_neutron_stochastic_1D_unpolarized_proj0_dd.dat");
-      fout_proj1_uu =  new std::ofstream("output_3point_neutron_stochastic_1D_unpolarized_proj1_uu.dat");
-      fout_proj1_dd =  new std::ofstream("output_3point_neutron_stochastic_1D_unpolarized_proj1_dd.dat");
-      fout_proj2_uu =  new std::ofstream("output_3point_neutron_stochastic_1D_unpolarized_proj2_uu.dat");
-      fout_proj2_dd =  new std::ofstream("output_3point_neutron_stochastic_1D_unpolarized_proj2_dd.dat");
-      fout_proj3_uu =  new std::ofstream("output_3point_neutron_stochastic_1D_unpolarized_proj3_uu.dat");
-      fout_proj3_dd =  new std::ofstream("output_3point_neutron_stochastic_1D_unpolarized_proj3_dd.dat");
+      fout_uu =  new std::ofstream("output_3point_neutron_stochastic_1D_unpolarized_uu.dat");
+      fout_dd =  new std::ofstream("output_3point_neutron_stochastic_1D_unpolarized_dd.dat");
     }
 
-    assert(C3n_proj0_1D.size() == 32);
+    assert(C3n_1D.size() == 32);
 
-    for(size_t i=0; i<C3n_proj0_1D.size(); i++)
+    for(size_t i=0; i<C3n_1D.size(); i++)
     {
 
-      std::vector< Core::BaryonCorrelator > all_corrs_proj0(C3n_proj0_1D[i].momentumProjection(momenta));
-      std::vector< Core::BaryonCorrelator > all_corrs_proj1(C3n_proj1_1D[i].momentumProjection(momenta));
-      std::vector< Core::BaryonCorrelator > all_corrs_proj2(C3n_proj2_1D[i].momentumProjection(momenta));
-      std::vector< Core::BaryonCorrelator > all_corrs_proj3(C3n_proj3_1D[i].momentumProjection(momenta));
+      std::vector< Core::BaryonCorrelator > all_corrs(C3n_1D[i].momentumProjection(momenta));
 
       for(size_t I=0; I<momenta.size(); I++)
       {
         std::ostringstream oss;
         oss << std::setw(3) << i/2 << " " << std::flush;
         std::string const prefix(oss.str());
-        all_corrs_proj0[I].setOffset(timeslice_source);
-        all_corrs_proj1[I].setOffset(timeslice_source);
-        all_corrs_proj2[I].setOffset(timeslice_source);
-        all_corrs_proj3[I].setOffset(timeslice_source);
+        all_corrs[I].setOffset(timeslice_source);
         if (weave.isRoot())
         {
           // since u and d currents are swapped for the neutron the d current comes first
           // which is contrary to the proton threepoint
           if(i%2 == 0)
           {
-            all_corrs_proj0[I].printWithMomentum(*fout_proj0_dd, momenta[I], prefix);
-            all_corrs_proj1[I].printWithMomentum(*fout_proj1_dd, momenta[I], prefix);
-            all_corrs_proj2[I].printWithMomentum(*fout_proj2_dd, momenta[I], prefix);
-            all_corrs_proj3[I].printWithMomentum(*fout_proj3_dd, momenta[I], prefix);
+            all_corrs[I].printWithMomentum_full(*fout_dd, momenta[I], prefix);
           }
           else
           {
-            all_corrs_proj0[I].printWithMomentum(*fout_proj0_uu, momenta[I], prefix);
-            all_corrs_proj1[I].printWithMomentum(*fout_proj1_uu, momenta[I], prefix);
-            all_corrs_proj2[I].printWithMomentum(*fout_proj2_uu, momenta[I], prefix);
-            all_corrs_proj3[I].printWithMomentum(*fout_proj3_uu, momenta[I], prefix);
+            all_corrs[I].printWithMomentum_full(*fout_uu, momenta[I], prefix);
           }
         }
       }
@@ -1477,73 +1054,43 @@ int main(int argc, char **argv)
 
     if (weave.isRoot())
     {
-      fout_proj0_uu->close();
-      fout_proj0_dd->close();
-      fout_proj1_uu->close();
-      fout_proj1_dd->close();
-      fout_proj2_uu->close();
-      fout_proj2_dd->close();
-      fout_proj3_uu->close();
-      fout_proj3_dd->close();
+      fout_uu->close();
+      fout_dd->close();
     }
 
-    delete fout_proj0_uu;
-    delete fout_proj0_dd;
-    delete fout_proj1_uu;
-    delete fout_proj1_dd;
-    delete fout_proj2_uu;
-    delete fout_proj2_dd;
-    delete fout_proj3_uu;
-    delete fout_proj3_dd;
+    delete fout_uu;
+    delete fout_dd;
 
     if (weave.isRoot())
     {
-      fout_proj0_uu =  new std::ofstream("output_3point_neutron_stochastic_1D_polarized_proj0_uu.dat");
-      fout_proj0_dd =  new std::ofstream("output_3point_neutron_stochastic_1D_polarized_proj0_dd.dat");
-      fout_proj1_uu =  new std::ofstream("output_3point_neutron_stochastic_1D_polarized_proj1_uu.dat");
-      fout_proj1_dd =  new std::ofstream("output_3point_neutron_stochastic_1D_polarized_proj1_dd.dat");
-      fout_proj2_uu =  new std::ofstream("output_3point_neutron_stochastic_1D_polarized_proj2_uu.dat");
-      fout_proj2_dd =  new std::ofstream("output_3point_neutron_stochastic_1D_polarized_proj2_dd.dat");
-      fout_proj3_uu =  new std::ofstream("output_3point_neutron_stochastic_1D_polarized_proj3_uu.dat");
-      fout_proj3_dd =  new std::ofstream("output_3point_neutron_stochastic_1D_polarized_proj3_dd.dat");
+      fout_uu =  new std::ofstream("output_3point_neutron_stochastic_1D_polarized_uu.dat");
+      fout_dd =  new std::ofstream("output_3point_neutron_stochastic_1D_polarized_dd.dat");
     }
 
-    assert(C3n_proj0_1DA.size() == 32);
+    assert(C3n_1DA.size() == 32);
 
-    for(size_t i=0; i<C3n_proj0_1D.size(); i++)
+    for(size_t i=0; i<C3n_1D.size(); i++)
     {
 
-      std::vector< Core::BaryonCorrelator > all_corrs_proj0(C3n_proj0_1DA[i].momentumProjection(momenta));
-      std::vector< Core::BaryonCorrelator > all_corrs_proj1(C3n_proj1_1DA[i].momentumProjection(momenta));
-      std::vector< Core::BaryonCorrelator > all_corrs_proj2(C3n_proj2_1DA[i].momentumProjection(momenta));
-      std::vector< Core::BaryonCorrelator > all_corrs_proj3(C3n_proj3_1DA[i].momentumProjection(momenta));
+      std::vector< Core::BaryonCorrelator > all_corrs(C3n_1DA[i].momentumProjection(momenta));
 
       for(size_t I=0; I<momenta.size(); I++)
       {
         std::ostringstream oss;
         oss << std::setw(3) << i/2 << " " << std::flush;
         std::string const prefix(oss.str());
-        all_corrs_proj0[I].setOffset(timeslice_source);
-        all_corrs_proj1[I].setOffset(timeslice_source);
-        all_corrs_proj2[I].setOffset(timeslice_source);
-        all_corrs_proj3[I].setOffset(timeslice_source);
+        all_corrs[I].setOffset(timeslice_source);
         if (weave.isRoot())
         {
           // since u and d currents are swapped for the neutron the d current comes first
           // which is contrary to the proton threepoint
           if(i%2 == 0)
           {
-            all_corrs_proj0[I].printWithMomentum(*fout_proj0_dd, momenta[I], prefix);
-            all_corrs_proj1[I].printWithMomentum(*fout_proj1_dd, momenta[I], prefix);
-            all_corrs_proj2[I].printWithMomentum(*fout_proj2_dd, momenta[I], prefix);
-            all_corrs_proj3[I].printWithMomentum(*fout_proj3_dd, momenta[I], prefix);
+            all_corrs[I].printWithMomentum_full(*fout_dd, momenta[I], prefix);
           }
           else
           {
-            all_corrs_proj0[I].printWithMomentum(*fout_proj0_uu, momenta[I], prefix);
-            all_corrs_proj1[I].printWithMomentum(*fout_proj1_uu, momenta[I], prefix);
-            all_corrs_proj2[I].printWithMomentum(*fout_proj2_uu, momenta[I], prefix);
-            all_corrs_proj3[I].printWithMomentum(*fout_proj3_uu, momenta[I], prefix);
+            all_corrs[I].printWithMomentum_full(*fout_uu, momenta[I], prefix);
           }
         }
       }
@@ -1552,24 +1099,12 @@ int main(int argc, char **argv)
 
     if (weave.isRoot())
     {
-      fout_proj0_uu->close();
-      fout_proj0_dd->close();
-      fout_proj1_uu->close();
-      fout_proj1_dd->close();
-      fout_proj2_uu->close();
-      fout_proj2_dd->close();
-      fout_proj3_uu->close();
-      fout_proj3_dd->close();
+      fout_uu->close();
+      fout_dd->close();
     }
 
-    delete fout_proj0_uu;
-    delete fout_proj0_dd;
-    delete fout_proj1_uu;
-    delete fout_proj1_dd;
-    delete fout_proj2_uu;
-    delete fout_proj2_dd;
-    delete fout_proj3_uu;
-    delete fout_proj3_dd;
+    delete fout_uu;
+    delete fout_dd;
 
     weave.barrier();
     time (&end);
@@ -1577,6 +1112,8 @@ int main(int argc, char **argv)
     if (weave.isRoot())
       std::cout << "done in " << dif << " seconds\n" << std::endl;
   }
+
+ #ifdef __2POINTS__
 
 
   // ****************************************************************************************************
@@ -1654,34 +1191,6 @@ int main(int argc, char **argv)
       fout->close();
       delete fout;
     }
-
-    C2_P_stochD.setOffset(timeslice_source);
-    C2_P_stochD *= Base::proj_PARITY_PLUS_STD;
-    if (weave.isRoot())
-    {
-      fout = new std::ofstream("output_2point_proton_stochD_projected.dat");
-      *fout << C2_P_stochD << std::endl;
-      fout->close();
-      delete fout;
-    }
-    C2_P_stochU.setOffset(timeslice_source);
-    C2_P_stochU *= Base::proj_PARITY_PLUS_STD;
-    if (weave.isRoot())
-    {
-      fout = new std::ofstream("output_2point_proton_stochU_projected.dat");
-      *fout << C2_P_stochU << std::endl;
-      fout->close();
-      delete fout;
-    }
-    C2_P.setOffset(timeslice_source);
-    C2_P *= Base::proj_PARITY_PLUS_STD;
-    if (weave.isRoot())
-    {
-      fout = new std::ofstream("output_2point_proton_projected.dat");
-      *fout << C2_P << std::endl;
-      fout->close();
-      delete fout;
-    }
     weave.barrier();
     time (&end);
     dif = difftime (end,start);
@@ -1742,34 +1251,6 @@ int main(int argc, char **argv)
       fout->close();
       delete fout;
     }
-
-    C2_N_stochD.setOffset(timeslice_source);
-    C2_N_stochD *= Base::proj_PARITY_PLUS_STD;
-    if (weave.isRoot())
-    {
-      fout = new std::ofstream("output_2point_neutron_stochD_projected.dat");
-      *fout << C2_N_stochD << std::endl;
-      fout->close();
-      delete fout;
-    }
-    C2_N_stochU.setOffset(timeslice_source);
-    C2_N_stochU *= Base::proj_PARITY_PLUS_STD;
-    if (weave.isRoot())
-    {
-      fout = new std::ofstream("output_2point_neutron_stochU_projected.dat");
-      *fout << C2_N_stochU << std::endl;
-      fout->close();
-      delete fout;
-    }
-    C2_N.setOffset(timeslice_source);
-    C2_N *= Base::proj_PARITY_PLUS_STD;
-    if (weave.isRoot())
-    {
-      fout = new std::ofstream("output_2point_neutron_projected.dat");
-      *fout << C2_N << std::endl;
-      fout->close();
-      delete fout;
-    }
     weave.barrier();
     time (&end);
     dif = difftime (end,start);
@@ -1777,9 +1258,12 @@ int main(int argc, char **argv)
       std::cout << "done in " << dif << " seconds\n" << std::endl;
   }
 
+  #endif
+  // __2POINTS__
+
   weave.barrier();
   if (weave.isRoot())
     std::cout << "\nprogramm is going to exit normally now\n" << std::endl;
-
+  
   return EXIT_SUCCESS;
 }

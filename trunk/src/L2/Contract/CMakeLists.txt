@@ -21,7 +21,8 @@ SET(Sources_Baryon Baryon.h
                    Baryon/Baryon_proton_threepoint_sequential_a.cpp
                    Baryon/Baryon_proton_threepoint_sequential_b.cpp
                    Baryon/Baryon_proton_threepoint_stochastic_naive.cpp
-                   Baryon/Baryon_proton_threepoint_stochastic.cpp)
+                   Baryon/Baryon_proton_threepoint_stochastic_a.cpp
+                   Baryon/Baryon_proton_threepoint_stochastic_b.cpp)
 SET(Sources_Disconnected Disconnected.h
                   Disconnected/Disconnected_compute_loop_twist2_operator_a.cpp
                   Disconnected/Disconnected_compute_loop_twist2_operator_b.cpp

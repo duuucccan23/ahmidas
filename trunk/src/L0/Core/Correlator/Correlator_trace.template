@@ -1,0 +1,16 @@
+template< > template< >
+Correlator< std::complex< double > > Correlator< Dirac::Matrix >::trace() const
+{
+  Field< std::complex< double > >field(L(), T());
+
+  Field< Dirac::Matrix >::const_iterator I(d_data->begin());
+
+  for (Field< std::complex< double > >::iterator Itr(field.begin()); Itr != field.end(); ++Itr)
+  {
+    (*Itr) = (*I).trace();
+    ++I;
+  }
+  
+  return Correlator< std::complex< double > >(field);
+}
+

@@ -34,60 +34,72 @@ namespace Core
     // for compatibility with parallel code
     Datatype *d_sumTimeslice_global;
 
-	static Field< int * > *s_xRelative;
-	static Field< size_t > *s_timelabel;
+	  static Field< int * > *s_xRelative;
+	  static Field< size_t > *s_timelabel;
 
-	  public:
+	  
+    public:
 
-	Correlator(Field < Datatype > const &d_data);
-	Correlator(Correlator const &other);
+    Correlator(Field < Datatype > const &d_data);
+    Correlator(Correlator const &other);
+    template< typename T > 
+    Correlator(std::vector< Correlator< T > > const &constituents);
 
-	~Correlator();
+    ~Correlator();
 
-	Correlator &operator=(Correlator const &rhs);
+    Correlator &operator=(Correlator const &rhs);
 
-	Datatype &operator[](size_t const idx);
-	Datatype const &operator[](size_t const idx) const;
+    Field< Datatype > const * const rawdata() const
+    {
+      return d_data;
+    }
+
+    Datatype &operator[](size_t const idx);
+    Datatype const &operator[](size_t const idx) const;
 
 
-	void operator*=(double const factor);
-	void operator*=(std::complex< double > const &factor);
-	void operator*=(Base::BaryonPropagatorProjector const projector);
-	void operator +=(Correlator< Datatype > const &other);
-	void operator *=(Correlator< Datatype > const &other);
+    void operator*=(double const factor);
+    void operator*=(std::complex< double > const &factor);
+    void operator*=(Base::BaryonPropagatorProjector const projector);
+    void operator +=(Correlator< Datatype > const &other);
+    void operator *=(Correlator< Datatype > const &other);
 
-	void deleteField();
+    template< typename SimpleDatatype > 
+    Correlator< SimpleDatatype > trace() const;
 
-	// performs a summation over the volume of each individual timeslice (zero momentum projection)
-	void sumOverSpatialVolume();
-	// performs a summation over the volume of each individual timeslice including non-zero momentum projection
-	std::vector< Correlator< Datatype > > momentumProjection(std::vector< int * > const &momenta) const;
-	void prepareMomentumProjection(int const * const position_offset);
+    void deleteField();
 
-	void rotateToPhysicalBasis();
+    // performs a summation over the volume of each individual timeslice (zero momentum projection)
+    void sumOverSpatialVolume();
+    // performs a summation over the volume of each individual timeslice including non-zero momentum projection
+    std::vector< Correlator< Datatype > > momentumProjection(std::vector< int * > const &momenta) const;
+    void prepareMomentumProjection(int const * const position_offset);
 
-	// set offset (for conventional reasons one would often like to shift the source timeslice to 0)
-	void setOffset(size_t timeslice);
+    void rotateToPhysicalBasis();
 
-	std::complex <double> getTrSum(size_t const timeslice) const;
+    // set offset (for conventional reasons one would often like to shift the source timeslice to 0)
+    void setOffset(size_t timeslice);
 
-	bool isRoot() const;
+    std::complex <double> getTrSum(size_t const timeslice) const;
 
-  // prints the trace and the momentum
-  void printWithMomentum(std::ostream &out, int const * const momentum, std::string const& prefix="") const;
-  // prints the full correlator and the momentum
-  void printWithMomentum_full(std::ostream &out, int const * const momentum, std::string const& prefix="") const;
+    bool isRoot() const;
 
-	size_t T() const;
-	size_t L() const;
-	size_t size() const;
+    // prints the trace and the momentum
+    void printWithMomentum(std::ostream &out, int const * const momentum, std::string const& prefix="") const;
+    // prints the full correlator and the momentum
+    void printWithMomentum_full(std::ostream &out, int const * const momentum, std::string const& prefix="") const;
+    void printWithMomentum_full_Cstyle(FILE * out, int const * const momentum, std::string const& prefix="") const;
 
-	friend std::ostream &operator<< < Datatype >(std::ostream &out, Correlator< Datatype > const &c);
+    size_t T() const;
+    size_t L() const;
+    size_t size() const;
 
-	private:
-	 void destroy();
-	 void isolate();
-	 void isolate_action();
+    friend std::ostream &operator<< < Datatype >(std::ostream &out, Correlator< Datatype > const &c);
+
+    private:
+	  void destroy();
+	  void isolate();
+	  void isolate_action();
   };
 
 
@@ -95,6 +107,7 @@ namespace Core
 
 #include "Correlator/Correlator_Correlator_a.template"
 #include "Correlator/Correlator_Correlator_b.template"
+#include "Correlator/Correlator_Correlator_c.template"
 #include "Correlator/Correlator.operators.template"
 
 #include "Correlator/Correlator_deleteField.template"
@@ -102,6 +115,7 @@ namespace Core
 #include "Correlator/Correlator_isolate.template"
 #include "Correlator/Correlator_setOffset.template"
 #include "Correlator/Correlator_sumOverSpatialVolume.template"
+#include "Correlator/Correlator_trace.template"
 
   typedef Correlator< Dirac::Matrix > BaryonCorrelator;
 

@@ -1,0 +1,75 @@
+// this is not efficient: it builds up a Dirac::Matrix from 16 complex numbers on every lattice site
+// however it is useful sometimes
+template< > template< >
+Correlator< Dirac::Matrix >::Correlator(std::vector< Correlator< std::complex< double > > > const &constituents)
+{
+  assert(constituents.size() == 16);
+
+  d_T = (constituents[0].T());
+  d_L = (constituents[0].L());
+  d_weave = (new Base::Weave(d_L, d_T));
+  d_data = (new Field< Dirac::Matrix >(d_L, d_T));
+  d_sumTimeslice = (new Dirac::Matrix[d_T]);
+  d_sumTimeslice_global = (new Dirac::Matrix[d_T]);
+  d_references = (new size_t(1));
+  d_offset = (0);
+
+  std::complex< double > tmp[16];
+
+  Field< std::complex< double > >::const_iterator I00(constituents[ 0].rawdata()->begin()); 
+  Field< std::complex< double > >::const_iterator I01(constituents[ 1].rawdata()->begin()); 
+  Field< std::complex< double > >::const_iterator I02(constituents[ 2].rawdata()->begin()); 
+  Field< std::complex< double > >::const_iterator I03(constituents[ 3].rawdata()->begin()); 
+  Field< std::complex< double > >::const_iterator I04(constituents[ 4].rawdata()->begin()); 
+  Field< std::complex< double > >::const_iterator I05(constituents[ 5].rawdata()->begin()); 
+  Field< std::complex< double > >::const_iterator I06(constituents[ 6].rawdata()->begin()); 
+  Field< std::complex< double > >::const_iterator I07(constituents[ 7].rawdata()->begin()); 
+  Field< std::complex< double > >::const_iterator I08(constituents[ 8].rawdata()->begin()); 
+  Field< std::complex< double > >::const_iterator I09(constituents[ 9].rawdata()->begin()); 
+  Field< std::complex< double > >::const_iterator I10(constituents[10].rawdata()->begin()); 
+  Field< std::complex< double > >::const_iterator I11(constituents[11].rawdata()->begin()); 
+  Field< std::complex< double > >::const_iterator I12(constituents[12].rawdata()->begin()); 
+  Field< std::complex< double > >::const_iterator I13(constituents[13].rawdata()->begin()); 
+  Field< std::complex< double > >::const_iterator I14(constituents[14].rawdata()->begin()); 
+  Field< std::complex< double > >::const_iterator I15(constituents[15].rawdata()->begin()); 
+
+  for (Field< Dirac::Matrix >::iterator I(d_data->begin()); I != d_data->end(); ++I)
+  {
+    tmp[ 0] = (*I00); 
+    tmp[ 1] = (*I01); 
+    tmp[ 2] = (*I02); 
+    tmp[ 3] = (*I03); 
+    tmp[ 4] = (*I04); 
+    tmp[ 5] = (*I05); 
+    tmp[ 6] = (*I06); 
+    tmp[ 7] = (*I07); 
+    tmp[ 8] = (*I08); 
+    tmp[ 9] = (*I09); 
+    tmp[10] = (*I10); 
+    tmp[11] = (*I11); 
+    tmp[12] = (*I12); 
+    tmp[13] = (*I13); 
+    tmp[14] = (*I14); 
+    tmp[15] = (*I15); 
+
+    (*I) = Dirac::Matrix(tmp);
+
+    ++I00;
+    ++I01;
+    ++I02;
+    ++I03;
+    ++I04;
+    ++I05;
+    ++I06;
+    ++I07;
+    ++I08;
+    ++I09;
+    ++I10;
+    ++I11;
+    ++I12;
+    ++I13;
+    ++I14;
+    ++I15;
+  }
+}
+

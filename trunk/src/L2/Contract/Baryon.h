@@ -195,6 +195,21 @@ namespace Contract
                                                 Base::BaryonPropagatorProjector const my_projector,
                                                 std::vector< Core::BaryonCorrelator > &addCorrs);
 
+  // same as above but without the projector (indices kept free)
+  std::vector< Core::BaryonCorrelator > proton_threepoint_stochastic(
+                                                Core::Propagator const &S_u,
+                                                Core::Propagator const &S_d,
+                                                Core::Propagator const &S_u_local,
+                                                Core::Propagator const &S_d_local,
+                                                Core::StochasticPropagator <12> const &phi_u,
+                                                Core::StochasticPropagator <12> const &phi_d,
+                                                Core::StochasticSource <12> const &xi_u,
+                                                Core::StochasticSource <12> const &xi_d,
+                                                Core::Field<QCD::Gauge> const * const gauge_field,
+                                                size_t const t_source, size_t const t_sink,
+                                                std::string const &operator_flag,
+                                                std::vector< Core::BaryonCorrelator > &addCorrs);
+
   std::vector< Core::BaryonCorrelator > proton_threepoint_stochastic_non_local(Core::Propagator const &u,
                                                 Core::Propagator const &d,
                                                 Core::Propagator const &u_local,

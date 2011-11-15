@@ -107,7 +107,7 @@ namespace Core
 
 #include "Correlator/Correlator_Correlator_a.template"
 #include "Correlator/Correlator_Correlator_b.template"
-#include "Correlator/Correlator_Correlator_c.template"
+//#include "Correlator/Correlator_Correlator_c.template"
 #include "Correlator/Correlator.operators.template"
 
 #include "Correlator/Correlator_deleteField.template"
@@ -115,7 +115,7 @@ namespace Core
 #include "Correlator/Correlator_isolate.template"
 #include "Correlator/Correlator_setOffset.template"
 #include "Correlator/Correlator_sumOverSpatialVolume.template"
-#include "Correlator/Correlator_trace.template"
+//#include "Correlator/Correlator_trace.template"
 
   typedef Correlator< Dirac::Matrix > BaryonCorrelator;
 

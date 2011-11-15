@@ -64,8 +64,8 @@ namespace Core
     void operator +=(Correlator< Datatype > const &other);
     void operator *=(Correlator< Datatype > const &other);
 
-    template< typename SimpleDatatype > 
-    Correlator< SimpleDatatype > trace() const;
+    // template< typename SimpleDatatype > 
+    Correlator< std::complex< double > > trace() const;
 
     void deleteField();
 

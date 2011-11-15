@@ -32,8 +32,10 @@ namespace Contract
     bool const twisted_basis(true);
     assert(S_u.L() == S_d.L() && S_u.T() == S_d.T());
 
-    std::vector< Core::Field< std::complex< double > > > fields;
-    std::vector< Core::Field< std::complex< double > > > fields_g5;
+    std::vector< Core::Correlator< std::complex< double > > > fields_uu;
+    std::vector< Core::Correlator< std::complex< double > > > fields_uu_g5;
+    std::vector< Core::Correlator< std::complex< double > > > fields_dd;
+    std::vector< Core::Correlator< std::complex< double > > > fields_dd_g5;
 
     size_t const L(S_u.L());
     size_t const T(S_u.T());
@@ -122,8 +124,8 @@ namespace Contract
         {
           tmp_d_ti_xi[sidx].rightMultiply(xi_d_snk);
           tmp_u_ti_xi[sidx].leftMultiply(xi_u_snk);
-          dd_part2_local[sidx] += tmp_d_ti_xi;
-          uu_part2_local[sidx] += tmp_u_ti_xi;
+          dd_part2_local[sidx] += tmp_d_ti_xi[sidx];
+          uu_part2_local[sidx] += tmp_u_ti_xi[sidx];
         }
 
         ++It_fw_u;
@@ -160,26 +162,29 @@ namespace Contract
       // ------------------------------------------------------
       
       std::vector< QCD::Tensor > dd_part2_T(dd_part2);
-      for(size_t i=0; i<16; i++)
-        dd_part2_T[i].transposeFull();
 
       Core::Propagator PHI_U_tmp((gamma5 * phi_d).dagger());
       Core::Propagator PHI_D_tmp((gamma5 * phi_u).dagger());
+      
+      for(size_t i=0; i<16; i++)
+      {
+        dd_part2_T[i].transposeFull();
 
-      for (Core::Propagator::iterator It_phi_u=PHI_U_tmp.begin(); It_phi_u != PHI_U_tmp.end(); ++It_phi_u)
-        (*It_phi_u).rightMultiply(uu_part2);
+        for (Core::Propagator::iterator It_phi_u=PHI_U_tmp.begin(); It_phi_u != PHI_U_tmp.end(); ++It_phi_u)
+          (*It_phi_u).rightMultiply(uu_part2[i]);
 
-      for (Core::Propagator::iterator It_phi_d=PHI_D_tmp.begin(); It_phi_d != PHI_D_tmp.end(); ++It_phi_d)
-        (*It_phi_d).rightMultiply(dd_part2_T);
+        for (Core::Propagator::iterator It_phi_d=PHI_D_tmp.begin(); It_phi_d != PHI_D_tmp.end(); ++It_phi_d)
+          (*It_phi_d).rightMultiply(dd_part2_T[i]);
 
-      PHI_U = new Core::Propagator(PHI_U_tmp);
-      PHI_D = new Core::Propagator(PHI_D_tmp);
+        PHI_U = new Core::Propagator(PHI_U_tmp);
+        PHI_D = new Core::Propagator(PHI_D_tmp);
 
-      Core::Propagator S_D_tmp(S_d_local);
-      for (Core::Propagator::iterator It_S_d = S_D_tmp.begin(); It_S_d != S_D_tmp.end(); ++It_S_d)
-        (*It_S_d).left_multiply_proton();
-      S_D = new Core::Propagator(S_D_tmp);
-      S_U = new Core::Propagator(S_u_local);
+        Core::Propagator S_D_tmp(S_d_local);
+        for (Core::Propagator::iterator It_S_d = S_D_tmp.begin(); It_S_d != S_D_tmp.end(); ++It_S_d)
+          (*It_S_d).left_multiply_proton();
+        S_D = new Core::Propagator(S_D_tmp);
+        S_U = new Core::Propagator(S_u_local);
+      }
     }
 
     if (operator_flag == "local")
@@ -207,13 +212,14 @@ namespace Contract
         {
           Core::Propagator PHI_U_copy(*PHI_U);
           PHI_U_copy.leftMultiplyOperator(ops[iOp], twisted_basis); //check again!!!
-          fields.push_back(PHI_U_copy.contract(*S_U));
+          Core::Correlator< Dirac::Matrix > uCurrent(PHI_U_copy.contract(*S_U));
+          fields_uu.push_back(uCurrent.trace());
         }
         // d current
         {
           Core::Propagator PHI_D_copy(*PHI_D);
           PHI_D_copy.leftMultiplyOperator(ops[iOp], twisted_basis);
-          Core::Field< Dirac::Matrix > dCurrent(PHI_D_copy.contract(*S_D));
+          Core::Correlator< Dirac::Matrix > dCurrent(PHI_D_copy.contract(*S_D));
           // this comes from a factor tau_3 for operators in twisted basis
           switch (ops[iOp])
           {
@@ -228,7 +234,7 @@ namespace Contract
               dCurrent *= -1.0;
               break;
           }
-          fields.push_back(dCurrent);
+          fields_dd.push_back(dCurrent.trace());
         }
       }
     }
@@ -245,10 +251,12 @@ namespace Contract
         //y-dependent loop is realized on "Field" level
         Core::Propagator PHI_U_copy(*PHI_U);
         Core::Propagator PHI_D_copy(*PHI_D);
-        fields.push_back(PHI_U_copy.contractWithOperatorInsertion(ops[opNo], gauge_field, *S_U, axialCurrent));
-        fields_g5.push_back(axialCurrent);
-        fields.push_back(PHI_D_copy.contractWithOperatorInsertion(ops[opNo], gauge_field, *S_D, axialCurrent));
-        fields_g5.push_back(axialCurrent);
+        Core::Correlator< Dirac::Matrix > uCurrent(PHI_U_copy.contractWithOperatorInsertion(ops[opNo], gauge_field, *S_U, axialCurrent));
+        fields_uu.push_back(uCurrent.trace());
+        fields_uu_g5.push_back((Core::Correlator< Dirac::Matrix >(axialCurrent)).trace());
+        Core::Correlator< Dirac::Matrix > dCurrent(PHI_D_copy.contractWithOperatorInsertion(ops[opNo], gauge_field, *S_D, axialCurrent));
+        fields_dd.push_back(dCurrent.trace());
+        fields_dd_g5.push_back((Core::Correlator< Dirac::Matrix >(axialCurrent)).trace());
       }
     }
     else if(operator_flag == "1D")
@@ -276,21 +284,24 @@ namespace Contract
         //y-dependent loop is realized on "Field" level
         Core::Propagator PHI_U_copy(*PHI_U);
         Core::Propagator PHI_D_copy(*PHI_D);
-        fields.push_back(PHI_U_copy.contractWithOperatorInsertion(ops[opNo], gauge_field, *S_U, polarizedCurrent));
-        fields_g5.push_back(polarizedCurrent);
-        fields.push_back(PHI_D_copy.contractWithOperatorInsertion(ops[opNo], gauge_field, *S_D, polarizedCurrent));
-        fields_g5.push_back(polarizedCurrent);
+        Core::Correlator< Dirac::Matrix > uCurrent(PHI_U_copy.contractWithOperatorInsertion(ops[opNo], gauge_field, *S_U, polarizedCurrent));
+        fields_uu.push_back(uCurrent.trace());
+        fields_uu_g5.push_back((Core::Correlator< Dirac::Matrix >(polarizedCurrent)).trace());
+        Core::Correlator< Dirac::Matrix > dCurrent(PHI_D_copy.contractWithOperatorInsertion(ops[opNo], gauge_field, *S_D, polarizedCurrent));
+        fields_dd.push_back(dCurrent.trace());
+        fields_dd_g5.push_back((Core::Correlator< Dirac::Matrix >(polarizedCurrent)).trace());
       }
     }
 
-    assert(fields.size() % 2 == 0);
+    assert(fields_uu.size()%16 == 0);
+    assert(fields_uu.size()==fields_dd.size());
 
     std::vector< Core::BaryonCorrelator > allthreepoints;
 
-    for (size_t idx=0; idx<fields.size(); idx+=2)
+    for (size_t idx=0; idx<fields_uu.size()/16; idx++)
     {
-      Core::BaryonCorrelator threepoint_UU(fields[idx  ]);
-      Core::BaryonCorrelator threepoint_DD(fields[idx+1]);
+      Core::BaryonCorrelator threepoint_UU(std::vector<Core::Correlator< std::complex< double > > >(fields_uu.begin()+idx*16, fields_uu.begin()+idx*16+16));
+      Core::BaryonCorrelator threepoint_DD(std::vector<Core::Correlator< std::complex< double > > >(fields_dd.begin()+idx*16, fields_dd.begin()+idx*16+16));
       threepoint_UU.sumOverSpatialVolume();
       threepoint_DD.sumOverSpatialVolume();
 
@@ -298,12 +309,13 @@ namespace Contract
       allthreepoints.push_back(threepoint_DD);
     }
 
-    assert(fields_g5.size() % 2 == 0);
+    assert(fields_uu_g5.size() % 16 == 0);
+    assert(fields_uu_g5.size() == fields_dd_g5.size());
 
-    for (size_t idx=0; idx<fields_g5.size(); idx+=2)
+    for (size_t idx=0; idx<fields_uu_g5.size()/16; idx++)
     {
-      Core::BaryonCorrelator threepoint_UU(fields_g5[idx]);
-      Core::BaryonCorrelator threepoint_DD(fields_g5[idx+1]);
+      Core::BaryonCorrelator threepoint_UU(std::vector<Core::Correlator< std::complex< double > > >(fields_uu_g5.begin()+idx*16, fields_uu_g5.begin()+idx*16+16));
+      Core::BaryonCorrelator threepoint_DD(std::vector<Core::Correlator< std::complex< double > > >(fields_dd_g5.begin()+idx*16, fields_dd_g5.begin()+idx*16+16));
       threepoint_UU.sumOverSpatialVolume();
       threepoint_DD.sumOverSpatialVolume();
       addCorrs.push_back(threepoint_UU);

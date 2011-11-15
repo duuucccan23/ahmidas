@@ -58,12 +58,12 @@ ADD_EXECUTABLE(main src/main.cpp)
 TARGET_LINK_LIBRARIES(main Ahmidas Dirac)
 
 
-ADD_EXECUTABLE(simon_test src/simon_test.cpp)
-IF(USE_MPI)
-TARGET_LINK_LIBRARIES(simon_test SU3 IO Base Core Dirac Weave Contract Input Smear Ahmidas lemon)
-ELSE(USE_MPI)
-TARGET_LINK_LIBRARIES(simon_test SU3 IO Base Core Dirac Weave Contract Input Smear Ahmidas)
-ENDIF(USE_MPI)
+#ADD_EXECUTABLE(simon_test src/simon_test.cpp)
+#IF(LEMON_FOUND)
+#TARGET_LINK_LIBRARIES(simon_test SU3 IO Base Core Dirac Weave Contract Input Smear Ahmidas lemon)
+#ELSE(LEMON_FOUND)
+#TARGET_LINK_LIBRARIES(simon_test SU3 IO Base Core Dirac Weave Contract Input Smear Ahmidas)
+#ENDIF(LEMON_FOUND)
 
 MESSAGE(STATUS "Compiler is " ${CMAKE_CXX_COMPILER})
 MESSAGE(STATUS "MPI is " ${USE_MPI})

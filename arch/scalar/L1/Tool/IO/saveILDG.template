@@ -6,6 +6,22 @@ void Tool::IO::saveILDG(Core::Field< Element > const &field, std::string const &
 
   writer.newRecord("ildg-data-lfn"); //NOTE incomplete header for now
   writer.finishMessage();
+
+  writer.newRecord("ildg-format"); //NOTE: has to preceed the binary data
+  std::ostringstream oss;
+  oss << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<ildgFormat xmlns=\"http://www.lqcd.org/ildg\"\n"
+          "            xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n"
+          "            xsi:schemaLocation=\"http://www.lqcd.org/ildg/filefmt.xsd\">\n"
+          "  <version>1.0</version>\n"
+          "  <field>su3gauge</field>\n"
+          "  <precision>";
+  oss << 64 << "</precision>\n  <lx>"; //Precision still hardcoded at double here
+  oss << field.L() << "</lx>\n  <ly>" << field.L() << "</ly>\n  <lz>";
+  oss << field.L() << "</lz>\n  <lt>" << field.T() << "</lt>\n</ildgFormat>";
+
+  std::string formatstring = oss.str();
+  writer.write(formatstring.c_str(), formatstring.length()*sizeof(char));
+
   writer.newRecord("ildg-binary-data");
 
   //Poor man's parser for reading the precision should be inserted here, beyond we now assume double as input
@@ -13,13 +29,13 @@ void Tool::IO::saveILDG(Core::Field< Element > const &field, std::string const &
   {
     for (size_t siteIdx = 0; siteIdx < field.volume(); ++siteIdx)
       writer.write(reinterpret_cast< double const * >(&(field.constPhysicalIndex(siteIdx))), elements);
-    return;
-  }
-  double buffer[elements];
-  for (size_t siteIdx = 0; siteIdx < field.volume(); ++siteIdx)
-  {
-    std::copy(reinterpret_cast< double const* >(&(field.constPhysicalIndex(siteIdx))), reinterpret_cast< double const* >(&(field.constPhysicalIndex(siteIdx))) + elements, buffer);
-    Base::swapEndian(buffer, buffer + elements, sizeof(double));
-    writer.write(buffer, elements);
+  } else {
+    double buffer[elements];
+    for (size_t siteIdx = 0; siteIdx < field.volume(); ++siteIdx)
+    {
+      std::copy(reinterpret_cast< double const* >(&(field.constPhysicalIndex(siteIdx))), reinterpret_cast< double const* >(&(field.constPhysicalIndex(siteIdx))) + elements, buffer);
+      Base::swapEndian(buffer, buffer + elements, sizeof(double));
+      writer.write(buffer, elements);
+    }
   }
 }

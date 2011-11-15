@@ -1,12 +1,12 @@
 #include "Correlator.ih"
-
+#include <cstdio>
 namespace Core
 {
 
   template< >
   void Correlator< Dirac::Matrix >::printWithMomentum_full_Cstyle(FILE * out, int const * const momentum, std::string const& prefix) const
   {
-    for (size_t t = 0; t < T(); t++)
+    for (int t = 0; t < int(T()); t++)
     {
       fprintf(out,"%s %+3d %+2d %+2d %+2d  %9.17e %9.17e %9.17e %9.17e %9.17e %9.17e %9.17e %9.17e\n", prefix.c_str(), t,
               momentum[0], momentum[1], momentum[2],

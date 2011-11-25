@@ -15,6 +15,11 @@ namespace Core
   template< typename Datatype >
   std::ostream &operator<<(std::ostream &out, Correlator< Datatype > const &c);
 
+  template< typename T1, typename T2 > 
+  void construct(Correlator< T1 > result, std::vector< Correlator< T2 > > const &from);
+
+  template< typename T1, typename T2 > 
+  void trace(Correlator< T1 > &trace, Correlator< T2 > const &of);
 
   template< typename Datatype >
   class Correlator
@@ -40,10 +45,14 @@ namespace Core
 	  
     public:
 
+    Correlator(size_t const L, size_t const T);
     Correlator(Field < Datatype > const &d_data);
     Correlator(Correlator const &other);
-    template< typename T > 
-    Correlator(std::vector< Correlator< T > > const &constituents);
+    
+    // unfortunately, this does not work with all compilers, 
+    // a non-member function does the job.
+    // template< typename T > 
+    // Correlator(std::vector< Correlator< T > > const &constituents);
 
     ~Correlator();
 
@@ -64,8 +73,9 @@ namespace Core
     void operator +=(Correlator< Datatype > const &other);
     void operator *=(Correlator< Datatype > const &other);
 
+    // this also gives problems with compilers and is therefore replaced by a non-member function
     // template< typename SimpleDatatype > 
-    Correlator< std::complex< double > > trace() const;
+    // Correlator< std::complex< double > > trace() const;
 
     void deleteField();
 
@@ -95,6 +105,11 @@ namespace Core
     size_t size() const;
 
     friend std::ostream &operator<< < Datatype >(std::ostream &out, Correlator< Datatype > const &c);
+    template< typename T1, typename T2 > 
+    friend void construct(Correlator< T1 > result, std::vector< Correlator< T2 > > const &from);
+    template< typename T1, typename T2 > 
+    friend void trace(Correlator< T1 > &trace, Correlator< T2 > const &of);
+
 
     private:
 	  void destroy();
@@ -107,7 +122,7 @@ namespace Core
 
 #include "Correlator/Correlator_Correlator_a.template"
 #include "Correlator/Correlator_Correlator_b.template"
-//#include "Correlator/Correlator_Correlator_c.template"
+#include "Correlator/Correlator_Correlator_c.template"
 #include "Correlator/Correlator.operators.template"
 
 #include "Correlator/Correlator_deleteField.template"
@@ -115,7 +130,8 @@ namespace Core
 #include "Correlator/Correlator_isolate.template"
 #include "Correlator/Correlator_setOffset.template"
 #include "Correlator/Correlator_sumOverSpatialVolume.template"
-//#include "Correlator/Correlator_trace.template"
+#include "Correlator/Correlator_construct.template"
+#include "Correlator/Correlator_trace.template"
 
   typedef Correlator< Dirac::Matrix > BaryonCorrelator;
 

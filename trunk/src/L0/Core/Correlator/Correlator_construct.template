@@ -1,0 +1,71 @@
+// this is not efficient: it builds up a Dirac::Matrix from 16 complex numbers on every lattice site
+// however it is useful sometimes
+// template< > template< >
+// Correlator< Dirac::Matrix >::Correlator(std::vector< Correlator< std::complex< double > > > const &from)
+template<  > 
+inline void construct(Correlator< Dirac::Matrix > result, std::vector< Correlator< std::complex< double > > > const &from)
+{
+  assert(from.size() == 16);
+
+  assert(result.d_T == from[0].T());
+  assert(result.d_L == from[0].L());
+
+  std::complex< double > tmp[16];
+
+  Field< std::complex< double > >::const_iterator I00(from[ 0].rawdata()->begin()); 
+  Field< std::complex< double > >::const_iterator I01(from[ 1].rawdata()->begin()); 
+  Field< std::complex< double > >::const_iterator I02(from[ 2].rawdata()->begin()); 
+  Field< std::complex< double > >::const_iterator I03(from[ 3].rawdata()->begin()); 
+  Field< std::complex< double > >::const_iterator I04(from[ 4].rawdata()->begin()); 
+  Field< std::complex< double > >::const_iterator I05(from[ 5].rawdata()->begin()); 
+  Field< std::complex< double > >::const_iterator I06(from[ 6].rawdata()->begin()); 
+  Field< std::complex< double > >::const_iterator I07(from[ 7].rawdata()->begin()); 
+  Field< std::complex< double > >::const_iterator I08(from[ 8].rawdata()->begin()); 
+  Field< std::complex< double > >::const_iterator I09(from[ 9].rawdata()->begin()); 
+  Field< std::complex< double > >::const_iterator I10(from[10].rawdata()->begin()); 
+  Field< std::complex< double > >::const_iterator I11(from[11].rawdata()->begin()); 
+  Field< std::complex< double > >::const_iterator I12(from[12].rawdata()->begin()); 
+  Field< std::complex< double > >::const_iterator I13(from[13].rawdata()->begin()); 
+  Field< std::complex< double > >::const_iterator I14(from[14].rawdata()->begin()); 
+  Field< std::complex< double > >::const_iterator I15(from[15].rawdata()->begin()); 
+
+  for (Field< Dirac::Matrix >::iterator I(result.d_data->begin()); I != result.d_data->end(); ++I)
+  {
+    tmp[ 0] = (*I00); 
+    tmp[ 1] = (*I01); 
+    tmp[ 2] = (*I02); 
+    tmp[ 3] = (*I03); 
+    tmp[ 4] = (*I04); 
+    tmp[ 5] = (*I05); 
+    tmp[ 6] = (*I06); 
+    tmp[ 7] = (*I07); 
+    tmp[ 8] = (*I08); 
+    tmp[ 9] = (*I09); 
+    tmp[10] = (*I10); 
+    tmp[11] = (*I11); 
+    tmp[12] = (*I12); 
+    tmp[13] = (*I13); 
+    tmp[14] = (*I14); 
+    tmp[15] = (*I15); 
+
+    (*I) = Dirac::Matrix(tmp);
+
+    ++I00;
+    ++I01;
+    ++I02;
+    ++I03;
+    ++I04;
+    ++I05;
+    ++I06;
+    ++I07;
+    ++I08;
+    ++I09;
+    ++I10;
+    ++I11;
+    ++I12;
+    ++I13;
+    ++I14;
+    ++I15;
+  }
+}
+

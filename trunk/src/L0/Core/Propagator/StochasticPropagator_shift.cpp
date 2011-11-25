@@ -58,3 +58,4 @@ namespace Core
     return *this;
   }*/
 }
+

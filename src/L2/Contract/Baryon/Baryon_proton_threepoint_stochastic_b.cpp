@@ -36,9 +36,11 @@ namespace Contract
     std::vector< Core::Correlator< std::complex< double > > > fields_uu_g5;
     std::vector< Core::Correlator< std::complex< double > > > fields_dd;
     std::vector< Core::Correlator< std::complex< double > > > fields_dd_g5;
-
+    
     size_t const L(S_u.L());
     size_t const T(S_u.T());
+
+    Core::Correlator< std::complex< double > > dummyCorr(L,T);
 
     Base::Weave weave(L, T);
 
@@ -67,8 +69,8 @@ namespace Contract
     }
 
 
-    Core::Propagator const * PHI_U = NULL;
-    Core::Propagator const * PHI_D = NULL;
+    std::vector< Core::Propagator > PHI_U;
+    std::vector< Core::Propagator > PHI_D;
     Core::Propagator const * S_U   = NULL;
     Core::Propagator const * S_D   = NULL;
 
@@ -176,15 +178,15 @@ namespace Contract
         for (Core::Propagator::iterator It_phi_d=PHI_D_tmp.begin(); It_phi_d != PHI_D_tmp.end(); ++It_phi_d)
           (*It_phi_d).rightMultiply(dd_part2_T[i]);
 
-        PHI_U = new Core::Propagator(PHI_U_tmp);
-        PHI_D = new Core::Propagator(PHI_D_tmp);
+        PHI_U.push_back(PHI_U_tmp);
+        PHI_D.push_back(PHI_D_tmp);
 
-        Core::Propagator S_D_tmp(S_d_local);
-        for (Core::Propagator::iterator It_S_d = S_D_tmp.begin(); It_S_d != S_D_tmp.end(); ++It_S_d)
-          (*It_S_d).left_multiply_proton();
-        S_D = new Core::Propagator(S_D_tmp);
-        S_U = new Core::Propagator(S_u_local);
       }
+      Core::Propagator S_D_tmp(S_d_local);
+      for (Core::Propagator::iterator It_S_d = S_D_tmp.begin(); It_S_d != S_D_tmp.end(); ++It_S_d)
+        (*It_S_d).left_multiply_proton();
+      S_D = new Core::Propagator(S_D_tmp);
+      S_U = new Core::Propagator(S_u_local);
     }
 
     if (operator_flag == "local")
@@ -208,19 +210,23 @@ namespace Contract
       ops.push_back(Base::op_G_15);
       for (size_t iOp=0; iOp<ops.size(); iOp++)
       {
+        for (size_t iS=0; iS<16; iS++)
+        {
         // u current
         {
-          Core::Propagator PHI_U_copy(*PHI_U);
+          Core::Propagator PHI_U_copy(PHI_U[iS]);
           PHI_U_copy.leftMultiplyOperator(ops[iOp], twisted_basis); //check again!!!
           Core::Correlator< Dirac::Matrix > uCurrent(PHI_U_copy.contract(*S_U));
-          fields_uu.push_back(uCurrent.trace());
+          Core::trace(dummyCorr, uCurrent);
+          fields_uu.push_back(dummyCorr);
         }
         // d current
         {
-          Core::Propagator PHI_D_copy(*PHI_D);
+          Core::Propagator PHI_D_copy(PHI_D[iS]);
           PHI_D_copy.leftMultiplyOperator(ops[iOp], twisted_basis);
           Core::Correlator< Dirac::Matrix > dCurrent(PHI_D_copy.contract(*S_D));
           // this comes from a factor tau_3 for operators in twisted basis
+          Core::trace(dummyCorr, dCurrent);
           switch (ops[iOp])
           {
             case Base::op_G_0:
@@ -231,10 +237,11 @@ namespace Contract
             case Base::op_G_13:
             case Base::op_G_14:
             case Base::op_G_15:
-              dCurrent *= -1.0;
+              dummyCorr *= -1.0;
               break;
           }
-          fields_dd.push_back(dCurrent.trace());
+          fields_dd.push_back(dummyCorr);
+        }
         }
       }
     }
@@ -249,14 +256,21 @@ namespace Contract
       for (size_t opNo=0; opNo<ops.size(); opNo++)
       {
         //y-dependent loop is realized on "Field" level
-        Core::Propagator PHI_U_copy(*PHI_U);
-        Core::Propagator PHI_D_copy(*PHI_D);
+        for (size_t iS=0; iS<16; iS++)
+        {
+        Core::Propagator PHI_U_copy(PHI_U[iS]);
+        Core::Propagator PHI_D_copy(PHI_D[iS]);
         Core::Correlator< Dirac::Matrix > uCurrent(PHI_U_copy.contractWithOperatorInsertion(ops[opNo], gauge_field, *S_U, axialCurrent));
-        fields_uu.push_back(uCurrent.trace());
-        fields_uu_g5.push_back((Core::Correlator< Dirac::Matrix >(axialCurrent)).trace());
+        Core::trace(dummyCorr, uCurrent);
+        fields_uu.push_back(dummyCorr);
+        Core::trace(dummyCorr, Core::Correlator< Dirac::Matrix >(axialCurrent));
+        fields_uu_g5.push_back(dummyCorr);
         Core::Correlator< Dirac::Matrix > dCurrent(PHI_D_copy.contractWithOperatorInsertion(ops[opNo], gauge_field, *S_D, axialCurrent));
-        fields_dd.push_back(dCurrent.trace());
-        fields_dd_g5.push_back((Core::Correlator< Dirac::Matrix >(axialCurrent)).trace());
+        Core::trace(dummyCorr, dCurrent);
+        fields_dd.push_back(dummyCorr);
+        Core::trace(dummyCorr, Core::Correlator< Dirac::Matrix >(axialCurrent));
+        fields_dd_g5.push_back(dummyCorr);
+        }
       }
     }
     else if(operator_flag == "1D")
@@ -281,27 +295,44 @@ namespace Contract
       Core::Field< Dirac::Matrix > polarizedCurrent(L, T);
       for (size_t opNo=0; opNo<ops.size(); opNo++)
       {
+        for (size_t iS=0; iS<16; iS++)
+        {
+        Core::Propagator PHI_U_copy(PHI_U[iS]);
+        Core::Propagator PHI_D_copy(PHI_D[iS]);
         //y-dependent loop is realized on "Field" level
-        Core::Propagator PHI_U_copy(*PHI_U);
-        Core::Propagator PHI_D_copy(*PHI_D);
         Core::Correlator< Dirac::Matrix > uCurrent(PHI_U_copy.contractWithOperatorInsertion(ops[opNo], gauge_field, *S_U, polarizedCurrent));
-        fields_uu.push_back(uCurrent.trace());
-        fields_uu_g5.push_back((Core::Correlator< Dirac::Matrix >(polarizedCurrent)).trace());
+        Core::trace(dummyCorr, uCurrent);
+        fields_uu.push_back(dummyCorr);
+        Core::trace(dummyCorr, Core::Correlator< Dirac::Matrix >(polarizedCurrent));
+        fields_uu_g5.push_back(dummyCorr);
         Core::Correlator< Dirac::Matrix > dCurrent(PHI_D_copy.contractWithOperatorInsertion(ops[opNo], gauge_field, *S_D, polarizedCurrent));
-        fields_dd.push_back(dCurrent.trace());
-        fields_dd_g5.push_back((Core::Correlator< Dirac::Matrix >(polarizedCurrent)).trace());
+        Core::trace(dummyCorr, dCurrent);
+        fields_dd.push_back(dummyCorr);
+        Core::trace(dummyCorr, Core::Correlator< Dirac::Matrix >(polarizedCurrent));
+        fields_dd_g5.push_back(dummyCorr);
+        }
       }
     }
+
+    PHI_U.clear();
+    PHI_D.clear();
+    delete S_U;
+    S_U   = NULL;
+    delete S_D;
+    S_D   = NULL;
 
     assert(fields_uu.size()%16 == 0);
     assert(fields_uu.size()==fields_dd.size());
 
     std::vector< Core::BaryonCorrelator > allthreepoints;
-
+   
+    Core::BaryonCorrelator threepoint_UU(L, T);
+    Core::BaryonCorrelator threepoint_DD(L, T);
+   
     for (size_t idx=0; idx<fields_uu.size()/16; idx++)
     {
-      Core::BaryonCorrelator threepoint_UU(std::vector<Core::Correlator< std::complex< double > > >(fields_uu.begin()+idx*16, fields_uu.begin()+idx*16+16));
-      Core::BaryonCorrelator threepoint_DD(std::vector<Core::Correlator< std::complex< double > > >(fields_dd.begin()+idx*16, fields_dd.begin()+idx*16+16));
+      Core::construct(threepoint_UU, std::vector<Core::Correlator< std::complex< double > > >(fields_uu.begin()+idx*16, fields_uu.begin()+idx*16+16));
+      Core::construct(threepoint_DD, std::vector<Core::Correlator< std::complex< double > > >(fields_dd.begin()+idx*16, fields_dd.begin()+idx*16+16));
       threepoint_UU.sumOverSpatialVolume();
       threepoint_DD.sumOverSpatialVolume();
 
@@ -314,22 +345,13 @@ namespace Contract
 
     for (size_t idx=0; idx<fields_uu_g5.size()/16; idx++)
     {
-      Core::BaryonCorrelator threepoint_UU(std::vector<Core::Correlator< std::complex< double > > >(fields_uu_g5.begin()+idx*16, fields_uu_g5.begin()+idx*16+16));
-      Core::BaryonCorrelator threepoint_DD(std::vector<Core::Correlator< std::complex< double > > >(fields_dd_g5.begin()+idx*16, fields_dd_g5.begin()+idx*16+16));
+      Core::construct(threepoint_UU, std::vector<Core::Correlator< std::complex< double > > >(fields_uu_g5.begin()+idx*16, fields_uu_g5.begin()+idx*16+16));
+      Core::construct(threepoint_DD, std::vector<Core::Correlator< std::complex< double > > >(fields_dd_g5.begin()+idx*16, fields_dd_g5.begin()+idx*16+16));
       threepoint_UU.sumOverSpatialVolume();
       threepoint_DD.sumOverSpatialVolume();
       addCorrs.push_back(threepoint_UU);
       addCorrs.push_back(threepoint_DD);
     }
-
-    delete PHI_U;
-    PHI_U = NULL;
-    delete PHI_D;
-    PHI_D = NULL;
-    delete S_U;
-    S_U   = NULL;
-    delete S_D;
-    S_D   = NULL;
 
     return allthreepoints;
   }

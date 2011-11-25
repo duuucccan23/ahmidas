@@ -36,3 +36,4 @@ namespace Core
     out.precision(prec_tmp);
   }
 }
+

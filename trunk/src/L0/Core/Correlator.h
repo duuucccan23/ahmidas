@@ -16,7 +16,7 @@ namespace Core
   std::ostream &operator<<(std::ostream &out, Correlator< Datatype > const &c);
 
   template< typename T1, typename T2 > 
-  void construct(Correlator< T1 > result, std::vector< Correlator< T2 > > const &from);
+  void construct(Correlator< T1 > &result, std::vector< Correlator< T2 > > const &from);
 
   template< typename T1, typename T2 > 
   void trace(Correlator< T1 > &trace, Correlator< T2 > const &of);
@@ -106,7 +106,7 @@ namespace Core
 
     friend std::ostream &operator<< < Datatype >(std::ostream &out, Correlator< Datatype > const &c);
     template< typename T1, typename T2 > 
-    friend void construct(Correlator< T1 > result, std::vector< Correlator< T2 > > const &from);
+    friend void construct(Correlator< T1 > &result, std::vector< Correlator< T2 > > const &from);
     template< typename T1, typename T2 > 
     friend void trace(Correlator< T1 > &trace, Correlator< T2 > const &of);
 

@@ -3,12 +3,13 @@
 // template< > template< >
 // Correlator< Dirac::Matrix >::Correlator(std::vector< Correlator< std::complex< double > > > const &from)
 template<  > 
-inline void construct(Correlator< Dirac::Matrix > result, std::vector< Correlator< std::complex< double > > > const &from)
+inline void construct(Correlator< Dirac::Matrix > &result, std::vector< Correlator< std::complex< double > > > const &from)
 {
   assert(from.size() == 16);
-
   assert(result.d_T == from[0].T());
   assert(result.d_L == from[0].L());
+
+  result.isolate();
 
   std::complex< double > tmp[16];
 

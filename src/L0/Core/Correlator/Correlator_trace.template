@@ -1,6 +1,7 @@
 template< >
 inline void trace(Correlator< std::complex< double > > &trace, Correlator< Dirac::Matrix > const &of)
 {
+  trace.isolate();
   Field< Dirac::Matrix >::const_iterator I(of.d_data->begin());
   for (Field< std::complex< double > >::iterator Itr(trace.d_data->begin()); Itr != trace.d_data->end(); ++Itr)
   {

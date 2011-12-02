@@ -48,7 +48,8 @@
 #include <L0/Ahmidas.h>
 
 
-#define _with_Fuzzing_
+//#define _with_Fuzzing_
+
 #define _with_theta_
 #define _with_Omunu_
 #define _with_momentum_projection
@@ -155,17 +156,24 @@ int main(int argc, char **argv)
 
 
 
+#ifdef _with_APE_
 	Core::Field< QCD::Gauge > gauge_field_f(gauge_field);
 
 	double const APE_alpha      = floats["APE_param"];
 	size_t const APE_iterations = size_t(floats["APE_steps"]);
-	double const Nlong    = floats["Fuzz_param"];
 	double const Jac_alpha      = floats["Jac_param"];
 	size_t const Jac_iterations = size_t(floats["Jac_steps"]);
+#endif
 
+#ifdef _with_Fuzzing__
+	double const Nlong    = floats["Fuzz_param"];
+#endif
+	
 	if (weave.isRoot())
 	{
 #ifdef _with_Fuzzing__
+		
+		
 		std::cout << "Fuzzing parameter = " << Nlong <<  std::endl;
 
 #endif
@@ -176,14 +184,30 @@ int main(int argc, char **argv)
 #endif
 	}
 
-
+#ifdef _with_APE_
 	if(weave.isRoot()) 
 		std::cout<<"Smear gauge field   ... "; 
 
-#ifdef _with_APE_
+
+	clock_t start_ape, finish_ape;
+	start_ape = clock();
+
+
 	Smear::APE APE_tool(APE_alpha);
 	APE_tool.smear(gauge_field_f, APE_iterations);
+
+
+	finish_ape = clock();
+
+	if (weave.isRoot())
+		std::cout << "APE smearing done in "<< double(finish_ape - start_ape)/CLOCKS_PER_SEC  << "seconds." << std::endl;
+
+
 #endif
+
+
+
+
 
 #ifdef _with_Fuzzing__
 	Smear::Fuzz Fuzz_tool(Nlong);
@@ -214,7 +238,7 @@ int main(int argc, char **argv)
 			filename.push_back(propaStochaFiles[n]);
 
 			Core::StochasticPropagator< 1 > phi(L, T);
-			
+
 			if (flag_mms==false)
 			{
 				if(weave.isRoot()) std::cout<< "Stochastic propagator " <<n<< " to be read from " << propaStochaFiles[n] <<" ... "; 
@@ -243,12 +267,12 @@ int main(int argc, char **argv)
 				if(weave.isRoot())	
 					std::cout << "done.\n" << std::endl;
 			}
-
+#ifdef _with_APE_
 
 			Core::StochasticPropagator< 1 >  phi_f(phi);
 			Smear::Jacobi Jacobi_tool(Jac_alpha);
 			phi_f.smearJacobi(Jac_alpha, Jac_iterations, gauge_field_f);
-
+#endif
 
 			//Now compute the source 
 
@@ -293,10 +317,14 @@ int main(int argc, char **argv)
 
 			Core::StochasticPropagator< 1 >  psi(phi);
 			Core::StochasticPropagator< 1 >  g5_phi(phi);
-			Core::StochasticPropagator< 1 >  g5_phi_f(phi_f);
-
 			g5_phi.rightMultiply(gamma5);
+			
+#ifdef _with_APE_
+			Core::StochasticPropagator< 1 >  g5_phi_f(phi_f);
 			g5_phi_f.rightMultiply(gamma5);
+#endif
+			
+			
 
 
 			if (weave.isRoot())
@@ -306,9 +334,10 @@ int main(int argc, char **argv)
 			std::vector< Core::Correlator< Dirac::Matrix > > C_vv = Contract::compute_loop(g5_phi,phi,my_operators);
 
 			// v4 & vv loop smeared quark fields
+#ifdef _with_APE_
 			std::vector< Core::Correlator< Dirac::Matrix > > C_v4_f = Contract::compute_loop(xi,phi_f,my_operators);
 			std::vector< Core::Correlator< Dirac::Matrix > > C_vv_f = Contract::compute_loop(g5_phi,phi_f,my_operators);
-
+#endif
 
 
 #ifdef	_with_Omunu_
@@ -450,7 +479,7 @@ int main(int argc, char **argv)
 			}
 
 			Core::Propagator phi(L, T);
-			
+
 			if (flag_mms==false) Tool::IO::load(&phi,filename, Tool::IO::fileSCIDAC);
 
 
@@ -472,18 +501,24 @@ int main(int argc, char **argv)
 
 			// for "vv" correlators
 
+			clock_t start, finish;
+			start = clock();
+
+
 			Core::Propagator  g5_phi(phi);
 			g5_phi.rightMultiply(gamma5);
 
 
 
 			//Now compute the source x gamma5 
+			std::vector< std::complex <double>  > C_naive;
 			std::vector< std::complex <double>  > C_v4;
 			std::vector< std::complex <double> > C_conserved_v4;
 
+#ifdef _with_APE_
 			std::vector< std::complex <double> > C_v4_f;
 			std::vector< std::complex <double> > C_vv_f;
-
+#endif
 
 #ifdef _with_Omunu_
 			std::vector< std::complex<double> > C_twist2;
@@ -492,9 +527,22 @@ int main(int argc, char **argv)
 
 			{
 
+#ifdef _with_APE_
+				clock_t start_Jac, finish_Jac;
+				start_Jac = clock();
+
+
 				Core::Propagator  phi_f(phi);
 				Smear::Jacobi Jacobi_tool(Jac_alpha);
 				phi_f.smearJacobi(Jac_alpha, Jac_iterations, gauge_field_f);
+
+
+				finish_Jac = clock();
+
+				if (weave.isRoot())
+					std::cout << "Jacobi smearing done in "<< double(finish_Jac - start_Jac)/CLOCKS_PER_SEC  << "seconds." << std::endl;
+
+#endif
 
 				{
 					if(weave.isRoot()) 
@@ -503,14 +551,38 @@ int main(int argc, char **argv)
 
 					Core::Propagator  xi(L,T);
 					xi = phi.applyDiracOperator(gauge_field,kappa,mu,thetat,thetax,thetay,thetaz,Base::Full); 
-					xi.rightMultiply(gamma5);
 
+
+
+					C_naive = Contract::compute_loop_new(xi,phi,my_operators);
+					
+					// to check					
 					if (weave.isRoot())
 						std::cout << "done.\n" << std::endl;
+
+					{
+						double const xiNorm = xi.norm();
+						if (weave.isRoot())
+							std::cout << "norm of source calculated from  propagator: " << xiNorm << std::endl;
+
+						double const phiNorm = phi.norm();
+						if (weave.isRoot())
+							std::cout << "norm of the propagator: " << phiNorm << std::endl;
+
+
+					}
+
+
+					xi.rightMultiply(gamma5);
 
 					// Now compute g5 [B^dagger H]^4 g5
 					if(weave.isRoot()) 
 						std::cout<<"Compute g5 [B^dagger H]^4 g5 times the source field "<< " ... ";
+
+
+					clock_t start_h4, finish_h4;
+					start_h4 = clock();
+
 
 
 					for(size_t i=0;i<4;i++)
@@ -520,6 +592,15 @@ int main(int argc, char **argv)
 						/* apply Bdagger ... */
 						xi = xi.applyDiracOperator(gauge_field,kappa,mu,thetat,thetax,thetay,thetaz,Base::Bdagger);				
 					}
+
+
+					finish_h4 = clock();
+
+					if (weave.isRoot())
+						std::cout << "part H4 done in "<< double(finish_h4 - start_h4)/CLOCKS_PER_SEC  << "seconds." << std::endl;
+
+
+
 					xi.rightMultiply(gamma5);
 
 
@@ -529,36 +610,72 @@ int main(int argc, char **argv)
 					//to have the same normalization than carsten . Origin ?
 					xi *= 1./(4.*kappa);
 
+					finish = clock();
+
+					if (weave.isRoot())
+						std::cout << "part 0 before contract  done in "<< double(finish - start)/CLOCKS_PER_SEC  << "seconds." << std::endl;
+
+
 					// v4  local quark fields
 					C_v4 = Contract::compute_loop_new(xi,phi,my_operators);
 					C_conserved_v4 = Contract::compute_loop_conserved_vector_current(gauge_field,xi,phi);
 
 					//v4  smeared
+					
+#ifdef _with_APE_
 					C_v4_f = Contract::compute_loop_new(xi,phi_f,my_operators);
-
+#endif
+					
 #ifdef _with_Omunu_
+					clock_t start_twist2, finish_twist2;
+					start_twist2 = clock();
+
+
 					C_twist2 = Contract::compute_loop_twist2_operator(gauge_field,xi,phi);
 					C_twist2_pol = Contract::compute_loop_twist2_operator(gauge_field,xi,g5_phi);
-#endif
+					finish_twist2 = clock();
 
+					if (weave.isRoot())
+						std::cout << "part twist2 v4  done in "<< double(finish_twist2 - start_twist2)/CLOCKS_PER_SEC  << "seconds." << std::endl;
+#endif
 
 				}
 
 				// vv loop smeared quark fields
+
+#ifdef _with_APE_
 				C_vv_f = Contract::compute_loop_new(g5_phi,phi_f,my_operators);
+#endif
 			}
+			finish = clock();
+
+			if (weave.isRoot())
+				std::cout << "part 1 done in "<< double(finish - start)/CLOCKS_PER_SEC  << "seconds." << std::endl;
+
 
 
 			if (weave.isRoot())
 				std::cout << "Compute loops for vv and v4 method"<<" ... ";
+
+
+			Core::Propagator g5_DW_phi(L,T);
+			g5_DW_phi=phi.applyDiracOperator(gauge_field,kappa,0,thetat,thetax,thetay,thetaz); //D_Wilson = D_tm(mu=0)
+			g5_DW_phi.rightMultiply(gamma5);
+
 			std::vector< std::complex <double>  > C_vv = Contract::compute_loop_new(g5_phi,phi,my_operators);
+			std::vector< std::complex <double>  > C_vvSum = Contract::compute_loop_new(g5_phi,g5_DW_phi,my_operators);
+
 			std::vector< std::complex <double> > C_conserved_vv = Contract::compute_loop_conserved_vector_current(gauge_field,g5_phi,phi);
 
 
 			for(size_t i=0; i < C_vv.size(); i++)
 			{
 				C_vv[i] *=  std::complex<double>(0,2.0*mu/(8.*kappa));	 // factor + 4 * i kappa mu /( 4 kappa) ^2
+				C_vvSum[i] *=  std::complex<double>(2.0,0);	 
+#ifdef _with_APE
 				C_vv_f[i] *=  std::complex<double>(0,2.0*mu/(8.*kappa));	 // factor + 4 * i kappa mu /( 4 kappa) ^2
+#endif
+
 			}
 
 			for(size_t i=0; i < C_conserved_vv.size(); i++)
@@ -568,22 +685,10 @@ int main(int argc, char **argv)
 
 			if (weave.isRoot()) std::cout << "done.\n" << std::endl;
 
+			finish = clock();
 
-			//sum_disc ? 
-//			if (weave.isRoot())
-//				std::cout << "Compute loops for vv_sum  method"<<" ..."; 
-
-//			Core::Propagator  xi(L,T);
-//			xi = phi.conjugate();
-//			xi.rightMultiply(gamma5);
-//			xi.leftMultiply(gamma5);
-//			xi = xi.applyDiracOperator(gauge_field,kappa,0,thetat,thetax,thetay,thetaz,Base::Full); //  D(mu=0) = 1+H
-//			xi *= 2;
-//			xi.conjugate();
-
-//			std::vector< std::complex <double>  > C_vv_sum = Contract::compute_loop_new(xi,phi,my_operators);
-
-//			if (weave.isRoot()) std::cout << "done.\n" << std::endl;
+			if (weave.isRoot())
+				std::cout << "part 2 done in "<< double(finish - start)/CLOCKS_PER_SEC  << "seconds." << std::endl;
 
 
 #ifdef _with_Omunu_
@@ -593,12 +698,22 @@ int main(int argc, char **argv)
 
 			std::vector< std::complex<double> > C_twist2_vv = Contract::compute_loop_twist2_operator(gauge_field,g5_phi,phi,false);
 			std::vector< std::complex<double> > C_twist2_pol_vv = Contract::compute_loop_twist2_operator(gauge_field,g5_phi,phi,true);
+			std::vector< std::complex<double> > C_twist2_vvSum = Contract::compute_loop_twist2_operator(gauge_field,g5_phi,g5_DW_phi,false);
+			std::vector< std::complex<double> > C_twist2_pol_vvSum = Contract::compute_loop_twist2_operator(gauge_field,g5_phi,g5_DW_phi,true);
+
 
 			if (weave.isRoot())
 				std::cout << "done.\n" << std::endl;
 
 
 #endif
+
+
+			finish = clock();
+
+			if (weave.isRoot())
+				std::cout << "part 3 done in "<< double(finish - start)/CLOCKS_PER_SEC  << "seconds." << std::endl;
+
 
 
 
@@ -664,12 +779,15 @@ int main(int argc, char **argv)
 				}
 
 
-
 				if (weave.isRoot())
-					std::cout << "done.\n" << std::endl;
+					std::cout << "done  "<<  std::endl;
 			}
 #endif
 
+			finish = clock();
+
+			if (weave.isRoot())
+				std::cout << "Computation of loops done in "<< double(finish - start)/CLOCKS_PER_SEC  << "seconds." << std::endl;
 
 
 			if (weave.isRoot())	
@@ -680,77 +798,97 @@ int main(int argc, char **argv)
 				//double addimag =  2.*kappa*mu*L*L*L*3.*4. / (sqrt(1 + 4.*kappa*kappa*mu*mu));
 				//double addreal =  L*L*L*3.*4./( sqrt(1. + 4.*kappa*kappa*mu*mu));
 
-				std::ofstream fout_v4;
-				std::ofstream fout_vv;
-//				std::ofstream fout_vv_sum;
-
-				std::ofstream fout_v4_f;
-				std::ofstream fout_vv_f;
-
+				FILE * fout_v4;
+				FILE * fout_naive;
+				//				am fout_vv;
+				FILE * fout_vv;
+				FILE * fout_vvSum;
+#ifdef _with_APE
+				FILE * fout_v4_f;
+				FILE * fout_vv_f;
+#endif
 
 #ifdef _with_momentum_projection
-				std::ofstream fout_vv_mom;
+				FILE * fout_vv_mom;
 #endif
-				std::ofstream fout_conserved_v4;
-				std::ofstream fout_conserved_vv;
+				FILE * fout_conserved_v4;
+				FILE * fout_conserved_vv;
 
 #ifdef _with_Omunu_
-				std::ofstream fout_twist2;
-				std::ofstream fout_twist2_pol;
+				FILE * fout_twist2;
+				FILE * fout_twist2_pol;
 
-				std::ofstream fout_twist2_vv;
-				std::ofstream fout_twist2_pol_vv;
+				FILE * fout_twist2_vvSum;
+				FILE * fout_twist2_pol_vvSum;
+				FILE * fout_twist2_vv;
+				FILE * fout_twist2_pol_vv;
 
 #endif
 
 				if (n==0)
 				{
 
-					fout_v4.open("output_disc_v4.dat");
-					fout_vv.open("output_disc_vv.dat");
-				//	fout_vv_sum.open("output_disc_vv_sum.dat");
-					fout_v4_f.open("output_disc_v4_f.dat");
-					fout_vv_f.open("output_disc_vv_f.dat");
+					fout_v4=fopen("output_disc_v4.dat","w");
+					fout_naive=fopen("output_disc_naive.dat","w");
+					fout_vvSum=fopen("output_disc_vvSum.dat","w");
+					fout_vv =fopen("output_disc_vv.dat","w");
+#ifdef _with_APE
+					fout_v4_f=fopen("output_disc_v4_f.dat","w");
+					fout_vv_f=fopen("output_disc_vv_f.dat","w");
+#endif					
 
 #ifdef _with_momentum_projection
-					fout_vv_mom.open("output_disc_vv_mom.dat");
+					fout_vv_mom=fopen("output_disc_vv_mom.dat","w");
 #endif
-					fout_conserved_v4.open("output_disc_conserved_v4.dat");
-					fout_conserved_vv.open("output_disc_conserved_vv.dat");
+					fout_conserved_v4=fopen("output_disc_conserved_v4.dat","w");
+					fout_conserved_vv=fopen("output_disc_conserved_vv.dat","w");
 
 #ifdef _with_Omunu_
-					fout_twist2.open("output_disc_twist2.dat");
-					fout_twist2_pol.open("output_disc_twist2_pol.dat");
-					fout_twist2_vv.open("output_disc_twist2_vv.dat");
-					fout_twist2_pol_vv.open("output_disc_twist2_pol_vv.dat");
+					fout_twist2=fopen("output_disc_twist2.dat","w");
+					fout_twist2_pol=fopen("output_disc_twist2_pol.dat","w");
+					fout_twist2_vvSum=fopen("output_disc_twist2_vvSum.dat","w");
+					fout_twist2_pol_vvSum=fopen("output_disc_twist2_pol_vvSum.dat","w");
+					fout_twist2_vv=fopen("output_disc_twist2_vv.dat","w");
+					fout_twist2_pol_vv=fopen("output_disc_twist2_pol_vv.dat","w");
+
 
 #endif
 				}
 				else	
 				{
 
-					fout_v4.open("output_disc_v4.dat",std::ios::app);
-					fout_vv.open("output_disc_vv.dat",std::ios::app);
-				//	fout_vv_sum.open("output_disc_vv_sum.dat",std::ios::app);
-					fout_v4_f.open("output_disc_v4_f.dat",std::ios::app);
-					fout_vv_f.open("output_disc_vv_f.dat",std::ios::app);
+					fout_v4=fopen("output_disc_v4.dat","a");
+					fout_naive=fopen("output_disc_naive.dat","a");
+					fout_vvSum=fopen("output_disc_vvSum.dat","a");
+					fout_vv =fopen("output_disc_vv.dat","a");
+					//	fout_vv_sum.open("output_disc_vv_sum.dat",std::ios::app);
+#ifdef _with_APE
+					fout_v4_f=fopen("output_disc_v4_f.dat","a");
+					fout_vv_f=fopen("output_disc_vv_f.dat","a");
+#endif
 
 #ifdef _with_momentum_projection
-					fout_vv_mom.open("output_disc_vv_mom.dat",std::ios::app);
+					fout_vv_mom=fopen("output_disc_vv_mom.dat","a");
 #endif
-					fout_conserved_v4.open("output_disc_conserved_v4.dat",std::ios::app);
-					fout_conserved_vv.open("output_disc_conserved_vv.dat",std::ios::app);
+					fout_conserved_v4=fopen("output_disc_conserved_v4.dat","a");
+					fout_conserved_vv=fopen("output_disc_conserved_vv.dat","a");
 
 #ifdef _with_Omunu_
-					fout_twist2.open("output_disc_twist2.dat",std::ios::app);
-					fout_twist2_pol.open("output_disc_twist2_pol.dat",std::ios::app);
-					fout_twist2_vv.open("output_disc_twist2_vv.dat",std::ios::app);
-					fout_twist2_pol_vv.open("output_disc_twist2_pol_vv.dat",std::ios::app);
+					fout_twist2=fopen("output_disc_twist2.dat","a");
+					fout_twist2_pol=fopen("output_disc_twist2_pol.dat","a");
+					fout_twist2_vv=fopen("output_disc_twist2_vv.dat","a");
+					fout_twist2_pol_vv=fopen("output_disc_twist2_pol_vv.dat","a");
+					fout_twist2_vvSum=fopen("output_disc_twist2_vvSum.dat","a");
+					fout_twist2_pol_vvSum=fopen("output_disc_twist2_pol_vvSum.dat","a");
+
 
 #endif
 				}
 
 				std::cout << "write output for sources from " << 12*n << " to " << 11+12*n<<" ... "  << std::endl;
+
+				//	clock_t start, finish;
+				start = clock();
 
 				for(size_t j=0; j<12; j++)
 				{
@@ -762,51 +900,49 @@ int main(int argc, char **argv)
 						{
 							if (i != 0 && i !=8)
 							{
-								fout_v4 << t << std::scientific <<"  "
-									<< i <<"  "<< j + 12*n <<"  "<<C_v4[t +  T*i + 16*T*j].real() <<"  "<< C_v4[t + T*i + 16*T*j].imag() << std::endl;
-								fout_v4_f << t << std::scientific <<"  "
-									<< i <<"  "<< j + 12*n <<"  "<<C_v4_f[t +  T*i + 16*T*j].real() <<"  "<< C_v4_f[t + T*i + 16*T*j].imag() << std::endl;
+								fprintf(fout_v4,"%3d %3d %3d %3.10e %3.10e\n",t,i,j+12*n, C_v4[t +  T*i + 16*T*j].real(),C_v4[t + T*i + 16*T*j].imag() );
+								fprintf(fout_naive,"%3d %3d %3d %3.10e %3.10e\n",t,i,j+12*n, C_naive[t +  T*i + 16*T*j].real(),C_naive[t + T*i + 16*T*j].imag() );
+#ifdef _with_APE	
+								fprintf(fout_v4_f,"%3d %3d %3d %3.10e %3.10e\n",t,i,j+12*n, C_v4_f[t +  T*i + 16*T*j].real(),C_v4_f[t + T*i + 16*T*j].imag() );
+#endif
+
+
 							}
 							if (i==0) 
 							{
-								fout_v4 << t << std::scientific <<"  "
-									<< i <<"  "<< j + 12*n <<"  "<<C_v4[t +  T*i + 16*T*j].real() <<"  "<< C_v4[t + T*i + 16*T*j].imag() +  addimag << std::endl;
-								fout_v4_f << t << std::scientific <<"  "
-									<< i <<"  "<< j + 12*n <<"  "<<C_v4_f[t +  T*i + 16*T*j].real() <<"  "<< C_v4_f[t + T*i + 16*T*j].imag() +  addimag << std::endl;
+								fprintf(fout_v4,"%3d %3d %3d %3.10e %3.10e\n",t,i,j+12*n, C_v4[t +  T*i + 16*T*j].real(),C_v4[t + T*i + 16*T*j].imag() +  addimag );
+#ifdef _with_APE
+								fprintf(fout_v4_f,"%3d %3d %3d %3.10e %3.10e\n",t,i,j+12*n, C_v4_f[t +  T*i + 16*T*j].real(),C_v4_f[t + T*i + 16*T*j].imag() +  addimag );
+#endif
+
 							}
 							if (i==8) 
 							{
-								fout_v4 << t << std::scientific <<"  "
-									<< i <<"  "<< j + 12*n <<"  "<<C_v4[t +  T*i + 16*T*j].real() + addreal <<"  "<< C_v4[t + T*i + 16*T*j].imag() << std::endl;
-								fout_v4_f << t << std::scientific <<"  "
-									<< i <<"  "<< j + 12*n <<"  "<<C_v4_f[t +  T*i + 16*T*j].real() + addreal <<"  "<< C_v4_f[t + T*i + 16*T*j].imag() << std::endl;
+								fprintf(fout_v4,"%3d %3d %3d %3.10e %3.10e\n",t,i,j+12*n, C_v4[t +  T*i + 16*T*j].real()+ addreal,C_v4[t + T*i + 16*T*j].imag() );
+#ifdef _with_APE
+								fprintf(fout_v4_f,"%3d %3d %3d %3.10e %3.10e\n",t,i,j+12*n, C_v4_f[t +  T*i + 16*T*j].real()+ addreal,C_v4_f[t + T*i + 16*T*j].imag() );
+#endif
+
 							}
 
 
-							fout_vv << t << std::scientific <<"  "
-								<< i <<"  "<< j + 12*n <<"  "<<C_vv[t +  T*i + 16*T*j].real() <<"  "<< C_vv[t + T*i + 16*T*j].imag() << std::endl;
-							fout_vv_f << t << std::scientific <<"  "
-								<< i <<"  "<< j + 12*n <<"  "<<C_vv_f[t +  T*i + 16*T*j].real() <<"  "<< C_vv_f[t + T*i + 16*T*j].imag() << std::endl;
-
-				//			fout_vv_sum << t << std::scientific <<"  "
-				//				<< i <<"  "<< j + 12*n <<"  "<<C_vv_sum[t +  T*i + 16*T*j].real() <<"  "<< C_vv_sum[t + T*i + 16*T*j].imag() << std::endl;
-
-							fout_vv_f.flush();
-							fout_v4_f.flush();
-
-							fout_vv.flush();
-				//			fout_vv_sum.flush();
-							fout_v4.flush();
+							fprintf(fout_vv,"%3d %3d %3d %3.10e %3.10e\n",t,i,j+12*n, C_vv[t +  T*i + 16*T*j].real(),C_vv[t + T*i + 16*T*j].imag() );
+							fprintf(fout_vvSum,"%3d %3d %3d %3.10e %3.10e\n",t,i,j+12*n, C_vvSum[t +  T*i + 16*T*j].real(),C_vvSum[t + T*i + 16*T*j].imag() );
+#ifdef _with_APE
+							fprintf(fout_vv_f,"%3d %3d %3d %3.10e %3.10e\n",t,i,j+12*n, C_vv_f[t +  T*i + 16*T*j].real(),C_vv_f[t + T*i + 16*T*j].imag() );
+#endif
 
 						}
 					}			
 				}
-				fout_v4.close();
-				fout_vv.close();
-			//	fout_vv_sum.close();
-
-				fout_v4_f.close();
-				fout_vv_f.close();
+				fclose(fout_v4);				//				fout_vv.close();
+				fclose(fout_vv);
+				fclose(fout_vvSum);
+				//	fout_vv_sum.close();
+#ifdef _with_APE
+				fclose(fout_v4_f);
+				fclose(fout_vv_f);
+#endif
 
 				for(size_t j=0; j<12; j++)
 				{
@@ -816,18 +952,22 @@ int main(int argc, char **argv)
 						{
 							for(size_t t = 0; t < T; t++)
 							{
-								fout_conserved_v4 << t << std::scientific <<"  "
-									<< i <<"  "<< j+12*n <<"  "<<k <<"  "<< C_conserved_v4[t+ T*k + 2*T*i + 2*T*4*j].real() <<"  "<< C_conserved_v4[t+ T*k + 2*T*i + 2*T*4*j].imag() << std::endl;
+								fprintf(fout_conserved_v4,"%3d %3d %3d %3d %3.10e %3.10e\n",t,i,j+12*n,k, C_conserved_v4[t+ T*k + 2*T*i + 2*T*4*j].real(),C_conserved_v4[t+ T*k + 2*T*i + 2*T*4*j].imag() );
+								fprintf(fout_conserved_vv,"%3d %3d %3d %3d %3.10e %3.10e\n",t,i,j+12*n,k, C_conserved_vv[t+ T*k + 2*T*i + 2*T*4*j].real(),C_conserved_vv[t+ T*k + 2*T*i + 2*T*4*j].imag() );
 
-								fout_conserved_vv << t << std::scientific <<"  "
-									<< i <<"  "<< j+12*n <<"  "<<k <<"  "<< C_conserved_vv[t+ T*k + 2*T*i + 2*T*4*j].real() <<"  "<< C_conserved_vv[t+ T*k + 2*T*i + 2*T*4*j].imag() << std::endl;
+
+								//								fout_conserved_v4 << t << std::scientific <<"  "
+								//									<< i <<"  "<< j+12*n <<"  "<<k <<"  "<< C_conserved_v4[t+ T*k + 2*T*i + 2*T*4*j].real() <<"  "<< C_conserved_v4[t+ T*k + 2*T*i + 2*T*4*j].imag() << std::endl;
+
+								//								fout_conserved_vv << t << std::scientific <<"  "
+								//									<< i <<"  "<< j+12*n <<"  "<<k <<"  "<< C_conserved_vv[t+ T*k + 2*T*i + 2*T*4*j].real() <<"  "<< C_conserved_vv[t+ T*k + 2*T*i + 2*T*4*j].imag() << std::endl;
 							}
 						}			
 					}
 				}
 
-				fout_conserved_vv.close();
-				fout_conserved_v4.close();
+				fclose(fout_conserved_vv);
+				fclose(fout_conserved_v4);
 
 #ifdef _with_Omunu_
 
@@ -841,33 +981,24 @@ int main(int argc, char **argv)
 							{
 
 
-
-								fout_twist2 << t << std::scientific <<"  "
-									<< i <<"  "<< j + 12*n <<"  "<< k <<"  " <<C_twist2[t  + T*k + 4*T*i + 4*T*4*j ].real() <<"  "<< C_twist2[t + T*k + 4*T*i +4*T*4*j ].imag() << std::endl;
-								fout_twist2_pol << t << std::scientific <<"  "
-									<< i <<"  "<< j + 12*n <<"  "<< k <<"  " <<C_twist2_pol[t  + T*k + 4*T*i + 4*T*4*j ].real() <<"  "<< C_twist2_pol[t + T*k + 4*T*i +4*T*4*j ].imag() << std::endl;
-
-								fout_twist2_vv << t << std::scientific <<"  "
-									<< i <<"  "<< j + 12*n <<"  "<< k <<"  " <<C_twist2_vv[t  + T*k + 4*T*i + 4*T*4*j ].real() <<"  "<< C_twist2_vv[t + T*k + 4*T*i +4*T*4*j ].imag() << std::endl;
-								fout_twist2_pol_vv << t << std::scientific <<"  "
-									<< i <<"  "<< j + 12*n <<"  "<< k <<"  " <<C_twist2_pol_vv[t  + T*k + 4*T*i + 4*T*4*j ].real() <<"  "<< C_twist2_pol_vv[t + T*k + 4*T*i +4*T*4*j ].imag() << std::endl;
-
-
-								fout_twist2.flush();
-								fout_twist2_pol.flush();
-								fout_twist2_vv.flush();
-								fout_twist2_pol_vv.flush();
-
+								fprintf(fout_twist2,"%3d %3d %3d %3d %3.10e %3.10e\n",t,i,j+12*n,k,C_twist2[t  + T*k + 4*T*i + 4*T*4*j ].real(),C_twist2[t + T*k + 4*T*i +4*T*4*j ].imag());
+								fprintf(fout_twist2_pol,"%3d %3d %3d %3d %3.10e %3.10e\n",t,i,j+12*n,k,C_twist2_pol[t  + T*k + 4*T*i + 4*T*4*j ].real(),C_twist2_pol[t + T*k + 4*T*i +4*T*4*j ].imag());
+								fprintf(fout_twist2_vv,"%3d %3d %3d %3d %3.10e %3.10e\n",t,i,j+12*n,k,C_twist2_vv[t  + T*k + 4*T*i + 4*T*4*j ].real(),C_twist2_vv[t + T*k + 4*T*i +4*T*4*j ].imag());
+								fprintf(fout_twist2_pol_vv,"%3d %3d %3d %3d %3.10e %3.10e\n",t,i,j+12*n,k,C_twist2_pol_vv[t  + T*k + 4*T*i + 4*T*4*j ].real(),C_twist2_pol_vv[t + T*k + 4*T*i +4*T*4*j ].imag());
+								fprintf(fout_twist2_vvSum,"%3d %3d %3d %3d %3.10e %3.10e\n",t,i,j+12*n,k,C_twist2_vvSum[t  + T*k + 4*T*i + 4*T*4*j ].real(),C_twist2_vvSum[t + T*k + 4*T*i +4*T*4*j ].imag());
+								fprintf(fout_twist2_pol_vvSum,"%3d %3d %3d %3d %3.10e %3.10e\n",t,i,j+12*n,k,C_twist2_pol_vvSum[t  + T*k + 4*T*i + 4*T*4*j ].real(),C_twist2_pol_vvSum[t + T*k + 4*T*i +4*T*4*j ].imag());
 
 							}/*t*/
 						}/*end loop on the 4 terms contributing to a symmetrized covariant derivative */
 					} /*i loop on the 4 operators : O_mumu (unpo1arized) and Omumu g5 (polarized) */
 				} /*loop on the 12 sources*/
 
-				fout_twist2.close();
-				fout_twist2_pol.close();
-				fout_twist2_vv.close();
-				fout_twist2_pol_vv.close();
+				fclose(fout_twist2);
+				fclose(fout_twist2_pol);
+				fclose(fout_twist2_vv);
+				fclose(fout_twist2_pol_vv);
+				fclose(fout_twist2_vvSum);
+				fclose(fout_twist2_pol_vvSum);
 
 #endif
 
@@ -884,17 +1015,18 @@ int main(int argc, char **argv)
 							for(size_t t = 0; t < T; t++)
 							{
 								index = t + T*i  +T*16*j + T*16*12*I;
-
-								fout_vv_mom << t << std::scientific <<"  " << momenta[I][0] << "  "<< momenta[I][1] << "  "	<< momenta[I][2] << "  "
-									<< i <<"  "<< j + 12*n <<"  "<<C_vv_mom[index].real() <<"  "<< C_vv_mom[index].imag() << std::endl;
+								fprintf(fout_vv_mom,"%3d %3d %3d %3d %3d %3d %3.10e %3.10e \n",t,momenta[I][0],momenta[I][1],momenta[I][2],i,j+12*n,C_vv_mom[index].real(),C_vv_mom[index].imag());
+								//								fout_vv_mom << t << std::scientific <<"  " << momenta[I][0] << "  "<< momenta[I][1] << "  "	<< momenta[I][2] << "  "
+								//									<< i <<"  "<< j + 12*n <<"  "<<C_vv_mom[index].real() <<"  "<< C_vv_mom[index].imag() << std::endl;
 
 							}
 						}
 					}
 				}
-				fout_vv_mom.close();
+				fclose(fout_vv_mom);
 #endif				
-				std::cout << "done.\n" << std::endl;
+				finish = clock();
+				std::cout << "done in "<< double(finish - start)/CLOCKS_PER_SEC  << "seconds." << std::endl;
 
 			}/* end if weave.isRoot() */
 		} /* loop on Nsample */

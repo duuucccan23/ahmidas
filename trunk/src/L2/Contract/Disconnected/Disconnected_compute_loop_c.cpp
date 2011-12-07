@@ -54,8 +54,6 @@ namespace Contract
 			std::vector< Base::HermitianBilinearOperator > ops)
 	{
 
-
-
 		assert(xi.T() == psi.T() && psi.L() == psi.L());
 		Base::Weave weave(xi.L(), xi.T());
 		//std::vector< Core::Correlator< Dirac::Matrix > > twopoints;
@@ -147,7 +145,8 @@ namespace Contract
 			std::vector< Base::HermitianBilinearOperator > ops)
 	{
 
-
+		clock_t start, finish;
+		start = clock();
 
 		assert(xi.T() == psi.T() && psi.L() == psi.L());
 
@@ -161,128 +160,169 @@ namespace Contract
 		//psi_conj.conjugate();
 		//xi_conj.conjugate();
 
-		// declaration of one propagator for each gamma structure. Memory consuming but efficient ...
 		Core::Propagator Gamma_psi0(psi);
-		Core::Propagator Gamma_psi1(psi);
-		Core::Propagator Gamma_psi2(psi);
-		Core::Propagator Gamma_psi3(psi);
-		Core::Propagator Gamma_psi4(psi);
-		Core::Propagator Gamma_psi5(psi);
-		Core::Propagator Gamma_psi6(psi);
-		Core::Propagator Gamma_psi7(psi);
-		Core::Propagator Gamma_psi8(psi);
-		Core::Propagator Gamma_psi9(psi);
-		Core::Propagator Gamma_psi10(psi);
-		Core::Propagator Gamma_psi11(psi);
-		Core::Propagator Gamma_psi12(psi);
-		Core::Propagator Gamma_psi13(psi);
-		Core::Propagator Gamma_psi14(psi);
-		Core::Propagator Gamma_psi15(psi);
-
-		// compute Gamma psi_star 
-		Gamma_psi0.rightMultiplyOperator(ops[0]);
-		Gamma_psi1.rightMultiplyOperator(ops[1]);
-		Gamma_psi2.rightMultiplyOperator(ops[2]);
-		Gamma_psi3.rightMultiplyOperator(ops[3]);
-		Gamma_psi4.rightMultiplyOperator(ops[4]);
-		Gamma_psi5.rightMultiplyOperator(ops[5]);
-		Gamma_psi6.rightMultiplyOperator(ops[6]);
-		Gamma_psi7.rightMultiplyOperator(ops[7]);
-		Gamma_psi8.rightMultiplyOperator(ops[8]);
-		Gamma_psi9.rightMultiplyOperator(ops[9]);
-		Gamma_psi10.rightMultiplyOperator(ops[10]);
-		Gamma_psi11.rightMultiplyOperator(ops[11]);
-		Gamma_psi12.rightMultiplyOperator(ops[12]);
-		Gamma_psi13.rightMultiplyOperator(ops[13]);
-		Gamma_psi14.rightMultiplyOperator(ops[14]);
-		Gamma_psi15.rightMultiplyOperator(ops[15]);
-
-
 		//declare iterator of 192 complex. To 
-		
 		Core::Field< complex192 > res(xi.L(),xi.T());
 		Core::Field< complex192 >::iterator K(res.begin());
 
 		Core::Propagator::const_iterator J0(Gamma_psi0.begin());
-		Core::Propagator::const_iterator J1(Gamma_psi1.begin());
-		Core::Propagator::const_iterator J2(Gamma_psi2.begin());
-		Core::Propagator::const_iterator J3(Gamma_psi3.begin());
-		Core::Propagator::const_iterator J4(Gamma_psi4.begin());
-		Core::Propagator::const_iterator J5(Gamma_psi5.begin());
-		Core::Propagator::const_iterator J6(Gamma_psi6.begin());
-		Core::Propagator::const_iterator J7(Gamma_psi7.begin());
-		Core::Propagator::const_iterator J8(Gamma_psi8.begin());
-		Core::Propagator::const_iterator J9(Gamma_psi9.begin());
-		Core::Propagator::const_iterator J10(Gamma_psi10.begin());
-		Core::Propagator::const_iterator J11(Gamma_psi11.begin());
-		Core::Propagator::const_iterator J12(Gamma_psi12.begin());
-		Core::Propagator::const_iterator J13(Gamma_psi13.begin());
-		Core::Propagator::const_iterator J14(Gamma_psi14.begin());
-		Core::Propagator::const_iterator J15(Gamma_psi15.begin());
 
 		Core::Propagator::const_iterator I(xi.begin());
+
+		/*Base::Weave *d_weave;
+
+		  static Core::Field< size_t > *s_timelabel;
+
+		  s_timelabel =  new Core::Field< size_t >(psi.L() , psi.T());
+
+		  size_t localIndex;
+		  for(size_t idx_T = 0; idx_T < psi.T(); idx_T++)
+		  {
+		  for(size_t idx_Z = 0; idx_Z < psi.L(); idx_Z++)
+		  {
+		  for(size_t idx_Y = 0; idx_Y < psi.L(); idx_Y++)
+		  {
+		  for(size_t idx_X = 0; idx_X < psi.L(); idx_X++)
+		  {
+		  localIndex = d_weave->globalCoordToLocalIndex(idx_X, idx_Y, idx_Z, idx_T);
+		  if (localIndex == d_weave->localVolume())
+		  continue;
+		  (*s_timelabel)[localIndex] = idx_T;
+		  }
+		  }
+		  }
+		  }
+		 */
+//		if (weave.isRoot()) 
+//		{
+//			std::cout << "before loop iterator ..."<<std::endl;
+//		}
+
+
+		clock_t starti, finishi;
+		starti = clock();
+
+
+		QCD::Tensor tmp0;
+		QCD::Tensor tmp1;
+		QCD::Tensor tmp2;
+		QCD::Tensor tmp3;
+		QCD::Tensor tmp4;
+		QCD::Tensor tmp5;
+		QCD::Tensor tmp6;
+		QCD::Tensor tmp7;
+		QCD::Tensor tmp8;
+		QCD::Tensor tmp9;
+		QCD::Tensor tmp10;
+		QCD::Tensor tmp11;
+		QCD::Tensor tmp12;
+		QCD::Tensor tmp13;
+		QCD::Tensor tmp14;
+		QCD::Tensor tmp15;
 
 
 		while(I != xi.end())
 		{
+
+			tmp0=*J0;
+			tmp1 = tmp0;
+			tmp2 = tmp0;
+			tmp3 = tmp0;
+			tmp4 = tmp0;
+			tmp5 = tmp0;
+			tmp6 = tmp0;
+			tmp7 = tmp0;
+			tmp8 = tmp0;
+			tmp9 = tmp0;
+			tmp10= tmp0;
+			tmp11= tmp0;
+			tmp12= tmp0;
+			tmp13= tmp0;
+			tmp14= tmp0;
+			tmp15= tmp0;
+
+			
+			//QCD::Tensor tmp0(*J0);
+/*			QCD::Tensor tmp1(*J0);
+			QCD::Tensor tmp2(*J0);
+			QCD::Tensor tmp3(*J0);
+			QCD::Tensor tmp4(*J0);
+			QCD::Tensor tmp5(*J0);
+			QCD::Tensor tmp6(*J0);
+			QCD::Tensor tmp7(*J0);
+			QCD::Tensor tmp8(*J0);
+			QCD::Tensor tmp9(*J0);
+			QCD::Tensor tmp10(*J0);
+			QCD::Tensor tmp11(*J0);
+			QCD::Tensor tmp12(*J0);
+			QCD::Tensor tmp13(*J0);
+			QCD::Tensor tmp14(*J0);
+			QCD::Tensor tmp15(*J0);*/
+
+			tmp0.rightMultiplyOperator(ops[0]);
+			tmp1.rightMultiplyOperator(ops[1]);
+			tmp2.rightMultiplyOperator(ops[2]);
+			tmp3.rightMultiplyOperator(ops[3]);
+			tmp4.rightMultiplyOperator(ops[4]);
+			tmp5.rightMultiplyOperator(ops[5]);
+			tmp6.rightMultiplyOperator(ops[6]);
+			tmp7.rightMultiplyOperator(ops[7]);
+			tmp8.rightMultiplyOperator(ops[8]);
+			tmp9.rightMultiplyOperator(ops[9]);
+			tmp10.rightMultiplyOperator(ops[10]);
+			tmp11.rightMultiplyOperator(ops[11]);
+			tmp12.rightMultiplyOperator(ops[12]);
+			tmp13.rightMultiplyOperator(ops[13]);
+			tmp14.rightMultiplyOperator(ops[14]);
+			tmp15.rightMultiplyOperator(ops[15]);
+
 			for (size_t i=0; i<12;i++)
 			{
 
-				(*K)[0+16*i]=innerProduct((*I)[i],(*J0)[i]);
-				(*K)[1+16*i]=innerProduct((*I)[i],(*J1)[i]);
-				(*K)[2+16*i]=innerProduct((*I)[i],(*J2)[i]);
-				(*K)[3+16*i]=innerProduct((*I)[i],(*J3)[i]);
-				(*K)[4+16*i]=innerProduct((*I)[i],(*J4)[i]);
-				(*K)[5+16*i]=innerProduct((*I)[i],(*J5)[i]);
-				(*K)[6+16*i]=innerProduct((*I)[i],(*J6)[i]);
-				(*K)[7+16*i]=innerProduct((*I)[i],(*J7)[i]);
-				(*K)[8+16*i]=innerProduct((*I)[i],(*J8)[i]);
-				(*K)[9+16*i]=innerProduct((*I)[i],(*J9)[i]);
-				(*K)[10+16*i]=innerProduct((*I)[i],(*J10)[i]);
-				(*K)[11+16*i]=innerProduct((*I)[i],(*J11)[i]);
-				(*K)[12+16*i]=innerProduct((*I)[i],(*J12)[i]);
-				(*K)[13+16*i]=innerProduct((*I)[i],(*J13)[i]);
-				(*K)[14+16*i]=innerProduct((*I)[i],(*J14)[i]);
-				(*K)[15+16*i]=innerProduct((*I)[i],(*J15)[i]);
+				(*K)[0+16*i]=innerProduct((*I)[i],tmp0[i]);
+				(*K)[1+16*i]=innerProduct((*I)[i],tmp1[i]);
+				(*K)[2+16*i]=innerProduct((*I)[i],tmp2[i]);
+				(*K)[3+16*i]=innerProduct((*I)[i],tmp3[i]);
+				(*K)[4+16*i]=innerProduct((*I)[i],tmp4[i]);
+				(*K)[5+16*i]=innerProduct((*I)[i],tmp5[i]);
+				(*K)[6+16*i]=innerProduct((*I)[i],tmp6[i]);
+				(*K)[7+16*i]=innerProduct((*I)[i],tmp7[i]);
+				(*K)[8+16*i]=innerProduct((*I)[i],tmp8[i]);
+				(*K)[9+16*i]=innerProduct((*I)[i],tmp9[i]);
+				(*K)[10+16*i]=innerProduct((*I)[i],tmp10[i]);
+				(*K)[11+16*i]=innerProduct((*I)[i],tmp11[i]);
+				(*K)[12+16*i]=innerProduct((*I)[i],tmp12[i]);
+				(*K)[13+16*i]=innerProduct((*I)[i],tmp13[i]);
+				(*K)[14+16*i]=innerProduct((*I)[i],tmp14[i]);
+				(*K)[15+16*i]=innerProduct((*I)[i],tmp15[i]);
 			}
 			++K;
 			++J0;
-			++J1;
-			++J2;
-			++J3;
-			++J4;
-			++J5;
-			++J6;
-			++J7;
-			++J8;
-			++J9;
-			++J10;
-			++J11;
-			++J12;
-			++J13;
-			++J14;
-			++J15;
 			++I;
 		}
 
+		finishi = clock();
+//		if (weave.isRoot())
+//			std::cout << "loop iterator  "<< double(finishi - starti)/CLOCKS_PER_SEC  << "seconds." << std::endl;
+
+
+		clock_t startv, finishv;
+		startv = clock();
+
 
 		Core::Correlator< complex192 > twopoint(res);
-		
+
 		//sum over space
 		twopoint.sumOverSpatialVolume(); 
-		twopoint.deleteField();
+//		twopoint.deleteField();
 
+		finishv = clock();
+//		if (weave.isRoot())
+//			std::cout << "loop vector  "<< double(finishv - startv)/CLOCKS_PER_SEC  << "seconds." << std::endl;
 
 
 		if (weave.isRoot()) 
 		{
-			/*	for (size_t i=0; i<12;i++)
-				{
-				for (size_t t=0;t < xi.T();t++)
-				{
-				std::cout << "Op = "<< iOp << " " << i <<" " << t  <<" "<<twopoint[t][i].real() << " "<< twopoint[t][i].imag()  <<std::endl;
-				}
-				}*/
 
 			//accumulate 
 			for (size_t i=0; i < 192;i++)
@@ -295,7 +335,15 @@ namespace Contract
 
 		}
 
+
+
+		finish = clock();
+//		if (weave.isRoot())
+//			std::cout << "Computation disconnected_loops_test in  "<< double(finish - start)/CLOCKS_PER_SEC  << "seconds." << std::endl;
+
 		return twopoints;
+
+
 	}
 
 }

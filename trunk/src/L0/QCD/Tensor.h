@@ -128,76 +128,78 @@ namespace QCD
       Tensor &leftMultiply(SU3::hcMatrix const &mat);
       Tensor &rightMultiply(SU3::hcMatrix const &mat);
 
-      //those functions are for construction of baryon fields
-      void left_multiply_proton();
-      void right_multiply_proton();
+	  void rightMultiplyOperator(Base::HermitianBilinearOperator const O, bool const twisted_basis=false);
 
-      // NOTE: there should be a discussion how this is to be named
-      // this function contracts color indices according to epsilon tensor
-      // and Dirac indices with delta
-      void make_sequential(Tensor const &A, Tensor const &B);
+	  //those functions are for construction of baryon fields
+	  void left_multiply_proton();
+	  void right_multiply_proton();
+
+	  // NOTE: there should be a discussion how this is to be named
+	  // this function contracts color indices according to epsilon tensor
+	  // and Dirac indices with delta
+	  void make_sequential(Tensor const &A, Tensor const &B);
 
 
-      hcTensor dagger() const;
-      Tensor spinDilutedDagger() const;
-      void spinDilutedConjugate();
-      void undilutedConjugate();
-      void spinDilutedTransposeFull();
+	  hcTensor dagger() const;
+	  Tensor spinDilutedDagger() const;
+	  void spinDilutedConjugate();
+	  void undilutedConjugate();
+	  void spinDilutedTransposeFull();
 
-      void conjugate();
-      void transposeDirac();
-      void transposeFull();
-      std::complex< double > trace() const;
+	  void conjugate();
+	  void transposeDirac();
+	  void transposeFull();
+	  std::complex< double > trace() const;
 
-      size_t size() const;
-      std::complex< double > diff(Tensor const &other) const;
-      double norm() const;
-      double normq() const;
-      void setToRandom();
-      // this produces tensor filled with random Z(4) elements
-      void setToRandom(Base::SourcePolarization const, Base::SourceColorState const,
-                       Base::SourceStochasticTypeFlag const type, uint64_t seed = 0);
+	  size_t size() const;
+	  std::complex< double > diff(Tensor const &other) const;
+	  double norm() const;
+	  double normq() const;
+	  void setToRandom();
+	  // this produces tensor filled with random Z(4) elements
+	  void setToRandom(Base::SourcePolarization const, Base::SourceColorState const,
+			  Base::SourceStochasticTypeFlag const type, uint64_t seed = 0);
 
-  #include "Tensor/Tensor.iterator"
+#include "Tensor/Tensor.iterator"
 
-      iterator begin(Base::ColourIndex const idx, TensorColourStride const stride);
+	  iterator begin(Base::ColourIndex const idx, TensorColourStride const stride);
 
-      iterator end(Base::ColourIndex const idx, TensorColourStride const stride);
+	  iterator end(Base::ColourIndex const idx, TensorColourStride const stride);
 
-      iterator begin(Base::DiracIndex const idx, TensorDiracStride const stride);
+	  iterator begin(Base::DiracIndex const idx, TensorDiracStride const stride);
 
-      iterator end(Base::DiracIndex const idx, TensorDiracStride const stride);
+	  iterator end(Base::DiracIndex const idx, TensorDiracStride const stride);
 
-      friend std::ostream &operator<<(std::ostream &out, Tensor const &tensor);
+	  friend std::ostream &operator<<(std::ostream &out, Tensor const &tensor);
 
-      template< size_t Index >
-      friend Tensor operator*(Dirac::Gamma< Index > const &gamma, Tensor const &tensor);
-      friend Tensor operator*(Dirac::Identity const &gamma, Tensor const &tensor);
-      template< size_t Index >
-      friend Tensor operator*(Dirac::Sigma< Index > const &gamma, Tensor const &tensor);
+	  template< size_t Index >
+		  friend Tensor operator*(Dirac::Gamma< Index > const &gamma, Tensor const &tensor);
+	  friend Tensor operator*(Dirac::Identity const &gamma, Tensor const &tensor);
+	  template< size_t Index >
+		  friend Tensor operator*(Dirac::Sigma< Index > const &gamma, Tensor const &tensor);
 
-      friend void getDiracMatrix(Dirac::Matrix &dMatrix, Tensor const &A, Tensor const &B);
-      friend void getSpinDilutedDiracMatrix(Dirac::Matrix &dMatrix, Tensor const &A, Tensor const &B);
-      friend void getUndilutedDiracMatrix(Dirac::Matrix &dMatrix, Tensor const &A, Tensor const &B);
-      friend void getDiracMatrix(Dirac::Matrix &dMatrix, Tensor const &A, Tensor const &B, Tensor const &C, Base::BaryonInterpolatingField const iPol);
-      friend void getDiracMatrix_alternative(Dirac::Matrix &dMatrix, Tensor const &A, Tensor const &B, Tensor const &C, Base::BaryonInterpolatingField const iPol);
+	  friend void getDiracMatrix(Dirac::Matrix &dMatrix, Tensor const &A, Tensor const &B);
+	  friend void getSpinDilutedDiracMatrix(Dirac::Matrix &dMatrix, Tensor const &A, Tensor const &B);
+	  friend void getUndilutedDiracMatrix(Dirac::Matrix &dMatrix, Tensor const &A, Tensor const &B);
+	  friend void getDiracMatrix(Dirac::Matrix &dMatrix, Tensor const &A, Tensor const &B, Tensor const &C, Base::BaryonInterpolatingField const iPol);
+	  friend void getDiracMatrix_alternative(Dirac::Matrix &dMatrix, Tensor const &A, Tensor const &B, Tensor const &C, Base::BaryonInterpolatingField const iPol);
 
-      // this is a very unelegant solution needed for threepoints
-      friend void multiplyOuterDiracIndices(Tensor const &left, Tensor const * const right, Tensor * const result);
+	  // this is a very unelegant solution needed for threepoints
+	  friend void multiplyOuterDiracIndices(Tensor const &left, Tensor const * const right, Tensor * const result);
 
-      friend void make_sequential_d(Tensor &result, Tensor const &U1, Tensor const &U2, Base::BaryonPropagatorProjector const projector);
-      friend void make_sequential_u(Tensor &result, Tensor const &D,  Tensor const &U,  Base::BaryonPropagatorProjector const projector);
-      friend void make_sequential_d(Tensor result[16], Tensor const &U1, Tensor const &U2);
-      friend void make_sequential_u(Tensor result[16], Tensor const &D, Tensor const &U);
+	  friend void make_sequential_d(Tensor &result, Tensor const &U1, Tensor const &U2, Base::BaryonPropagatorProjector const projector);
+	  friend void make_sequential_u(Tensor &result, Tensor const &D,  Tensor const &U,  Base::BaryonPropagatorProjector const projector);
+	  friend void make_sequential_d(Tensor result[16], Tensor const &U1, Tensor const &U2);
+	  friend void make_sequential_u(Tensor result[16], Tensor const &D, Tensor const &U);
   };
 
   std::ostream &operator<<(std::ostream &out, Tensor const &tensor);
 
   template< size_t Index >
-  QCD::Tensor operator*(Dirac::Gamma< Index > const &gamma, Tensor const &tensor);
+	  QCD::Tensor operator*(Dirac::Gamma< Index > const &gamma, Tensor const &tensor);
   QCD::Tensor operator*(Dirac::Identity const &gamma, Tensor const &tensor);
   template< size_t Index >
-  QCD::Tensor operator*(Dirac::Sigma< Index > const &gamma, Tensor const &tensor);
+	  QCD::Tensor operator*(Dirac::Sigma< Index > const &gamma, Tensor const &tensor);
 
   void getDiracMatrix(Dirac::Matrix &dMatrix, Tensor const &A, Tensor const &B);
   void getSpinDilutedDiracMatrix(Dirac::Matrix &dMatrix, Tensor const &A, Tensor const &B);
@@ -217,22 +219,22 @@ namespace QCD
 
   class hcTensor
   {
-    friend class Tensor;
+	  friend class Tensor;
 
-    Tensor const &d_parent;
+	  Tensor const &d_parent;
 
-    hcTensor(Tensor const &parent);
+	  hcTensor(Tensor const &parent);
 
-    public:
-      hcTensor(hcTensor const &parent);
+	  public:
+	  hcTensor(hcTensor const &parent);
 
-      Spinor operator[](size_t const idx) const;
+	  Spinor operator[](size_t const idx) const;
 
-      std::complex< double > operator()(size_t const idx) const;
+	  std::complex< double > operator()(size_t const idx) const;
 
-      Tensor const &dagger() const;
+	  Tensor const &dagger() const;
 
-      size_t size() const;
+	  size_t size() const;
   };
 
 }

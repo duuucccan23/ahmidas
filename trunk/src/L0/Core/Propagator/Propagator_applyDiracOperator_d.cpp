@@ -47,7 +47,7 @@ namespace Core
 
 	  //a normalization constant
 	  double const nrm=1./(1+4*kappa*kappa*mu*mu);
-	  
+
 	  Propagator result(L(), T());
 	  result *= std::complex<double>(0.0, 0.0);
 
@@ -237,7 +237,7 @@ namespace Core
 				  }
 
 				  result *= std::complex<double>(-kappa, 0.0);
-			
+
 				  break;
 			  }
 
@@ -295,7 +295,7 @@ namespace Core
 					  //neighbors.isolate();
 					  neighbors += gamma4*neighbors;
 					  // same procedure as in Transport::step(..., Base::dir_UP)
-					  (neighbors.d_components)->rightMultiply(gauge_field_copy.component< SU3::Matrix >(Base::idx_T));
+					  (neighbors.d_components)->rightMultiply(gauge_field_copy.component< SU3::Matrix >(Base::idx_T).dagger());
 					  neighbors.shift(Base::idx_T, Base::dir_UP);
 					  result += neighbors;
 					  // positive t-direction
@@ -304,7 +304,7 @@ namespace Core
 					  neighbors -= gamma4*neighbors;
 					  // same procedure as in Transport::step(..., Base::dir_DOWN)
 					  neighbors.shift(Base::idx_T, Base::dir_DOWN);
-					  (neighbors.d_components)->rightMultiply(gauge_field_copy.component< SU3::Matrix >(Base::idx_T).dagger());
+					  (neighbors.d_components)->rightMultiply(gauge_field_copy.component< SU3::Matrix >(Base::idx_T));
 					  result += neighbors;
 				  }
 
@@ -315,7 +315,7 @@ namespace Core
 					  //neighbors.isolate();
 					  neighbors += gamma1*neighbors;
 					  // same procedure as in Transport::step(..., Base::dir_UP)
-					  (neighbors.d_components)->rightMultiply(gauge_field_copy.component< SU3::Matrix >(Base::idx_X));
+					  (neighbors.d_components)->rightMultiply(gauge_field_copy.component< SU3::Matrix >(Base::idx_X).dagger());
 					  neighbors.shift(Base::idx_X, Base::dir_UP);
 					  result += neighbors;
 					  // positive x-direction
@@ -324,7 +324,7 @@ namespace Core
 					  neighbors -= gamma1*neighbors;
 					  // same procedure as in Transport::step(..., Base::dir_DOWN)
 					  neighbors.shift(Base::idx_X, Base::dir_DOWN);
-					  (neighbors.d_components)->rightMultiply(gauge_field_copy.component< SU3::Matrix >(Base::idx_X).dagger());
+					  (neighbors.d_components)->rightMultiply(gauge_field_copy.component< SU3::Matrix >(Base::idx_X));
 					  result += neighbors;
 				  }
 
@@ -335,7 +335,7 @@ namespace Core
 					  //neighbors.isolate();
 					  neighbors += gamma2*neighbors;
 					  // same procedure as in Transport::step(..., Base::dir_UP)
-					  (neighbors.d_components)->rightMultiply(gauge_field_copy.component< SU3::Matrix >(Base::idx_Y));
+					  (neighbors.d_components)->rightMultiply(gauge_field_copy.component< SU3::Matrix >(Base::idx_Y).dagger());
 					  neighbors.shift(Base::idx_Y, Base::dir_UP);
 					  result += neighbors;
 					  // positive y-direction
@@ -344,7 +344,7 @@ namespace Core
 					  neighbors -= gamma2*neighbors;
 					  // same procedure as in Transport::step(..., Base::dir_DOWN)
 					  neighbors.shift(Base::idx_Y, Base::dir_DOWN);
-					  (neighbors.d_components)->rightMultiply(gauge_field_copy.component< SU3::Matrix >(Base::idx_Y).dagger());
+					  (neighbors.d_components)->rightMultiply(gauge_field_copy.component< SU3::Matrix >(Base::idx_Y));
 					  result += neighbors;
 				  }
 
@@ -355,7 +355,7 @@ namespace Core
 					  //neighbors.isolate();
 					  neighbors += gamma3*neighbors;
 					  // same procedure as in Transport::step(..., Base::dir_UP)
-					  (neighbors.d_components)->rightMultiply(gauge_field_copy.component< SU3::Matrix >(Base::idx_Z));
+					  (neighbors.d_components)->rightMultiply(gauge_field_copy.component< SU3::Matrix >(Base::idx_Z).dagger());
 					  neighbors.shift(Base::idx_Z, Base::dir_UP);
 					  result += neighbors;
 					  // positive z-direction
@@ -364,15 +364,16 @@ namespace Core
 					  neighbors -= gamma3*neighbors;
 					  // same procedure as in Transport::step(..., Base::dir_DOWN)
 					  neighbors.shift(Base::idx_Z, Base::dir_DOWN);
-					  (neighbors.d_components)->rightMultiply(gauge_field_copy.component< SU3::Matrix >(Base::idx_Z).dagger());
+					  (neighbors.d_components)->rightMultiply(gauge_field_copy.component< SU3::Matrix >(Base::idx_Z));
 					  result += neighbors;
 				  }
 
+
 				  result *= std::complex<double>(-kappa, 0.0);
+				  
 				  // diagonal contribution
 				  {
 					  Propagator tmp(*this);
-					  tmp *= std::complex<double>(1.0, 0.0);
 					  result += tmp;
 				  }
 
@@ -381,11 +382,10 @@ namespace Core
 			  }
 
 
-
 	  };
 
 
-	  weave.barrier();
+//	  weave.barrier();
 	  return result;
   }
 }

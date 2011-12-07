@@ -53,16 +53,33 @@ namespace Contract
 		Base::Weave weave(xi.L(), xi.T());
 		std::vector<  std::complex<double>  > twopoints;
 
+
+
+			Core::Propagator xi_shifted_T_UP(xi);
+			Core::Propagator xi_shifted_T_DOWN(xi);
+			Core::Propagator xi_shifted_X_UP(xi);
+			Core::Propagator xi_shifted_X_DOWN(xi);
+
+			xi_shifted_T_UP.isolate();
+			xi_shifted_T_DOWN.isolate();
+			xi_shifted_X_UP.isolate();
+			xi_shifted_X_DOWN.isolate();
+
+			xi_shifted_T_UP.shift(Base::idx_T, Base::dir_UP);
+			xi_shifted_T_DOWN.shift(Base::idx_T, Base::dir_DOWN);
+			xi_shifted_X_UP.shift(Base::idx_X, Base::dir_UP);
+			xi_shifted_X_DOWN.shift(Base::idx_X, Base::dir_DOWN);
+
 		{
 
-			Core::Propagator Gamma_psi0(psi);
-			Core::Propagator Gamma_psi1(psi);
-			Core::Propagator Gamma_psi2(psi);
-			Core::Propagator Gamma_psi3(psi);
-			Core::Propagator Gamma_psi4(psi);
-			Core::Propagator Gamma_psi5(psi);
-			Core::Propagator Gamma_psi6(psi);
-			Core::Propagator Gamma_psi7(psi);
+			Core::Propagator Gamma_psi0(L, T);
+			Core::Propagator Gamma_psi1(L, T);
+			Core::Propagator Gamma_psi2(L, T);
+			Core::Propagator Gamma_psi3(L, T);
+			Core::Propagator Gamma_psi4(L, T);
+			Core::Propagator Gamma_psi5(L, T);
+			Core::Propagator Gamma_psi6(L, T);
+			Core::Propagator Gamma_psi7(L, T);
 
 			// now start the very ugly part ... O_mu mu and gamma_5 O_mu mu 
 
@@ -190,22 +207,6 @@ namespace Contract
 
 
 
-			Core::Propagator xi_shifted_T_UP(xi);
-			Core::Propagator xi_shifted_T_DOWN(xi);
-			Core::Propagator xi_shifted_X_UP(xi);
-			Core::Propagator xi_shifted_X_DOWN(xi);
-
-			xi_shifted_T_UP.isolate();
-			xi_shifted_T_DOWN.isolate();
-			xi_shifted_X_UP.isolate();
-			xi_shifted_X_DOWN.isolate();
-
-			xi_shifted_T_UP.shift(Base::idx_T, Base::dir_UP);
-			xi_shifted_T_DOWN.shift(Base::idx_T, Base::dir_DOWN);
-			xi_shifted_X_UP.shift(Base::idx_X, Base::dir_UP);
-			xi_shifted_X_DOWN.shift(Base::idx_X, Base::dir_DOWN);
-
-
 			Core::Propagator::const_iterator I(xi.begin());
 			Core::Propagator::const_iterator I0(xi_shifted_T_UP.begin());
 			Core::Propagator::const_iterator I1(xi_shifted_T_DOWN.begin());
@@ -272,7 +273,20 @@ namespace Contract
 			Core::Propagator Gamma_psi14(psi);
 			Core::Propagator Gamma_psi15(psi);
 
+			Core::Propagator xi_shifted_Y_UP(xi);
+			Core::Propagator xi_shifted_Y_DOWN(xi);
+			Core::Propagator xi_shifted_Z_UP(xi);
+			Core::Propagator xi_shifted_Z_DOWN(xi);
 
+			xi_shifted_Y_UP.isolate();
+			xi_shifted_Y_DOWN.isolate();
+			xi_shifted_Z_UP.isolate();
+			xi_shifted_Z_DOWN.isolate();
+
+			xi_shifted_Y_UP.shift(Base::idx_Y, Base::dir_UP);
+			xi_shifted_Y_DOWN.shift(Base::idx_Y, Base::dir_DOWN);
+			xi_shifted_Z_UP.shift(Base::idx_Z, Base::dir_UP);
+			xi_shifted_Z_DOWN.shift(Base::idx_Z, Base::dir_DOWN);
 
 
 			//O22
@@ -401,22 +415,6 @@ namespace Contract
 
 			}
 			//end O33
-
-
-			Core::Propagator xi_shifted_Y_UP(xi);
-			Core::Propagator xi_shifted_Y_DOWN(xi);
-			Core::Propagator xi_shifted_Z_UP(xi);
-			Core::Propagator xi_shifted_Z_DOWN(xi);
-
-			xi_shifted_Y_UP.isolate();
-			xi_shifted_Y_DOWN.isolate();
-			xi_shifted_Z_UP.isolate();
-			xi_shifted_Z_DOWN.isolate();
-
-			xi_shifted_Y_UP.shift(Base::idx_Y, Base::dir_UP);
-			xi_shifted_Y_DOWN.shift(Base::idx_Y, Base::dir_DOWN);
-			xi_shifted_Z_UP.shift(Base::idx_Z, Base::dir_UP);
-			xi_shifted_Z_DOWN.shift(Base::idx_Z, Base::dir_DOWN);
 
 
 			Core::Propagator::const_iterator I(xi.begin());

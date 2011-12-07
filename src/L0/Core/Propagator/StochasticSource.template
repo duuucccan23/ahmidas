@@ -89,7 +89,18 @@ Core::StochasticSource< NComp >::StochasticSource(size_t const L, size_t const T
 
 	size_t localIndex;
 
-	for(size_t idx_T = 0; idx_T < T; idx_T++)
+
+	Core::Field< uint64_t >::const_iterator i_seed(seeds.begin()); 
+	
+	
+	for (Core::Field< QCD::Tensor >::iterator I(d_components->begin()); I != d_components->end(); ++I)
+	{
+		(*I).setToRandom(pol, col, type, *i_seed);
+		++i_seed;
+	}
+
+	
+	/*	for(size_t idx_T = 0; idx_T < T; idx_T++)
 	{
 		for(size_t idx_Z = 0; idx_Z < L; idx_Z++)
 		{
@@ -98,7 +109,6 @@ Core::StochasticSource< NComp >::StochasticSource(size_t const L, size_t const T
 				for(size_t idx_X = 0; idx_X < L; idx_X++)
 				{
 					localIndex = weave.globalCoordToLocalIndex(idx_X, idx_Y, idx_Z, idx_T);
-					/* globalCoordToLocalIndex returns local volume if local data is not available on this cpu */
 					if (localIndex == weave.localVolume())
 						continue;
 
@@ -106,8 +116,8 @@ Core::StochasticSource< NComp >::StochasticSource(size_t const L, size_t const T
 				}
 			}
 		}
-	} /* end loop on idx_T */
-
+	} 
+*/
 
 }
 

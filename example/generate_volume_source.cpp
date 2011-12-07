@@ -46,6 +46,9 @@
 #include <L1/Smear/APE.h>
 #include <L1/Smear/Jacobi.h>
 
+#include <L0/Core/Correlator.h>
+#include <L2/Contract/Disconnected.h>
+#include <L0/Base/Base.h>
 
 int main(int argc, char **argv)
 {
@@ -67,6 +70,8 @@ int main(int argc, char **argv)
   /* ****************************************** */
   /* ****** reading the input file ************ */
   /* ****************************************** */
+clock_t start_inp, finish_inp;
+start_inp = clock();
 
   // create input file reader, the name of the input file has to be passed as a parameter
   Input::FileReader reader("./generate_stochastic_source_input.xml");
@@ -80,10 +85,15 @@ int main(int argc, char **argv)
   const size_t T(T_tmp);
 
   /* ****************************************** */
+finish_inp = clock();
 
   // this is needed if we want to have the output (i.e. to the standard output) done by only
   // one process in the parallel version
   Base::Weave weave(L, T);
+
+if (weave.isRoot())
+	        std::cout << "read input in "<< double(finish_inp - start_inp)/CLOCKS_PER_SEC  << "seconds." << std::endl;
+
 
 
   // ##########################################################################################
@@ -92,39 +102,54 @@ int main(int argc, char **argv)
 
   // that's how writing to the standard output works in C++
   // note: the "<<" operator also works for most of the ahmidas objects like SU3::Spinor or QCD::Tensor
-  if(weave.isRoot())
-    std::cout << "\nLattice size: " << L << "x" << L << "x" << L << "x" << T << std::endl;
 
   // that's how one can access the values in the map "floats"
   double kappa = floats["kappa"];
   double mu    = floats["mu"];
 
-  if(weave.isRoot())
-    std::cout << "kappa = " << kappa << ", mu = " << mu << std::endl;
+  double thetax=floats["thetax"];
+  double thetay=floats["thetay"];
+  double thetaz=floats["thetaz"];
+  double thetat=floats["thetat"];
 
-  size_t const t_src = size_t(floats["timesliceSource"]); 
+
+  //  Prepare for vvSum method
+  bool const flag_vvSum = bool(floats["vvSum"] != 0.0); // 0=no,!=0 =yes
+  //  need to generate ~ g5 (1 + H)^\dag \xi
+  //  maybe better to create a separate executable.
+
   if(weave.isRoot())
-    std::cout << "\nsource timeslice: " << t_src << std::endl;
+  {
+	  std::cout<<"Lattice size: "<<L<<"x"<<L<<"x"<<L<<"x"<<T<<std::endl;
+	  std::cout<<"kappa="<<kappa<<", mu="<<mu<<std::endl;
+	  std::cout<<"thetax="<<thetax<<", ";
+	  std::cout<<"thetay="<<thetay<<", ";
+	  std::cout<<"thetaz="<<thetaz<<", ";
+	  std::cout<<"thetat="<<thetat<<std::endl;
+  }
 
 
 
   uint64_t const rSeed = uint64_t(floats["seed"]);
   if(weave.isRoot())
-    std::cout << "\nrandom seed: " << rSeed << std::endl;
+	  std::cout << "\nrandom seed: " << rSeed << std::endl;
 
 
   // this is necessary to have reproducible results for different parallelizations
   Core::Field < uint64_t > seeds(L, T);
 
 
-//   if (rSeed > 0)
-//   {
-//     double *tmp = new double[512];
-//     std::generate_n(tmp, 512, Base::Random::Z2);
-//     delete [] tmp;
-//   }
+  //   if (rSeed > 0)
+  //   {
+  //     double *tmp = new double[512];
+  //     std::generate_n(tmp, 512, Base::Random::Z2);
+  //     delete [] tmp;
+  //   }
+clock_t start_ini, finish_ini;
+start_ini = clock();
 
-// here we assign a seed to each lattice site
+
+  // here we assign a seed to each lattice site
   {
 	  uint64_t const increment(17);
 	  size_t localIndex(0);
@@ -140,7 +165,6 @@ int main(int argc, char **argv)
 			  {
 				  for(size_t idx_X = 0; idx_X < L; idx_X++)
 				  {
-					  weave.barrier();
 					  globalIndex += increment;
 					  localIndex = weave.globalCoordToLocalIndex(idx_X, idx_Y, idx_Z, idx_T);
 					  if (localIndex == localVolume)
@@ -155,7 +179,13 @@ int main(int argc, char **argv)
   }
   // ###############################################################################################
   // let's do it in scalar, even though this is not very elegant!
+finish_ini = clock();
 
+if (weave.isRoot())      std::cout <<  "ini seed "<< double(finish_ini - start_ini)/CLOCKS_PER_SEC  << "seconds." << std::endl;
+
+
+
+  
   if(weave.isRoot())
   {
 	  std::cout << "\nThe following files are going to be created:" << std::endl;
@@ -244,6 +274,7 @@ int main(int argc, char **argv)
   std::vector< std::string > const & stochasticSourceFiles(files[0]);
   std::vector< std::string > const & gaugeFieldFiles(files[1]);
 
+  std::vector< std::string > const & stochasticSourceFiles_vvSum(files[2]);
 
   Core::Field< QCD::Gauge > *gauge_field;
 
@@ -302,7 +333,17 @@ int main(int argc, char **argv)
   // version 2: spin (Dirac) dilution only
   else if(polarization == Base::sou_PARTLY_POLARIZED && colorState == Base::sou_GENERIC)
   {
+
+	  clock_t start_source, finish_source;
+	  start_source = clock();
+
 	  Core::StochasticSource< 1 > stochastic_source(L, T, polarization, colorState, seeds, type);
+	  finish_source = clock();
+
+	  if (weave.isRoot())
+		  std::cout <<  "source generated "<< double(finish_source - start_source)/CLOCKS_PER_SEC  << "seconds." << std::endl;
+
+
 
 	  if (Jac_iterations > 0)
 	  {
@@ -311,10 +352,118 @@ int main(int argc, char **argv)
 		  delete gauge_field;
 		  if(weave.isRoot())
 			  std::cout << "stochastic source smeared successfully\n" << std::endl;
+
 	  }
+
+	  clock_t start_save,finish_save;
+	  start_save = clock();
+
 	  Tool::IO::save(reinterpret_cast< Core::StochasticPropagator< 1 > * >(&stochastic_source), stochasticSourceFiles, Tool::IO::fileSCIDAC);
+
+	  finish_save = clock();
+
+	  if (weave.isRoot())
+		  std::cout << " sources saved in "<< double(finish_save - start_save)/CLOCKS_PER_SEC  << "seconds." << std::endl;
+
+
+
 	  if (weave.isRoot())
 		  std::cout << "stochastic source saved successfully\n" << std::endl;
+
+
+	  //bool const flag_vvSum = bool(floats["vvSum"] != 0.0); // 0=no,!=0 =yes
+	  //  need to generate ~ g5 (1 + H)^\dag \xi
+	  //  maybe better to create a separate executable.
+	  if (flag_vvSum == true)
+	  {
+		  std::vector< std::string > const &gaugeFieldFiles(files[1]); 
+
+		  //read and declare gauge field 
+		  Core::Field< QCD::Gauge > gauge_field(L, T);
+
+		  if(weave.isRoot())
+		  {
+			  std::cout << "\n Now compute and save (1 + H) g5 xi for vvSum" << std::endl;
+			  std::cout << "\nThe following files are going to be created:" << std::endl;
+
+			  // there should only be one container in files, which can be accessed by files[0]
+			  // (similar to accessing an object in a C array)
+			  for (size_t fileIndex=0; fileIndex<files[2].size(); fileIndex++)
+			  {
+				  std::cout << (files[2])[fileIndex] << std::endl;
+			  }
+		  }
+
+
+		  if (weave.isRoot())
+			  std::cout << "gauge field to be read from " << gaugeFieldFiles[0] << " ... ";
+		  Tool::IO::load(&gauge_field, gaugeFieldFiles[0], Tool::IO::fileILDG);
+		  if (weave.isRoot())
+			  std::cout << "done.\n" << std::endl;
+
+		  Dirac::Gamma<5> gamma5;
+
+		  Core::StochasticPropagator< 1 > xi(stochastic_source);
+
+		  xi.rightMultiply(gamma5);
+		  xi.applyDiracOperator(gauge_field,kappa,mu,thetat,thetax,thetay,thetaz,Base::C);
+
+		  Tool::IO::save(reinterpret_cast< Core::StochasticPropagator< 1 > * > (&xi), stochasticSourceFiles_vvSum, Tool::IO::fileSCIDAC);
+
+		  if (weave.isRoot())
+			  std::cout << "Store  (1 + H) g5 xi to test vvSum. \n" << std::endl;
+
+		  double norm_xi(xi.norm());
+		  if (weave.isRoot())
+			  std::cout << std::scientific << "norm of (1 + H) g5 xi: " << norm_xi << std::endl;
+
+		  // debug  compute xi_tilde^dag xi -> should be real ?
+
+		  std::vector< Base::HermitianBilinearOperator > my_operators;
+
+		  // define a basis of Hermitian Dirac matrices 
+
+		  my_operators.push_back(Base::op_G_0);
+		  my_operators.push_back(Base::op_G_1);
+		  my_operators.push_back(Base::op_G_2);
+		  my_operators.push_back(Base::op_G_3);
+		  my_operators.push_back(Base::op_G_4);
+		  my_operators.push_back(Base::op_G_5);
+		  my_operators.push_back(Base::op_G_6);
+		  my_operators.push_back(Base::op_G_7);
+		  my_operators.push_back(Base::op_G_8);
+		  my_operators.push_back(Base::op_G_9);
+		  my_operators.push_back(Base::op_G_10);
+		  my_operators.push_back(Base::op_G_11);
+		  my_operators.push_back(Base::op_G_12);
+		  my_operators.push_back(Base::op_G_13);
+		  my_operators.push_back(Base::op_G_14);
+		  my_operators.push_back(Base::op_G_15);
+
+
+		  Core::StochasticPropagator< 1 > phi(L,T);
+		  Core::StochasticPropagator< 1 > phi_vv(L,T);
+
+		  Tool::IO::load(&phi,stochasticSourceFiles, Tool::IO::fileSCIDAC);
+		  Tool::IO::load(&phi_vv,stochasticSourceFiles_vvSum, Tool::IO::fileSCIDAC);
+		  std::vector< Core::Correlator< Dirac::Matrix > > check_source = Contract::compute_loop(phi_vv,phi,my_operators);
+
+		  if(weave.isRoot())
+		  {
+			  for(size_t i=0; i<my_operators.size(); i++)
+			  {
+				  for(size_t t = 0; t < T; t++)
+				  {
+
+					  std::cout << t << "  "  << i<< "  "<<check_source[i][t].trace().real() <<"  "<< check_source[i][t].trace().imag() << std::endl;
+
+				  }
+			  }
+
+		  }
+	  }
+
+
   }
   else
   {

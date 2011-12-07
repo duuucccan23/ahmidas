@@ -130,7 +130,7 @@ namespace Core
       (*I) *= phaseFactorReverse;
     }
 
-    weave.barrier();
+//    weave.barrier();
 //     Dirac::Gamma< 5 > gamma5;
 //     return result.rightMultiply(gamma5);
     return result;

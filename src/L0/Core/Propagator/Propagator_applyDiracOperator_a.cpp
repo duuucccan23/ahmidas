@@ -173,7 +173,7 @@ namespace Core
 //         (*I)[Base::idx_Z] *= phaseFactorReverseZ;
 //     }
 
-    weave.barrier();
+//    weave.barrier();
     return result;
   }
 }

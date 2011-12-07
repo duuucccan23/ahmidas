@@ -538,8 +538,7 @@ int main(int argc, char **argv)
 
 
 				finish_Jac = clock();
-
-				if (weave.isRoot())
+				if (weave.isRoot() and debug==true)
 					std::cout << "Jacobi smearing done in "<< double(finish_Jac - start_Jac)/CLOCKS_PER_SEC  << "seconds." << std::endl;
 
 #endif
@@ -557,7 +556,7 @@ int main(int argc, char **argv)
 					C_naive = Contract::compute_loop_new(xi,phi,my_operators);
 					
 					// to check					
-					if (weave.isRoot())
+					if (weave.isRoot() and debug==true )
 						std::cout << "done.\n" << std::endl;
 
 					{
@@ -596,8 +595,8 @@ int main(int argc, char **argv)
 
 					finish_h4 = clock();
 
-					if (weave.isRoot())
-						std::cout << "part H4 done in "<< double(finish_h4 - start_h4)/CLOCKS_PER_SEC  << "seconds." << std::endl;
+					if (weave.isRoot() and debug==true )
+						std::cout << "HPE (apply H4) done in "<< double(finish_h4 - start_h4)/CLOCKS_PER_SEC  << "seconds." << std::endl;
 
 
 
@@ -612,8 +611,8 @@ int main(int argc, char **argv)
 
 					finish = clock();
 
-					if (weave.isRoot())
-						std::cout << "part 0 before contract  done in "<< double(finish - start)/CLOCKS_PER_SEC  << "seconds." << std::endl;
+					if (weave.isRoot() and debug==true )
+						std::cout << "intermediate time 1 (before contraction) in "<< double(finish - start)/CLOCKS_PER_SEC  << "seconds." << std::endl;
 
 
 					// v4  local quark fields
@@ -635,8 +634,8 @@ int main(int argc, char **argv)
 					C_twist2_pol = Contract::compute_loop_twist2_operator(gauge_field,xi,g5_phi);
 					finish_twist2 = clock();
 
-					if (weave.isRoot())
-						std::cout << "part twist2 v4  done in "<< double(finish_twist2 - start_twist2)/CLOCKS_PER_SEC  << "seconds." << std::endl;
+					if (weave.isRoot() and debug==true )
+						std::cout << "twist2 v4  done in "<< double(finish_twist2 - start_twist2)/CLOCKS_PER_SEC  << "seconds." << std::endl;
 #endif
 
 				}
@@ -649,8 +648,8 @@ int main(int argc, char **argv)
 			}
 			finish = clock();
 
-			if (weave.isRoot())
-				std::cout << "part 1 done in "<< double(finish - start)/CLOCKS_PER_SEC  << "seconds." << std::endl;
+			if (weave.isRoot() and debug==true )
+				std::cout << "intermediate time 2  "<< double(finish - start)/CLOCKS_PER_SEC  << "seconds." << std::endl;
 
 
 
@@ -687,8 +686,8 @@ int main(int argc, char **argv)
 
 			finish = clock();
 
-			if (weave.isRoot())
-				std::cout << "part 2 done in "<< double(finish - start)/CLOCKS_PER_SEC  << "seconds." << std::endl;
+			if (weave.isRoot() and debug==true )
+				std::cout << "intermediate time 3 in  "<< double(finish - start)/CLOCKS_PER_SEC  << "seconds." << std::endl;
 
 
 #ifdef _with_Omunu_
@@ -711,8 +710,8 @@ int main(int argc, char **argv)
 
 			finish = clock();
 
-			if (weave.isRoot())
-				std::cout << "part 3 done in "<< double(finish - start)/CLOCKS_PER_SEC  << "seconds." << std::endl;
+			if (weave.isRoot() and debug==true )
+				std::cout << "intermediate time 4 in "<< double(finish - start)/CLOCKS_PER_SEC  << "seconds." << std::endl;
 
 
 
@@ -861,7 +860,6 @@ int main(int argc, char **argv)
 					fout_naive=fopen("output_disc_naive.dat","a");
 					fout_vvSum=fopen("output_disc_vvSum.dat","a");
 					fout_vv =fopen("output_disc_vv.dat","a");
-					//	fout_vv_sum.open("output_disc_vv_sum.dat",std::ios::app);
 #ifdef _with_APE
 					fout_v4_f=fopen("output_disc_v4_f.dat","a");
 					fout_vv_f=fopen("output_disc_vv_f.dat","a");

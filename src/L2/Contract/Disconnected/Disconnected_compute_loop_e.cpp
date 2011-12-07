@@ -48,15 +48,14 @@ namespace Contract
 {
 
 	// compute xi^* x Gamma x psi
-	std::vector< std::complex<double>  > compute_loop_new(
+	std::vector< std::complex<double>  > compute_loop_test(
 			Core::Propagator const &xi, Core::Propagator const &psi,
-			std::vector< Base::HermitianBilinearOperator > ops,
-			int const * const position_offset, std::vector< int* > const &momenta,int const tsrc)
+			std::vector< Base::HermitianBilinearOperator > ops)
 	{
-
 
 		clock_t start, finish;
 		start = clock();
+
 
 		assert(xi.T() == psi.T() && psi.L() == psi.L());
 
@@ -79,27 +78,57 @@ namespace Contract
 
 		Core::Propagator::const_iterator I(xi.begin());
 
-		QCD::Tensor tmp0;
+		/*Base::Weave *d_weave;
+
+		static Core::Field< size_t > *s_timelabel;
+
+
+		s_timelabel =  new Core::Field< size_t >(psi.L() , psi.T());
+
+		size_t localIndex;
+		for(size_t idx_T = 0; idx_T < psi.T(); idx_T++)
+		{
+			for(size_t idx_Z = 0; idx_Z < psi.L(); idx_Z++)
+			{
+				for(size_t idx_Y = 0; idx_Y < psi.L(); idx_Y++)
+				{
+					for(size_t idx_X = 0; idx_X < psi.L(); idx_X++)
+					{
+						localIndex = d_weave->globalCoordToLocalIndex(idx_X, idx_Y, idx_Z, idx_T);
+						if (localIndex == d_weave->localVolume())
+							continue;
+						(*s_timelabel)[localIndex] = idx_T;
+					}
+				}
+			}
+		}
+*/
+
+
+		QCD::Tensor tmp0;	
 		while(I != xi.end())
 		{
 
 			tmp0=*J0;
-			//QCD::Tensor tmp0(*J0);
-			QCD::Tensor tmp1(*J0);
-			QCD::Tensor tmp2(*J0);
-			QCD::Tensor tmp3(*J0);
-			QCD::Tensor tmp4(*J0);
-			QCD::Tensor tmp5(*J0);
-			QCD::Tensor tmp6(*J0);
-			QCD::Tensor tmp7(*J0);
-			QCD::Tensor tmp8(*J0);
-			QCD::Tensor tmp9(*J0);
-			QCD::Tensor tmp10(*J0);
-			QCD::Tensor tmp11(*J0);
-			QCD::Tensor tmp12(*J0);
-			QCD::Tensor tmp13(*J0);
-			QCD::Tensor tmp14(*J0);
-			QCD::Tensor tmp15(*J0);
+			//QCD::Tensor tmp0(*J0);	
+			QCD::Tensor tmp1(*J0);	
+			QCD::Tensor tmp2(*J0);	
+			QCD::Tensor tmp3(*J0);	
+			QCD::Tensor tmp4(*J0);	
+			QCD::Tensor tmp5(*J0);	
+			QCD::Tensor tmp6(*J0);	
+			QCD::Tensor tmp7(*J0);	
+			QCD::Tensor tmp8(*J0);	
+			QCD::Tensor tmp9(*J0);	
+			QCD::Tensor tmp10(*J0);	
+			QCD::Tensor tmp11(*J0);	
+			QCD::Tensor tmp12(*J0);	
+			QCD::Tensor tmp13(*J0);	
+			QCD::Tensor tmp14(*J0);	
+			QCD::Tensor tmp15(*J0);	
+
+
+
 
 			tmp0.rightMultiplyOperator(ops[0]);
 			tmp1.rightMultiplyOperator(ops[1]);
@@ -143,41 +172,35 @@ namespace Contract
 			++I;
 		}
 
-
-
 		Core::Correlator< complex192 > twopoint(res);
 
-
-
-
-		twopoint.prepareMomentumProjection(position_offset);
-
-		std::vector< Core::Correlator< complex192 > > tmp(twopoint.momentumProjection(momenta));
-
+		//sum over space
+		twopoint.sumOverSpatialVolume(); 
 		twopoint.deleteField();
 
 		if (weave.isRoot()) 
 		{
 
-			for (size_t m=0; m <momenta.size();m++)
+			//accumulate 
+			for (size_t i=0; i < 192;i++)
 			{
-				tmp[m].setOffset(tsrc);
-				for (size_t i=0; i < 192;i++)
+				for (size_t t=0;t < xi.T();t++)
 				{
-					for (size_t t=0;t < xi.T();t++)
-					{
-						twopoints.push_back(tmp[m][t][i]);
-					}
+					twopoints.push_back(twopoint[t][i]);
 				}
 			}
+
 		}
 
+
 		finish = clock();
-//		if (weave.isRoot())
-//			std::cout << "Computation disconnected_loops_test (non zero momentum) in  "<< double(finish - start)/CLOCKS_PER_SEC  << "seconds." << std::endl;
+
+		//		if (weave.isRoot())
+//			std::cout << "Computation disconnected_loops_test in  "<< double(finish - start)/CLOCKS_PER_SEC  << "seconds." << std::endl;
 
 
 		return twopoints;
+
 	}
 
 }

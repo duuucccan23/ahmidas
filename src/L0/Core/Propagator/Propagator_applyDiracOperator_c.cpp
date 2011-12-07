@@ -154,7 +154,7 @@ namespace Core
     }
 
 
-    weave.barrier();
+ //   weave.barrier();
     return result;
   }
 }

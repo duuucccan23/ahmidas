@@ -60,75 +60,232 @@ namespace QCD
 
   inline void Tensor::operator*=(Dirac::Identity const &gamma)
   {
-    // nothing to do
+	  // nothing to do
   }
 
   template< size_t Index >
-  inline Tensor Tensor::operator*(Dirac::Gamma< Index > const &gamma) const
-  {
-    Tensor tmp(*this);
-    tmp *= gamma;
-    return tmp;
-  }
+	  inline Tensor Tensor::operator*(Dirac::Gamma< Index > const &gamma) const
+	  {
+		  Tensor tmp(*this);
+		  tmp *= gamma;
+		  return tmp;
+	  }
 
   template< >
-  inline Tensor Tensor::operator*(Dirac::Gamma< 5 > const &gamma) const
-  {
-    Tensor tmp(*this);
-    std::transform(reinterpret_cast< double * > (tmp.d_data +  72),
-                   reinterpret_cast< double * > (tmp.d_data + 144),
-                   reinterpret_cast< double * > (tmp.d_data +  72),
-                   std::bind1st(std::multiplies< double >(), -1));
-    return tmp;
-  }
+	  inline Tensor Tensor::operator*(Dirac::Gamma< 5 > const &gamma) const
+	  {
+		  Tensor tmp(*this);
+		  std::transform(reinterpret_cast< double * > (tmp.d_data +  72),
+				  reinterpret_cast< double * > (tmp.d_data + 144),
+				  reinterpret_cast< double * > (tmp.d_data +  72),
+				  std::bind1st(std::multiplies< double >(), -1));
+		  return tmp;
+	  }
 
   inline Tensor Tensor::operator*(Dirac::Identity const &gamma) const
   {
-    return Tensor(*this);
+	  return Tensor(*this);
+  }
+  inline void Tensor::rightMultiplyOperator(Base::HermitianBilinearOperator const O, bool const twisted_basis)
+  {
+
+	  Dirac::Gamma< 1 > gamma1;
+	  Dirac::Gamma< 2 > gamma2;
+	  Dirac::Gamma< 3 > gamma3;
+	  Dirac::Gamma< 4 > gamma4;
+	  Dirac::Gamma< 5 > gamma5;
+	  std::complex<double > const minus_i(0.0, -1.0);
+	  std::complex<double > const plus_i(0.0, +1.0);
+	  //isolate();
+	  switch (O)
+	  {
+		  case Base::op_G_0:
+			  if (twisted_basis)
+			  {
+				  // identity (up to a factor)
+				  (*this)*= plus_i;
+			  }
+			  else
+			  {
+				  (*this).rightMultiply(gamma5);
+			  }
+			  break;
+		  case Base::op_G_1:
+			  (*this).rightMultiply(gamma1);
+			  break;
+		  case Base::op_G_2:
+			  (*this).rightMultiply(gamma2);
+			  break;
+		  case Base::op_G_3:
+			  (*this).rightMultiply(gamma3);
+			  break;
+		  case Base::op_G_4:
+			  (*this).rightMultiply(gamma5);
+			  (*this).rightMultiply(gamma4);
+			  (*this)*= minus_i;
+			  break;
+		  case Base::op_G_5:
+			  if (twisted_basis)
+			  {
+				  (*this).rightMultiply(gamma1);
+				  (*this).rightMultiply(gamma4);
+				  (*this).rightMultiply(gamma5);
+			  }
+			  else
+			  {
+				  (*this).rightMultiply(gamma1);
+				  (*this).rightMultiply(gamma4);
+				  (*this)*= minus_i;
+			  }
+			  break;
+		  case Base::op_G_6:
+			  if (twisted_basis)
+			  {
+				  (*this).rightMultiply(gamma2);
+				  (*this).rightMultiply(gamma4);
+				  (*this).rightMultiply(gamma5);
+			  }
+			  else
+			  {
+				  (*this).rightMultiply(gamma2);
+				  (*this).rightMultiply(gamma4);
+				  (*this)*= minus_i;
+			  }
+			  break;
+		  case Base::op_G_7:
+			  if (twisted_basis)
+			  {
+				  (*this).rightMultiply(gamma3);
+				  (*this).rightMultiply(gamma4);
+				  (*this).rightMultiply(gamma5);
+			  }
+			  else
+			  {
+				  (*this).rightMultiply(gamma3);
+				  (*this).rightMultiply(gamma4);
+				  (*this)*= minus_i;
+			  }
+			  break;
+		  case Base::op_G_8:
+			  if (twisted_basis)
+			  {
+				  (*this).rightMultiply(gamma5);
+				  (*this)*= plus_i;
+			  }
+			  else
+			  {
+				  //unity
+			  }
+			  break;
+		  case Base::op_G_9:
+			  (*this).rightMultiply(gamma1);
+			  (*this).rightMultiply(gamma5);
+			  (*this)*= minus_i;
+			  break;
+		  case Base::op_G_10:
+			  (*this).rightMultiply(gamma2);
+			  (*this).rightMultiply(gamma5);
+			  (*this)*= minus_i;
+			  break;
+		  case Base::op_G_11:
+			  (*this).rightMultiply(gamma3);
+			  (*this).rightMultiply(gamma5);
+			  (*this)*= minus_i;
+			  break;
+		  case Base::op_G_12:
+			  (*this).rightMultiply(gamma4);
+			  break;
+		  case Base::op_G_13:
+			  if (twisted_basis)
+			  {
+				  (*this).rightMultiply(gamma1);
+				  (*this).rightMultiply(gamma4);
+			  }
+			  else
+			  {
+				  (*this).rightMultiply(gamma1);
+				  (*this).rightMultiply(gamma4);
+				  (*this).rightMultiply(gamma5);
+				  (*this)*= minus_i;
+			  }
+			  break;
+		  case Base::op_G_14:
+			  if (twisted_basis)
+			  {
+				  (*this).rightMultiply(gamma2);
+				  (*this).rightMultiply(gamma4);
+			  }
+			  else
+			  {
+				  (*this).rightMultiply(gamma2);
+				  (*this).rightMultiply(gamma4);
+				  (*this).rightMultiply(gamma5);
+				  (*this)*= minus_i;
+			  }
+			  break;
+		  case Base::op_G_15:
+			  if (twisted_basis)
+			  {
+				  (*this).rightMultiply(gamma3);
+				  (*this).rightMultiply(gamma4);
+			  }
+			  else
+			  {
+				  (*this).rightMultiply(gamma3);
+				  (*this).rightMultiply(gamma4);
+				  (*this).rightMultiply(gamma5);
+				  (*this)*= minus_i;
+			  }
+			  break;
+		  default:
+			  std::cerr << "Error in void Tensor::rightmultiplyOperator(Base::HermitianBilinearOperator const& O)\n";
+			  std::cerr << "Operator with no. " << O << " not implemented!" << std::endl;
+			  exit(1);
+	  }
   }
 
 
   // ------ non-member operators ---------------------------------------------
 
   /*
-  template< size_t Index >
-  inline void operator*=(Dirac::Gamma< Index > const &gamma, Tensor &tensor)
-  {
-    for(size_t Idx=0; Idx<12; Idx++)
-    {
-      (tensor[Idx]).leftMultiply(gamma);
-    }
-  }
+	 template< size_t Index >
+	 inline void operator*=(Dirac::Gamma< Index > const &gamma, Tensor &tensor)
+	 {
+	 for(size_t Idx=0; Idx<12; Idx++)
+	 {
+	 (tensor[Idx]).leftMultiply(gamma);
+	 }
+	 }
 
-  inline void operator*=(Dirac::Identity const &gamma, Tensor &tensor)
-  {
-    // nothing to do
+	 inline void operator*=(Dirac::Identity const &gamma, Tensor &tensor)
+	 {
+  // nothing to do
   }
-  */
+   */
 
   template< size_t Index >
-  inline Tensor operator*(Dirac::Gamma< Index > const &gamma, Tensor const &tensor)
-  {
-    Tensor tmp(tensor);
-    for(size_t Idx=0; Idx<12; Idx++)
-    {
-      (tmp[Idx]).leftMultiply(gamma);
-    }
-    return tmp;
-  }
+	  inline Tensor operator*(Dirac::Gamma< Index > const &gamma, Tensor const &tensor)
+	  {
+		  Tensor tmp(tensor);
+		  for(size_t Idx=0; Idx<12; Idx++)
+		  {
+			  (tmp[Idx]).leftMultiply(gamma);
+		  }
+		  return tmp;
+	  }
 
   inline Tensor operator*(Dirac::Identity const &gamma, Tensor const &tensor)
   {
-    return Tensor(tensor);
+	  return Tensor(tensor);
   }
 
   template< size_t Index >
-  inline void QCD::Tensor::rightMultiply(Dirac::Gamma< Index > const &gamma)
-  {
-    for(size_t Idx=0; Idx<12; Idx++)
-    {
-      ((*this)[Idx]).leftMultiply(gamma);
-    }
-  }
+	  inline void QCD::Tensor::rightMultiply(Dirac::Gamma< Index > const &gamma)
+	  {
+		  for(size_t Idx=0; Idx<12; Idx++)
+		  {
+			  ((*this)[Idx]).leftMultiply(gamma);
+		  }
+	  }
 
 }

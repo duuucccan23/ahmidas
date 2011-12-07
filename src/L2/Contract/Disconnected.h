@@ -31,6 +31,12 @@ namespace Contract
 			std::vector< Base::HermitianBilinearOperator > ops,
 			int const * const position_offset, std::vector< int* > const &momenta,int const tsrc);
 
+
+	std::vector< std::complex<double>  > compute_loop_test(
+			Core::Propagator const &xi, Core::Propagator const &psi,
+			std::vector< Base::HermitianBilinearOperator > ops);
+
+
 	std::vector< Core::Correlator< Dirac::Matrix > > compute_loop_twist2_operator(
 			Core::Field < QCD::Gauge > &gauge_field,	
 			Core::StochasticPropagator< 1 > const &xi, Core::StochasticPropagator< 1 > const &psi );

@@ -165,11 +165,11 @@ namespace Contract
       
       std::vector< QCD::Tensor > dd_part2_T(dd_part2);
 
-      Core::Propagator PHI_U_tmp((gamma5 * phi_d).dagger());
-      Core::Propagator PHI_D_tmp((gamma5 * phi_u).dagger());
-      
       for(size_t i=0; i<16; i++)
       {
+        Core::Propagator PHI_U_tmp((gamma5 * phi_d).dagger());
+        Core::Propagator PHI_D_tmp((gamma5 * phi_u).dagger());
+      
         dd_part2_T[i].transposeFull();
 
         for (Core::Propagator::iterator It_phi_u=PHI_U_tmp.begin(); It_phi_u != PHI_U_tmp.end(); ++It_phi_u)

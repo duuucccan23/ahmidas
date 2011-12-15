@@ -50,7 +50,7 @@
 #define __CALCULATE_TWOPOINT__
 
 // do we want to use all 4 projectors? (otherwise onlu (1+gamma_0)/2 is used)
-#define __4_PROJECTORS__
+// #define __4_PROJECTORS__
 
 
 int main(int argc, char **argv)
@@ -1155,18 +1155,18 @@ int main(int argc, char **argv)
       for(size_t I=0; I<momenta.size(); I++)
       {
         all_corrsP[I].setOffset(timeslice_source);
-        // all_corrsP[I].printWithMomentum_full(*fout, momenta[I]);
-        all_corrsP[I] *= Base::proj_PARITY_PLUS_STD;
-        all_corrsP[I].printWithMomentum(*fout, momenta[I]);
+        all_corrsP[I].printWithMomentum_full(*fout, momenta[I]);
+        // all_corrsP[I] *= Base::proj_PARITY_PLUS_STD;
+        // all_corrsP[I].printWithMomentum(*fout, momenta[I]);
       }
       fout->close();
       fout = new std::ofstream("output_2point_neutron.dat");
       for(size_t I=0; I<momenta.size(); I++)
       {
         all_corrsN[I].setOffset(timeslice_source);
-        // all_corrsN[I].printWithMomentum_full(*fout, momenta[I]);
-        all_corrsN[I] *= Base::proj_PARITY_PLUS_STD;
-        all_corrsN[I].printWithMomentum(*fout, momenta[I]);
+        all_corrsN[I].printWithMomentum_full(*fout, momenta[I]);
+        // all_corrsN[I] *= Base::proj_PARITY_PLUS_STD;
+        // all_corrsN[I].printWithMomentum(*fout, momenta[I]);
       }
       fout->close();
     }

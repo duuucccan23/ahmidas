@@ -1,4 +1,3 @@
-
 #include <cstring>
 #include <ctime>
 #include <vector>
@@ -35,7 +34,7 @@ int main(int argc, char **argv)
   size_t L_tmp = 0;
   size_t T_tmp = 0;
 
-  Input::FileReader reader("simon_test_input.xml");
+  Input::FileReader reader("contract_nucleon3point_stochastic_input.xml");
 
   std::map< std::string, double > floats;
   std::vector< size_t * > positions;
@@ -67,7 +66,6 @@ int main(int argc, char **argv)
   assert(timeslice_source < T);
   assert(timeslice_boundary < T);
   assert(timeslice_stochSource < T);
-  //size_t const timeslice_sink = timeslice_stochSource;
 
   if (weave.isRoot())
   {
@@ -79,12 +77,12 @@ int main(int argc, char **argv)
   }
 
   std::vector< int* > momenta;
-  // for(size_t I=0; I<257; I++)
-  for(size_t I=0; I<195; I++)
-    momenta.push_back( new int[3]);
+  size_t const MOMS = 179; 
+  for(size_t I=0; I<MOMS; I++)
+    momenta.push_back(new int[3]);
   {
     // int momenta_raw[771] = {
-    int momenta_raw[585] = {
+    int momenta_raw[3*MOMS] = {
     +0, +0, +0,
      1, +0, +0,
     -1, +0, +0,
@@ -263,7 +261,7 @@ int main(int argc, char **argv)
      2, -2,  2,
     -2,  2, -2,
      2, -2, -2,
-    -2,  2,  2,
+    -2,  2,  2};
 //      3,  2, +0,
 //     -3, -2, +0,
 //      3, -2, +0,
@@ -342,8 +340,8 @@ int main(int argc, char **argv)
 //     +0, -4, +0,
 //     +0, +0,  4,
 //     +0, +0, -4
-    };
-
+//     };
+    assert(momenta.size() == MOMS);
     for(size_t I=0; I<momenta.size(); I++)
       std::copy(&(momenta_raw[3*I]), &(momenta_raw[3*I]) + 3, momenta[I]);
   }
@@ -368,6 +366,7 @@ int main(int argc, char **argv)
 
   Core::Propagator uProp = Core::Propagator(L, T);
 
+  weave.barrier();
   Tool::IO::load(&uProp, propfilesU, Tool::IO::fileSCIDAC);
 
   if (weave.isRoot())
@@ -472,13 +471,17 @@ int main(int argc, char **argv)
     int const sourcePos[3] = {source_position[0], source_position[1], source_position[2]};
     C3p_local[0].prepareMomentumProjection(sourcePos);
 
-    std::ofstream *fout_uu = NULL;
-    std::ofstream *fout_dd = NULL;
-
+    // std::ofstream *fout_uu = NULL;
+    // std::ofstream *fout_dd = NULL;
+    FILE * fout_uu = NULL;
+    FILE * fout_dd = NULL;
+    
     if (weave.isRoot())
     {
-      fout_uu =  new std::ofstream("output_3point_proton_stochastic_local_uu.dat");
-      fout_dd =  new std::ofstream("output_3point_proton_stochastic_local_dd.dat");
+      //fout_uu =  new std::ofstream("output_3point_proton_stochastic_local_uu.dat");
+      //fout_dd =  new std::ofstream("output_3point_proton_stochastic_local_dd.dat");
+      fout_uu = fopen("output_3point_proton_stochastic_local_uu.dat", "w");
+      fout_dd = fopen("output_3point_proton_stochastic_local_dd.dat", "w");
     }
 
     assert(C3p_local.size() == 32);
@@ -497,11 +500,13 @@ int main(int argc, char **argv)
         {
           if(i%2 == 0)
           {
-            all_corrs[I].printWithMomentum_full(*fout_uu, momenta[I], prefix);
+            // all_corrs[I].printWithMomentum_full(*fout_uu, momenta[I], prefix);
+            all_corrs[I].printWithMomentum_full_Cstyle(fout_uu, momenta[I], prefix);
           }
           else
           {
-            all_corrs[I].printWithMomentum_full(*fout_dd, momenta[I], prefix);
+            // all_corrs[I].printWithMomentum_full(*fout_dd, momenta[I], prefix);
+            all_corrs[I].printWithMomentum_full_Cstyle(fout_dd, momenta[I], prefix);
           }
         }
       }
@@ -510,12 +515,14 @@ int main(int argc, char **argv)
 
     if (weave.isRoot())
     {
-      fout_uu->close();
-      fout_dd->close();
+      //fout_uu->close();
+      //fout_dd->close();
+      fclose(fout_uu);
+      fclose(fout_dd);
     }
 
-    delete fout_uu;
-    delete fout_dd;
+    // delete fout_uu;
+    // delete fout_dd;
 
     weave.barrier();
     time (&end);
@@ -545,13 +552,17 @@ int main(int argc, char **argv)
     int const sourcePos[3] = {source_position[0], source_position[1], source_position[2]};
     C3n_local[0].prepareMomentumProjection(sourcePos);
 
-    std::ofstream *fout_uu = NULL;
-    std::ofstream *fout_dd = NULL;
+    //std::ofstream *fout_uu = NULL;
+    //std::ofstream *fout_dd = NULL;
+    FILE *fout_uu = NULL;
+    FILE *fout_dd = NULL;
 
     if (weave.isRoot())
     {
-      fout_uu =  new std::ofstream("output_3point_neutron_stochastic_local_uu.dat");
-      fout_dd =  new std::ofstream("output_3point_neutron_stochastic_local_dd.dat");
+      //fout_uu =  new std::ofstream("output_3point_neutron_stochastic_local_uu.dat");
+      //fout_dd =  new std::ofstream("output_3point_neutron_stochastic_local_dd.dat");
+      fout_uu = fopen("output_3point_neutron_stochastic_local_uu.dat", "w");
+      fout_dd = fopen("output_3point_neutron_stochastic_local_dd.dat", "w");
     }
 
     assert(C3n_local.size() == 32);
@@ -602,11 +613,13 @@ int main(int argc, char **argv)
           // which is contrary to the proton threepoint
           if(i%2 == 0)
           {
-            all_corrs[I].printWithMomentum_full(*fout_dd, momenta[I], prefix);
+            //all_corrs[I].printWithMomentum_full(*fout_dd, momenta[I], prefix);
+            all_corrs[I].printWithMomentum_full_Cstyle(fout_dd, momenta[I], prefix);
           }
           else
           {
-            all_corrs[I].printWithMomentum_full(*fout_uu, momenta[I], prefix);
+            //all_corrs[I].printWithMomentum_full(*fout_dd, momenta[I], prefix);
+            all_corrs[I].printWithMomentum_full_Cstyle(fout_uu, momenta[I], prefix);
           }
         }
       }
@@ -615,12 +628,14 @@ int main(int argc, char **argv)
 
     if (weave.isRoot())
     {
-      fout_uu->close();
-      fout_dd->close();
+      //fout_uu->close();
+      //fout_dd->close();
+      fclose(fout_uu);
+      fclose(fout_dd);
     }
 
-    delete fout_uu;
-    delete fout_dd;
+    //delete fout_uu;
+    //delete fout_dd;
 
     weave.barrier();
     time (&end);
@@ -655,13 +670,17 @@ int main(int argc, char **argv)
     int const sourcePos[3] = {source_position[0], source_position[1], source_position[2]};
     C3p_conserved[0].prepareMomentumProjection(sourcePos);
 
-    std::ofstream *fout_uu = NULL;
-    std::ofstream *fout_dd = NULL;
+    //std::ofstream *fout_uu = NULL;
+    //std::ofstream *fout_dd = NULL;
+    FILE *fout_uu = NULL;
+    FILE *fout_dd = NULL;
 
     if (weave.isRoot())
     {
-      fout_uu =  new std::ofstream("output_3point_proton_stochastic_conserved_vector_uu.dat");
-      fout_dd =  new std::ofstream("output_3point_proton_stochastic_conserved_vector_dd.dat");
+      //fout_uu =  new std::ofstream("output_3point_proton_stochastic_conserved_vector_uu.dat");
+      //fout_dd =  new std::ofstream("output_3point_proton_stochastic_conserved_vector_dd.dat");
+      fout_uu = fopen("output_3point_proton_stochastic_conserved_vector_uu.dat", "w");
+      fout_dd = fopen("output_3point_proton_stochastic_conserved_vector_dd.dat", "w");
     }
 
     assert(C3p_conserved.size() == 8);
@@ -680,11 +699,13 @@ int main(int argc, char **argv)
         {
           if(i%2 == 0)
           {
-            all_corrs[I].printWithMomentum_full(*fout_uu, momenta[I], prefix);
+            //all_corrs[I].printWithMomentum_full(*fout_uu, momenta[I], prefix);
+            all_corrs[I].printWithMomentum_full_Cstyle(fout_uu, momenta[I], prefix);
           }
           else
           {
-            all_corrs[I].printWithMomentum_full(*fout_dd, momenta[I], prefix);
+            //all_corrs[I].printWithMomentum_full(*fout_dd, momenta[I], prefix);
+            all_corrs[I].printWithMomentum_full_Cstyle(fout_dd, momenta[I], prefix);
           }
         }
       }
@@ -693,17 +714,21 @@ int main(int argc, char **argv)
 
     if (weave.isRoot())
     {
-      fout_uu->close();
-      fout_dd->close();
+      //fout_uu->close();
+      //fout_dd->close();
+      fclose(fout_uu);
+      fclose(fout_dd);
     }
 
-    delete fout_uu;
-    delete fout_dd;
+    //delete fout_uu;
+    //delete fout_dd;
 
     if (weave.isRoot())
     {
-      fout_uu =  new std::ofstream("output_3point_proton_stochastic_conserved_axial_uu.dat");
-      fout_dd =  new std::ofstream("output_3point_proton_stochastic_conserved_axial_dd.dat");
+      //fout_uu =  new std::ofstream("output_3point_proton_stochastic_conserved_axial_uu.dat");
+      //fout_dd =  new std::ofstream("output_3point_proton_stochastic_conserved_axial_dd.dat");
+      fout_uu = fopen("output_3point_proton_stochastic_conserved_axial_uu.dat", "w");
+      fout_dd = fopen("output_3point_proton_stochastic_conserved_axial_dd.dat", "w");
     }
 
     assert(C3p_conservedA.size() == 8);
@@ -722,11 +747,13 @@ int main(int argc, char **argv)
         {
           if(i%2 == 0)
           {
-            all_corrs[I].printWithMomentum_full(*fout_uu, momenta[I], prefix);
+            //all_corrs[I].printWithMomentum_full(*fout_uu, momenta[I], prefix);
+            all_corrs[I].printWithMomentum_full_Cstyle(fout_uu, momenta[I], prefix);
           }
           else
           {
-            all_corrs[I].printWithMomentum_full(*fout_dd, momenta[I], prefix);
+            //all_corrs[I].printWithMomentum_full(*fout_dd, momenta[I], prefix);
+            all_corrs[I].printWithMomentum_full_Cstyle(fout_dd, momenta[I], prefix);
           }
         }
       }
@@ -735,12 +762,14 @@ int main(int argc, char **argv)
 
     if (weave.isRoot())
     {
-      fout_uu->close();
-      fout_dd->close();
+      //fout_uu->close();
+      //fout_dd->close();
+      fclose(fout_uu);
+      fclose(fout_dd);
     }
 
-    delete fout_uu;
-    delete fout_dd;
+    //delete fout_uu;
+    //delete fout_dd;
 
     weave.barrier();
     time (&end);
@@ -771,13 +800,17 @@ int main(int argc, char **argv)
     int const sourcePos[3] = {source_position[0], source_position[1], source_position[2]};
     C3n_conserved[0].prepareMomentumProjection(sourcePos);
 
-    std::ofstream *fout_uu = NULL;
-    std::ofstream *fout_dd = NULL;
-
+    //std::ofstream *fout_uu = NULL;
+    //std::ofstream *fout_dd = NULL;
+    FILE *fout_uu = NULL;
+    FILE *fout_dd = NULL;
+    
     if (weave.isRoot())
     {
-      fout_uu =  new std::ofstream("output_3point_neutron_stochastic_conserved_vector_uu.dat");
-      fout_dd =  new std::ofstream("output_3point_neutron_stochastic_conserved_vector_dd.dat");
+      //fout_uu =  new std::ofstream("output_3point_neutron_stochastic_conserved_vector_uu.dat");
+      //fout_dd =  new std::ofstream("output_3point_neutron_stochastic_conserved_vector_dd.dat");
+      fout_uu =  fopen("output_3point_neutron_stochastic_conserved_vector_uu.dat", "w");
+      fout_dd =  fopen("output_3point_neutron_stochastic_conserved_vector_dd.dat", "w");
     }
 
     assert(C3n_conserved.size() == 8);
@@ -799,11 +832,13 @@ int main(int argc, char **argv)
           // which is contrary to the proton threepoint
           if(i%2 == 0)
           {
-            all_corrs[I].printWithMomentum_full(*fout_dd, momenta[I], prefix);
+            //all_corrs[I].printWithMomentum_full(*fout_dd, momenta[I], prefix);
+            all_corrs[I].printWithMomentum_full_Cstyle(fout_dd, momenta[I], prefix);
           }
           else
           {
-            all_corrs[I].printWithMomentum_full(*fout_uu, momenta[I], prefix);
+            //all_corrs[I].printWithMomentum_full(*fout_uu, momenta[I], prefix);
+            all_corrs[I].printWithMomentum_full_Cstyle(fout_uu, momenta[I], prefix);
           }
         }
       }
@@ -812,17 +847,21 @@ int main(int argc, char **argv)
 
     if (weave.isRoot())
     {
-      fout_uu->close();
-      fout_dd->close();
+      //fout_uu->close();
+      //fout_dd->close();
+      fclose(fout_uu);
+      fclose(fout_dd);
     }
 
-    delete fout_uu;
-    delete fout_dd;
+    //delete fout_uu;
+    //delete fout_dd;
 
     if (weave.isRoot())
     {
-      fout_uu =  new std::ofstream("output_3point_neutron_stochastic_conserved_axial_uu.dat");
-      fout_dd =  new std::ofstream("output_3point_neutron_stochastic_conserved_axial_dd.dat");
+      //fout_uu =  new std::ofstream("output_3point_neutron_stochastic_conserved_axial_uu.dat");
+      //fout_dd =  new std::ofstream("output_3point_neutron_stochastic_conserved_axial_dd.dat");
+      fout_uu =  fopen("output_3point_neutron_stochastic_conserved_axial_uu.dat", "w");
+      fout_dd =  fopen("output_3point_neutron_stochastic_conserved_axial_dd.dat", "w");
     }
 
     assert(C3n_conservedA.size() == 8);
@@ -844,11 +883,13 @@ int main(int argc, char **argv)
           // which is contrary to the proton threepoint
           if(i%2 == 0)
           {
-            all_corrs[I].printWithMomentum_full(*fout_dd, momenta[I], prefix);
+            //all_corrs[I].printWithMomentum_full(*fout_dd, momenta[I], prefix);
+            all_corrs[I].printWithMomentum_full_Cstyle(fout_dd, momenta[I], prefix);
           }
           else
           {
-            all_corrs[I].printWithMomentum_full(*fout_uu, momenta[I], prefix);
+            //all_corrs[I].printWithMomentum_full(*fout_uu, momenta[I], prefix);
+            all_corrs[I].printWithMomentum_full_Cstyle(fout_uu, momenta[I], prefix);
           }
         }
       }
@@ -857,12 +898,14 @@ int main(int argc, char **argv)
 
     if (weave.isRoot())
     {
-      fout_uu->close();
-      fout_dd->close();
+      //fout_uu->close();
+      //fout_dd->close();
+      fclose(fout_uu);
+      fclose(fout_dd);
     }
 
-    delete fout_uu;
-    delete fout_dd;
+    //delete fout_uu;
+    //delete fout_dd;
 
     weave.barrier();
     time (&end);
@@ -897,13 +940,17 @@ int main(int argc, char **argv)
     int const sourcePos[3] = {source_position[0], source_position[1], source_position[2]};
     C3p_1D[0].prepareMomentumProjection(sourcePos);
 
-    std::ofstream *fout_uu = NULL;
-    std::ofstream *fout_dd = NULL;
+    //std::ofstream *fout_uu = NULL;
+    //std::ofstream *fout_dd = NULL;
+    FILE *fout_uu = NULL;
+    FILE *fout_dd = NULL;
 
     if (weave.isRoot())
     {
-      fout_uu =  new std::ofstream("output_3point_proton_stochastic_1D_unpolarized_uu.dat");
-      fout_dd =  new std::ofstream("output_3point_proton_stochastic_1D_unpolarized_dd.dat");
+      //fout_uu =  new std::ofstream("output_3point_proton_stochastic_1D_unpolarized_uu.dat");
+      //fout_dd =  new std::ofstream("output_3point_proton_stochastic_1D_unpolarized_dd.dat");
+      fout_uu =  fopen("output_3point_proton_stochastic_1D_unpolarized_uu.dat", "w");
+      fout_dd =  fopen("output_3point_proton_stochastic_1D_unpolarized_dd.dat", "w");
     }
 
     assert(C3p_1D.size() == 32);
@@ -922,11 +969,13 @@ int main(int argc, char **argv)
         {
           if(i%2 == 0)
           {
-            all_corrs[I].printWithMomentum_full(*fout_uu, momenta[I], prefix);
+            //all_corrs[I].printWithMomentum_full(*fout_uu, momenta[I], prefix);
+            all_corrs[I].printWithMomentum_full_Cstyle(fout_uu, momenta[I], prefix);
           }
           else
           {
-            all_corrs[I].printWithMomentum_full(*fout_dd, momenta[I], prefix);
+            //all_corrs[I].printWithMomentum_full(*fout_dd, momenta[I], prefix);
+            all_corrs[I].printWithMomentum_full_Cstyle(fout_dd, momenta[I], prefix);
           }
         }
       }
@@ -935,17 +984,21 @@ int main(int argc, char **argv)
 
     if (weave.isRoot())
     {
-      fout_uu->close();
-      fout_dd->close();
+      //fout_uu->close();
+      //fout_dd->close();
+      fclose(fout_uu);
+      fclose(fout_dd);
     }
 
-    delete fout_uu;
-    delete fout_dd;
+    //delete fout_uu;
+    //delete fout_dd;
 
     if (weave.isRoot())
     {
-      fout_uu =  new std::ofstream("output_3point_proton_stochastic_1D_polarized_uu.dat");
-      fout_dd =  new std::ofstream("output_3point_proton_stochastic_1D_polarized_dd.dat");
+      //fout_uu =  new std::ofstream("output_3point_proton_stochastic_1D_polarized_uu.dat");
+      //fout_dd =  new std::ofstream("output_3point_proton_stochastic_1D_polarized_dd.dat");
+      fout_uu = fopen("output_3point_proton_stochastic_1D_polarized_uu.dat", "w");
+      fout_dd = fopen("output_3point_proton_stochastic_1D_polarized_dd.dat", "w");
     }
 
     assert(C3p_1DA.size() == 32);
@@ -964,11 +1017,13 @@ int main(int argc, char **argv)
         {
           if(i%2 == 0)
           {
-            all_corrs[I].printWithMomentum_full(*fout_uu, momenta[I], prefix);
+            //all_corrs[I].printWithMomentum_full(*fout_uu, momenta[I], prefix);
+            all_corrs[I].printWithMomentum_full_Cstyle(fout_uu, momenta[I], prefix);
           }
           else
           {
-            all_corrs[I].printWithMomentum_full(*fout_dd, momenta[I], prefix);
+            //all_corrs[I].printWithMomentum_full(*fout_dd, momenta[I], prefix);
+            all_corrs[I].printWithMomentum_full_Cstyle(fout_dd, momenta[I], prefix);
           }
         }
       }
@@ -977,12 +1032,14 @@ int main(int argc, char **argv)
 
     if (weave.isRoot())
     {
-      fout_uu->close();
-      fout_dd->close();
+      //fout_uu->close();
+      //fout_dd->close();
+      fclose(fout_uu);
+      fclose(fout_dd);
     }
 
-    delete fout_uu;
-    delete fout_dd;
+    //delete fout_uu;
+    //delete fout_dd;
 
     weave.barrier();
     time (&end);
@@ -1013,13 +1070,17 @@ int main(int argc, char **argv)
     int const sourcePos[3] = {source_position[0], source_position[1], source_position[2]};
     C3n_1D[0].prepareMomentumProjection(sourcePos);
 
-    std::ofstream *fout_uu = NULL;
-    std::ofstream *fout_dd = NULL;
+    //std::ofstream *fout_uu = NULL;
+    //std::ofstream *fout_dd = NULL;
+    FILE *fout_uu = NULL;
+    FILE *fout_dd = NULL;
 
     if (weave.isRoot())
     {
-      fout_uu =  new std::ofstream("output_3point_neutron_stochastic_1D_unpolarized_uu.dat");
-      fout_dd =  new std::ofstream("output_3point_neutron_stochastic_1D_unpolarized_dd.dat");
+      //fout_uu =  new std::ofstream("output_3point_neutron_stochastic_1D_unpolarized_uu.dat");
+      //fout_dd =  new std::ofstream("output_3point_neutron_stochastic_1D_unpolarized_dd.dat");
+      fout_uu = fopen("output_3point_neutron_stochastic_1D_unpolarized_uu.dat", "w");
+      fout_dd = fopen("output_3point_neutron_stochastic_1D_unpolarized_dd.dat", "w");
     }
 
     assert(C3n_1D.size() == 32);
@@ -1041,11 +1102,13 @@ int main(int argc, char **argv)
           // which is contrary to the proton threepoint
           if(i%2 == 0)
           {
-            all_corrs[I].printWithMomentum_full(*fout_dd, momenta[I], prefix);
+            //all_corrs[I].printWithMomentum_full(*fout_dd, momenta[I], prefix);
+            all_corrs[I].printWithMomentum_full_Cstyle(fout_dd, momenta[I], prefix);
           }
           else
           {
-            all_corrs[I].printWithMomentum_full(*fout_uu, momenta[I], prefix);
+            //all_corrs[I].printWithMomentum_full(*fout_uu, momenta[I], prefix);
+            all_corrs[I].printWithMomentum_full_Cstyle(fout_uu, momenta[I], prefix);
           }
         }
       }
@@ -1054,17 +1117,21 @@ int main(int argc, char **argv)
 
     if (weave.isRoot())
     {
-      fout_uu->close();
-      fout_dd->close();
+      //fout_uu->close();
+      //fout_dd->close();
+      fclose(fout_uu);
+      fclose(fout_dd);
     }
 
-    delete fout_uu;
-    delete fout_dd;
+    //delete fout_uu;
+    //delete fout_dd;
 
     if (weave.isRoot())
     {
-      fout_uu =  new std::ofstream("output_3point_neutron_stochastic_1D_polarized_uu.dat");
-      fout_dd =  new std::ofstream("output_3point_neutron_stochastic_1D_polarized_dd.dat");
+      //fout_uu =  new std::ofstream("output_3point_neutron_stochastic_1D_polarized_uu.dat");
+      //fout_dd =  new std::ofstream("output_3point_neutron_stochastic_1D_polarized_dd.dat");
+      fout_uu = fopen("output_3point_neutron_stochastic_1D_polarized_uu.dat", "w");
+      fout_dd = fopen("output_3point_neutron_stochastic_1D_polarized_dd.dat", "w");
     }
 
     assert(C3n_1DA.size() == 32);
@@ -1086,11 +1153,13 @@ int main(int argc, char **argv)
           // which is contrary to the proton threepoint
           if(i%2 == 0)
           {
-            all_corrs[I].printWithMomentum_full(*fout_dd, momenta[I], prefix);
+            //all_corrs[I].printWithMomentum_full(*fout_dd, momenta[I], prefix);
+            all_corrs[I].printWithMomentum_full_Cstyle(fout_dd, momenta[I], prefix);
           }
           else
           {
-            all_corrs[I].printWithMomentum_full(*fout_uu, momenta[I], prefix);
+            //all_corrs[I].printWithMomentum_full(*fout_uu, momenta[I], prefix);
+            all_corrs[I].printWithMomentum_full_Cstyle(fout_uu, momenta[I], prefix);
           }
         }
       }
@@ -1099,12 +1168,14 @@ int main(int argc, char **argv)
 
     if (weave.isRoot())
     {
-      fout_uu->close();
-      fout_dd->close();
+      //fout_uu->close();
+      //fout_dd->close();
+      fclose(fout_uu);
+      fclose(fout_dd);
     }
 
-    delete fout_uu;
-    delete fout_dd;
+    //delete fout_uu;
+    //delete fout_dd;
 
     weave.barrier();
     time (&end);
@@ -1165,31 +1236,41 @@ int main(int argc, char **argv)
     std::vector< Core::BaryonCorrelator > all_corrsP_stochD(C2_P_stochD.momentumProjection(momenta));
     std::vector< Core::BaryonCorrelator > all_corrsP_stochU(C2_P_stochU.momentumProjection(momenta));
 
-    std::ofstream *fout = NULL;
+    //std::ofstream *fout = NULL;
+    FILE *fout = NULL;
     if (weave.isRoot())
     {
-      fout =  new std::ofstream("output_2point_proton.dat");
+      //fout =  new std::ofstream("output_2point_proton.dat");
+      fout =  fopen("output_2point_proton.dat", "w");
       for(size_t I=0; I<momenta.size(); I++)
       {
         all_corrsP[I].setOffset(timeslice_source);
-        all_corrsP[I].printWithMomentum_full(*fout, momenta[I]);
+        //all_corrsP[I].printWithMomentum_full(*fout, momenta[I]);
+        all_corrsP[I].printWithMomentum_full_Cstyle(fout, momenta[I]);
       }
-      fout->close();
-      fout->open("output_2point_proton_stochD.dat");
+      //fout->close();
+      fclose(fout);
+      //fout->open("output_2point_proton_stochD.dat");
+      fout = fopen("output_2point_proton_stochD.dat", "w");
       for(size_t I=0; I<momenta.size(); I++)
       {
         all_corrsP_stochD[I].setOffset(timeslice_source);
-        all_corrsP_stochD[I].printWithMomentum_full(*fout, momenta[I]);
+        //all_corrsP_stochD[I].printWithMomentum_full(*fout, momenta[I]);
+        all_corrsP_stochD[I].printWithMomentum_full_Cstyle(fout, momenta[I]);
       }
-      fout->close();
-      fout->open("output_2point_proton_stochU.dat");
+      //fout->close();
+      fclose(fout);
+      //fout->open("output_2point_proton_stochU.dat");
+      fout = fopen("output_2point_proton_stochU.dat", "w");
       for(size_t I=0; I<momenta.size(); I++)
       {
         all_corrsP_stochU[I].setOffset(timeslice_source);
-        all_corrsP_stochU[I].printWithMomentum_full(*fout, momenta[I]);
+        //all_corrsP_stochU[I].printWithMomentum_full(*fout, momenta[I]);
+        all_corrsP_stochU[I].printWithMomentum_full_Cstyle(fout, momenta[I]);
       }
-      fout->close();
-      delete fout;
+      //fout->close();
+      fclose(fout);
+      //delete fout;
     }
     weave.barrier();
     time (&end);
@@ -1225,31 +1306,41 @@ int main(int argc, char **argv)
     std::vector< Core::BaryonCorrelator > all_corrsP_stochD(C2_N_stochD.momentumProjection(momenta));
     std::vector< Core::BaryonCorrelator > all_corrsP_stochU(C2_N_stochU.momentumProjection(momenta));
 
-    std::ofstream *fout = NULL;
+    //std::ofstream *fout = NULL;
+    FILE *fout = NULL;
     if (weave.isRoot())
     {
-      fout =  new std::ofstream("output_2point_neutron.dat");
+      //fout =  new std::ofstream("output_2point_neutron.dat");
+      fout = fopen("output_2point_neutron.dat", "w");
       for(size_t I=0; I<momenta.size(); I++)
       {
         all_corrsP[I].setOffset(timeslice_source);
-        all_corrsP[I].printWithMomentum_full(*fout, momenta[I]);
+        //all_corrsP[I].printWithMomentum_full(*fout, momenta[I]);
+        all_corrsP[I].printWithMomentum_full_Cstyle(fout, momenta[I]);
       }
-      fout->close();
-      fout->open("output_2point_neutron_stochD.dat");
+      //fout->close();
+      fclose(fout);
+      //fout->open("output_2point_neutron_stochD.dat");
+      fout = fopen("output_2point_neutron_stochD.dat", "w");
       for(size_t I=0; I<momenta.size(); I++)
       {
         all_corrsP_stochD[I].setOffset(timeslice_source);
-        all_corrsP_stochD[I].printWithMomentum_full(*fout, momenta[I]);
+        //all_corrsP_stochD[I].printWithMomentum_full(*fout, momenta[I]);
+        all_corrsP_stochD[I].printWithMomentum_full_Cstyle(fout, momenta[I]);
       }
-      fout->close();
-      fout->open("output_2point_neutron_stochU.dat");
+      //fout->close();
+      fclose(fout);
+      //fout->open("output_2point_neutron_stochU.dat");
+      fout = fopen("output_2point_neutron_stochU.dat", "w");
       for(size_t I=0; I<momenta.size(); I++)
       {
         all_corrsP_stochU[I].setOffset(timeslice_source);
-        all_corrsP_stochU[I].printWithMomentum_full(*fout, momenta[I]);
+        //all_corrsP_stochU[I].printWithMomentum_full(*fout, momenta[I]);
+        all_corrsP_stochU[I].printWithMomentum_full_Cstyle(fout, momenta[I]);
       }
-      fout->close();
-      delete fout;
+      //fout->close();
+      fclose(fout);
+      //delete fout;
     }
     weave.barrier();
     time (&end);

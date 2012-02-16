@@ -51,6 +51,8 @@ namespace Tool
 
   Base::Operator convertIntToOperator(int const input);
 
+  Core::Correlator< std::complex<double> > Plaquette_timeslice(Core::Field< QCD::Gauge > const &field, Base::SpaceTimeIndex via, Base::Direction dirVia, Base::SpaceTimeIndex to, Base::Direction dirTo);
+  
 }
 
 #include "Tool/Tool_randomize.template"

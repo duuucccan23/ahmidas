@@ -92,11 +92,14 @@ int main(int argc, char **argv)
 
     bool const flag_mms = bool(floats["MMS"] != 0.0); // 0=no,!=0 =yes
     bool debug=(bool)floats["debug"]; // 0=no,!=0 =yes
+    bool gluon_loop=(bool)floats["gluon_loop"]; // 0=no,!=0 =yes
 
 	 if(weave.isRoot() and debug==true) std::cout<<"Debug mode !" <<std::endl;
 	 if(weave.isRoot() and flag_mms==true) std::cout<<"Input propagators are assumed to be of the form (D^dag D)^-1" <<std::endl;
 	 if(weave.isRoot() and flag_mms==false) std::cout<<"Input propagators are assumed to be of the form D^-1" <<std::endl;
-	
+	 if(weave.isRoot() and gluon_loop==true) std::cout<<"Gluon loop will be computed" <<std::endl;
+	 if(weave.isRoot() and gluon_loop==false) std::cout<<"Gluon loop won't be computed" <<std::endl;
+
 	 if(weave.isRoot())
 	{
 		std::cout<<"Lattice size: "<<L<<"x"<<L<<"x"<<L<<"x"<<T<<std::endl;
@@ -701,6 +704,14 @@ int main(int argc, char **argv)
 			std::vector< std::complex<double> > C_twist2_pol_vvSum = Contract::compute_loop_twist2_operator(gauge_field,g5_phi,g5_DW_phi,true);
 
 
+			for(size_t i=0; i < C_vv.size(); i++)
+			{
+				C_twist2_vvSum[i] *=  std::complex<double>(2.0,0);	 
+				C_twist2_pol_vvSum[i] *=  std::complex<double>(2.0,0);	 
+			}
+
+
+
 			if (weave.isRoot())
 				std::cout << "done.\n" << std::endl;
 
@@ -719,6 +730,11 @@ int main(int argc, char **argv)
 #ifdef _with_momentum_projection
 
 			std::vector< std::complex <double>  > C_vv_mom;
+			std::vector< std::complex <double>  > C_vvSum_mom;
+			std::vector< std::complex<double> > C_twist2_vvSum_mom ;
+			std::vector< std::complex<double> > C_twist2_pol_vvSum_mom ;
+
+
 			if (weave.isRoot())
 				std::cout << "Non zero momentum "<<" ... ";
 
@@ -770,11 +786,18 @@ int main(int argc, char **argv)
 				}
 
 				C_vv_mom=Contract::compute_loop_new(g5_phi,phi,my_operators,sourcePos,momenta,timeslice_source);
+				C_vvSum_mom=Contract::compute_loop_new(g5_phi,g5_DW_phi,my_operators,sourcePos,momenta,timeslice_source);
+				C_twist2_vvSum_mom = Contract::compute_loop_twist2_operator(gauge_field,g5_phi,g5_DW_phi,sourcePos,momenta,timeslice_source,false);
+				C_twist2_pol_vvSum_mom = Contract::compute_loop_twist2_operator(gauge_field,g5_phi,g5_DW_phi,sourcePos,momenta,timeslice_source,true);
+
 
 
 				for(size_t i=0; i < C_vv_mom.size(); i++)
 				{
 					C_vv_mom[i] *=  std::complex<double>(0,2.0*mu/(8.*kappa)); 
+					C_vvSum_mom[i] *=  std::complex<double>(2.0,0);
+					C_twist2_vvSum_mom[i] *=  std::complex<double>(2.0,0);
+					C_twist2_pol_vvSum_mom[i] *=  std::complex<double>(2.0,0);
 				}
 
 
@@ -783,261 +806,317 @@ int main(int argc, char **argv)
 			}
 #endif
 
+			
 			finish = clock();
 
-			if (weave.isRoot())
-				std::cout << "Computation of loops done in "<< double(finish - start)/CLOCKS_PER_SEC  << "seconds." << std::endl;
+      if (weave.isRoot())
+        std::cout << "Computation of loops done in "<< double(finish - start)/CLOCKS_PER_SEC  << "seconds." << std::endl;
+
+      // Compute gluon loop
+      std::vector< std::complex<double> > C_gluon;
+      if (gluon_loop==true && n == 0)    C_gluon = Contract::compute_loop_gluon_Pmunu(gauge_field);
 
 
-			if (weave.isRoot())	
-			{
-				double addimag =0; 
-				double addreal =0;
+      if (weave.isRoot())	
+      {
+        double addimag =0; 
+        double addreal =0;
 
-				//double addimag =  2.*kappa*mu*L*L*L*3.*4. / (sqrt(1 + 4.*kappa*kappa*mu*mu));
-				//double addreal =  L*L*L*3.*4./( sqrt(1. + 4.*kappa*kappa*mu*mu));
+        //double addimag =  2.*kappa*mu*L*L*L*3.*4. / (sqrt(1 + 4.*kappa*kappa*mu*mu));
+        //double addreal =  L*L*L*3.*4./( sqrt(1. + 4.*kappa*kappa*mu*mu));
 
-				FILE * fout_v4;
-				FILE * fout_naive;
-				//				am fout_vv;
-				FILE * fout_vv;
-				FILE * fout_vvSum;
+        FILE * fout_gluon;
+
+        FILE * fout_v4;
+        FILE * fout_naive;
+        //				am fout_vv;
+        FILE * fout_vv;
+        FILE * fout_vvSum;
 #ifdef _with_APE
-				FILE * fout_v4_f;
-				FILE * fout_vv_f;
+        FILE * fout_v4_f;
+        FILE * fout_vv_f;
 #endif
 
 #ifdef _with_momentum_projection
-				FILE * fout_vv_mom;
+        FILE * fout_vv_mom;
+        FILE * fout_vvSum_mom;
+        FILE * fout_twist2_vvSum_mom;
+        FILE * fout_twist2_pol_vvSum_mom;
 #endif
-				FILE * fout_conserved_v4;
-				FILE * fout_conserved_vv;
+        FILE * fout_conserved_v4;
+        FILE * fout_conserved_vv;
 
 #ifdef _with_Omunu_
-				FILE * fout_twist2;
-				FILE * fout_twist2_pol;
+        FILE * fout_twist2;
+        FILE * fout_twist2_pol;
 
-				FILE * fout_twist2_vvSum;
-				FILE * fout_twist2_pol_vvSum;
-				FILE * fout_twist2_vv;
-				FILE * fout_twist2_pol_vv;
+        FILE * fout_twist2_vvSum;
+        FILE * fout_twist2_pol_vvSum;
+        FILE * fout_twist2_vv;
+        FILE * fout_twist2_pol_vv;
 
 #endif
 
-				if (n==0)
-				{
+        if (n==0)
+        {
 
-					fout_v4=fopen("output_disc_v4.dat","w");
-					fout_naive=fopen("output_disc_naive.dat","w");
-					fout_vvSum=fopen("output_disc_vvSum.dat","w");
-					fout_vv =fopen("output_disc_vv.dat","w");
+          if (gluon_loop==true) fout_gluon=fopen("output_disc_gluon.dat","w");
+
+          fout_v4=fopen("output_disc_v4.dat","w");
+          fout_naive=fopen("output_disc_naive.dat","w");
+          fout_vvSum=fopen("output_disc_vvSum.dat","w");
+          fout_vv =fopen("output_disc_vv.dat","w");
 #ifdef _with_APE
-					fout_v4_f=fopen("output_disc_v4_f.dat","w");
-					fout_vv_f=fopen("output_disc_vv_f.dat","w");
+          fout_v4_f=fopen("output_disc_v4_f.dat","w");
+          fout_vv_f=fopen("output_disc_vv_f.dat","w");
 #endif					
 
 #ifdef _with_momentum_projection
-					fout_vv_mom=fopen("output_disc_vv_mom.dat","w");
+          fout_vv_mom=fopen("output_disc_vv_mom.dat","w");
+          fout_vvSum_mom=fopen("output_disc_vvSum_mom.dat","w");
+          fout_twist2_vvSum_mom=fopen("output_disc_twist2_vvSum_mom.dat","w");
+          fout_twist2_pol_vvSum_mom=fopen("output_disc_twist2_pol_vvSum_mom.dat","w");
 #endif
-					fout_conserved_v4=fopen("output_disc_conserved_v4.dat","w");
-					fout_conserved_vv=fopen("output_disc_conserved_vv.dat","w");
+          fout_conserved_v4=fopen("output_disc_conserved_v4.dat","w");
+          fout_conserved_vv=fopen("output_disc_conserved_vv.dat","w");
 
 #ifdef _with_Omunu_
-					fout_twist2=fopen("output_disc_twist2.dat","w");
-					fout_twist2_pol=fopen("output_disc_twist2_pol.dat","w");
-					fout_twist2_vvSum=fopen("output_disc_twist2_vvSum.dat","w");
-					fout_twist2_pol_vvSum=fopen("output_disc_twist2_pol_vvSum.dat","w");
-					fout_twist2_vv=fopen("output_disc_twist2_vv.dat","w");
-					fout_twist2_pol_vv=fopen("output_disc_twist2_pol_vv.dat","w");
+          fout_twist2=fopen("output_disc_twist2.dat","w");
+          fout_twist2_pol=fopen("output_disc_twist2_pol.dat","w");
+          fout_twist2_vvSum=fopen("output_disc_twist2_vvSum.dat","w");
+          fout_twist2_pol_vvSum=fopen("output_disc_twist2_pol_vvSum.dat","w");
+          fout_twist2_vv=fopen("output_disc_twist2_vv.dat","w");
+          fout_twist2_pol_vv=fopen("output_disc_twist2_pol_vv.dat","w");
 
 
 #endif
-				}
-				else	
-				{
+        }
+        else	
+        {
 
-					fout_v4=fopen("output_disc_v4.dat","a");
-					fout_naive=fopen("output_disc_naive.dat","a");
-					fout_vvSum=fopen("output_disc_vvSum.dat","a");
-					fout_vv =fopen("output_disc_vv.dat","a");
+          fout_gluon=fopen("output_disc_gluon.dat","a");
+
+          fout_v4=fopen("output_disc_v4.dat","a");
+          fout_naive=fopen("output_disc_naive.dat","a");
+          fout_vvSum=fopen("output_disc_vvSum.dat","a");
+          fout_vv =fopen("output_disc_vv.dat","a");
 #ifdef _with_APE
-					fout_v4_f=fopen("output_disc_v4_f.dat","a");
-					fout_vv_f=fopen("output_disc_vv_f.dat","a");
+          fout_v4_f=fopen("output_disc_v4_f.dat","a");
+          fout_vv_f=fopen("output_disc_vv_f.dat","a");
 #endif
 
 #ifdef _with_momentum_projection
-					fout_vv_mom=fopen("output_disc_vv_mom.dat","a");
+          fout_vv_mom=fopen("output_disc_vv_mom.dat","a");
+          fout_vvSum_mom=fopen("output_disc_vvSum_mom.dat","a");
+          fout_twist2_vvSum_mom=fopen("output_disc_twist2_vvSum_mom.dat","a");
+          fout_twist2_pol_vvSum_mom=fopen("output_disc_twist2_pol_vvSum_mom.dat","a");
 #endif
-					fout_conserved_v4=fopen("output_disc_conserved_v4.dat","a");
-					fout_conserved_vv=fopen("output_disc_conserved_vv.dat","a");
+          fout_conserved_v4=fopen("output_disc_conserved_v4.dat","a");
+          fout_conserved_vv=fopen("output_disc_conserved_vv.dat","a");
 
 #ifdef _with_Omunu_
-					fout_twist2=fopen("output_disc_twist2.dat","a");
-					fout_twist2_pol=fopen("output_disc_twist2_pol.dat","a");
-					fout_twist2_vv=fopen("output_disc_twist2_vv.dat","a");
-					fout_twist2_pol_vv=fopen("output_disc_twist2_pol_vv.dat","a");
-					fout_twist2_vvSum=fopen("output_disc_twist2_vvSum.dat","a");
-					fout_twist2_pol_vvSum=fopen("output_disc_twist2_pol_vvSum.dat","a");
+          fout_twist2=fopen("output_disc_twist2.dat","a");
+          fout_twist2_pol=fopen("output_disc_twist2_pol.dat","a");
+          fout_twist2_vv=fopen("output_disc_twist2_vv.dat","a");
+          fout_twist2_pol_vv=fopen("output_disc_twist2_pol_vv.dat","a");
+          fout_twist2_vvSum=fopen("output_disc_twist2_vvSum.dat","a");
+          fout_twist2_pol_vvSum=fopen("output_disc_twist2_pol_vvSum.dat","a");
 
 
 #endif
-				}
+        }
 
-				std::cout << "write output for sources from " << 12*n << " to " << 11+12*n<<" ... "  << std::endl;
+        std::cout << "write output for sources from " << 12*n << " to " << 11+12*n<<" ... "  << std::endl;
 
-				//	clock_t start, finish;
-				start = clock();
+        //	clock_t start, finish;
+        start = clock();
+        
+        if(n==0 && gluon_loop==true){        
+          for(size_t i=0; i<6; i++)
+          {
+            for(size_t t = 0; t < T; t++)
+            {
+              fprintf(fout_gluon,"%3d %3d %3.10e %3.10e\n",t,i, C_gluon[t +  T*i ].real(),C_gluon[t + T*i].imag() );
+            }
+          }
+          fclose(fout_gluon);
+        }
 
-				for(size_t j=0; j<12; j++)
-				{
+        for(size_t j=0; j<12; j++)
+        {
 
-					for(size_t i=0; i<my_operators.size(); i++)
-					{
+          for(size_t i=0; i<my_operators.size(); i++)
+          {
 
-						for(size_t t = 0; t < T; t++)
-						{
-							if (i != 0 && i !=8)
-							{
-								fprintf(fout_v4,"%3d %3d %3d %3.10e %3.10e\n",t,i,j+12*n, C_v4[t +  T*i + 16*T*j].real(),C_v4[t + T*i + 16*T*j].imag() );
-								fprintf(fout_naive,"%3d %3d %3d %3.10e %3.10e\n",t,i,j+12*n, C_naive[t +  T*i + 16*T*j].real(),C_naive[t + T*i + 16*T*j].imag() );
+            for(size_t t = 0; t < T; t++)
+            {
+              if (i != 0 && i !=8)
+              {
+                fprintf(fout_v4,"%3d %3d %3d %3.10e %3.10e\n",t,i,j+12*n, C_v4[t +  T*i + 16*T*j].real(),C_v4[t + T*i + 16*T*j].imag() );
+                fprintf(fout_naive,"%3d %3d %3d %3.10e %3.10e\n",t,i,j+12*n, C_naive[t +  T*i + 16*T*j].real(),C_naive[t + T*i + 16*T*j].imag() );
 #ifdef _with_APE	
-								fprintf(fout_v4_f,"%3d %3d %3d %3.10e %3.10e\n",t,i,j+12*n, C_v4_f[t +  T*i + 16*T*j].real(),C_v4_f[t + T*i + 16*T*j].imag() );
+                fprintf(fout_v4_f,"%3d %3d %3d %3.10e %3.10e\n",t,i,j+12*n, C_v4_f[t +  T*i + 16*T*j].real(),C_v4_f[t + T*i + 16*T*j].imag() );
 #endif
 
 
-							}
-							if (i==0) 
-							{
-								fprintf(fout_v4,"%3d %3d %3d %3.10e %3.10e\n",t,i,j+12*n, C_v4[t +  T*i + 16*T*j].real(),C_v4[t + T*i + 16*T*j].imag() +  addimag );
+              }
+              if (i==0) 
+              {
+                fprintf(fout_v4,"%3d %3d %3d %3.10e %3.10e\n",t,i,j+12*n, C_v4[t +  T*i + 16*T*j].real(),C_v4[t + T*i + 16*T*j].imag() +  addimag );
 #ifdef _with_APE
-								fprintf(fout_v4_f,"%3d %3d %3d %3.10e %3.10e\n",t,i,j+12*n, C_v4_f[t +  T*i + 16*T*j].real(),C_v4_f[t + T*i + 16*T*j].imag() +  addimag );
+                fprintf(fout_v4_f,"%3d %3d %3d %3.10e %3.10e\n",t,i,j+12*n, C_v4_f[t +  T*i + 16*T*j].real(),C_v4_f[t + T*i + 16*T*j].imag() +  addimag );
 #endif
 
-							}
-							if (i==8) 
-							{
-								fprintf(fout_v4,"%3d %3d %3d %3.10e %3.10e\n",t,i,j+12*n, C_v4[t +  T*i + 16*T*j].real()+ addreal,C_v4[t + T*i + 16*T*j].imag() );
+              }
+              if (i==8) 
+              {
+                fprintf(fout_v4,"%3d %3d %3d %3.10e %3.10e\n",t,i,j+12*n, C_v4[t +  T*i + 16*T*j].real()+ addreal,C_v4[t + T*i + 16*T*j].imag() );
 #ifdef _with_APE
-								fprintf(fout_v4_f,"%3d %3d %3d %3.10e %3.10e\n",t,i,j+12*n, C_v4_f[t +  T*i + 16*T*j].real()+ addreal,C_v4_f[t + T*i + 16*T*j].imag() );
+                fprintf(fout_v4_f,"%3d %3d %3d %3.10e %3.10e\n",t,i,j+12*n, C_v4_f[t +  T*i + 16*T*j].real()+ addreal,C_v4_f[t + T*i + 16*T*j].imag() );
 #endif
 
-							}
+              }
 
 
-							fprintf(fout_vv,"%3d %3d %3d %3.10e %3.10e\n",t,i,j+12*n, C_vv[t +  T*i + 16*T*j].real(),C_vv[t + T*i + 16*T*j].imag() );
-							fprintf(fout_vvSum,"%3d %3d %3d %3.10e %3.10e\n",t,i,j+12*n, C_vvSum[t +  T*i + 16*T*j].real(),C_vvSum[t + T*i + 16*T*j].imag() );
+              fprintf(fout_vv,"%3d %3d %3d %3.10e %3.10e\n",t,i,j+12*n, C_vv[t +  T*i + 16*T*j].real(),C_vv[t + T*i + 16*T*j].imag() );
+              fprintf(fout_vvSum,"%3d %3d %3d %3.10e %3.10e\n",t,i,j+12*n, C_vvSum[t +  T*i + 16*T*j].real(),C_vvSum[t + T*i + 16*T*j].imag() );
 #ifdef _with_APE
-							fprintf(fout_vv_f,"%3d %3d %3d %3.10e %3.10e\n",t,i,j+12*n, C_vv_f[t +  T*i + 16*T*j].real(),C_vv_f[t + T*i + 16*T*j].imag() );
+              fprintf(fout_vv_f,"%3d %3d %3d %3.10e %3.10e\n",t,i,j+12*n, C_vv_f[t +  T*i + 16*T*j].real(),C_vv_f[t + T*i + 16*T*j].imag() );
 #endif
 
-						}
-					}			
-				}
-				fclose(fout_v4);				//				fout_vv.close();
-				fclose(fout_vv);
-				fclose(fout_vvSum);
-				//	fout_vv_sum.close();
+            }
+          }			
+        }
+        fclose(fout_v4);				//				fout_vv.close();
+        fclose(fout_vv);
+        fclose(fout_vvSum);
+        //	fout_vv_sum.close();
 #ifdef _with_APE
-				fclose(fout_v4_f);
-				fclose(fout_vv_f);
+        fclose(fout_v4_f);
+        fclose(fout_vv_f);
 #endif
 
-				for(size_t j=0; j<12; j++)
-				{
-					for(size_t i=0; i<4; i++)
-					{
-						for(size_t k=0; k<2; k++)
-						{
-							for(size_t t = 0; t < T; t++)
-							{
-								fprintf(fout_conserved_v4,"%3d %3d %3d %3d %3.10e %3.10e\n",t,i,j+12*n,k, C_conserved_v4[t+ T*k + 2*T*i + 2*T*4*j].real(),C_conserved_v4[t+ T*k + 2*T*i + 2*T*4*j].imag() );
-								fprintf(fout_conserved_vv,"%3d %3d %3d %3d %3.10e %3.10e\n",t,i,j+12*n,k, C_conserved_vv[t+ T*k + 2*T*i + 2*T*4*j].real(),C_conserved_vv[t+ T*k + 2*T*i + 2*T*4*j].imag() );
+        for(size_t j=0; j<12; j++)
+        {
+          for(size_t i=0; i<4; i++)
+          {
+            for(size_t k=0; k<2; k++)
+            {
+              for(size_t t = 0; t < T; t++)
+              {
+                fprintf(fout_conserved_v4,"%3d %3d %3d %3d %3.10e %3.10e\n",t,i,j+12*n,k, C_conserved_v4[t+ T*k + 2*T*i + 2*T*4*j].real(),C_conserved_v4[t+ T*k + 2*T*i + 2*T*4*j].imag() );
+                fprintf(fout_conserved_vv,"%3d %3d %3d %3d %3.10e %3.10e\n",t,i,j+12*n,k, C_conserved_vv[t+ T*k + 2*T*i + 2*T*4*j].real(),C_conserved_vv[t+ T*k + 2*T*i + 2*T*4*j].imag() );
 
 
-								//								fout_conserved_v4 << t << std::scientific <<"  "
-								//									<< i <<"  "<< j+12*n <<"  "<<k <<"  "<< C_conserved_v4[t+ T*k + 2*T*i + 2*T*4*j].real() <<"  "<< C_conserved_v4[t+ T*k + 2*T*i + 2*T*4*j].imag() << std::endl;
+                //								fout_conserved_v4 << t << std::scientific <<"  "
+                //									<< i <<"  "<< j+12*n <<"  "<<k <<"  "<< C_conserved_v4[t+ T*k + 2*T*i + 2*T*4*j].real() <<"  "<< C_conserved_v4[t+ T*k + 2*T*i + 2*T*4*j].imag() << std::endl;
 
-								//								fout_conserved_vv << t << std::scientific <<"  "
-								//									<< i <<"  "<< j+12*n <<"  "<<k <<"  "<< C_conserved_vv[t+ T*k + 2*T*i + 2*T*4*j].real() <<"  "<< C_conserved_vv[t+ T*k + 2*T*i + 2*T*4*j].imag() << std::endl;
-							}
-						}			
-					}
-				}
+                //								fout_conserved_vv << t << std::scientific <<"  "
+                //									<< i <<"  "<< j+12*n <<"  "<<k <<"  "<< C_conserved_vv[t+ T*k + 2*T*i + 2*T*4*j].real() <<"  "<< C_conserved_vv[t+ T*k + 2*T*i + 2*T*4*j].imag() << std::endl;
+              }
+            }			
+          }
+        }
 
-				fclose(fout_conserved_vv);
-				fclose(fout_conserved_v4);
+        fclose(fout_conserved_vv);
+        fclose(fout_conserved_v4);
 
 #ifdef _with_Omunu_
 
-				for(size_t j=0; j<12; j++)
-				{
-					for(size_t i=0; i<4; i++)
-					{
-						for(size_t k=0; k<4; k++)
-						{
-							for(size_t t = 0; t < T; t++)
-							{
+        for(size_t j=0; j<12; j++)
+        {
+          for(size_t i=0; i<4; i++)
+          {
+            for(size_t k=0; k<4; k++)
+            {
+              for(size_t t = 0; t < T; t++)
+              {
 
 
-								fprintf(fout_twist2,"%3d %3d %3d %3d %3.10e %3.10e\n",t,i,j+12*n,k,C_twist2[t  + T*k + 4*T*i + 4*T*4*j ].real(),C_twist2[t + T*k + 4*T*i +4*T*4*j ].imag());
-								fprintf(fout_twist2_pol,"%3d %3d %3d %3d %3.10e %3.10e\n",t,i,j+12*n,k,C_twist2_pol[t  + T*k + 4*T*i + 4*T*4*j ].real(),C_twist2_pol[t + T*k + 4*T*i +4*T*4*j ].imag());
-								fprintf(fout_twist2_vv,"%3d %3d %3d %3d %3.10e %3.10e\n",t,i,j+12*n,k,C_twist2_vv[t  + T*k + 4*T*i + 4*T*4*j ].real(),C_twist2_vv[t + T*k + 4*T*i +4*T*4*j ].imag());
-								fprintf(fout_twist2_pol_vv,"%3d %3d %3d %3d %3.10e %3.10e\n",t,i,j+12*n,k,C_twist2_pol_vv[t  + T*k + 4*T*i + 4*T*4*j ].real(),C_twist2_pol_vv[t + T*k + 4*T*i +4*T*4*j ].imag());
-								fprintf(fout_twist2_vvSum,"%3d %3d %3d %3d %3.10e %3.10e\n",t,i,j+12*n,k,C_twist2_vvSum[t  + T*k + 4*T*i + 4*T*4*j ].real(),C_twist2_vvSum[t + T*k + 4*T*i +4*T*4*j ].imag());
-								fprintf(fout_twist2_pol_vvSum,"%3d %3d %3d %3d %3.10e %3.10e\n",t,i,j+12*n,k,C_twist2_pol_vvSum[t  + T*k + 4*T*i + 4*T*4*j ].real(),C_twist2_pol_vvSum[t + T*k + 4*T*i +4*T*4*j ].imag());
+                fprintf(fout_twist2,"%3d %3d %3d %3d %3.10e %3.10e\n",t,i,j+12*n,k,C_twist2[t  + T*k + 4*T*i + 4*T*4*j ].real(),C_twist2[t + T*k + 4*T*i +4*T*4*j ].imag());
+                fprintf(fout_twist2_pol,"%3d %3d %3d %3d %3.10e %3.10e\n",t,i,j+12*n,k,C_twist2_pol[t  + T*k + 4*T*i + 4*T*4*j ].real(),C_twist2_pol[t + T*k + 4*T*i +4*T*4*j ].imag());
+                fprintf(fout_twist2_vv,"%3d %3d %3d %3d %3.10e %3.10e\n",t,i,j+12*n,k,C_twist2_vv[t  + T*k + 4*T*i + 4*T*4*j ].real(),C_twist2_vv[t + T*k + 4*T*i +4*T*4*j ].imag());
+                fprintf(fout_twist2_pol_vv,"%3d %3d %3d %3d %3.10e %3.10e\n",t,i,j+12*n,k,C_twist2_pol_vv[t  + T*k + 4*T*i + 4*T*4*j ].real(),C_twist2_pol_vv[t + T*k + 4*T*i +4*T*4*j ].imag());
+                fprintf(fout_twist2_vvSum,"%3d %3d %3d %3d %3.10e %3.10e\n",t,i,j+12*n,k,C_twist2_vvSum[t  + T*k + 4*T*i + 4*T*4*j ].real(),C_twist2_vvSum[t + T*k + 4*T*i +4*T*4*j ].imag());
+                fprintf(fout_twist2_pol_vvSum,"%3d %3d %3d %3d %3.10e %3.10e\n",t,i,j+12*n,k,C_twist2_pol_vvSum[t  + T*k + 4*T*i + 4*T*4*j ].real(),C_twist2_pol_vvSum[t + T*k + 4*T*i +4*T*4*j ].imag());
 
-							}/*t*/
-						}/*end loop on the 4 terms contributing to a symmetrized covariant derivative */
-					} /*i loop on the 4 operators : O_mumu (unpo1arized) and Omumu g5 (polarized) */
-				} /*loop on the 12 sources*/
+              }/*t*/
+            }/*end loop on the 4 terms contributing to a symmetrized covariant derivative */
+          } /*i loop on the 4 operators : O_mumu (unpo1arized) and Omumu g5 (polarized) */
+        } /*loop on the 12 sources*/
 
-				fclose(fout_twist2);
-				fclose(fout_twist2_pol);
-				fclose(fout_twist2_vv);
-				fclose(fout_twist2_pol_vv);
-				fclose(fout_twist2_vvSum);
-				fclose(fout_twist2_pol_vvSum);
+        fclose(fout_twist2);
+        fclose(fout_twist2_pol);
+        fclose(fout_twist2_vv);
+        fclose(fout_twist2_pol_vv);
+        fclose(fout_twist2_vvSum);
+        fclose(fout_twist2_pol_vvSum);
 
 #endif
 
 #ifdef _with_momentum_projection
-				int N=momenta.size();
-				int index;
+        int N=momenta.size();
+        int index;
 
-				for(size_t I = 0; I < momenta.size(); I++)
-				{
-					for(size_t j=0; j<12; j++)
-					{
-						for(size_t i=0; i<16; i++)
-						{
-							for(size_t t = 0; t < T; t++)
-							{
-								index = t + T*i  +T*16*j + T*16*12*I;
-								fprintf(fout_vv_mom,"%3d %3d %3d %3d %3d %3d %3.10e %3.10e \n",t,momenta[I][0],momenta[I][1],momenta[I][2],i,j+12*n,C_vv_mom[index].real(),C_vv_mom[index].imag());
-								//								fout_vv_mom << t << std::scientific <<"  " << momenta[I][0] << "  "<< momenta[I][1] << "  "	<< momenta[I][2] << "  "
-								//									<< i <<"  "<< j + 12*n <<"  "<<C_vv_mom[index].real() <<"  "<< C_vv_mom[index].imag() << std::endl;
+        for(size_t I = 0; I < momenta.size(); I++)
+        {
+          for(size_t j=0; j<12; j++)
+          {
+            for(size_t i=0; i<16; i++)
+            {
+              for(size_t t = 0; t < T; t++)
+              {
+                index = t + T*i  +T*16*j + T*16*12*I;
+                fprintf(fout_vv_mom,"%3d %3d %3d %3d %3d %3d %3.10e %3.10e \n",t,momenta[I][0],momenta[I][1],momenta[I][2],i,j+12*n,C_vv_mom[index].real(),C_vv_mom[index].imag());
+                fprintf(fout_vvSum_mom,"%3d %3d %3d %3d %3d %3d %3.10e %3.10e \n",t,momenta[I][0],momenta[I][1],momenta[I][2],i,j+12*n,C_vvSum_mom[index].real(),C_vvSum_mom[index].imag());
 
-							}
-						}
-					}
-				}
-				fclose(fout_vv_mom);
+              }
+            }
+          }
+        }
+
+        for(size_t I = 0; I < momenta.size(); I++)
+        {
+
+          for(size_t j=0; j<12; j++)
+          {
+            for(size_t i=0; i<4; i++)
+            {
+              for(size_t k=0; k<4; k++)
+              {
+                for(size_t t = 0; t < T; t++)
+                {
+                  index = t + T*k  +T*4*i + T*4*4*j + T*4*4*12*I;
+
+                  fprintf(fout_twist2_vvSum_mom,"%3d %3d %3d %3d %3d %3d %3d %3.10e %3.10e \n",t,momenta[I][0],momenta[I][1],momenta[I][2],i,j+12*n,k,C_twist2_vvSum_mom[index].real(),C_twist2_vvSum_mom[index].imag());
+
+                  fprintf(fout_twist2_pol_vvSum_mom,"%3d %3d %3d %3d %3d %3d %3d %3.10e %3.10e \n",t,momenta[I][0],momenta[I][1],momenta[I][2],i,j+12*n,k,C_twist2_pol_vvSum_mom[index].real(),C_twist2_pol_vvSum_mom[index].imag());
+
+                }
+              }
+            }
+          }
+        }
+        fclose(fout_twist2_vvSum_mom);
+        fclose(fout_twist2_pol_vvSum_mom);
+        fclose(fout_vv_mom);
+        fclose(fout_vvSum_mom);
 #endif				
-				finish = clock();
-				std::cout << "done in "<< double(finish - start)/CLOCKS_PER_SEC  << "seconds." << std::endl;
+        finish = clock();
+        std::cout << "done in "<< double(finish - start)/CLOCKS_PER_SEC  << "seconds." << std::endl;
 
-			}/* end if weave.isRoot() */
-		} /* loop on Nsample */
-	}/* end case N%12 = 0 */
+      }/* end if weave.isRoot() */
+    } /* loop on Nsample */
+  }/* end case N%12 = 0 */
 
 #ifdef __MPI_ARCH__
-	if (myid == 0)
+  if (myid == 0)
 #endif
 
-		if(weave.isRoot())
-			std::cout << "\nprogram is going to exit normally now\n" << std::endl;
+    if(weave.isRoot())
+      std::cout << "\nprogram is going to exit normally now\n" << std::endl;
 
-	return EXIT_SUCCESS;
+  return EXIT_SUCCESS;
 
 }
 

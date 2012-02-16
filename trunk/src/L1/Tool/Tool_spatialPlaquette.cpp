@@ -9,3 +9,10 @@ double Tool::spatialPlaquette(Core::Field< QCD::Gauge > const &field)
   // So divide by 3 (colors) * 3 (XY, XZ, YZ) = 9
   return (res / 9.0);
 }
+
+Core::Correlator< std::complex<double> > Tool::Plaquette_timeslice(Core::Field< QCD::Gauge > const &field, Base::SpaceTimeIndex via, Base::Direction dirVia, Base::SpaceTimeIndex to, Base::Direction dirTo)
+{
+	Core::Correlator< std::complex<double> > res(  localTrace(Path::square(field, via, dirVia, to, dirTo)));
+	
+  return (res);
+}

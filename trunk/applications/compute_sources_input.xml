@@ -10,19 +10,13 @@
     <!-- flags convention 0 = false, else  =true -->
     <MMS> 1 </MMS>  
     <debug> 1 </debug>
-    <gluon_loop> 1 </gluon_loop>
     <thetax> 0 </thetax>
     <thetay> 0 </thetay>
     <thetaz> 0 </thetaz>
     <thetat> 1 </thetat>
-    <APE_steps>  0  </APE_steps>
-    <APE_param>  0.5 </APE_param>
-    <Jac_steps>  0   </Jac_steps>
-    <Jac_param>  4.0 </Jac_param>
-    <Fuzz_param> 5 </Fuzz_param>	
   </params>
   <files>
-    <!-- u and d quark propagators -->
+    <!-- propagators (input) -->
     <file>
     <type>propagator</type>
     <directory>./prop/</directory>
@@ -40,6 +34,15 @@
     <firstIndex>9999</firstIndex>
     <lastIndex>9999</lastIndex>
     <indexWidth>4</indexWidth>
+    </file>
+    <!-- Stochastic sources (output) -->
+    <file>
+    <type>stochastic_source</type>
+    <directory>./sources/</directory>
+    <filenameBase>source.</filenameBase>
+    <firstIndex>0</firstIndex>
+    <lastIndex>0</lastIndex>
+    <indexWidth>2</indexWidth>
     </file>
   </files>
 </ahmidas>

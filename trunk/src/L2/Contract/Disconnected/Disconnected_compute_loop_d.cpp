@@ -172,9 +172,6 @@ namespace Contract
 			}
 		}
 
-		finish = clock();
-//		if (weave.isRoot())
-//			std::cout << "Computation disconnected_loops_test (non zero momentum) in  "<< double(finish - start)/CLOCKS_PER_SEC  << "seconds." << std::endl;
 
 
 		return twopoints;

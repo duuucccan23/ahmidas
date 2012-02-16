@@ -327,149 +327,148 @@ if (weave.isRoot())      std::cout <<  "ini seed "<< double(finish_ini - start_i
 	  }
 	  Tool::IO::save(reinterpret_cast< Core::StochasticPropagator< 4 > * >(&stochastic_source),
 			  stochasticSourceFiles, Tool::IO::fileSCIDAC);
-	  if (weave.isRoot())
-		  std::cout << "stochastic source saved successfully\n" << std::endl;
+    if (weave.isRoot())
+      std::cout << "stochastic source saved successfully\n" << std::endl;
   }
   // version 2: spin (Dirac) dilution only
   else if(polarization == Base::sou_PARTLY_POLARIZED && colorState == Base::sou_GENERIC)
   {
 
-	  clock_t start_source, finish_source;
-	  start_source = clock();
+    clock_t start_source, finish_source;
+    start_source = clock();
 
-	  Core::StochasticSource< 1 > stochastic_source(L, T, polarization, colorState, seeds, type);
-	  finish_source = clock();
+    Core::StochasticSource< 1 > stochastic_source(L, T, polarization, colorState, seeds, type);
+    finish_source = clock();
 
-	  if (weave.isRoot())
-		  std::cout <<  "source generated "<< double(finish_source - start_source)/CLOCKS_PER_SEC  << "seconds." << std::endl;
-
-
-
-	  if (Jac_iterations > 0)
-	  {
-		  //stochastic_source.smearJacobi(Jac_alpha, Jac_iterations, *gauge_field, t_src);
-		  stochastic_source.smearJacobi(Jac_alpha, Jac_iterations, *gauge_field);
-		  delete gauge_field;
-		  if(weave.isRoot())
-			  std::cout << "stochastic source smeared successfully\n" << std::endl;
-
-	  }
-
-	  clock_t start_save,finish_save;
-	  start_save = clock();
-
-	  Tool::IO::save(reinterpret_cast< Core::StochasticPropagator< 1 > * >(&stochastic_source), stochasticSourceFiles, Tool::IO::fileSCIDAC);
-
-	  finish_save = clock();
-
-	  if (weave.isRoot())
-		  std::cout << " sources saved in "<< double(finish_save - start_save)/CLOCKS_PER_SEC  << "seconds." << std::endl;
+    if (weave.isRoot())
+      std::cout <<  "source generated "<< double(finish_source - start_source)/CLOCKS_PER_SEC  << "seconds." << std::endl;
 
 
 
-	  if (weave.isRoot())
-		  std::cout << "stochastic source saved successfully\n" << std::endl;
+    if (Jac_iterations > 0)
+    {
+      //stochastic_source.smearJacobi(Jac_alpha, Jac_iterations, *gauge_field, t_src);
+      stochastic_source.smearJacobi(Jac_alpha, Jac_iterations, *gauge_field);
+      delete gauge_field;
+      if(weave.isRoot())
+        std::cout << "stochastic source smeared successfully\n" << std::endl;
+
+    }
+
+    clock_t start_save,finish_save;
+    start_save = clock();
+
+    Tool::IO::save(reinterpret_cast< Core::StochasticPropagator< 1 > * >(&stochastic_source), stochasticSourceFiles, Tool::IO::fileSCIDAC);
+
+    finish_save = clock();
+
+    if (weave.isRoot())
+      std::cout << " sources saved in "<< double(finish_save - start_save)/CLOCKS_PER_SEC  << "seconds." << std::endl;
 
 
-	  //bool const flag_vvSum = bool(floats["vvSum"] != 0.0); // 0=no,!=0 =yes
-	  //  need to generate ~ g5 (1 + H)^\dag \xi
-	  //  maybe better to create a separate executable.
-	  if (flag_vvSum == true)
-	  {
-		  std::vector< std::string > const &gaugeFieldFiles(files[1]); 
 
-		  //read and declare gauge field 
-		  Core::Field< QCD::Gauge > gauge_field(L, T);
-
-		  if(weave.isRoot())
-		  {
-			  std::cout << "\n Now compute and save (1 + H) g5 xi for vvSum" << std::endl;
-			  std::cout << "\nThe following files are going to be created:" << std::endl;
-
-			  // there should only be one container in files, which can be accessed by files[0]
-			  // (similar to accessing an object in a C array)
-			  for (size_t fileIndex=0; fileIndex<files[2].size(); fileIndex++)
-			  {
-				  std::cout << (files[2])[fileIndex] << std::endl;
-			  }
-		  }
+    if (weave.isRoot())
+      std::cout << "stochastic source saved successfully\n" << std::endl;
 
 
-		  if (weave.isRoot())
-			  std::cout << "gauge field to be read from " << gaugeFieldFiles[0] << " ... ";
-		  Tool::IO::load(&gauge_field, gaugeFieldFiles[0], Tool::IO::fileILDG);
-		  if (weave.isRoot())
-			  std::cout << "done.\n" << std::endl;
+    //bool const flag_vvSum = bool(floats["vvSum"] != 0.0); // 0=no,!=0 =yes
+    //  need to generate ~ g5 (1 + H)^\dag \xi
+    //  maybe better to create a separate executable.
+    if (flag_vvSum == true)
+    {
+      std::vector< std::string > const &gaugeFieldFiles(files[1]); 
 
-		  Dirac::Gamma<5> gamma5;
+      //read and declare gauge field 
+      Core::Field< QCD::Gauge > gauge_field(L, T);
 
-		  Core::StochasticPropagator< 1 > xi(stochastic_source);
+      if(weave.isRoot())
+      {
+        std::cout << "\n Now compute and save (1 + H) g5 xi for vvSum" << std::endl;
+        std::cout << "\nThe following files are going to be created:" << std::endl;
 
-		  xi.rightMultiply(gamma5);
-		  xi.applyDiracOperator(gauge_field,kappa,mu,thetat,thetax,thetay,thetaz,Base::C);
-
-		  Tool::IO::save(reinterpret_cast< Core::StochasticPropagator< 1 > * > (&xi), stochasticSourceFiles_vvSum, Tool::IO::fileSCIDAC);
-
-		  if (weave.isRoot())
-			  std::cout << "Store  (1 + H) g5 xi to test vvSum. \n" << std::endl;
-
-		  double norm_xi(xi.norm());
-		  if (weave.isRoot())
-			  std::cout << std::scientific << "norm of (1 + H) g5 xi: " << norm_xi << std::endl;
-
-		  // debug  compute xi_tilde^dag xi -> should be real ?
-
-		  std::vector< Base::HermitianBilinearOperator > my_operators;
-
-		  // define a basis of Hermitian Dirac matrices 
-
-		  my_operators.push_back(Base::op_G_0);
-		  my_operators.push_back(Base::op_G_1);
-		  my_operators.push_back(Base::op_G_2);
-		  my_operators.push_back(Base::op_G_3);
-		  my_operators.push_back(Base::op_G_4);
-		  my_operators.push_back(Base::op_G_5);
-		  my_operators.push_back(Base::op_G_6);
-		  my_operators.push_back(Base::op_G_7);
-		  my_operators.push_back(Base::op_G_8);
-		  my_operators.push_back(Base::op_G_9);
-		  my_operators.push_back(Base::op_G_10);
-		  my_operators.push_back(Base::op_G_11);
-		  my_operators.push_back(Base::op_G_12);
-		  my_operators.push_back(Base::op_G_13);
-		  my_operators.push_back(Base::op_G_14);
-		  my_operators.push_back(Base::op_G_15);
+        // there should only be one container in files, which can be accessed by files[0]
+        // (similar to accessing an object in a C array)
+        for (size_t fileIndex=0; fileIndex<files[2].size(); fileIndex++)
+        {
+          std::cout << (files[2])[fileIndex] << std::endl;
+        }
+      }
 
 
-		  Core::StochasticPropagator< 1 > phi(L,T);
-		  Core::StochasticPropagator< 1 > phi_vv(L,T);
+      if (weave.isRoot())
+        std::cout << "gauge field to be read from " << gaugeFieldFiles[0] << " ... ";
+      Tool::IO::load(&gauge_field, gaugeFieldFiles[0], Tool::IO::fileILDG);
+      if (weave.isRoot())
+        std::cout << "done.\n" << std::endl;
 
-		  Tool::IO::load(&phi,stochasticSourceFiles, Tool::IO::fileSCIDAC);
-		  Tool::IO::load(&phi_vv,stochasticSourceFiles_vvSum, Tool::IO::fileSCIDAC);
-		  std::vector< Core::Correlator< Dirac::Matrix > > check_source = Contract::compute_loop(phi_vv,phi,my_operators);
+      Dirac::Gamma<5> gamma5;
 
-		  if(weave.isRoot())
-		  {
-			  for(size_t i=0; i<my_operators.size(); i++)
-			  {
-				  for(size_t t = 0; t < T; t++)
-				  {
+      Core::StochasticPropagator< 1 > xi(stochastic_source);
 
-					  std::cout << t << "  "  << i<< "  "<<check_source[i][t].trace().real() <<"  "<< check_source[i][t].trace().imag() << std::endl;
+      xi.rightMultiply(gamma5);
+      xi.applyDiracOperator(gauge_field,kappa,mu,thetat,thetax,thetay,thetaz,Base::C);
 
-				  }
-			  }
+      Tool::IO::save(reinterpret_cast< Core::StochasticPropagator< 1 > * > (&xi), stochasticSourceFiles_vvSum, Tool::IO::fileSCIDAC);
 
-		  }
-	  }
+      if (weave.isRoot())
+        std::cout << "Store  (1 + H) g5 xi to test vvSum. \n" << std::endl;
 
+      double norm_xi(xi.norm());
+      if (weave.isRoot())
+        std::cout << std::scientific << "norm of (1 + H) g5 xi: " << norm_xi << std::endl;
+
+      // debug  compute xi_tilde^dag xi -> should be real ?
+
+      //std::vector< Base::HermitianBilinearOperator > my_operators;
+
+      // define a basis of Hermitian Dirac matrices 
+
+      /*my_operators.push_back(Base::op_G_0);
+        my_operators.push_back(Base::op_G_1);
+        my_operators.push_back(Base::op_G_2);
+        my_operators.push_back(Base::op_G_3);
+        my_operators.push_back(Base::op_G_4);
+        my_operators.push_back(Base::op_G_5);
+        my_operators.push_back(Base::op_G_6);
+        my_operators.push_back(Base::op_G_7);
+        my_operators.push_back(Base::op_G_8);
+        my_operators.push_back(Base::op_G_9);
+        my_operators.push_back(Base::op_G_10);
+        my_operators.push_back(Base::op_G_11);
+        my_operators.push_back(Base::op_G_12);
+        my_operators.push_back(Base::op_G_13);
+        my_operators.push_back(Base::op_G_14);
+        my_operators.push_back(Base::op_G_15);
+
+
+        Core::StochasticPropagator< 1 > phi(L,T);
+        Core::StochasticPropagator< 1 > phi_vv(L,T);
+
+        Tool::IO::load(&phi,stochasticSourceFiles, Tool::IO::fileSCIDAC);
+        Tool::IO::load(&phi_vv,stochasticSourceFiles_vvSum, Tool::IO::fileSCIDAC);
+        std::vector< Core::Correlator< Dirac::Matrix > > check_source = Contract::compute_loop(phi_vv,phi,my_operators);
+
+        if(weave.isRoot())
+        {
+        for(size_t i=0; i<my_operators.size(); i++)
+        {
+        for(size_t t = 0; t < T; t++)
+        {
+
+        std::cout << t << "  "  << i<< "  "<<check_source[i][t].trace().real() <<"  "<< check_source[i][t].trace().imag() << std::endl;
+
+        }
+        }
+
+        }*/
+    }
 
   }
   else
   {
-	  if(weave.isRoot())
-		  std::cerr << "source polarization and color state combination not implemented" << std::endl;
-	  exit(1);
+    if(weave.isRoot())
+      std::cerr << "source polarization and color state combination not implemented" << std::endl;
+    exit(1);
   }
 
 

@@ -84,3 +84,8 @@ TARGET_LINK_LIBRARIES(contract_OS_heavylight_mesons_2pts Print Ahmidas SU3 QCD I
 			Weave Contract Input Smear)
 
 
+ADD_EXECUTABLE(compute_sources compute_sources.cpp)
+TARGET_LINK_LIBRARIES(compute_sources Print Ahmidas SU3 QCD IO Base Core Dirac Weave Contract
+		    Input Smear)
+
+

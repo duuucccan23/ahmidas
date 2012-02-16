@@ -27,12 +27,14 @@ SET(Sources_Disconnected Disconnected.h
                   Disconnected/Disconnected_compute_loop_twist2_operator_a.cpp
                   Disconnected/Disconnected_compute_loop_twist2_operator_b.cpp
                   Disconnected/Disconnected_compute_loop_twist2_operator_c.cpp
+                  Disconnected/Disconnected_compute_loop_twist2_operator_d.cpp
 				  Disconnected/Disconnected_compute_loop_conserved_current.cpp
 				  Disconnected/Disconnected_compute_loop_conserved_current_a.cpp
 				  Disconnected/Disconnected_compute_loop_a.cpp
                   Disconnected/Disconnected_compute_loop_b.cpp
                   Disconnected/Disconnected_compute_loop_c.cpp
-                  Disconnected/Disconnected_compute_loop_d.cpp)
+                  Disconnected/Disconnected_compute_loop_d.cpp
+				  Disconnected/Disconnected_compute_loop_gluon.cpp)
 
 ADD_LIBRARY(Contract ${Sources_Meson} ${Sources_Baryon} ${Sources_Disconnected})
 SET_TARGET_PROPERTIES(Contract PROPERTIES LINKER_LANGUAGE CXX)

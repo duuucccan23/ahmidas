@@ -6,6 +6,7 @@
 #include <L0/Core/Propagator.h>
 #include <L0/Core/Correlator.h>
 #include <L0/Core/Component.h>
+#include <L1/Tool.h>
 
 namespace Contract
 {
@@ -48,7 +49,12 @@ namespace Contract
 	std::vector<  std::complex<double> > compute_loop_twist2_operator(
 			Core::Field < QCD::Gauge > &gauge_field,
 			Core::Propagator const &xi, Core::Propagator const &psi, bool pol);
-	
+
+	std::vector<  std::complex<double> > compute_loop_twist2_operator(
+			Core::Field < QCD::Gauge > &gauge_field,
+			Core::Propagator const &xi, Core::Propagator const &psi,
+			int const * const position_offset, std::vector< int* > const &momenta,int const tsrc, bool pol);
+
 	std::vector< std::complex<double>  > compute_loop_conserved_vector_current(
 			Core::Field < QCD::Gauge > &gauge_field,
 			Core::Propagator const &xi, Core::Propagator const &psi);
@@ -57,4 +63,5 @@ namespace Contract
 			Core::Field < QCD::Gauge > &gauge_field,
 			Core::Propagator const &xi, Core::Propagator const &psi,int const * const position_offset, std::vector< int* > const &momenta,int tsrc);
 
+	std::vector< std::complex<double>  > compute_loop_gluon_Pmunu(Core::Field < QCD::Gauge > &gauge_field);
 }
